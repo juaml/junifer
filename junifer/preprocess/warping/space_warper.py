@@ -4,19 +4,35 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional, Union
+from enum import Enum
+from typing import Any, ClassVar, Literal, Optional
 
 from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
+from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import logger, raise_error
-from ..base import BasePreprocessor
+from ...utils import raise_error
+from ..base import BasePreprocessor, logger
 from ._ants_warper import ANTsWarper
 from ._fsl_warper import FSLWarper
 
 
-__all__ = ["SpaceWarper"]
+__all__ = ["SpaceWarper", "SpaceWarpingImpl"]
+
+
+class SpaceWarpingImpl(str, Enum):
+    """Accepted space warping implementations.
+
+    * ``fsl`` : FSL's ``applywarp``
+    * ``ants`` : ANTs' ``antsApplyTransforms``
+    * ``auto`` : Auto-select tool when ``reference="T1w"``
+
+    """
+
+    fsl = "fsl"
+    ants = "ants"
+    auto = "auto"
 
 
 @register_preprocessor
@@ -25,85 +41,69 @@ class SpaceWarper(BasePreprocessor):
 
     Parameters
     ----------
-    using : {"fsl", "ants", "auto"}
-        Implementation to use for warping:
-
-        * "fsl" : Use FSL's ``applywarp``
-        * "ants" : Use ANTs' ``antsApplyTransforms``
-        * "auto" : Auto-select tool when ``reference="T1w"``
-
+    using : :enum:`.SpaceWarpingImpl`
     reference : str
         The data type to use as reference for warping, can be either a data
         type like ``"T1w"`` or a template space like ``"MNI152NLin2009cAsym"``.
         Use ``"T1w"`` for native space warping and named templates for
         template space warping.
-    on : {"T1w", "T2w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", \
-        "GCOR", "LCOR"} or list of the options
-        The data type to warp.
-
-    Raises
-    ------
-    ValueError
-        If ``using`` is invalid or
-        if ``reference`` is invalid.
+    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+         ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
+         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``}
+        The data type(s) to warp.
 
     """
 
     _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
         {
-            "using": "fsl",
-            "depends_on": FSLWarper,
+            "using": SpaceWarpingImpl.fsl,
+            "depends_on": [FSLWarper],
         },
         {
-            "using": "ants",
-            "depends_on": ANTsWarper,
+            "using": SpaceWarpingImpl.ants,
+            "depends_on": [ANTsWarper],
         },
         {
-            "using": "auto",
+            "using": SpaceWarpingImpl.auto,
             "depends_on": [FSLWarper, ANTsWarper],
         },
     ]
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = [
-        "T1w",
-        "T2w",
-        "BOLD",
-        "VBM_GM",
-        "VBM_WM",
-        "VBM_CSF",
-        "fALFF",
-        "GCOR",
-        "LCOR",
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [
+        DataType.T1w,
+        DataType.T2w,
+        DataType.BOLD,
+        DataType.VBM_GM,
+        DataType.VBM_WM,
+        DataType.VBM_CSF,
+        DataType.FALFF,
+        DataType.GCOR,
+        DataType.LCOR,
     ]
 
-    def __init__(
-        self, using: str, reference: str, on: Union[list[str], str]
-    ) -> None:
-        """Initialize the class."""
-        # Validate `using` parameter
-        valid_using = [dep["using"] for dep in self._CONDITIONAL_DEPENDENCIES]
-        if using not in valid_using:
-            raise_error(
-                f"Invalid value for `using`, should be one of: {valid_using}"
-            )
-        self.using = using
-        self.reference = reference
-        # Set required data types based on reference and
-        # initialize superclass
-        if self.reference == "T1w":  # pragma: no cover
-            required_data_types = [self.reference, "Warp"]
-            # Listify on
-            if not isinstance(on, list):
-                on = [on]
-            # Extend required data types
-            required_data_types.extend(on)
+    using: SpaceWarpingImpl
+    reference: str
+    on: list[
+        Literal[
+            DataType.T1w,
+            DataType.T2w,
+            DataType.BOLD,
+            DataType.VBM_GM,
+            DataType.VBM_WM,
+            DataType.VBM_CSF,
+            DataType.FALFF,
+            DataType.GCOR,
+            DataType.LCOR,
+        ]
+    ]
 
-            super().__init__(
-                on=on,
-                required_data_types=required_data_types,
-            )
-        elif self.reference in tflow.templates():
-            super().__init__(on=on)
-        else:
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
+        # Set required data types based on reference
+        if self.reference == "T1w":  # pragma: no cover
+            # Update required data types
+            self.required_data_types = [DataType.T1w, DataType.Warp]
+            self.required_data_types.extend(self.on)
+        elif self.reference not in tflow.templates():
             raise_error(f"Unknown reference: {self.reference}")
 
     def preprocess(  # noqa: C901

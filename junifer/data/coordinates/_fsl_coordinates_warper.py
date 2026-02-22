@@ -9,7 +9,7 @@ import numpy as np
 from numpy.typing import ArrayLike
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, run_ext_cmd
+from ...utils import run_ext_cmd
 
 
 __all__ = ["FSLCoordinatesWarper"]
@@ -46,6 +46,9 @@ class FSLCoordinatesWarper:
             The transformed coordinates.
 
         """
+        # Imported here to avoid circular import
+        from ._coordinates import logger
+
         logger.debug("Using FSL for coordinates transformation")
 
         # Create element-specific tempdir for storing post-warping assets

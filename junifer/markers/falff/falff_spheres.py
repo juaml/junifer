@@ -6,10 +6,13 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional, Union
+
+from pydantic import PositiveFloat
 
 from ...api.decorators import register_marker
-from ...utils import logger
+from ...datagrabber import DataType
+from ..base import logger
 from ..sphere_aggregation import SphereAggregation
 from .falff_base import ALFFBase
 
@@ -26,40 +29,35 @@ class ALFFSpheres(ALFFBase):
     coords : str
         The name of the coordinates list to use.
         See :func:`.list_data` for options.
-    using : {"junifer", "afni"}
-        Implementation to use for computing ALFF:
-
-        * "junifer" : Use ``junifer``'s own ALFF implementation
-        * "afni" : Use AFNI's ``3dRSFC``
-
-    radius : float, optional
-        The radius of the sphere in mm. If None, the signal will be extracted
-        from a single voxel. See :class:`nilearn.maskers.NiftiSpheresMasker`
-        for more information (default None).
+    using : :enum:`.ALFFImpl`
+    radius : ``zero`` or positive float or None, optional
+        The radius of the sphere in millimetres.
+        If None, the signal will be extracted from a single voxel.
+        See :class:`.JuniferNiftiSpheresMasker` for more information
+        (default None).
     allow_overlap : bool, optional
-        Whether to allow overlapping spheres. If False, an error is raised if
-        the spheres overlap (default is False).
-    highpass : positive float, optional
-        The highpass cutoff frequency for the bandpass filter. If 0,
-        it will not apply a highpass filter (default 0.01).
-    lowpass : positive float, optional
-        The lowpass cutoff frequency for the bandpass filter (default 0.1).
-    tr : positive float, optional
-        The Repetition Time of the BOLD data. If None, will extract
-        the TR from NIfTI header (default None).
+        Whether to allow overlapping spheres.
+        If False, an error is raised if the spheres overlap (default False).
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`.get_aggfunc_by_name`.
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for valid options (default None).
+    highpass : positive float, optional
+        Highpass cutoff frequency (default 0.01).
+    lowpass : positive float, optional
+        Lowpass cutoff frequency (default 0.1).
+    tr : positive float, optional
+        The repetition time of the BOLD data.
+        If None, will extract the TR from NIfTI header (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     Notes
     -----
@@ -75,34 +73,10 @@ class ALFFSpheres(ALFFBase):
 
     """
 
-    def __init__(
-        self,
-        coords: str,
-        using: str,
-        radius: Optional[float] = None,
-        allow_overlap: bool = False,
-        highpass: float = 0.01,
-        lowpass: float = 0.1,
-        tr: Optional[float] = None,
-        agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        # Superclass init first to validate `using` parameter
-        super().__init__(
-            highpass=highpass,
-            lowpass=lowpass,
-            using=using,
-            tr=tr,
-            name=name,
-        )
-        self.coords = coords
-        self.radius = radius
-        self.allow_overlap = allow_overlap
-        self.agg_method = agg_method
-        self.agg_method_params = agg_method_params
-        self.masks = masks
+    coords: str
+    radius: Optional[Union[Literal[0], PositiveFloat]] = None
+    allow_overlap: bool = False
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def compute(
         self,
@@ -160,7 +134,7 @@ class ALFFSpheres(ALFFBase):
                     method=self.agg_method,
                     method_params=self.agg_method_params,
                     masks=self.masks,
-                    on="BOLD",
+                    on=[DataType.BOLD],
                 ).compute(
                     input=aggregation_alff_input,
                     extra_input=extra_input,
@@ -174,7 +148,7 @@ class ALFFSpheres(ALFFBase):
                     method=self.agg_method,
                     method_params=self.agg_method_params,
                     masks=self.masks,
-                    on="BOLD",
+                    on=[DataType.BOLD],
                 ).compute(
                     input=aggregation_falff_input,
                     extra_input=extra_input,

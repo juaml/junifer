@@ -5,7 +5,16 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import sys
+
+
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import TypedDict
+else:
+    from typing import TypedDict
+
 from collections.abc import Sequence
+from enum import Enum
 from typing import (
     Any,
     ClassVar,
@@ -23,13 +32,14 @@ from nilearn.interfaces.fmriprep.load_confounds_utils import prepare_output
 
 from ...api.decorators import register_preprocessor
 from ...data import get_data
+from ...datagrabber import DataType
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger, raise_error
-from ..base import BasePreprocessor
+from ...utils import raise_error
+from ..base import BasePreprocessor, logger
 
 
-__all__ = ["fMRIPrepConfoundRemover"]
+__all__ = ["Confounds", "Strategy", "fMRIPrepConfoundRemover"]
 
 
 FMRIPREP_BASICS = {
@@ -100,6 +110,31 @@ FMRIPREP_VALID_NAMES = [
 FMRIPREP_VALID_NAMES.append("framewise_displacement")
 
 
+class Confounds(str, Enum):
+    """Accepted confounds.
+
+    * ``Basic`` : only the confounding time series
+    * ``Power2`` : signal + quadratic term
+    * ``Derivatives`` : signal + derivatives
+    * ``Full`` : signal + deriv. + quadratic terms + power2
+
+    """
+
+    Basic = "basic"
+    Power2 = "power2"
+    Derivatives = "derivatives"
+    Full = "full"
+
+
+class Strategy(TypedDict, total=False):
+    """Accepted confound removal strategy."""
+
+    motion: Confounds
+    wm_csf: Confounds
+    global_signal: Confounds
+    scrubbing: bool
+
+
 @register_preprocessor
 class fMRIPrepConfoundRemover(BasePreprocessor):
     """Class for confound removal using fMRIPrep confounds format.
@@ -111,27 +146,13 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
 
     Parameters
     ----------
-    strategy : dict, optional
+    strategy : :class:`.Strategy` or None, optional
         The strategy to use for each component. If None, will use the *full*
         strategy for all components except ``"scrubbing"`` which will be set
         to False (default None).
         The keys of the dictionary should correspond to names of noise
-        components to include:
-
-        * ``motion``
-        * ``wm_csf``
-        * ``global_signal``
-        * ``scrubbing``
-
-        The values of dictionary should correspond to types of confounds
-        extracted from each signal:
-
-        * ``basic`` : only the confounding time series
-        * ``power2`` : signal + quadratic term
-        * ``derivatives`` : signal + derivatives
-        * ``full`` : signal + deriv. + quadratic terms + power2 deriv.
-
-        except ``scrubbing`` which needs to be bool.
+        components (Strategy) to include and the values should correspond to
+        types of confounds (Confounds) extracted from each signal.
     spike : float, optional
         If None, no spike regressor is added. If spike is a float, it will
         add a spike regressor for every point at which framewise displacement
@@ -168,7 +189,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -176,84 +197,29 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
-    def __init__(
-        self,
-        strategy: Optional[dict[str, Union[str, bool]]] = None,
-        spike: Optional[float] = None,
-        scrub: Optional[int] = None,
-        fd_threshold: Optional[float] = None,
-        std_dvars_threshold: Optional[float] = None,
-        detrend: bool = True,
-        standardize: bool = True,
-        low_pass: Optional[float] = None,
-        high_pass: Optional[float] = None,
-        t_r: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-    ) -> None:
-        """Initialize the class."""
-        if strategy is None:
-            strategy = {
-                "motion": "full",
-                "wm_csf": "full",
-                "global_signal": "full",
+    strategy: Optional[Strategy] = None
+    spike: Optional[float] = None
+    scrub: Optional[int] = None
+    fd_threshold: Optional[float] = None
+    std_dvars_threshold: Optional[float] = None
+    detrend: bool = True
+    standardize: bool = True
+    low_pass: Optional[float] = None
+    high_pass: Optional[float] = None
+    t_r: Optional[float] = None
+    masks: Optional[list[Union[dict, str]]] = None
+
+    def validate_preprocessor_params(self) -> None:
+        """Run extra logical validation for preprocessor."""
+        if self.strategy is None:
+            self.strategy = {
+                "motion": Confounds.Full,
+                "wm_csf": Confounds.Full,
+                "global_signal": Confounds.Full,
                 "scrubbing": False,
             }
-        self.strategy = strategy
-        self.spike = spike
-        self.scrub = scrub
-        self.fd_threshold = fd_threshold
-        self.std_dvars_threshold = std_dvars_threshold
-        self.detrend = detrend
-        self.standardize = standardize
-        self.low_pass = low_pass
-        self.high_pass = high_pass
-        self.t_r = t_r
-        self.masks = masks
-
-        self._valid_components = [
-            "motion",
-            "wm_csf",
-            "global_signal",
-            "scrubbing",
-        ]
-        self._valid_confounds = ["basic", "power2", "derivatives", "full"]
-
-        if any(not isinstance(k, str) for k in strategy.keys()):
-            raise_error("Strategy keys must be strings", ValueError)
-
-        if any(
-            not isinstance(v, str)
-            for k, v in strategy.items()
-            if k != "scrubbing"
-        ):
-            raise_error("Strategy values must be strings", ValueError)
-
-        if any(x not in self._valid_components for x in strategy.keys()):
-            raise_error(
-                msg=f"Invalid component names {list(strategy.keys())}. "
-                f"Valid components are {self._valid_components}.\n"
-                f"If any of them is a valid parameter in "
-                "nilearn.interfaces.fmriprep.load_confounds we may "
-                "include it in the future",
-                klass=ValueError,
-            )
-
-        if any(
-            v not in self._valid_confounds
-            for k, v in strategy.items()
-            if k != "scrubbing"
-        ):
-            raise_error(
-                msg=f"Invalid confound types {list(strategy.values())}. "
-                f"Valid confound types are {self._valid_confounds}.\n"
-                f"If any of them is a valid parameter in "
-                "nilearn.interfaces.fmriprep.load_confounds we may "
-                "include it in the future",
-                klass=ValueError,
-            )
-        super().__init__()
 
     def _map_adhoc_to_fmriprep(self, input: dict[str, Any]) -> None:
         """Map the adhoc format to the fmpriprep format spec.

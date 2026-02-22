@@ -9,9 +9,10 @@ from typing import TYPE_CHECKING, Any, Optional, Union
 import nibabel as nib
 import nilearn.image as nimg
 import numpy as np
+import structlog
 from junifer_data import get
 
-from ...utils import logger, raise_error
+from ...utils import raise_error
 from ..pipeline_data_registry_base import BasePipelineDataRegistry
 from ..utils import (
     JUNIFER_DATA_PARAMS,
@@ -28,6 +29,9 @@ if TYPE_CHECKING:
 
 
 __all__ = ["MapsRegistry"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="data")
 
 
 class MapsRegistry(BasePipelineDataRegistry):

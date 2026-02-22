@@ -10,8 +10,10 @@ Authors: Federico Raimondo
 License: BSD 3 clause
 """
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from pathlib import Path
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils import configure_logging
+from pydantic import HttpUrl
 
 
 ###############################################################################
@@ -23,7 +25,7 @@ configure_logging(level="INFO")
 # The BIDS DataGrabber requires three parameters: the types of data we want,
 # the specific pattern that matches each type, and the variables that will be
 # replaced in the patterns.
-types = ["T1w", "BOLD"]
+types = [DataType.T1w, DataType.BOLD]
 patterns = {
     "T1w": {
         "pattern": "{subject}/anat/{subject}_T1w.nii.gz",
@@ -38,8 +40,8 @@ replacements = ["subject"]
 ###############################################################################
 # Additionally, a datalad-based DataGrabber requires the URI of the remote
 # sibling and the location of the dataset within the remote sibling.
-repo_uri = "https://gin.g-node.org/juaml/datalad-example-bids"
-rootdir = "example_bids"
+repo_uri = HttpUrl("https://gin.g-node.org/juaml/datalad-example-bids")
+rootdir = Path("example_bids")
 
 ###############################################################################
 # Now we can use the DataGrabber within a `with` context.

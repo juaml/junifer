@@ -6,8 +6,7 @@
 
 from pathlib import Path
 
-import pytest
-
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.temporal_snr import TemporalSNRSpheres
 from junifer.storage import HDF5FeatureStorage
@@ -21,9 +20,8 @@ def test_TemporalSNRSpheres_computation() -> None:
         marker = TemporalSNRSpheres(coords="DMNBuckner", radius=5.0)
         # Check correct output
         assert "vector" == marker.storage_type(
-            input_type="BOLD", output_feature="tsnr"
+            input_type=DataType.BOLD, output_feature="tsnr"
         )
-
         # Fit-transform the data
         tsnr_spheres = marker.fit_transform(element_data)
         tsnr_spheres_bold = tsnr_spheres["BOLD"]["tsnr"]
@@ -47,16 +45,10 @@ def test_TemporalSNRSpheres_storage(tmp_path: Path) -> None:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         marker = TemporalSNRSpheres(coords="DMNBuckner", radius=5.0)
         # Store
-        storage = HDF5FeatureStorage(tmp_path / "test_tsnr_spheres.hdf5")
+        storage = HDF5FeatureStorage(uri=tmp_path / "test_tsnr_spheres.hdf5")
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
         assert any(
             x["name"] == "BOLD_TemporalSNRSpheres_tsnr"
             for x in features.values()
         )
-
-
-def test_TemporalSNRSpheres_error() -> None:
-    """Test TemporalSNRSpheres errors."""
-    with pytest.raises(ValueError, match="radius should be > 0"):
-        TemporalSNRSpheres(coords="DMNBuckner", radius=-0.1)

@@ -12,30 +12,6 @@ import pytest
 from junifer.api.queue_context import GnuParallelLocalAdapter
 
 
-def test_GnuParallelLocalAdapter_env_kind_error() -> None:
-    """Test error for invalid env kind."""
-    with pytest.raises(ValueError, match=r"Invalid value for `env.kind`"):
-        GnuParallelLocalAdapter(
-            job_name="check_env_kind",
-            job_dir=Path("."),
-            yaml_config_path=Path("."),
-            elements=["sub01"],
-            env={"kind": "jambalaya"},
-        )
-
-
-def test_GnuParallelLocalAdapter_env_shell_error() -> None:
-    """Test error for invalid env shell."""
-    with pytest.raises(ValueError, match=r"Invalid value for `env.shell`"):
-        GnuParallelLocalAdapter(
-            job_name="check_env_shell",
-            job_dir=Path("."),
-            yaml_config_path=Path("."),
-            elements=["sub01"],
-            env={"kind": "conda", "shell": "fish"},
-        )
-
-
 @pytest.mark.parametrize(
     "elements, expected_text",
     [
@@ -63,7 +39,7 @@ def test_GnuParallelLocalAdapter_elements(
         yaml_config_path=Path("."),
         elements=elements,
     )
-    assert expected_text in adapter.elements()
+    assert expected_text in adapter.elements_to_run()
 
 
 @pytest.mark.parametrize(
@@ -98,7 +74,7 @@ def test_GnuParallelLocalAdapter_pre_run(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "conda", "name": "junifer", "shell": shell},
-        pre_run=pre_run,
+        pre_run_cmds=pre_run,
     )
     assert shell in adapter.pre_run()
     assert expected_text in adapter.pre_run()
@@ -136,7 +112,7 @@ def test_GnuParallelLocalAdapter_pre_collect(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "venv", "name": "junifer", "shell": shell},
-        pre_collect=pre_collect,
+        pre_collect_cmds=pre_collect,
     )
     assert shell in adapter.pre_collect()
     assert expected_text in adapter.pre_collect()

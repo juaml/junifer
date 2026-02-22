@@ -8,14 +8,18 @@ from typing import Any, Optional, Union
 
 import nibabel as nib
 import numpy as np
+import structlog
 from junifer_data import get
 from templateflow import api as tflow
 
-from ..utils import logger, raise_error
+from ..utils import raise_error
 from .utils import JUNIFER_DATA_PARAMS, closest_resolution, get_dataset_path
 
 
 __all__ = ["get_template", "get_xfm"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="data")
 
 
 def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover

@@ -8,12 +8,16 @@
 # License: AGPL
 
 from itertools import product
-from pathlib import Path
-from typing import Union
+from typing import Literal
+
+from pydantic import HttpUrl
 
 from ...api.decorators import register_datagrabber
-from ...utils import raise_error
+from ...typing import DataGrabberPatterns
+from ..base import DataType
+from ..pattern import ConfoundsFormat
 from ..pattern_datalad import PatternDataladDataGrabber
+from ._types import AOMICSpace, AOMICTask
 
 
 __all__ = ["DataladAOMICPIOP1"]
@@ -25,246 +29,247 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    datadir : str or Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM", "DWI", \
-           "FreeSurfer"} or list of the options, optional
-        AOMIC data types. If None, all available data types are selected.
-        (default None).
-    tasks : {"restingstate", "anticipation", "emomatching", "faces", \
-            "gstroop", "workingmemory"} or list of the options, optional
-        AOMIC PIOP1 task sessions. If None, all available task sessions are
-        selected (default None).
-    space : {"native", "MNI152NLin2009cAsym"}, optional
-        The space to use for the data (default "MNI152NLin2009cAsym").
-
-    Raises
-    ------
-    ValueError
-        If invalid value is passed for:
-         * ``tasks``
-         * ``space``
+    types : list of {``DataType.BOLD``, ``DataType.T1w``, \
+            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
+            ``DataType.DWI``, ``DataType.FreeSurfer``, ``DataType.Warp``}, \
+            optional
+        The data type(s) to grab.
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
+    tasks : list of {``AOMICTask.RestingState``, ``AOMICTask.Anticipation``, \
+            ``AOMICTask.EmoMatching``, ``AOMICTask.Faces``, \
+            ``AOMICTask.Gstroop``, ``AOMICTask.WorkingMemory``}, optional
+        AOMIC PIOP1 task sessions.
+        By default, all available task sessions are selected.
+    space : :enum:`.AOMICSpace`, optional
+        AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).
 
     """
 
-    def __init__(
-        self,
-        datadir: Union[str, Path, None] = None,
-        types: Union[str, list[str], None] = None,
-        tasks: Union[str, list[str], None] = None,
-        space: str = "MNI152NLin2009cAsym",
-    ) -> None:
-        valid_spaces = ["native", "MNI152NLin2009cAsym"]
-        if space not in ["native", "MNI152NLin2009cAsym"]:
-            raise_error(
-                f"Invalid space {space}. Must be one of {valid_spaces}"
-            )
-        # Declare all tasks
-        all_tasks = [
-            "restingstate",
-            "anticipation",
-            "emomatching",
-            "faces",
-            "gstroop",
-            "workingmemory",
+    uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds002785")
+    types: list[
+        Literal[
+            DataType.BOLD,
+            DataType.T1w,
+            DataType.VBM_CSF,
+            DataType.VBM_GM,
+            DataType.VBM_WM,
+            DataType.DWI,
+            DataType.FreeSurfer,
+            DataType.Warp,
         ]
-        # Set default tasks
-        if tasks is None:
-            tasks = all_tasks
-        else:
-            # Convert single task into list
-            if isinstance(tasks, str):
-                tasks = [tasks]
-            # Verify valid tasks
-            for t in tasks:
-                if t not in all_tasks:
-                    raise_error(
-                        f"{t} is not a valid task in the AOMIC PIOP1 dataset!"
-                    )
-        self.tasks = tasks
-        # Descriptor for space in `anat`
-        sp_anat_desc = (
-            "" if space == "native" else "space-MNI152NLin2009cAsym_"
-        )
-        # Descriptor for space in `func`
-        sp_func_desc = (
-            "space-T1w_" if space == "native" else "space-MNI152NLin2009cAsym_"
-        )
-        # The patterns
-        patterns = {
-            "BOLD": {
+    ] = [  # noqa: RUF012
+        DataType.BOLD,
+        DataType.T1w,
+        DataType.VBM_CSF,
+        DataType.VBM_GM,
+        DataType.VBM_WM,
+        DataType.DWI,
+        DataType.FreeSurfer,
+        DataType.Warp,
+    ]
+    tasks: list[
+        Literal[
+            AOMICTask.RestingState,
+            AOMICTask.Anticipation,
+            AOMICTask.EmoMatching,
+            AOMICTask.Faces,
+            AOMICTask.Gstroop,
+            AOMICTask.WorkingMemory,
+        ]
+    ] = [  # noqa: RUF012
+        AOMICTask.RestingState,
+        AOMICTask.Anticipation,
+        AOMICTask.EmoMatching,
+        AOMICTask.Faces,
+        AOMICTask.Gstroop,
+        AOMICTask.WorkingMemory,
+    ]
+    space: AOMICSpace = AOMICSpace.MNI152NLin2009cAsym
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "BOLD": {
+            "pattern": (
+                "derivatives/fmriprep/{subject}/func/"
+                "{subject}_task-{task}_"
+                "{sp_func_desc}"
+                "desc-preproc_bold.nii.gz"
+            ),
+            "mask": {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/func/"
                     "{subject}_task-{task}_"
-                    f"{sp_func_desc}"
-                    "desc-preproc_bold.nii.gz"
+                    "{sp_func_desc}"
+                    "desc-brain_mask.nii.gz"
                 ),
-                "space": space,
-                "mask": {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/func/"
-                        "{subject}_task-{task}_"
-                        f"{sp_func_desc}"
-                        "desc-brain_mask.nii.gz"
-                    ),
-                    "space": space,
-                },
-                "confounds": {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/func/"
-                        "{subject}_task-{task}_"
-                        "desc-confounds_regressors.tsv"
-                    ),
-                    "format": "fmriprep",
-                },
-                "reference": {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/func/"
-                        "{subject}_task-{task}_"
-                        f"{sp_func_desc}"
-                        "boldref.nii.gz"
-                    ),
-                },
             },
-            "T1w": {
+            "confounds": {
+                "pattern": (
+                    "derivatives/fmriprep/{subject}/func/"
+                    "{subject}_task-{task}_"
+                    "desc-confounds_regressors.tsv"
+                ),
+                "format": "fmriprep",
+            },
+            "reference": {
+                "pattern": (
+                    "derivatives/fmriprep/{subject}/func/"
+                    "{subject}_task-{task}_"
+                    "{sp_func_desc}"
+                    "boldref.nii.gz"
+                ),
+            },
+        },
+        "T1w": {
+            "pattern": (
+                "derivatives/fmriprep/{subject}/anat/"
+                "{subject}_"
+                "{sp_anat_desc}"
+                "desc-preproc_T1w.nii.gz"
+            ),
+            "mask": {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/anat/"
                     "{subject}_"
-                    f"{sp_anat_desc}"
-                    "desc-preproc_T1w.nii.gz"
+                    "{sp_anat_desc}"
+                    "desc-brain_mask.nii.gz"
                 ),
-                "space": space,
-                "mask": {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/anat/"
-                        "{subject}_"
-                        f"{sp_anat_desc}"
-                        "desc-brain_mask.nii.gz"
-                    ),
-                    "space": space,
-                },
             },
-            "VBM_CSF": {
+        },
+        "VBM_CSF": {
+            "pattern": (
+                "derivatives/fmriprep/{subject}/anat/"
+                "{subject}_"
+                "{sp_anat_desc}"
+                "label-CSF_probseg.nii.gz"
+            ),
+        },
+        "VBM_GM": {
+            "pattern": (
+                "derivatives/fmriprep/{subject}/anat/"
+                "{subject}_"
+                "{sp_anat_desc}"
+                "label-GM_probseg.nii.gz"
+            ),
+        },
+        "VBM_WM": {
+            "pattern": (
+                "derivatives/fmriprep/{subject}/anat/"
+                "{subject}_"
+                "{sp_anat_desc}"
+                "label-WM_probseg.nii.gz"
+            ),
+        },
+        "DWI": {
+            "pattern": (
+                "derivatives/dwipreproc/{subject}/dwi/"
+                "{subject}_desc-preproc_dwi.nii.gz"
+            ),
+        },
+        "FreeSurfer": {
+            "pattern": "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]",
+            "aseg": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/mri/aseg.mg[z]"
+                )
+            },
+            "norm": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/mri/norm.mg[z]"
+                )
+            },
+            "lh_white": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/surf/lh.whit[e]"
+                )
+            },
+            "rh_white": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/surf/rh.whit[e]"
+                )
+            },
+            "lh_pial": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/surf/lh.pia[l]"
+                )
+            },
+            "rh_pial": {
+                "pattern": (
+                    "derivatives/freesurfer/[!f]{subject}/surf/rh.pia[l]"
+                )
+            },
+        },
+        "Warp": [
+            {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/anat/"
-                    "{subject}_"
-                    f"{sp_anat_desc}"
-                    "label-CSF_probseg.nii.gz"
+                    "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
+                    "mode-image_xfm.h5"
                 ),
-                "space": space,
+                "src": "MNI152NLin2009cAsym",
+                "dst": "native",
+                "warper": "ants",
             },
-            "VBM_GM": {
+            {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/anat/"
-                    "{subject}_"
-                    f"{sp_anat_desc}"
-                    "label-GM_probseg.nii.gz"
+                    "{subject}_from-T1w_to-MNI152NLin2009cAsym_"
+                    "mode-image_xfm.h5"
                 ),
-                "space": space,
+                "src": "native",
+                "dst": "MNI152NLin2009cAsym",
+                "warper": "ants",
             },
-            "VBM_WM": {
-                "pattern": (
-                    "derivatives/fmriprep/{subject}/anat/"
-                    "{subject}_"
-                    f"{sp_anat_desc}"
-                    "label-WM_probseg.nii.gz"
-                ),
-                "space": space,
-            },
-            "DWI": {
-                "pattern": (
-                    "derivatives/dwipreproc/{subject}/dwi/"
-                    "{subject}_desc-preproc_dwi.nii.gz"
-                ),
-            },
-            "FreeSurfer": {
-                "pattern": "derivatives/freesurfer/[!f]{subject}/mri/T1.mg[z]",
-                "aseg": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/mri/aseg.mg[z]"
-                    )
-                },
-                "norm": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/mri/norm.mg[z]"
-                    )
-                },
-                "lh_white": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/surf/lh.whit[e]"
-                    )
-                },
-                "rh_white": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/surf/rh.whit[e]"
-                    )
-                },
-                "lh_pial": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/surf/lh.pia[l]"
-                    )
-                },
-                "rh_pial": {
-                    "pattern": (
-                        "derivatives/freesurfer/[!f]{subject}/surf/rh.pia[l]"
-                    )
-                },
-            },
-            "Warp": [
-                {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/anat/"
-                        "{subject}_from-MNI152NLin2009cAsym_to-T1w_"
-                        "mode-image_xfm.h5"
-                    ),
-                    "src": "MNI152NLin2009cAsym",
-                    "dst": "native",
-                    "warper": "ants",
-                },
-                {
-                    "pattern": (
-                        "derivatives/fmriprep/{subject}/anat/"
-                        "{subject}_from-T1w_to-MNI152NLin2009cAsym_"
-                        "mode-image_xfm.h5"
-                    ),
-                    "src": "native",
-                    "dst": "MNI152NLin2009cAsym",
-                    "warper": "ants",
-                },
-            ],
-        }
+        ],
+    }
+    replacements: list[str] = ["subject", "task"]  # noqa: RUF012
+    confounds_format: ConfoundsFormat = ConfoundsFormat.FMRIPrep
 
-        if space == "native":
-            patterns["BOLD"]["prewarp_space"] = "MNI152NLin2009cAsym"
-        else:
-            patterns["BOLD"]["prewarp_space"] = "native"
-
-        # Use native T1w assets
-        self.space = space
-
-        # Set default types
-        if types is None:
-            types = list(patterns.keys())
-        # Convert single type into list
-        else:
-            if not isinstance(types, list):
-                types = [types]
-        # The replacements
-        replacements = ["subject", "task"]
-        uri = "https://github.com/OpenNeuroDatasets/ds002785"
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            uri=uri,
-            patterns=patterns,
-            replacements=replacements,
-            confounds_format="fmriprep",
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
+        # Descriptor for space in `anat`
+        sp_anat_desc = (
+            "" if self.space == "native" else "space-MNI152NLin2009cAsym_"
         )
+        # Descriptor for space in `func`
+        sp_func_desc = (
+            "space-T1w_"
+            if self.space == "native"
+            else "space-MNI152NLin2009cAsym_"
+        )
+        self.patterns["BOLD"]["pattern"] = self.patterns["BOLD"][
+            "pattern"
+        ].replace("{sp_func_desc}", sp_func_desc)
+        self.patterns["BOLD"]["mask"]["pattern"] = self.patterns["BOLD"][
+            "mask"
+        ]["pattern"].replace("{sp_func_desc}", sp_func_desc)
+        self.patterns["BOLD"]["reference"]["pattern"] = self.patterns["BOLD"][
+            "reference"
+        ]["pattern"].replace("{sp_func_desc}", sp_func_desc)
+        self.patterns["T1w"]["pattern"] = self.patterns["T1w"][
+            "pattern"
+        ].replace("{sp_anat_desc}", sp_anat_desc)
+        self.patterns["T1w"]["mask"]["pattern"] = self.patterns["T1w"]["mask"][
+            "pattern"
+        ].replace("{sp_anat_desc}", sp_anat_desc)
+        for t in ["VBM_CSF", "VBM_GM", "VBM_WM"]:
+            self.patterns[t]["pattern"] = self.patterns[t]["pattern"].replace(
+                "{sp_anat_desc}", sp_anat_desc
+            )
+        for t in ["BOLD", "T1w"]:
+            self.patterns[t]["space"] = self.space
+            self.patterns[t]["mask"]["space"] = self.space
+        for t in ["VBM_CSF", "VBM_GM", "VBM_WM"]:
+            self.patterns[t]["space"] = self.space
+        if self.space == "native":
+            self.patterns["BOLD"]["prewarp_space"] = "MNI152NLin2009cAsym"
+        else:
+            self.patterns["BOLD"]["prewarp_space"] = "native"
+        super().validate_datagrabber_params()
 
     def get_item(self, subject: str, task: str) -> dict:
-        """Index one element in the dataset.
+        """Get the specified item from the dataset.
 
         Parameters
         ----------

@@ -7,12 +7,16 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+import structlog
 
 from ..typing import StorageLike
-from ..utils import logger, raise_error, warn_with_log
+from ..utils import raise_error, warn_with_log
 
 
 __all__ = ["read_transform"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="onthefly")
 
 
 def read_transform(

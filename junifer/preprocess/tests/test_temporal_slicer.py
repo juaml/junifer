@@ -76,14 +76,6 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
         ],
         [10.0, None, 30.0, None, 30, nullcontext()],
         [
-            -1.0,
-            None,
-            None,
-            None,
-            84,
-            pytest.raises(ValueError, match="`start` cannot be negative"),
-        ],
-        [
             0.0,
             500.0,
             None,

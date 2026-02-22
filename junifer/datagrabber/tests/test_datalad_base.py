@@ -9,7 +9,7 @@ from pathlib import Path
 import datalad.api as dl
 import pytest
 
-from junifer.datagrabber import DataladDataGrabber
+from junifer.datagrabber import DataladDataGrabber, DataType
 from junifer.utils import config
 
 
@@ -38,23 +38,18 @@ def concrete_datagrabber() -> type[DataladDataGrabber]:
 
     """
 
-    class MyDataGrabber(DataladDataGrabber):  # type: ignore
-        def __init__(self, datadir, uri):
-            super().__init__(
-                datadir=datadir,
-                rootdir="example_bids",
-                uri=uri,
-                types=["T1w", "BOLD"],
-            )
+    class MyDataGrabber(DataladDataGrabber):
+        types: list[DataType] = [DataType.T1w, DataType.BOLD]  # noqa: RUF012
+        rootdir: Path = Path("example_bids")
 
         def get_item(self, subject):
             out = {
                 "T1w": {
-                    "path": self.datadir
+                    "path": self.fulldir
                     / f"{subject}/anat/{subject}_T1w.nii.gz"
                 },
                 "BOLD": {
-                    "path": self.datadir
+                    "path": self.fulldir
                     / f"{subject}/func/{subject}_task-rest_bold.nii.gz"
                 },
             }
@@ -91,7 +86,7 @@ def test_DataladDataGrabber_install_errors(
     # Files are not there
     assert datadir.exists() is False
     # Clone dataset
-    dl.clone(uri, datadir)  # type: ignore
+    dl.clone(uri, datadir)
     dg = concrete_datagrabber(datadir=datadir, uri=uri2)
     with pytest.raises(ValueError, match=r"different ID"):
         with dg:
@@ -160,7 +155,6 @@ def test_DataladDataGrabber_clone_cleanup(
         assert "datagrabber" in meta
         assert "datalad_dirty" in meta["datagrabber"]
         assert meta["datagrabber"]["datalad_dirty"] is False
-        assert hasattr(dg, "_got_files") is False
         assert datadir.exists() is True
         assert elem1_bold.is_file() is True
         assert elem1_bold.is_symlink() is True
@@ -185,8 +179,8 @@ def test_DataladDataGrabber_clone_create_cleanup(
 
     # Clone whole dataset
     uri = _testing_dataset["example_bids"]["uri"]
-    with concrete_datagrabber(datadir=None, uri=uri) as dg:
-        datadir = dg._tmpdir / "datadir"
+    with concrete_datagrabber(uri=uri) as dg:
+        datadir = dg._repodir
         elem1_bold = (
             datadir / "example_bids/sub-01/func/sub-01_task-rest_bold.nii.gz"
         )
@@ -206,7 +200,6 @@ def test_DataladDataGrabber_clone_create_cleanup(
         assert "datagrabber" in meta
         assert "datalad_dirty" in meta["datagrabber"]
         assert meta["datagrabber"]["datalad_dirty"] is False
-        assert hasattr(dg, "_got_files") is False
         assert datadir.exists() is True
         assert elem1_bold.is_file() is True
         assert elem1_bold.is_symlink() is True
@@ -246,7 +239,7 @@ def test_DataladDataGrabber_previously_cloned(
     assert elem1_t1w.exists() is False
 
     # Clone dataset
-    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
+    dl.clone(uri, datadir, result_renderer="disabled")
 
     # Files are there, but are empty symbolic links
     assert datadir.exists() is True
@@ -316,7 +309,7 @@ def test_DataladDataGrabber_previously_cloned_and_get(
     assert elem1_t1w.exists() is False
 
     # Clone dataset
-    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
+    dl.clone(uri, datadir, result_renderer="disabled")
 
     # Files are there, but are empty symbolic links
     assert datadir.exists() is True
@@ -325,9 +318,7 @@ def test_DataladDataGrabber_previously_cloned_and_get(
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is False
 
-    dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled"
-    )
+    dl.get(elem1_t1w, dataset=datadir, result_renderer="disabled")
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False
@@ -399,7 +390,7 @@ def test_DataladDataGrabber_previously_cloned_and_get_dirty(
     assert elem1_t1w.exists() is False
 
     # Clone dataset
-    dl.clone(uri, datadir, result_renderer="disabled")  # type: ignore
+    dl.clone(uri, datadir, result_renderer="disabled")
 
     # Files are there, but are empty symbolic links
     assert datadir.exists() is True
@@ -408,9 +399,7 @@ def test_DataladDataGrabber_previously_cloned_and_get_dirty(
     assert elem1_t1w.is_symlink() is True
     assert elem1_t1w.is_file() is False
 
-    dl.get(  # type: ignore
-        elem1_t1w, dataset=datadir, result_renderer="disabled"
-    )
+    dl.get(elem1_t1w, dataset=datadir, result_renderer="disabled")
 
     assert elem1_bold.is_symlink() is True
     assert elem1_bold.is_file() is False

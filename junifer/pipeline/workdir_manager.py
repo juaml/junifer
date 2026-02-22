@@ -9,11 +9,15 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Union
 
-from ..utils import logger
+import structlog
+
 from ..utils.singleton import Singleton
 
 
 __all__ = ["WorkDirManager"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="pipeline")
 
 
 class WorkDirManager(metaclass=Singleton):

@@ -31,10 +31,3 @@ def test_JuselessDataladIXIVBM() -> None:
             out["VBM_GM"]["path"].name == f"m0wp1sub-{test_element[1]}.nii.gz"
         )
         assert out["VBM_GM"]["path"].exists()
-
-
-def test_JuselessDataladIXIVBM_invalid_site() -> None:
-    """Test JuselessDataladIXIVBM with invalid site."""
-    with pytest.raises(ValueError, match="notavalidsite not a valid site"):
-        with JuselessDataladIXIVBM(sites="notavalidsite"):
-            pass

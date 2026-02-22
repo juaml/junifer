@@ -10,8 +10,11 @@ from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
 
 import numpy as np
+from pydantic import validate_call
 
-from ..utils.logging import logger, raise_error
+from ._types import MatrixKind
+from ..utils import raise_error
+from .base import logger
 
 
 __all__ = [
@@ -76,6 +79,9 @@ def _meta_hash(meta: dict) -> str:
     meta["dependencies"] = {
         dep: get_dependency_version(dep) for dep in meta["dependencies"]
     }
+    # Remove datadir from datagrabber
+    if meta.get("datagrabber"):
+        _ = meta.get("datagrabber").pop("datadir", None)
     meta_md5 = hashlib.md5(
         json.dumps(meta, sort_keys=True).encode("utf-8")
     ).hexdigest()
@@ -106,7 +112,7 @@ def process_meta(meta: dict) -> tuple[str, dict, dict]:
     Raises
     ------
     ValueError
-        If ``meta`` is None or if it does not contain the key "element".
+        If ``meta=None`` or if it does not contain the key "element".
 
     """
     if meta is None:
@@ -163,8 +169,9 @@ def element_to_prefix(element: dict) -> str:
     return f"{prefix}_"
 
 
+@validate_call
 def store_matrix_checks(
-    matrix_kind: str,
+    matrix_kind: MatrixKind,
     diagonal: bool,
     data_shape: tuple[int, int],
     row_names_len: int,
@@ -174,15 +181,10 @@ def store_matrix_checks(
 
     Parameters
     ----------
-    matrix_kind : {"triu", "tril", "full"}
-        The kind of matrix:
-
-        * ``triu`` : store upper triangular only
-        * ``tril`` : store lower triangular
-        * ``full`` : full matrix
-
+    matrix_kind : :enum:`.MatrixKind`, optional
+        The matrix kind.
     diagonal : bool
-        Whether to store the diagonal. If ``matrix_kind`` is "full",
+        Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
         setting this to False will raise an error.
     data_shape : tuple of int and int
         The shape of the matrix data to store.
@@ -194,16 +196,12 @@ def store_matrix_checks(
     Raises
     ------
     ValueError
-        If the matrix kind is invalid
-        If the diagonal is False and the matrix kind is "full"
-        If the matrix kind is "triu" or "tril" and the matrix is not square
-        If the number of row names does not match the number of rows
-        If the number of column names does not match the number of columns
+        If ``diagonal=False`` and ``matrix_kind="full"`` or
+        if ``matrix_kind`` is "triu" or "tril" and the matrix is not square or
+        if the number of row names does not match the number of rows
+        If the number of column names does not match the number of columns.
 
     """
-    # Matrix kind validation
-    if matrix_kind not in ("triu", "tril", "full"):
-        raise_error(msg=f"Invalid kind {matrix_kind}", klass=ValueError)
     # Diagonal validation
     if diagonal is False and matrix_kind not in ["triu", "tril"]:
         raise_error(
@@ -250,9 +248,9 @@ def store_timeseries_2d_checks(
     Raises
     ------
     ValueError
-        If the data is not a 3D array (timepoints, rows, columns)
-        If the number of row names does not match the number of rows
-        If the number of column names does not match the number of columns
+        If the data is not a 3D array (timepoints, rows, columns) or
+        if the number of row names does not match the number of rows or
+        if the number of column names does not match the number of columns.
 
     """
     # Data validation
@@ -280,7 +278,7 @@ def matrix_to_vector(
     data: np.ndarray,
     col_names: Sequence[str],
     row_names: Sequence[str],
-    matrix_kind: str,
+    matrix_kind: MatrixKind,
     diagonal: bool,
 ) -> tuple[np.ndarray, list[str]]:
     """Convert matrix to vector based on parameters.
@@ -293,13 +291,8 @@ def matrix_to_vector(
         The column labels.
     row_names : list-like of str
         The row labels.
-    matrix_kind : str
-        The kind of matrix:
-
-        * ``triu`` : store upper triangular only
-        * ``tril`` : store lower triangular
-        * ``full`` : full matrix
-
+    matrix_kind : :enum:`.MatrixKind`
+        The matrix kind.
     diagonal : bool
         Whether to store the diagonal.
 
@@ -310,6 +303,11 @@ def matrix_to_vector(
     list of str
         The column labels.
 
+    Raises
+    ------
+    ValueError
+        If the matrix kind is invalid.
+
     """
     # Prepare data indexing based on matrix kind
     if matrix_kind == "triu":
@@ -318,11 +316,13 @@ def matrix_to_vector(
     elif matrix_kind == "tril":
         k = 0 if diagonal is True else -1
         data_idx = np.tril_indices(data.shape[0], k=k)
-    else:  # full
+    elif matrix_kind == "full":  # full
         data_idx = (
             np.repeat(np.arange(data.shape[0]), data.shape[1]),
             np.tile(np.arange(data.shape[1]), data.shape[0]),
         )
+    else:
+        raise_error(f"Invalid matrix kind: {matrix_kind}")
     # Subset data as 1D
     flat_data = data[data_idx]
     # Generate flat 1D row X column names

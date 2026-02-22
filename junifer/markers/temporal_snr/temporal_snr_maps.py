@@ -3,9 +3,10 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any, Literal, Optional
 
 from ...api.decorators import register_marker
+from ...datagrabber import DataType
 from ..maps_aggregation import MapsAggregation
 from .temporal_snr_base import TemporalSNRBase
 
@@ -22,27 +23,18 @@ class TemporalSNRMaps(TemporalSNRBase):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    masks : str, dict or list of dict or str, optional
+    masks : list of dict or str, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     """
 
-    def __init__(
-        self,
-        maps: str,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.maps = maps
-        super().__init__(
-            masks=masks,
-            name=name,
-        )
+    maps: str
+    on: list[Literal[DataType.BOLD]] = [DataType.BOLD]  # noqa: RUF012
 
     def aggregate(
         self, input: dict[str, Any], extra_input: Optional[dict] = None
@@ -76,5 +68,5 @@ class TemporalSNRMaps(TemporalSNRBase):
         return MapsAggregation(
             maps=self.maps,
             masks=self.masks,
-            on="BOLD",
+            on=[DataType.BOLD],
         ).compute(input=input, extra_input=extra_input)

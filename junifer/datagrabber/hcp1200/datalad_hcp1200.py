@@ -6,11 +6,13 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Union
+from typing import Literal
 
-from junifer.datagrabber.datalad_base import DataladDataGrabber
+from pydantic import HttpUrl
 
 from ...api.decorators import register_datagrabber
+from ..base import DataType
+from ..datalad_base import DataladDataGrabber
 from .hcp1200 import HCP1200
 
 
@@ -23,50 +25,37 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
 
     Parameters
     ----------
-    datadir : str or Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    tasks : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
-            "LANGUAGE", "GAMBLING", "MOTOR"} or list of the options or None \
-            , optional
-        HCP task sessions. If None, all available task sessions are selected
-        (default None).
-    phase_encodings : {"LR", "RL"} or list of the options or None, optional
-        HCP phase encoding directions. If None, both will be used
-        (default None).
+    types : list of {``DataType.BOLD``, ``DataType.T1w``, ``DataType.Warp``}, \
+            optional
+        The data type(s) to grab.
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
+    tasks : list of :enum:`.HCP1200Task`, optional
+        HCP task sessions.
+        By default, all available task sessions are selected.
+    phase_encodings : list of :enum:`.HCP1200PhaseEncoding`, optional
+        HCP phase encoding directions.
+        By default, all are used.
     ica_fix : bool, optional
         Whether to retrieve data that was processed with ICA+FIX.
-        Only "REST1" and "REST2" tasks are available with ICA+FIX (default
-        False).
-
-    Raises
-    ------
-    ValueError
-        If invalid value is passed for ``tasks`` or ``phase_encodings``.
+        Only ``HCP1200Task.REST1`` and ``HCP1200Task.REST2`` tasks
+        are available with ICA+FIX
+        (default False).
 
     """
 
-    def __init__(
-        self,
-        datadir: Union[str, Path, None] = None,
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
-        ica_fix: bool = False,
-    ) -> None:
-        uri = (
-            "https://github.com/datalad-datasets/"
-            "human-connectome-project-openaccess.git"
-        )
-        rootdir = "HCP1200"
-        super().__init__(
-            datadir=datadir,
-            tasks=tasks,
-            phase_encodings=phase_encodings,
-            uri=uri,
-            rootdir=rootdir,
-            ica_fix=ica_fix,
-        )
+    uri: HttpUrl = HttpUrl(
+        "https://github.com/datalad-datasets/"
+        "human-connectome-project-openaccess.git"
+    )
+    types: list[Literal[DataType.BOLD, DataType.T1w, DataType.Warp]] = [  # noqa: RUF012
+        DataType.BOLD,
+        DataType.T1w,
+        DataType.Warp,
+    ]
+    rootdir: Path = Path("HCP1200")
 
     # Needed here as HCP1200's subjects are sub-datasets, so will not be
     # found when elements are checked.

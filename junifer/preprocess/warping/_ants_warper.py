@@ -12,9 +12,10 @@ import nibabel as nib
 import numpy as np
 
 from ...data import get_template, get_xfm
-from ...pipeline import WorkDirManager
+from ...pipeline import ExtDep, WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import raise_error, run_ext_cmd
+from ..base import logger
 
 
 __all__ = ["ANTsWarper"]
@@ -30,7 +31,7 @@ class ANTsWarper:
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "ants",
+            "name": ExtDep.ANTs,
             "commands": ["ResampleImage", "antsApplyTransforms"],
         },
     ]

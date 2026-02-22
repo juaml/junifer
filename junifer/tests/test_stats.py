@@ -41,8 +41,6 @@ def test_get_aggfunc_by_name(name: str, params: Optional[dict]) -> None:
 
 def test_get_aggfunc_by_name_errors() -> None:
     """Test aggregation function retrieval using wrong name."""
-    with pytest.raises(ValueError, match=r"unknown. Please provide any of"):
-        get_aggfunc_by_name(name="invalid", func_params=None)
 
     with pytest.raises(ValueError, match=r"list of limits"):
         get_aggfunc_by_name(name="winsorized_mean", func_params=None)

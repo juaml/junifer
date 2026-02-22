@@ -3,16 +3,18 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, ClassVar, Optional, Union
+from typing import Any, ClassVar, Literal, Optional, Union
 
 from nilearn.maskers import NiftiMapsMasker
 
 from ..api.decorators import register_marker
 from ..data import get_data
+from ..datagrabber import DataType
 from ..stats import get_aggfunc_by_name
+from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import logger, raise_error, warn_with_log
-from .base import BaseMarker
+from ..utils import raise_error, warn_with_log
+from .base import BaseMarker, logger
 
 
 __all__ = ["MapsAggregation"]
@@ -27,23 +29,26 @@ class MapsAggregation(BaseMarker):
     maps : str
         The name of the map(s) to use.
         See :func:`.list_data` for options.
-    time_method : str, optional
-        The method to use to aggregate the time series over the time points,
-        after aggregation (only applicable to BOLD data). If None,
+    time_method : str or None, optional
+        The aggregation function to use for time series after applying
+        :term:`method` (only applicable to BOLD data). If None,
         it will not operate on the time dimension (default None).
-    time_method_params : dict, optional
+    time_method_params : dict or None, optional
         The parameters to pass to the time aggregation method (default None).
-    masks : str, dict or list of dict or str, optional
+    on : list of {``DataType.T1w``, ``DataType.T2w``, ``DataType.BOLD``, \
+         ``DataType.VBM_GM``, ``DataType.VBM_WM``, ``DataType.VBM_CSF``, \
+         ``DataType.FALFF``, ``DataType.GCOR``, ``DataType.LCOR``} or None, \
+         optional
+        The data type(s) to apply the marker on.
+        If None, will work on all available data.
+        Check :enum:`.DataType` for valid values (default None).
+    masks : list of dict or str, or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    on : {"T1w", "T2w", "BOLD", "VBM_GM", "VBM_WM", "VBM_CSF", "fALFF", \
-        "GCOR", "LCOR"} or list of the options, optional
-        The data types to apply the marker to. If None, will work on all
-        available data (default None).
-    name : str, optional
-        The name of the marker. If None, will use the class name (default
-        None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     Raises
     ------
@@ -56,61 +61,68 @@ class MapsAggregation(BaseMarker):
     _DEPENDENCIES: ClassVar[Dependencies] = {"nilearn", "numpy"}
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
-        "T1w": {
-            "aggregation": "vector",
+        DataType.T1w: {
+            "aggregation": StorageType.Vector,
         },
-        "T2w": {
-            "aggregation": "vector",
+        DataType.T2w: {
+            "aggregation": StorageType.Vector,
         },
-        "BOLD": {
-            "aggregation": "timeseries",
+        DataType.BOLD: {
+            "aggregation": StorageType.Timeseries,
         },
-        "VBM_GM": {
-            "aggregation": "vector",
+        DataType.VBM_GM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_WM": {
-            "aggregation": "vector",
+        DataType.VBM_WM: {
+            "aggregation": StorageType.Vector,
         },
-        "VBM_CSF": {
-            "aggregation": "vector",
+        DataType.VBM_CSF: {
+            "aggregation": StorageType.Vector,
         },
-        "fALFF": {
-            "aggregation": "vector",
+        DataType.FALFF: {
+            "aggregation": StorageType.Vector,
         },
-        "GCOR": {
-            "aggregation": "vector",
+        DataType.GCOR: {
+            "aggregation": StorageType.Vector,
         },
-        "LCOR": {
-            "aggregation": "vector",
+        DataType.LCOR: {
+            "aggregation": StorageType.Vector,
         },
     }
 
-    def __init__(
-        self,
-        maps: str,
-        time_method: Optional[str] = None,
-        time_method_params: Optional[dict[str, Any]] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        on: Union[list[str], str, None] = None,
-        name: Optional[str] = None,
-    ) -> None:
-        self.maps = maps
-        self.masks = masks
-        super().__init__(on=on, name=name)
+    maps: str
+    time_method: Optional[str] = None
+    time_method_params: Optional[dict[str, Any]] = None
+    masks: Optional[list[Union[dict, str]]] = None
+    on: Optional[
+        list[
+            Literal[
+                DataType.T1w,
+                DataType.T2w,
+                DataType.BOLD,
+                DataType.VBM_GM,
+                DataType.VBM_WM,
+                DataType.VBM_CSF,
+                DataType.FALFF,
+                DataType.GCOR,
+                DataType.LCOR,
+            ]
+        ]
+    ] = None
 
-        # Verify after super init so self._on is set
-        if "BOLD" not in self._on and time_method is not None:
+    def validate_marker_params(self) -> None:
+        """Run extra logical validation for marker."""
+        # self.on is set already
+        if "BOLD" not in self.on and self.time_method is not None:
             raise_error(
                 "`time_method` can only be used with BOLD data. "
                 "Please remove `time_method` parameter."
             )
-        if time_method is None and time_method_params is not None:
+        if self.time_method is None and self.time_method_params is not None:
             raise_error(
                 "`time_method_params` can only be used with `time_method`. "
                 "Please remove `time_method_params` parameter."
             )
-        self.time_method = time_method
-        self.time_method_params = time_method_params or {}
 
     def compute(
         self, input: dict[str, Any], extra_input: Optional[dict] = None

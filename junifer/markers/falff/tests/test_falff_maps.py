@@ -7,11 +7,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
-from junifer.markers import ALFFMaps
+from junifer.markers import ALFFImpl, ALFFMaps
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import HDF5FeatureStorage
@@ -38,8 +38,8 @@ def test_ALFFMaps_storage_type(feature: str) -> None:
     """
     assert "vector" == ALFFMaps(
         maps=MAPS,
-        using="junifer",
-    ).storage_type(input_type="BOLD", output_feature=feature)
+        using=ALFFImpl.junifer,
+    ).storage_type(input_type=DataType.BOLD, output_feature=feature)
 
 
 def test_ALFFMaps(
@@ -70,12 +70,12 @@ def test_ALFFMaps(
             # Initialize marker
             marker = ALFFMaps(
                 maps=MAPS,
-                using="junifer",
+                using=ALFFImpl.junifer,
             )
             # Check correct output
             for name in ["alff", "falff"]:
                 assert "vector" == marker.storage_type(
-                    input_type="BOLD", output_feature=name
+                    input_type=DataType.BOLD, output_feature=name
                 )
 
             # Fit transform marker on data
@@ -99,7 +99,7 @@ def test_ALFFMaps(
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = HDF5FeatureStorage(tmp_path / "falff_maps.hdf5")
+            storage = HDF5FeatureStorage(uri=tmp_path / "falff_maps.hdf5")
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -141,7 +141,7 @@ def test_ALFFMaps_comparison(
         # Initialize marker
         junifer_marker = ALFFMaps(
             maps=MAPS,
-            using="junifer",
+            using=ALFFImpl.junifer,
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -151,7 +151,7 @@ def test_ALFFMaps_comparison(
         # Initialize marker
         afni_marker = ALFFMaps(
             maps=MAPS,
-            using="afni",
+            using=ALFFImpl.afni,
         )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
@@ -160,7 +160,7 @@ def test_ALFFMaps_comparison(
 
         for feature in afni_output_bold.keys():
             # Check for Pearson correlation coefficient
-            r, _ = sp.stats.pearsonr(
+            r, _ = sps.pearsonr(
                 junifer_output_bold[feature]["data"][0],
                 afni_output_bold[feature]["data"][0],
             )

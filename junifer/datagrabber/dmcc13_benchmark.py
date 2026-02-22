@@ -3,16 +3,58 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from enum import Enum
 from itertools import product
-from pathlib import Path
-from typing import Union
+from typing import Literal
+
+from pydantic import HttpUrl
 
 from ..api.decorators import register_datagrabber
-from ..utils import raise_error
+from ..typing import DataGrabberPatterns
+from .base import DataType
+from .pattern import ConfoundsFormat
 from .pattern_datalad import PatternDataladDataGrabber
 
 
-__all__ = ["DMCC13Benchmark"]
+__all__ = [
+    "DMCC13Benchmark",
+    "DMCCPhaseEncoding",
+    "DMCCRun",
+    "DMCCSession",
+    "DMCCTask",
+]
+
+
+class DMCCSession(str, Enum):
+    """Accepted DMCC sessions."""
+
+    Wave1Bas = "ses-wave1bas"
+    Wave1Pro = "ses-wave1pro"
+    Wave1Rea = "ses-wave1rea"
+
+
+class DMCCTask(str, Enum):
+    """Accepted DMCC tasks."""
+
+    Rest = "Rest"
+    Axcpt = "Axcpt"
+    Cuedts = "Cuedts"
+    Stern = "Stern"
+    Stroop = "Stroop"
+
+
+class DMCCPhaseEncoding(str, Enum):
+    """Accepted DMCC phase encoding directions."""
+
+    AP = "AP"
+    PA = "PA"
+
+
+class DMCCRun(str, Enum):
+    """Accepted DMCC runs."""
+
+    One = "1"
+    Two = "2"
 
 
 @register_datagrabber
@@ -21,191 +63,145 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
 
     Parameters
     ----------
-    datadir : str or Path or None, optional
-        The directory where the datalad dataset will be cloned. If None,
-        the datalad dataset will be cloned into a temporary directory
-        (default None).
-    types: {"BOLD", "T1w", "VBM_CSF", "VBM_GM", "VBM_WM"} or \
-           list of the options, optional
-        DMCC data types. If None, all available data types are selected.
-        (default None).
-    sessions: {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"} or \
-              list of the options, optional
-        DMCC sessions. If None, all available sessions are selected
-        (default None).
-    tasks: {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"} or \
-           list of the options, optional
-        DMCC task sessions. If None, all available task sessions are selected
-        (default None).
-    phase_encodings : {"AP", "PA"} or list of the options, optional
-        DMCC phase encoding directions. If None, all available phase encodings
-        are selected (default None).
-    runs : {"1", "2"} or list of the options, optional
-        DMCC runs. If None, all available runs are selected (default None).
+    types : list of {``DataType.BOLD``, ``DataType.T1w``, \
+            ``DataType.VBM_CSF``, ``DataType.VBM_GM``, ``DataType.VBM_WM``, \
+            ``DataType.Warp``}, optional
+        The data type(s) to grab.
+    datadir : pathlib.Path, optional
+        That path where the datalad dataset will be cloned.
+        If not specified, the datalad dataset will be cloned into a temporary
+        directory.
+    sessions : list of :enum:`.DMCCSession`, optional
+        DMCC sessions.
+        By default, all available sessions are selected.
+    tasks : list of :enum:`.DMCCTask`, optional
+        DMCC tasks.
+        By default, all available tasks are selected.
+    phase_encodings : list of :enum:`.DMCCPhaseEncoding`, optional
+        DMCC phase encoding directions.
+        By default, all available phase encodings are selected.
+    runs : list of :enum:`.DMCCRun`, optional
+        DMCC runs.
+        By default, all available runs are selected.
     native_t1w : bool, optional
         Whether to use T1w in native space (default False).
 
-    Raises
-    ------
-    ValueError
-        If invalid value is passed for:
-         * ``sessions``
-         * ``tasks``
-         * ``phase_encodings``
-         * ``runs``
-
     """
 
-    def __init__(
-        self,
-        datadir: Union[str, Path, None] = None,
-        types: Union[str, list[str], None] = None,
-        sessions: Union[str, list[str], None] = None,
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
-        runs: Union[str, list[str], None] = None,
-        native_t1w: bool = False,
-    ) -> None:
-        # Declare all sessions
-        all_sessions = [
-            "ses-wave1bas",
-            "ses-wave1pro",
-            "ses-wave1rea",
+    uri: HttpUrl = HttpUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
+    types: list[
+        Literal[
+            DataType.BOLD,
+            DataType.T1w,
+            DataType.VBM_CSF,
+            DataType.VBM_GM,
+            DataType.VBM_WM,
+            DataType.Warp,
         ]
-        # Set default sessions
-        if sessions is None:
-            sessions = all_sessions
-        else:
-            # Convert single session into list
-            if isinstance(sessions, str):
-                sessions = [sessions]
-            # Verify valid sessions
-            for s in sessions:
-                if s not in all_sessions:
-                    raise_error(
-                        f"{s} is not a valid session in the DMCC dataset"
-                    )
-        self.sessions = sessions
-        # Declare all tasks
-        all_tasks = [
-            "Rest",
-            "Axcpt",
-            "Cuedts",
-            "Stern",
-            "Stroop",
-        ]
-        # Set default tasks
-        if tasks is None:
-            tasks = all_tasks
-        else:
-            # Convert single task into list
-            if isinstance(tasks, str):
-                tasks = [tasks]
-            # Verify valid tasks
-            for t in tasks:
-                if t not in all_tasks:
-                    raise_error(f"{t} is not a valid task in the DMCC dataset")
-        self.tasks = tasks
-        # Declare all phase encodings
-        all_phase_encodings = ["AP", "PA"]
-        # Set default phase encodings
-        if phase_encodings is None:
-            phase_encodings = all_phase_encodings
-        else:
-            # Convert single phase encoding into list
-            if isinstance(phase_encodings, str):
-                phase_encodings = [phase_encodings]
-            # Verify valid phase encodings
-            for p in phase_encodings:
-                if p not in all_phase_encodings:
-                    raise_error(
-                        f"{p} is not a valid phase encoding in the DMCC "
-                        "dataset"
-                    )
-        self.phase_encodings = phase_encodings
-        # Declare all runs
-        all_runs = ["1", "2"]
-        # Set default runs
-        if runs is None:
-            runs = all_runs
-        else:
-            # Convert single run into list
-            if isinstance(runs, str):
-                runs = [runs]
-            # Verify valid runs
-            for r in runs:
-                if r not in all_runs:
-                    raise_error(f"{r} is not a valid run in the DMCC dataset")
-        self.runs = runs
-        # The patterns
-        patterns = {
-            "BOLD": {
+    ] = [  # noqa: RUF012
+        DataType.BOLD,
+        DataType.T1w,
+        DataType.VBM_CSF,
+        DataType.VBM_GM,
+        DataType.VBM_WM,
+    ]
+    sessions: list[DMCCSession] = [  # noqa: RUF012
+        DMCCSession.Wave1Bas,
+        DMCCSession.Wave1Pro,
+        DMCCSession.Wave1Rea,
+    ]
+    tasks: list[DMCCTask] = [  # noqa: RUF012
+        DMCCTask.Rest,
+        DMCCTask.Axcpt,
+        DMCCTask.Cuedts,
+        DMCCTask.Stern,
+        DMCCTask.Stroop,
+    ]
+    phase_encodings: list[DMCCPhaseEncoding] = [  # noqa: RUF012
+        DMCCPhaseEncoding.AP,
+        DMCCPhaseEncoding.PA,
+    ]
+    runs: list[DMCCRun] = [  # noqa: RUF012
+        DMCCRun.One,
+        DMCCRun.Two,
+    ]
+    native_t1w: bool = False
+    patterns: DataGrabberPatterns = {  # noqa: RUF012
+        "BOLD": {
+            "pattern": (
+                "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                "func/{subject}_{session}_task-{task}_acq-mb4"
+                "{phase_encoding}_run-{run}_"
+                "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
+            ),
+            "space": "MNI152NLin2009cAsym",
+            "mask": {
                 "pattern": (
                     "derivatives/fmriprep-1.3.2/{subject}/{session}/"
                     "func/{subject}_{session}_task-{task}_acq-mb4"
                     "{phase_encoding}_run-{run}_"
-                    "space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz"
+                    "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
-                "mask": {
-                    "pattern": (
-                        "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                        "func/{subject}_{session}_task-{task}_acq-mb4"
-                        "{phase_encoding}_run-{run}_"
-                        "space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-                    ),
-                    "space": "MNI152NLin2009cAsym",
-                },
-                "confounds": {
-                    "pattern": (
-                        "derivatives/fmriprep-1.3.2/{subject}/{session}/"
-                        "func/{subject}_{session}_task-{task}_acq-mb4"
-                        "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
-                    ),
-                    "format": "fmriprep",
-                },
             },
-            "T1w": {
+            "confounds": {
+                "pattern": (
+                    "derivatives/fmriprep-1.3.2/{subject}/{session}/"
+                    "func/{subject}_{session}_task-{task}_acq-mb4"
+                    "{phase_encoding}_run-{run}_desc-confounds_regressors.tsv"
+                ),
+                "format": "fmriprep",
+            },
+        },
+        "T1w": {
+            "pattern": (
+                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                "{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
+            ),
+            "space": "MNI152NLin2009cAsym",
+            "mask": {
                 "pattern": (
                     "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
-                "mask": {
-                    "pattern": (
-                        "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                        "{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
-                    ),
-                    "space": "MNI152NLin2009cAsym",
-                },
-            },
-            "VBM_CSF": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
+                    "{subject}_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
                 ),
                 "space": "MNI152NLin2009cAsym",
             },
-            "VBM_GM": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
-            },
-            "VBM_WM": {
-                "pattern": (
-                    "derivatives/fmriprep-1.3.2/{subject}/anat/"
-                    "{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
-                ),
-                "space": "MNI152NLin2009cAsym",
-            },
-        }
-        # Use native T1w assets
-        self.native_t1w = False
-        if native_t1w:
-            self.native_t1w = True
-            patterns.update(
+        },
+        "VBM_CSF": {
+            "pattern": (
+                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                "{subject}_space-MNI152NLin2009cAsym_label-CSF_probseg.nii.gz"
+            ),
+            "space": "MNI152NLin2009cAsym",
+        },
+        "VBM_GM": {
+            "pattern": (
+                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                "{subject}_space-MNI152NLin2009cAsym_label-GM_probseg.nii.gz"
+            ),
+            "space": "MNI152NLin2009cAsym",
+        },
+        "VBM_WM": {
+            "pattern": (
+                "derivatives/fmriprep-1.3.2/{subject}/anat/"
+                "{subject}_space-MNI152NLin2009cAsym_label-WM_probseg.nii.gz"
+            ),
+            "space": "MNI152NLin2009cAsym",
+        },
+    }
+    replacements: list[str] = [  # noqa: RUF012
+        "subject",
+        "session",
+        "task",
+        "phase_encoding",
+        "run",
+    ]
+    confounds_format: ConfoundsFormat = ConfoundsFormat.FMRIPrep
+
+    def validate_datagrabber_params(self) -> None:
+        """Run extra logical validation for datagrabber."""
+        if self.native_t1w:
+            self.patterns.update(
                 {
                     "T1w": {
                         "pattern": (
@@ -245,24 +241,8 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                     ],
                 }
             )
-        # Set default types
-        if types is None:
-            types = list(patterns.keys())
-        # Convert single type into list
-        else:
-            if not isinstance(types, list):
-                types = [types]
-        # The replacements
-        replacements = ["subject", "session", "task", "phase_encoding", "run"]
-        uri = "https://github.com/OpenNeuroDatasets/ds003452.git"
-        super().__init__(
-            types=types,
-            datadir=datadir,
-            uri=uri,
-            patterns=patterns,
-            replacements=replacements,
-            confounds_format="fmriprep",
-        )
+            self.types.append(DataType.Warp)
+        super().validate_datagrabber_params()
 
     def get_item(
         self,
@@ -272,7 +252,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         phase_encoding: str,
         run: str,
     ) -> dict:
-        """Index one element in the dataset.
+        """Get the specified item from the dataset.
 
         Parameters
         ----------

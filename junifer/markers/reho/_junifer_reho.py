@@ -19,8 +19,9 @@ from nilearn import masking as nmask
 
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import logger, raise_error
+from ...utils import raise_error
 from ...utils.singleton import Singleton
+from ..base import logger
 
 
 if TYPE_CHECKING:

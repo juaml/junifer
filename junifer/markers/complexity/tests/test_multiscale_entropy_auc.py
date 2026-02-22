@@ -11,6 +11,7 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.complexity import MultiscaleEntropyAUC
 from junifer.pipeline.utils import _check_ants
@@ -21,7 +22,7 @@ from junifer.testing.datagrabbers import (
 
 
 # Set parcellation
-PARCELLATION = "Schaefer100x17"
+PARCELLATION = ["Schaefer100x17"]
 
 
 @pytest.mark.skipif(
@@ -46,7 +47,7 @@ def test_storage_type() -> None:
     """Test MultiscaleEntropyAUC storage_type."""
     assert "vector" == MultiscaleEntropyAUC(
         parcellation=PARCELLATION
-    ).storage_type(input_type="BOLD", output_feature="complexity")
+    ).storage_type(input_type=DataType.BOLD, output_feature="complexity")
 
 
 @pytest.mark.skipif(
