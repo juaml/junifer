@@ -481,16 +481,22 @@ class MaskRegistry(BasePipelineDataRegistry):
 
         # Extra data type requirement check if target space is native
         if target_space == "native":
+            # Fix for having dict in masks; flatten the dict keys for set
+            # conversion
+            ms = [
+                next(iter(x.keys())) if isinstance(x, dict) else x
+                for x in masks
+            ]
             # Check for in-built callable masks so that get_native_warper is
             # not called in case only callable masks are used
             if (
-                set(masks) == {nilearn_callable_masks[0]}
-                or set(masks) == {nilearn_callable_masks[1]}
-                or set(masks) == set(nilearn_callable_masks)
+                set(ms) == {nilearn_callable_masks[0]}
+                or set(ms) == {nilearn_callable_masks[1]}
+                or set(ms) == set(nilearn_callable_masks)
             ):
                 logger.debug(
                     "Target space is native. "
-                    f"No warping will be done for: {masks}"
+                    f"No warping will be done for: {ms}"
                 )
             else:
                 # Check for extra inputs
