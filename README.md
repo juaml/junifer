@@ -77,7 +77,7 @@ If you use `junifer` in a scientific publication, we would appreciate if you cit
 ## Funding
 
 We thank the [Helmholtz Imaging Platform](https://helmholtz-imaging.de/) and
-[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of `junifer`.
+[SMHB](https://www.fz-juelich.de/en/smhb) for supporting development of `junifer`. Development of this software was funded, in part, by the European Union’s Horizon Europe Framework Programme for Research infrastructures under the [specific grant agreement no. 101147319](https://cordis.europa.eu/project/id/101147319) (EBRAINS 2.0).
 (The funding sources had no role in the design, implementation and evaluation of the pipeline.)
 
 ## Contribution
