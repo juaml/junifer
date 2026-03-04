@@ -78,5 +78,5 @@ RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
 # Checkout latest junifer code and install
 RUN git clone --depth 1 https://github.com/juaml/junifer.git && \
     cd junifer && \
-    python -m pip install --no-cache-dir .[all] && \
+    python -m pip install --no-cache-dir ".[all]" && \
     cd .. && rm -rf junifer
