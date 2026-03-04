@@ -76,7 +76,7 @@ RUN apt-get autoremove --purge && apt-get clean
 RUN python -m pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Checkout latest junifer code and install
-RUN git clone --depth 1 https://github.com/juaml/junifer.git && \
+RUN git clone --depth 1 --recurse-submodules https://github.com/juaml/junifer.git && \
     cd junifer && \
     python -m pip install --no-cache-dir ".[all]" && \
     cd .. && rm -rf junifer
