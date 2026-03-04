@@ -10,6 +10,125 @@ What's new
 
 .. towncrier release notes start
 
+Junifer 0.0.7 (2026-03-04)
+--------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Allow ``timeseries_2d`` storage for :class:`.HDF5FeatureStorage` by `Fede
+  Raimondo`_ (:gh:`444`)
+- Fix FSL presence checking status code by `Fede Raimondo`_ (:gh:`454`)
+- Bypass warper check for callable masks on native data by `Synchon Mandal`_
+  (:gh:`481`)
+- Fix mask specification check involving dicts in
+  :class:`junifer.data.MaskRegistry` when working in native space by `Synchon
+  Mandal`_ (:gh:`487`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- ``fname``, ``overwrite`` and ``output_format`` have been removed from
+  :func:`.configure_logging` by `Synchon Mandal`_ (:gh:`231`)
+- ``ParcellationRegistry.get`` now returns labels as dictionary mapping from
+  values to labels instead of a list of labels by `Synchon Mandal`_ (:gh:`257`)
+- :func:`.read_transform` has a new parameter ``nan_policy`` to handle NaN
+  values when transforming feature data by `Fede Raimondo`_ (:gh:`429`)
+- :func:`.get_data`, :func:`.load_data`, :func:`.list_data`,
+  :func:`.register_data` and :func:`.deregister_data` now support ``"maps"`` as
+  a valid argument for ``kind`` by `Synchon Mandal`_ (:gh:`458`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Add documentation on extending data registries by `Synchon Mandal`_
+  (:gh:`450`)
+- Add documentation on adding data types by `Synchon Mandal`_ (:gh:`451`)
+- Add documentation on :class:`.ConfigManager`, dumping data object and
+  extending data dump assets by `Synchon Mandal`_ (:gh:`452`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Allow parcellation registration with non-continuous ranges as values by
+  `Synchon Mandal`_ (:gh:`257`)
+- Add support for Chatterjee's xi correlation in
+  :class:`.JuniferConnectivityMeasure` by `Synchon Mandal`_ (:gh:`333`)
+- Implement a NaN policy for :func:`.read_transform` by `Fede Raimondo`_
+  (:gh:`429`)
+- Add FreeSurfer 7.4.1 aseg parcellation to :class:`.ParcellationRegistry` by
+  `Synchon Mandal`_ (:gh:`470`)
+- Simplify ``Storage`` interface and implementations by `Synchon Mandal`_
+  (:gh:`472`)
+- Simplify ``Preprocess`` interface and implementations by `Synchon Mandal`_
+  (:gh:`473`)
+- Simplify :class:`.PipelineStepMixin` interface by `Synchon Mandal`_
+  (:gh:`476`)
+- Improve ``Marker`` interface and implementations by `Synchon Mandal`_
+  (:gh:`477`)
+- Add Glasser and Julich-Brain parcellations to :class:`.ParcellationRegistry`
+  by `Synchon Mandal`_ (:gh:`486`)
+
+
+Features
+^^^^^^^^
+
+- Introduce :class:`.TemporalFilter` preprocessor for temporally filtering BOLD
+  data by `Fede Raimondo`_ (:gh:`432`)
+- Introduce :class:`.TemporalSlicer` preprocessor for temporally slicing BOLD
+  data by `Synchon Mandal`_ (:gh:`443`)
+- Enable data registries to be extended by exposing
+  :class:`.BasePipelineDataRegistry` and introducing
+  :func:`.register_data_registry` decorator by `Synchon Mandal`_ (:gh:`450`)
+- Enable data types to be added by introducing :func:`.register_data_type` by
+  `Synchon Mandal`_ (:gh:`451`)
+- Allow pipeline data object to be dumped by introducing
+  :class:`.DataObjectDumper` and available dumping / loading assets to be
+  extended by introducing :func:`.register_data_dump_asset` decorator by
+  `Synchon Mandal`_ (:gh:`452`)
+- Introduce :class:`.MapsRegistry` to centralise probabilistic atlas (maps)
+  data management by `Synchon Mandal`_ (:gh:`458`)
+- Introduce :class:`.MapsAggregation`, :class:`.FunctionalConnectivityMaps`,
+  :class:`.EdgeCentricFCMaps`, :class:`.ReHoMaps`, :class:`.ALFFMaps` and
+  :class:`.TemporalSNRMaps` by `Synchon Mandal`_ (:gh:`460`)
+- Enable :class:`.SpaceWarper` to warp data from native space to template
+  spaces via both FSL and ANTs by `Synchon Mandal`_ (:gh:`462`)
+
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Adopt ``structlog`` for logging infrastructure by `Synchon Mandal`_
+  (:gh:`231`)
+- Regular repository maintenance by updating ``.pre-commit-config.yaml``,
+  replacing ``black`` with ``ruff-format`` and updating tool configs by
+  `Synchon Mandal`_ (:gh:`441`)
+- Bump ``junifer-data`` to ``v3`` for Docker images by `Synchon Mandal`_
+  (:gh:`456`)
+- Bump ``junifer-data`` to ``v3`` by `Synchon Mandal`_ (:gh:`457`)
+- Constrain ``templateflow`` version to ``>=23.0.0,<25.0.0`` by `Synchon
+  Mandal`_ (:gh:`458`)
+- Add a new GitHub Action to mark stale issues by `Synchon Mandal`_ (:gh:`464`)
+- Bump ``junifer-data`` to ``v4`` for Docker images by `Synchon Mandal`_
+  (:gh:`465`)
+- Bump ``junifer-data`` to ``v4`` by `Synchon Mandal`_ (:gh:`466`)
+- Disable FSL installation for ``junifer-ci`` Docker image build with
+  ``junifer-data`` v4 by `Synchon Mandal`_ (:gh:`467`)
+- Pin ``junifer-ci`` Docker image to ``python:3.12-slim-bookworm`` and
+  re-enable FSL installation by `Synchon Mandal`_ (:gh:`468`)
+- Bump ``junifer-data`` to ``v5`` by `Synchon Mandal`_ (:gh:`470`)
+- Bump ``junifer-data`` to ``v6`` for Docker images by `Synchon Mandal`_
+  (:gh:`483`)
+- Bump ``junifer-data`` to ``v7`` for Docker images by `Synchon Mandal`_
+  (:gh:`485`)
+- Bump ``junifer-data`` to ``v7`` by `Synchon Mandal`_ (:gh:`486`)
+- Add Dockerfile and a corresponding action for building and publishing the
+  image by `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`489`)
+
+
 Junifer 0.0.6 (2025-03-24)
 --------------------------
 
