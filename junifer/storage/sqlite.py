@@ -5,7 +5,6 @@
 # License: AGPL
 
 import json
-from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 

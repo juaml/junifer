@@ -1456,7 +1456,7 @@ def _retrieve_aseg(
 
 
 def _retrieve_glasser(
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
 ) -> tuple[Path, list[str]]:
     """Retrieve Glasser v1.0 .
 
@@ -1500,7 +1500,7 @@ def _retrieve_glasser(
 
 
 def _retrieve_julich_brain(
-    resolution: Optional[float] = None,
+    resolution: float | None = None,
     version: str = "v3_1",
 ) -> tuple[Path, list[str]]:
     """Retrieve Julich-Brain labelled parcellations.
