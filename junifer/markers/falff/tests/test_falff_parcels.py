@@ -8,10 +8,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff import ALFFParcels
+from junifer.markers import ALFFImpl, ALFFParcels
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
@@ -39,8 +40,8 @@ def test_ALFFParcels_storage_type(feature: str) -> None:
     """
     assert "vector" == ALFFParcels(
         parcellation=PARCELLATION,
-        using="junifer",
-    ).storage_type(input_type="BOLD", output_feature=feature)
+        using=ALFFImpl.junifer,
+    ).storage_type(input_type=DataType.BOLD, output_feature=feature)
 
 
 def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
@@ -63,7 +64,7 @@ def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Initialize marker
             marker = ALFFParcels(
                 parcellation=PARCELLATION,
-                using="junifer",
+                using=ALFFImpl.junifer,
             )
             # Fit transform marker on data
             output = marker.fit_transform(element_data)
@@ -86,7 +87,9 @@ def test_ALFFParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = SQLiteFeatureStorage(tmp_path / "falff_parcels.sqlite")
+            storage = SQLiteFeatureStorage(
+                uri=tmp_path / "falff_parcels.sqlite"
+            )
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -116,7 +119,7 @@ def test_ALFFParcels_comparison(tmp_path: Path) -> None:
         # Initialize marker
         junifer_marker = ALFFParcels(
             parcellation=PARCELLATION,
-            using="junifer",
+            using=ALFFImpl.junifer,
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -126,7 +129,7 @@ def test_ALFFParcels_comparison(tmp_path: Path) -> None:
         # Initialize marker
         afni_marker = ALFFParcels(
             parcellation=PARCELLATION,
-            using="afni",
+            using=ALFFImpl.afni,
         )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
@@ -135,7 +138,7 @@ def test_ALFFParcels_comparison(tmp_path: Path) -> None:
 
         for feature in afni_output_bold.keys():
             # Check for Pearson correlation coefficient
-            r, _ = sp.stats.pearsonr(
+            r, _ = sps.pearsonr(
                 junifer_output_bold[feature]["data"][0],
                 afni_output_bold[feature]["data"][0],
             )

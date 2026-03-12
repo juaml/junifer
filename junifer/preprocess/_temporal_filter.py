@@ -7,6 +7,7 @@
 
 from collections.abc import Sequence
 from typing import (
+    Annotated,
     Any,
     ClassVar,
 )
@@ -14,12 +15,14 @@ from typing import (
 import nibabel as nib
 from nilearn import image as nimg
 from nilearn._utils.niimg_conversions import check_niimg_4d
+from pydantic import BeforeValidator
 
 from ..api.decorators import register_preprocessor
 from ..data import get_data
+from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
-from ..utils import logger
+from ..utils import ensure_list_or_none, logger
 from .base import BasePreprocessor
 
 
@@ -47,7 +50,7 @@ class TemporalFilter(BasePreprocessor):
     t_r : float, optional
         Repetition time, in second (sampling period).
         If None, it will use t_r from nifti header (default None).
-    masks : str, dict or list of dict or str, optional
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
@@ -55,26 +58,17 @@ class TemporalFilter(BasePreprocessor):
     """
 
     _DEPENDENCIES: ClassVar[Dependencies] = {"numpy", "nilearn"}
-    _VALID_DATA_TYPES: ClassVar[Sequence[str]] = ["BOLD"]
+    _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
-    def __init__(
-        self,
-        detrend: bool = True,
-        standardize: bool = True,
-        low_pass: float | None = None,
-        high_pass: float | None = None,
-        t_r: float | None = None,
-        masks: str | dict | list[dict | str] | None = None,
-    ) -> None:
-        """Initialize the class."""
-        self.detrend = detrend
-        self.standardize = standardize
-        self.low_pass = low_pass
-        self.high_pass = high_pass
-        self.t_r = t_r
-        self.masks = masks
-
-        super().__init__()
+    detrend: bool = True
+    standardize: bool = True
+    low_pass: float | None = None
+    high_pass: float | None = None
+    t_r: float | None = None
+    masks: Annotated[
+        dict | str | list[dict | str] | None,
+        BeforeValidator(ensure_list_or_none),
+    ] = None
 
     def _validate_data(
         self,
