@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional
-
 import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
@@ -25,7 +23,7 @@ from junifer.stats import count, get_aggfunc_by_name, select, winsorized_mean
         ("mode", {"keepdims": True}),
     ],
 )
-def test_get_aggfunc_by_name(name: str, params: Optional[dict]) -> None:
+def test_get_aggfunc_by_name(name: str, params: dict | None) -> None:
     """Test aggregation function retrieval by name.
 
     Parameters

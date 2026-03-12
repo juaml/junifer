@@ -15,7 +15,7 @@ else:
 import logging
 import logging.config
 import warnings
-from typing import NoReturn, Optional, Union
+from typing import NoReturn
 from warnings import warn
 
 import datalad
@@ -210,8 +210,8 @@ def log_versions() -> None:
 
 
 def configure_logging(
-    level: Union[int, str] = "WARNING",
-    level_datalad: Union[int, str, None] = None,
+    level: int | str = "WARNING",
+    level_datalad: int | str | None = None,
 ) -> None:
     """Configure the logging functionality.
 
@@ -246,7 +246,7 @@ def configure_logging(
 def raise_error(
     msg: str,
     klass: type[Exception] = ValueError,
-    exception: Optional[Exception] = None,
+    exception: Exception | None = None,
 ) -> NoReturn:
     """Raise error, but first log it.
 
@@ -268,7 +268,7 @@ def raise_error(
 
 
 def warn_with_log(
-    msg: str, category: Optional[type[Warning]] = RuntimeWarning
+    msg: str, category: type[Warning] | None = RuntimeWarning
 ) -> None:
     """Warn, but first log it.
 

@@ -7,7 +7,6 @@ from typing import (
     Any,
     ClassVar,
     Literal,
-    Union,
 )
 
 import nibabel as nib
@@ -34,7 +33,7 @@ class NilearnSmoothing:
     def preprocess(
         self,
         input: dict[str, Any],
-        fwhm: Union[int, float, ArrayLike, Literal["fast"], None],
+        fwhm: int | float | ArrayLike | Literal["fast"] | None,
     ) -> dict[str, Any]:
         """Preprocess using nilearn.
 

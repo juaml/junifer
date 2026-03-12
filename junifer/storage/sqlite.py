@@ -5,9 +5,8 @@
 # License: AGPL
 
 import json
-from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -57,7 +56,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     def __init__(
         self,
-        uri: Union[str, Path],
+        uri: str | Path,
         single_output: bool = True,
         upsert: str = "update",
     ) -> None:
@@ -75,7 +74,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             single_output=single_output,
         )
 
-    def get_engine(self, element: Optional[dict] = None) -> "Engine":
+    def get_engine(self, element: dict | None = None) -> "Engine":
         """Get engine.
 
         Parameters
@@ -109,7 +108,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     def _save_upsert(
         self,
-        df: Union[pd.DataFrame, pd.Series],
+        df: pd.DataFrame | pd.Series,
         name: str,
         engine: Optional["Engine"] = None,
         if_exists: str = "append",
@@ -225,11 +224,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     def read(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
-    ) -> dict[
-        str, Union[str, list[Union[int, str, dict[str, str]]], np.ndarray]
-    ]:
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
+    ) -> dict[str, str | list[int | str | dict[str, str]] | np.ndarray]:
         """Read stored feature.
 
         Parameters
@@ -261,8 +258,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     def read_df(
         self,
-        feature_name: Optional[str] = None,
-        feature_md5: Optional[str] = None,
+        feature_name: str | None = None,
+        feature_md5: str | None = None,
     ) -> pd.DataFrame:
         """Implement feature reading into a pandas DataFrame.
 
@@ -370,7 +367,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             self._save_upsert(meta_df, "meta", engine)
 
     def store_df(
-        self, meta_md5: str, element: dict, df: Union[pd.DataFrame, pd.Series]
+        self, meta_md5: str, element: dict, df: pd.DataFrame | pd.Series
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -425,8 +422,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         meta_md5: str,
         element: dict,
         data: np.ndarray,
-        col_names: Optional[Sequence[str]] = None,
-        row_names: Optional[Sequence[str]] = None,
+        col_names: list[str] | None = None,
+        row_names: list[str] | None = None,
         matrix_kind: str = "full",
         diagonal: bool = True,
     ) -> None:

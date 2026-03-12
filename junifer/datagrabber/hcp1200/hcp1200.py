@@ -7,7 +7,6 @@
 
 from itertools import product
 from pathlib import Path
-from typing import Union
 
 from ...api.decorators import register_datagrabber
 from ...utils import raise_error
@@ -47,9 +46,9 @@ class HCP1200(PatternDataGrabber):
 
     def __init__(
         self,
-        datadir: Union[str, Path],
-        tasks: Union[str, list[str], None] = None,
-        phase_encodings: Union[str, list[str], None] = None,
+        datadir: str | Path,
+        tasks: str | list[str] | None = None,
+        phase_encodings: str | list[str] | None = None,
         ica_fix: bool = False,
     ) -> None:
         # All tasks

@@ -8,7 +8,7 @@
 import logging
 from contextlib import AbstractContextManager, nullcontext
 from pathlib import Path
-from typing import Any, Optional, Union
+from typing import Any
 
 import pytest
 from nibabel.filebasedimages import ImageFileError
@@ -516,7 +516,7 @@ def test_queue_with_imports(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     caplog: pytest.LogCaptureFixture,
-    with_: Union[str, list[str]],
+    with_: str | list[str],
 ) -> None:
     """Test queue with `with` imports.
 
@@ -742,7 +742,7 @@ def test_reset_queue(
 )
 def test_list_elements(
     datagrabber: dict[str, str],
-    elements: Optional[list[tuple[str, ...]]],
+    elements: list[tuple[str, ...]] | None,
 ) -> None:
     """Test elements listing.
 

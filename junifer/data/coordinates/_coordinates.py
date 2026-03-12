@@ -5,7 +5,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -135,7 +135,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry):
         coordinates: ArrayLike,
         voi_names: list[str],
         space: str,
-        overwrite: Optional[bool] = False,
+        overwrite: bool | None = False,
     ) -> None:
         """Register a custom user coordinates.
 
@@ -302,7 +302,7 @@ class CoordinatesRegistry(BasePipelineDataRegistry):
         self,
         coords: str,
         target_data: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> tuple[ArrayLike, list[str]]:
         """Get coordinates, tailored for the target data.
 

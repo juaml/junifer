@@ -4,8 +4,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Union
-
 import pytest
 
 from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
@@ -23,7 +21,7 @@ from junifer.pipeline.update_meta_mixin import UpdateMetaMixin
 def test_UpdateMetaMixin(
     input: dict,
     step_name: str,
-    dependencies: Union[set, list, str, None],
+    dependencies: set | list | str | None,
     expected: set,
 ) -> None:
     """Test UpdateMetaMixin.

@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Optional,
 )
 
 import nibabel as nib
@@ -52,14 +51,14 @@ class AFNIReHo(metaclass=Singleton):
         self,
         input_path: Path,
         nneigh: int = 27,
-        neigh_rad: Optional[float] = None,
-        neigh_x: Optional[float] = None,
-        neigh_y: Optional[float] = None,
-        neigh_z: Optional[float] = None,
-        box_rad: Optional[int] = None,
-        box_x: Optional[int] = None,
-        box_y: Optional[int] = None,
-        box_z: Optional[int] = None,
+        neigh_rad: float | None = None,
+        neigh_x: float | None = None,
+        neigh_y: float | None = None,
+        neigh_z: float | None = None,
+        box_rad: int | None = None,
+        box_x: int | None = None,
+        box_y: int | None = None,
+        box_z: int | None = None,
     ) -> tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 

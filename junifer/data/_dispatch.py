@@ -3,12 +3,11 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import Iterator, MutableMapping
+from collections.abc import Callable, Iterator, MutableMapping
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Optional,
     Union,
 )
@@ -110,14 +109,9 @@ class DataDispatcher(MutableMapping):
 
 def get_data(
     kind: str,
-    names: Union[
-        str,  # coordinates, parcellation, mask
-        list[str],  # parcellation, mask
-        dict,  # mask
-        list[dict],  # mask
-    ],
+    names: str | list[str] | dict | list[dict],
     target_data: dict[str, Any],
-    extra_input: Optional[dict[str, Any]] = None,
+    extra_input: dict[str, Any] | None = None,
 ) -> Union[
     tuple[ArrayLike, list[str]],  # coordinates
     tuple["Nifti1Image", dict[int, str]],  # parcellation
@@ -196,15 +190,11 @@ def load_data(
     kind: str,
     name: str,
     **kwargs,
-) -> Union[
-    tuple[ArrayLike, list[str], str],  # coordinates
-    tuple[
-        Optional["Nifti1Image"], list[str], Path, str
-    ],  # parcellation / maps
-    tuple[
-        Optional[Union["Nifti1Image", Callable]], Optional[Path], str
-    ],  # mask
-]:
+) -> (
+    tuple[ArrayLike, list[str], str]
+    | tuple[Optional["Nifti1Image"], list[str], Path, str]
+    | tuple[Union["Nifti1Image", Callable] | None, Path | None, str]
+):
     """Load ``kind`` named ``name``.
 
     Parameters

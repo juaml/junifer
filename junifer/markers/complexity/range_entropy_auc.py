@@ -4,8 +4,6 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
-
 import neurokit2 as nk
 import numpy as np
 
@@ -56,12 +54,12 @@ class RangeEntropyAUC(ComplexityBase):
 
     def __init__(
         self,
-        parcellation: Union[str, list[str]],
+        parcellation: str | list[str],
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        params: Optional[dict] = None,
-        name: Optional[str] = None,
+        agg_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        params: dict | None = None,
+        name: str | None = None,
     ) -> None:
         super().__init__(
             parcellation=parcellation,
@@ -138,7 +136,11 @@ class RangeEntropyAUC(ComplexityBase):
                 range_ent_vec[idx_r] = range_en_auc_roi_tmp[0]
                 idx_r = idx_r + 1
 
-            range_en_auc_roi[idx_roi] = np.trapz(range_ent_vec)
+            range_en_auc_roi[idx_roi] = (
+                np.trapezoid(range_ent_vec)
+                if int(np.__version__[0]) > 1
+                else np.trapz(range_ent_vec)
+            )
 
         range_en_auc_roi = range_en_auc_roi / n_r
 

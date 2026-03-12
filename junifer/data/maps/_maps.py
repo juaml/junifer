@@ -4,7 +4,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Optional, Union
+from typing import TYPE_CHECKING, Any, Optional
 
 import nibabel as nib
 import nilearn.image as nimg
@@ -74,7 +74,7 @@ class MapsRegistry(BasePipelineDataRegistry):
     def register(
         self,
         name: str,
-        maps_path: Union[str, Path],
+        maps_path: str | Path,
         maps_labels: list[str],
         space: str,
         overwrite: bool = False,
@@ -156,7 +156,7 @@ class MapsRegistry(BasePipelineDataRegistry):
         self,
         name: str,
         target_space: str,
-        resolution: Optional[float] = None,
+        resolution: float | None = None,
         path_only: bool = False,
     ) -> tuple[Optional["Nifti1Image"], list[str], Path, str]:
         """Load map(s) and labels.
@@ -251,7 +251,7 @@ class MapsRegistry(BasePipelineDataRegistry):
         self,
         maps: str,
         target_data: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> tuple["Nifti1Image", list[str]]:
         """Get map(s), tailored for the target image.
 
@@ -376,9 +376,9 @@ class MapsRegistry(BasePipelineDataRegistry):
 
 
 def _retrieve_smith(
-    resolution: Optional[float] = None,
-    components: Optional[str] = None,
-    dimension: Optional[int] = None,
+    resolution: float | None = None,
+    components: str | None = None,
+    dimension: int | None = None,
 ) -> tuple[Path, list[str]]:
     """Retrieve Smith maps.
 

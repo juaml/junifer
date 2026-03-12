@@ -11,7 +11,6 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Optional,
 )
 
 from ...typing import ConditionalDependencies, MarkerInOutMappings
@@ -91,8 +90,8 @@ class ALFFBase(BaseMarker):
         highpass: float,
         lowpass: float,
         using: str,
-        tr: Optional[float] = None,
-        name: Optional[str] = None,
+        tr: float | None = None,
+        name: str | None = None,
     ) -> None:
         if highpass < 0:
             raise_error("Highpass must be positive or 0")

@@ -9,8 +9,6 @@ from collections.abc import Sequence
 from typing import (
     Any,
     ClassVar,
-    Optional,
-    Union,
 )
 
 import nibabel as nib
@@ -63,10 +61,10 @@ class TemporalFilter(BasePreprocessor):
         self,
         detrend: bool = True,
         standardize: bool = True,
-        low_pass: Optional[float] = None,
-        high_pass: Optional[float] = None,
-        t_r: Optional[float] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
+        low_pass: float | None = None,
+        high_pass: float | None = None,
+        t_r: float | None = None,
+        masks: str | dict | list[dict | str] | None = None,
     ) -> None:
         """Initialize the class."""
         self.detrend = detrend
@@ -102,7 +100,7 @@ class TemporalFilter(BasePreprocessor):
     def preprocess(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Preprocess.
 

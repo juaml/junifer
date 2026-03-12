@@ -4,7 +4,7 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from typing import Any, ClassVar, Optional
+from typing import Any, ClassVar
 
 import nibabel as nib
 import nilearn.image as nimg
@@ -51,9 +51,9 @@ class TemporalSlicer(BasePreprocessor):
     def __init__(
         self,
         start: float,
-        stop: Optional[float],
-        duration: Optional[float] = None,
-        t_r: Optional[float] = None,
+        stop: float | None,
+        duration: float | None = None,
+        t_r: float | None = None,
     ) -> None:
         """Initialize the class."""
         if start < 0:
@@ -68,7 +68,7 @@ class TemporalSlicer(BasePreprocessor):
     def preprocess(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Preprocess.
 

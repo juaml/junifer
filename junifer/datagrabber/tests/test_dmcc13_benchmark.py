@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Optional, Union
-
 import pytest
 
 from junifer.datagrabber import DMCC13Benchmark
@@ -48,10 +46,10 @@ URI = "https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark"
     ],
 )
 def test_DMCC13Benchmark(
-    sessions: Optional[str],
-    tasks: Optional[str],
-    phase_encodings: Optional[str],
-    runs: Optional[str],
+    sessions: str | None,
+    tasks: str | None,
+    phase_encodings: str | None,
+    runs: str | None,
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber.
@@ -129,7 +127,9 @@ def test_DMCC13Benchmark(
                 "sub-01_space-MNI152NLin2009cAsym_desc-preproc_T1w.nii.gz"
             )
 
-        for data_type, data_file_name in zip(data_types, data_file_names):
+        for data_type, data_file_name in zip(
+            data_types, data_file_names, strict=False
+        ):
             # Assert data type
             assert data_type in out
             # Conditional for Warp
@@ -166,6 +166,7 @@ def test_DMCC13Benchmark(
                     "desc-confounds_regressors.tsv"
                 ),
             ),
+            strict=False,
         ):
             # Assert data type
             assert type_ in out["BOLD"]
@@ -218,7 +219,7 @@ def test_DMCC13Benchmark(
     ],
 )
 def test_DMCC13Benchmark_partial_data_access(
-    types: Union[str, list[str]],
+    types: str | list[str],
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber partial data access.

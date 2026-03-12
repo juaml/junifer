@@ -7,7 +7,7 @@ import copy
 import sys
 import warnings
 from math import cosh, exp, log, sinh, sqrt
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 import numpy as np
 import pytest
@@ -88,7 +88,7 @@ def random_diagonal(
     p: int,
     v_min: float = 1.0,
     v_max: float = 2.0,
-    random_state: Union[int, np.random.RandomState] = 0,
+    random_state: int | np.random.RandomState = 0,
 ) -> np.ndarray:
     """Generate a random diagonal matrix.
 
@@ -120,7 +120,7 @@ def random_spd(
     p: int,
     eig_min: float,
     cond: float,
-    random_state: Union[int, np.random.RandomState] = 0,
+    random_state: int | np.random.RandomState = 0,
 ) -> np.ndarray:
     """Generate a random symmetric positive definite matrix.
 
@@ -190,7 +190,7 @@ def signals() -> list[np.ndarray]:
 
 @pytest.fixture
 def signals_and_covariances(
-    cov_estimator: Union[LedoitWolf, EmpiricalCovariance],
+    cov_estimator: LedoitWolf | EmpiricalCovariance,
 ) -> tuple[list[np.ndarray], list[float]]:
     """Return signals and covariances for a covariance estimator.
 
@@ -343,7 +343,7 @@ def test_geometric_mean_properties() -> None:
 
     # Generic
     assert isinstance(spds, list)
-    for spd, input_spd in zip(spds, input_spds):
+    for spd, input_spd in zip(spds, input_spds, strict=False):
         assert_array_equal(spd, input_spd)
     assert is_spd(gmean, decimal=7)
 
@@ -352,7 +352,7 @@ def random_non_singular(
     p: int,
     sing_min: float = 1.0,
     sing_max: float = 2.0,
-    random_state: Union[int, np.random.RandomState] = 0,
+    random_state: int | np.random.RandomState = 0,
 ) -> np.ndarray:
     """Generate a random nonsingular matrix.
 
@@ -669,7 +669,7 @@ def _assert_connectivity_tangent(connectivities, conn_measure, covs) -> None:
 
     """
     for true_covariance_matrix, estimated_covariance_matrix in zip(
-        covs, connectivities
+        covs, connectivities, strict=False
     ):
         assert_array_almost_equal(
             estimated_covariance_matrix, estimated_covariance_matrix.T
@@ -701,7 +701,7 @@ def _assert_connectivity_precision(connectivities, covs) -> None:
 
     """
     for true_covariance_matrix, estimated_covariance_matrix in zip(
-        covs, connectivities
+        covs, connectivities, strict=False
     ):
         assert is_spd(estimated_covariance_matrix, decimal=7)
         assert_array_almost_equal(
@@ -729,7 +729,7 @@ def _assert_connectivity_correlation(
 
     """
     for true_covariance_matrix, estimated_covariance_matrix in zip(
-        covs, connectivities
+        covs, connectivities, strict=False
     ):
         assert is_spd(estimated_covariance_matrix, decimal=7)
 
@@ -750,7 +750,7 @@ def _assert_connectivity_correlation(
 def _assert_connectivity_partial_correlation(connectivities, covs) -> None:
     """Assert partial correlation connectivity matrix."""
     for true_covariance_matrix, estimated_covariance_matrix in zip(
-        covs, connectivities
+        covs, connectivities, strict=False
     ):
         precision_matrix = linalg.inv(true_covariance_matrix)
 

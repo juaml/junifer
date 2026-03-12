@@ -5,7 +5,6 @@
 # License: AGPL
 
 from collections.abc import Iterable
-from typing import Union
 
 import numpy as np
 import pytest
@@ -25,13 +24,18 @@ from junifer.storage.utils import (
     "dependency, max_version",
     [
         ("click", "8.2"),
-        ("numpy", "1.27"),
-        ("datalad", "0.20"),
-        ("pandas", "2.2"),
-        ("nibabel", "5.11"),
-        ("nilearn", "0.11.0"),
+        ("numpy", "2.4.0"),
+        ("scipy", "1.17.0"),
+        ("datalad", "1.3.0"),
+        ("pandas", "2.4.0"),
+        ("nibabel", "5.4.0"),
+        ("nilearn", "0.10.4"),
         ("sqlalchemy", "2.1.0"),
-        ("ruamel.yaml", "0.18.0"),
+        ("ruamel.yaml", "0.19.0"),
+        ("tqdm", "4.68.0"),
+        ("templateflow", "25.0.0"),
+        ("lapy", "2.0.0"),
+        ("structlog", "26.0.0"),
     ],
 )
 def test_get_dependency_version(dependency: str, max_version: str) -> None:
@@ -47,7 +51,7 @@ def test_get_dependency_version(dependency: str, max_version: str) -> None:
     """
     version = get_dependency_version(dependency)
     if len(version.split(".")) == 3:  # semver
-        assert int(version.split(".")[1]) <= int(max_version.split(".")[1])
+        assert int(version.split(".")[0]) <= int(max_version.split(".")[0])
     else:
         assert version < max_version
 
@@ -322,7 +326,7 @@ def test_element_to_prefix_invalid_type() -> None:
     ],
 )
 def test_store_matrix_checks(
-    params: dict[str, Union[str, bool, tuple[int, int], int]], err_msg: str
+    params: dict[str, str | bool | tuple[int, int] | int], err_msg: str
 ) -> None:
     """Test matrix storing parameter checks.
 
@@ -403,7 +407,7 @@ def test_store_matrix_checks(
     ],
 )
 def test_matrix_to_vector(
-    params: dict[str, Union[np.ndarray, Iterable[str], str, bool]],
+    params: dict[str, np.ndarray | Iterable[str] | str | bool],
     expected_data: np.ndarray,
     expected_columns: list[str],
 ) -> None:

@@ -4,7 +4,6 @@
 # License: AGPL
 
 from contextlib import AbstractContextManager, nullcontext
-from typing import Optional
 
 import pytest
 
@@ -95,9 +94,9 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 )
 def test_TemporalSlicer(
     start: float,
-    stop: Optional[float],
-    duration: Optional[float],
-    t_r: Optional[float],
+    stop: float | None,
+    duration: float | None,
+    t_r: float | None,
     expected_dim: int,
     expect: AbstractContextManager,
 ) -> None:

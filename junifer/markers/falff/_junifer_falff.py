@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import (
     TYPE_CHECKING,
     ClassVar,
-    Optional,
 )
 
 import nibabel as nib
@@ -50,7 +49,7 @@ class JuniferALFF(metaclass=Singleton):
         input_path: Path,
         highpass: float,
         lowpass: float,
-        tr: Optional[float],
+        tr: float | None,
     ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF + fALFF map.
 

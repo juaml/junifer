@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Any, Optional, Union
+from typing import Any
 
 from ...api.decorators import register_marker
 from ...utils import logger
@@ -79,15 +79,15 @@ class ALFFSpheres(ALFFBase):
         self,
         coords: str,
         using: str,
-        radius: Optional[float] = None,
+        radius: float | None = None,
         allow_overlap: bool = False,
         highpass: float = 0.01,
         lowpass: float = 0.1,
-        tr: Optional[float] = None,
+        tr: float | None = None,
         agg_method: str = "mean",
-        agg_method_params: Optional[dict] = None,
-        masks: Union[str, dict, list[Union[dict, str]], None] = None,
-        name: Optional[str] = None,
+        agg_method_params: dict | None = None,
+        masks: str | dict | list[dict | str] | None = None,
+        name: str | None = None,
     ) -> None:
         # Superclass init first to validate `using` parameter
         super().__init__(
@@ -107,7 +107,7 @@ class ALFFSpheres(ALFFBase):
     def compute(
         self,
         input: dict[str, Any],
-        extra_input: Optional[dict[str, Any]] = None,
+        extra_input: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         """Compute.
 
