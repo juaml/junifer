@@ -129,20 +129,21 @@ class SpaceWarper(BasePreprocessor):
         ------
         ValueError
             If ``extra_input`` is None when transforming to native space
-            i.e., using ``"T1w"`` as reference.
+            i.e., using ``"T1w"`` as reference or converting from native to
+            template space or
+            if the ``reference`` key is missing from ``input`` when converting
+            from native to template space.
         RuntimeError
             If warper could not be found in ``extra_input`` when
             ``using="auto"`` or converting from native space or
             if the data is in the correct space and does not require
             warping or
-            if FSL is used when ``reference="T1w"``.
+            if FSL or "auto" is used when ``reference!="T1w"``.
 
         """
         logger.info(f"Warping to {self.reference} space using SpaceWarper")
         # Transform to native space
-        if (
-            self.using in ["fsl", "ants", "auto"] and self.reference == "T1w"
-        ):  # pragma: no cover
+        if self.reference == "T1w":  # pragma: no cover
             # Check for extra inputs
             if extra_input is None:
                 raise_error(
@@ -150,20 +151,8 @@ class SpaceWarper(BasePreprocessor):
                     f"`{self.reference}` data types in particular."
                 )
             # Conditional preprocessor
-            if self.using == "fsl":
-                input = FSLWarper().preprocess(
-                    input=input,
-                    extra_input=extra_input,
-                    reference=self.reference,
-                )
-            elif self.using == "ants":
-                input = ANTsWarper().preprocess(
-                    input=input,
-                    extra_input=extra_input,
-                    reference=self.reference,
-                )
-            elif self.using == "auto":
-                warper = None
+            warper = None
+            if self.using == "auto":
                 for entry in extra_input["Warp"]:
                     if entry["dst"] == "native":
                         warper = entry["warper"]
@@ -171,20 +160,21 @@ class SpaceWarper(BasePreprocessor):
                     raise_error(
                         klass=RuntimeError, msg="Could not find correct warper"
                     )
-                if warper == "fsl":
-                    input = FSLWarper().preprocess(
-                        input=input,
-                        extra_input=extra_input,
-                        reference=self.reference,
-                    )
-                elif warper == "ants":
-                    input = ANTsWarper().preprocess(
-                        input=input,
-                        extra_input=extra_input,
-                        reference=self.reference,
-                    )
-        # Transform to template space
-        if self.using in ["fsl", "ants"] and self.reference != "T1w":
+            else:
+                warper = self.using
+            if warper == "fsl":
+                input = FSLWarper().preprocess(
+                    input=input,
+                    extra_input=extra_input,
+                    reference=self.reference,
+                )
+            elif warper == "ants":
+                input = ANTsWarper().preprocess(
+                    input=input,
+                    extra_input=extra_input,
+                    reference=self.reference,
+                )
+        else:
             input_space = input["space"]
             # Check pre-requirements for space manipulation
             if self.using == "ants" and self.reference == input_space:
@@ -241,12 +231,12 @@ class SpaceWarper(BasePreprocessor):
                     )
             else:
                 # Transform from MNI to MNI template space not possible
-                if self.using == "fsl":
+                if self.using in ["fsl", "auto"]:
                     raise_error(
                         (
                             f"Warping from {input_space} space to "
                             f"{self.reference} space not possible with "
-                            "FSL, use ANTs instead."
+                            f"{self.using}, use ANTs instead."
                         ),
                         klass=RuntimeError,
                     )
@@ -257,5 +247,10 @@ class SpaceWarper(BasePreprocessor):
                         extra_input={},
                         reference=self.reference,
                     )
-
+        logger.debug("Completed warping step")
+        logger.debug("Warped data types: ")
+        for k, v in input.items():
+            if k in ["data", "meta"]:
+                continue
+            logger.debug(f"\t{k}: {v}")
         return input
