@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -54,9 +54,7 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         "https://github.com/datalad-datasets/"
         "human-connectome-project-openaccess.git"
     )
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.Warp,

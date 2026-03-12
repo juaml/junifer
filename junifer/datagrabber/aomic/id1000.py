@@ -7,7 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -53,9 +53,7 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
     """
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds003097.git")
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.VBM_CSF,

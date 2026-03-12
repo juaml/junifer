@@ -87,9 +87,7 @@ class ReHoParcels(ReHoBase):
 
     """
 
-    parcellation: Annotated[
-        str | list[str], BeforeValidator(ensure_list)
-    ]
+    parcellation: Annotated[str | list[str], BeforeValidator(ensure_list)]
 
     def compute(
         self,

@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Union
-
 import pytest
 from pydantic import AnyUrl
 
@@ -215,7 +213,7 @@ def test_DMCC13Benchmark(
     ],
 )
 def test_DMCC13Benchmark_partial_data_access(
-    types: Union[str, list[str]],
+    types: str | list[str],
     native_t1w: bool,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber partial data access.

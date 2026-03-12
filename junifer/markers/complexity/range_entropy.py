@@ -59,7 +59,6 @@ class RangeEntropy(ComplexityBase):
     def validate_marker_params(self) -> None:
         """Run extra logical validation for marker."""
         if self.params is None:
-
             self.params = {"m": 2, "tol": 0.5, "delay": 1}
 
     def compute_complexity(

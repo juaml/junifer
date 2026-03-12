@@ -119,9 +119,7 @@ class ParcelAggregation(BaseMarker):
         },
     }
 
-    parcellation: Annotated[
-        str | list[str], BeforeValidator(ensure_list)
-    ]
+    parcellation: Annotated[str | list[str], BeforeValidator(ensure_list)]
     method: str = "mean"
     method_params: dict[str, Any] | None = None
     time_method: str | None = None

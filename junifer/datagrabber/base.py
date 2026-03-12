@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Any, Union
+from typing import Annotated, Any
 
 from aenum import Enum as AEnum
 from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
@@ -57,7 +57,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
     model_config = ConfigDict(use_enum_values=True)
 
     types: Annotated[
-        Union[DataType, list[DataType]],
+        DataType | list[DataType],
         Field(frozen=True),
         BeforeValidator(ensure_list),
     ]
