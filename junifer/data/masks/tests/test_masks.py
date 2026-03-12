@@ -177,7 +177,7 @@ def test_register_already_registered() -> None:
 )
 def test_register(
     name: str,
-    mask_path: Union[str, Path],
+    mask_path: str | Path,
     space: str,
     overwrite: bool,
 ) -> None:

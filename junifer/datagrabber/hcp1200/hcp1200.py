@@ -7,7 +7,7 @@
 
 from enum import Enum
 from itertools import product
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import BeforeValidator
 
@@ -87,16 +87,12 @@ class HCP1200(PatternDataGrabber):
 
     """
 
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.Warp,
     ]
-    tasks: Annotated[
-        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    tasks: Annotated[_tasks | list[_tasks], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         HCP1200Task.REST1,
         HCP1200Task.REST2,
         HCP1200Task.SOCIAL,
@@ -108,7 +104,7 @@ class HCP1200(PatternDataGrabber):
         HCP1200Task.MOTOR,
     ]
     phase_encodings: Annotated[
-        Union[_phase_encodings, list[_phase_encodings]],
+        _phase_encodings | list[_phase_encodings],
         BeforeValidator(ensure_list),
     ] = [  # noqa: RUF012
         HCP1200PhaseEncoding.RL,

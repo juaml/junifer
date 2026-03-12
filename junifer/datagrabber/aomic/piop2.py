@@ -8,7 +8,7 @@
 # License: AGPL
 
 from itertools import product
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -65,9 +65,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
     """
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds002790")
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.VBM_CSF,
@@ -77,9 +75,7 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         DataType.FreeSurfer,
         DataType.Warp,
     ]
-    tasks: Annotated[
-        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    tasks: Annotated[_tasks | list[_tasks], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         AOMICTask.RestingState,
         AOMICTask.StopSignal,
         AOMICTask.EmoMatching,

@@ -6,7 +6,7 @@
 # License: AGPL
 
 from enum import Enum
-from typing import Annotated, Literal, Union
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -52,9 +52,13 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         "ria+http://cat_12.5.ds.inm7.de#b7107c52-8408-11ea-89c6-a0369f287950"
     )
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
-    sites: Annotated[
-        Union[IXISite, list[IXISite]], BeforeValidator(ensure_list)
-    ] = [IXISite.Guys, IXISite.HH, IXISite.IOP]  # noqa: RUF012
+    sites: ClassVar[
+        Annotated[IXISite | list[IXISite], BeforeValidator(ensure_list)]
+    ] = [
+        IXISite.Guys,
+        IXISite.HH,
+        IXISite.IOP,
+    ]
     patterns: DataGrabberPatterns = {  # noqa: RUF012
         "VBM_GM": {
             "pattern": ("{site}/{subject}/mri/m0wp1{subject}.nii.gz"),

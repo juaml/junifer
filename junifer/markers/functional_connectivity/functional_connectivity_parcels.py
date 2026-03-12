@@ -56,9 +56,7 @@ class FunctionalConnectivityParcels(FunctionalConnectivityBase):
 
     """
 
-    parcellation: Annotated[
-        str | list[str], BeforeValidator(ensure_list)
-    ]
+    parcellation: Annotated[str | list[str], BeforeValidator(ensure_list)]
 
     def aggregate(
         self, input: dict[str, Any], extra_input: dict | None = None

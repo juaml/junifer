@@ -58,9 +58,7 @@ class RSSETSMarker(BaseMarker):
         },
     }
 
-    parcellation: Annotated[
-        str | list[str], BeforeValidator(ensure_list)
-    ]
+    parcellation: Annotated[str | list[str], BeforeValidator(ensure_list)]
     agg_method: str = "mean"
     agg_method_params: dict | None = None
     masks: Annotated[

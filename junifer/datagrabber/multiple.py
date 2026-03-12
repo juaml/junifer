@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Annotated, Union
+from typing import Annotated
 
 from pydantic import BeforeValidator, ConfigDict
 
@@ -46,14 +46,10 @@ class MultipleDataGrabber(BaseDataGrabber):
     model_config = ConfigDict(extra="allow")
 
     datagrabbers: list[
-        Union[
-            DataGrabberLike,
-            PatternDataGrabber,
-            PatternDataladDataGrabber,
-        ]
+        DataGrabberLike | PatternDataGrabber | PatternDataladDataGrabber
     ]
     types: Annotated[
-        Union[DataType, list[DataType]], BeforeValidator(ensure_list)
+        DataType | list[DataType], BeforeValidator(ensure_list)
     ] = []  # noqa: RUF012
     datadir: Path = Path(".")
 

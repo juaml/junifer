@@ -7,7 +7,6 @@ import shutil
 import tempfile
 from collections.abc import Iterable
 from pathlib import Path
-from typing import Union
 
 import pytest
 from pydantic import AnyUrl
@@ -300,7 +299,8 @@ def test_HCP1200_elements(
     ],
 )
 def test_HCP1200_incorrect_access_icafix(
-    tasks: str | list[str], ica_fix: bool,
+    tasks: str | list[str],
+    ica_fix: bool,
 ) -> None:
     """Test HCP1200 DataGrabber incorrect access for icafix.
 

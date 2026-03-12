@@ -5,7 +5,7 @@
 
 from enum import Enum
 from itertools import product
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -125,9 +125,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
     """
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.VBM_CSF,
@@ -135,15 +133,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         DataType.VBM_WM,
     ]
     sessions: Annotated[
-        Union[_sessions, list[_sessions]], BeforeValidator(ensure_list)
+        _sessions | list[_sessions], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         DMCCSession.Wave1Bas,
         DMCCSession.Wave1Pro,
         DMCCSession.Wave1Rea,
     ]
-    tasks: Annotated[
-        Union[_tasks, list[_tasks]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    tasks: Annotated[_tasks | list[_tasks], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DMCCTask.Rest,
         DMCCTask.Axcpt,
         DMCCTask.Cuedts,
@@ -151,15 +147,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         DMCCTask.Stroop,
     ]
     phase_encodings: Annotated[
-        Union[_phase_encodings, list[_phase_encodings]],
+        _phase_encodings | list[_phase_encodings],
         BeforeValidator(ensure_list),
     ] = [  # noqa: RUF012
         DMCCPhaseEncoding.AP,
         DMCCPhaseEncoding.PA,
     ]
-    runs: Annotated[
-        Union[_runs, list[_runs]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    runs: Annotated[_runs | list[_runs], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DMCCRun.One,
         DMCCRun.Two,
     ]

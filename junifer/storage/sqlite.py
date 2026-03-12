@@ -6,7 +6,6 @@
 
 import json
 from enum import Enum
-from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np

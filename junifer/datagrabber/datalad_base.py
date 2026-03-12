@@ -100,9 +100,9 @@ class DataladDataGrabber(BaseDataGrabber):
     # Flag to indicate if the dataset was cloned before and it might be
     # dirty
     datalad_dirty: bool = False
-    datalad_commit_id: Optional[str] = None
-    datalad_id: Optional[str] = None
-    _dataset: Optional[dl.Dataset] = None
+    datalad_commit_id: str | None = None
+    datalad_id: str | None = None
+    _dataset: dl.Dataset | None = None
     _got_files: list[str] = []  # noqa: RUF012
     _was_cloned: bool = False
 

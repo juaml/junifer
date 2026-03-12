@@ -6,7 +6,7 @@
 
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from pydantic import BeforeValidator
 
@@ -78,9 +78,7 @@ class JuselessUCLA(PatternDataGrabber):
     # NOT have preprocessed data
     # uri = "https://github.com/OpenNeuroDatasets/ds000030.git"
     datadir: Path = Path("/data/project/psychosis_thalamus/data/fmriprep")
-    types: Annotated[
-        Union[_types, list[_types]], BeforeValidator(ensure_list)
-    ] = [  # noqa: RUF012
+    types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
         DataType.BOLD,
         DataType.T1w,
         DataType.VBM_CSF,
@@ -88,7 +86,7 @@ class JuselessUCLA(PatternDataGrabber):
         DataType.VBM_WM,
     ]
     tasks: Annotated[
-        Union[UCLATask, list[UCLATask]], BeforeValidator(ensure_list)
+        UCLATask | list[UCLATask], BeforeValidator(ensure_list)
     ] = [  # noqa: RUF012
         UCLATask.REST,
         UCLATask.BART,
