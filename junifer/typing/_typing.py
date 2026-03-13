@@ -74,7 +74,10 @@ Dependencies = set[str]
 ConditionalDependencies = list[ConditionalDependency]
 ExternalDependencies = list[ExternalDependency]
 MarkerInOutMappings = dict["DataType", dict[str, "StorageType"]]
-DataGrabberPatterns = dict[str, dict[str, str] | list[dict[str, str]]]
+DataGrabberPatterns = dict[
+    str,
+    dict[str, dict[str, str] | str] | dict[str, str] | list[dict[str, str]],
+]
 ConfigVal = bool | int | float | str
 Element = str | tuple[str, ...]
 Elements = Sequence[Element]
