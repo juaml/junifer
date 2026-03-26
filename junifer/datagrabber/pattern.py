@@ -466,8 +466,14 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
 
         # Iterate by number of replacements. At least one pattern must have
         # all of them.
+        # NOTE: will ignore list dtype vals like Warp
         replacement_in_patterns = [
-            np.sum([x in self.patterns[t_type] for x in self.replacements])
+            np.sum(
+                [
+                    x in self.patterns[t_type].get("pattern")
+                    for x in self.replacements
+                ]
+            )
             for t_type in self.types
         ]
         order = np.argsort(replacement_in_patterns)
