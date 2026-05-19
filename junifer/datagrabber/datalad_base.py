@@ -106,6 +106,19 @@ class DataladDataGrabber(BaseDataGrabber):
     _got_files: list[str] = []  # noqa: RUF012
     _was_cloned: bool = False
 
+    @field_validator("datadir", mode="after")
+    @classmethod
+    def warn_existing_datalad_autodir(cls, value: Path) -> Path:
+        """Warn if existing datalad autodir exists."""
+        if value.stem.startswith("datalad") and value.stem.endswith(
+            "juniferauto"
+        ):
+            warn_with_log(
+                f"{value.resolve()!s} already exists and will reuse assets "
+                "from previous run."
+            )
+        return value
+
     @field_validator("datalad_dirty", mode="before")
     @classmethod
     def disable_tag(cls, value: Any) -> NoReturn:
