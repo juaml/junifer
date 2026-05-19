@@ -183,6 +183,7 @@ def run(
                 "elements will be processed"
             )
     WorkDirManager(**workdir)
+    atexit.register(WorkDirManager()._cleanup)
 
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber.copy())
@@ -212,8 +213,6 @@ def run(
     )
     # Validate the marker collection for the datagrabber
     mc.validate(datagrabber_object)
-
-    atexit.register(WorkDirManager()._cleanup)
 
     # Fit elements
     with datagrabber_object:
