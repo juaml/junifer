@@ -7,10 +7,11 @@
 
 import re
 from copy import deepcopy
-from enum import Enum
 from pathlib import Path
 
 import numpy as np
+from aenum import Enum as AEnum
+from aenum import extend_enum
 from pydantic import Field
 
 from ..api.decorators import register_datagrabber
@@ -20,14 +21,32 @@ from .base import BaseDataGrabber
 from .pattern_validation_mixin import PatternValidationMixin
 
 
-__all__ = ["ConfoundsFormat", "PatternDataGrabber"]
+__all__ = [
+    "ConfoundsFormat",
+    "PatternDataGrabber",
+    "register_confounds_format",
+]
 
 
-class ConfoundsFormat(str, Enum):
+class ConfoundsFormat(str, AEnum):
     """Accepted confounds format."""
 
     FMRIPrep = "fmriprep"
     AdHoc = "adhoc"
+
+
+def register_confounds_format(name: str, alias: str) -> None:
+    """Register custom confounds format.
+
+    Parameters
+    ----------
+    name : str
+        The confounds format name to be referred.
+    alias : str
+        The confounds format alias for string representation.
+
+    """
+    extend_enum(ConfoundsFormat, name, alias)
 
 
 @register_datagrabber

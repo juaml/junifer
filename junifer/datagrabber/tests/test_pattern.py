@@ -10,7 +10,21 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber import PatternDataGrabber
+from junifer.datagrabber import (
+    ConfoundsFormat,
+    PatternDataGrabber,
+    register_confounds_format,
+)
+
+
+def test_register_confounds_format() -> None:
+    """Test confounds format registration."""
+
+    register_confounds_format(
+        name="Confounds",
+        alias="confounds",
+    )
+    assert "confounds" in list(ConfoundsFormat)
 
 
 def test_PatternDataGrabber_errors(tmp_path: Path) -> None:

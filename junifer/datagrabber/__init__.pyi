@@ -25,12 +25,17 @@ __all__ = [
     "register_data_type",
     "DataType",
     "ConfoundsFormat",
+    "register_confounds_format",
 ]
 
 # These 4 need to be in this order, otherwise it is a circular import
 from .base import BaseDataGrabber, DataType
 from .datalad_base import DataladDataGrabber
-from .pattern import PatternDataGrabber, ConfoundsFormat
+from .pattern import (
+    PatternDataGrabber,
+    ConfoundsFormat,
+    register_confounds_format,
+)
 from .pattern_datalad import PatternDataladDataGrabber
 
 from .aomic import (
