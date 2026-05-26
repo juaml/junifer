@@ -178,7 +178,11 @@ Template for a custom Preprocessor
 
 .. code-block:: python
 
+    from collections.abc import Sequence
+    from typing import ClassVar
+
     from junifer.api.decorators import register_preprocessor
+    from junifer.datagrabber import DataType
     from junifer.preprocess import BasePreprocessor
 
 
@@ -189,7 +193,7 @@ Template for a custom Preprocessor
         _DEPENDENCIES = {}
 
         # TODO: add the inputs
-        _VALID_DATA_TYPES = []
+        _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = []
 
         # TODO: define preprocessor-specific parameters
 
