@@ -28,6 +28,7 @@ class MatrixKind(str, Enum):
     LowerTriangle = "tril"
     Full = "full"
 
+
 _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="storage", step="storage")
 

@@ -63,10 +63,10 @@ class ParcellationRegistry(BasePipelineDataRegistry):
         # junifer-data dataset.
         # Make built-in and external dictionaries for validation later
         self._builtin: dict[
-            str, dict[str, Union[str, int, Path, list[str], list[int]]]
+            str, dict[str, str | int | Path | list[str] | list[int]]
         ] = {}
         self._external: dict[
-            str, dict[str, Union[str, int, Path, list[str], list[int]]]
+            str, dict[str, str | int | Path | list[str] | list[int]]
         ] = {}
 
         # Add SUIT
