@@ -8,8 +8,9 @@ from collections.abc import MutableMapping
 from pathlib import Path
 
 import numpy as np
+import structlog
 
-from ..utils import config, logger, raise_error
+from ..utils import config, raise_error
 
 
 __all__ = [
@@ -21,6 +22,8 @@ __all__ = [
     "get_native_warper",
 ]
 
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="data")
 
 # junifer-data version constant
 JUNIFER_DATA_VERSION = "7"

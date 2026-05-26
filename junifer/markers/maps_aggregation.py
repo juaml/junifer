@@ -14,8 +14,8 @@ from ..datagrabber import DataType
 from ..stats import get_aggfunc_by_name
 from ..storage import StorageType
 from ..typing import Dependencies, MarkerInOutMappings
-from ..utils import ensure_list_or_none, logger, raise_error, warn_with_log
-from .base import BaseMarker
+from ..utils import ensure_list_or_none, raise_error, warn_with_log
+from .base import BaseMarker, logger
 
 
 __all__ = ["MapsAggregation"]

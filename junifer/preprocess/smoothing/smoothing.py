@@ -17,8 +17,8 @@ from pydantic import BeforeValidator
 from ...api.decorators import register_preprocessor
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
-from ...utils import ensure_list_or_none, logger
-from ..base import BasePreprocessor
+from ...utils import ensure_list_or_none
+from ..base import BasePreprocessor, logger
 from ._afni_smoothing import AFNISmoothing
 from ._fsl_smoothing import FSLSmoothing
 from ._nilearn_smoothing import NilearnSmoothing

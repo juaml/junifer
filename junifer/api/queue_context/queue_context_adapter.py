@@ -19,12 +19,16 @@ else:
 from abc import ABC, abstractmethod
 from enum import Enum
 
+import structlog
 from pydantic import BaseModel, ConfigDict
 
 from ...utils import raise_error
 
 
 __all__ = ["EnvKind", "EnvShell", "QueueContextAdapter", "QueueContextEnv"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="api")
 
 
 class EnvKind(str, Enum):
