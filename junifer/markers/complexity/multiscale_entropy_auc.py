@@ -2,6 +2,7 @@
 
 # Authors: Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 #          Leonard Sasse <l.sasse@fz-juelich.de>
+#          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
 import neurokit2 as nk
@@ -25,23 +26,25 @@ class MultiscaleEntropyAUC(ComplexityBase):
         The name(s) of the parcellation(s) to use.
         See :func:`.list_data` for options.
     agg_method : str, optional
-        The method to perform aggregation using. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default "mean").
-    agg_method_params : dict, optional
-        Parameters to pass to the aggregation function. Check valid options in
-        :func:`junifer.stats.get_aggfunc_by_name` (default None).
-    masks : str, dict or list of dict or str, optional
+        The aggregation function to use.
+        See :func:`.get_aggfunc_by_name` for options
+        (default "mean").
+    agg_method_params : dict or None, optional
+        The parameters to pass to the aggregation function.
+        See :func:`.get_aggfunc_by_name` for options (default None).
+    masks : str, dict, list of them or None, optional
         The specification of the masks to apply to regions before extracting
         signals. Check :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
-    params : dict, optional
-        Parameters to pass to the AUC of multiscale entropy calculation
-        function. For more information, check out
-        ``junifer.markers.utils._multiscale_entropy_auc``. If None, value
-        is set to {"m": 2, "tol": 0.5, "scale": 10} (default None).
-    name : str, optional
-        The name of the marker. If None, it will use the class name
+    params : dict or None, optional
+        The parameters to pass to the AUC of multiscale entropy calculation
+        function. See
+        ``junifer.markers.utils._multiscale_entropy_auc`` for more information.
+        If None, value is set to ``{"m": 2, "tol": 0.5, "scale": 10}``
         (default None).
+    name : str or None, optional
+        The name of the marker.
+        If None, will use the class name (default None).
 
     Warnings
     --------
@@ -52,26 +55,12 @@ class MultiscaleEntropyAUC(ComplexityBase):
 
     """
 
-    def __init__(
-        self,
-        parcellation: str | list[str],
-        agg_method: str = "mean",
-        agg_method_params: dict | None = None,
-        masks: str | dict | list[dict | str] | None = None,
-        params: dict | None = None,
-        name: str | None = None,
-    ) -> None:
-        super().__init__(
-            parcellation=parcellation,
-            agg_method=agg_method,
-            agg_method_params=agg_method_params,
-            masks=masks,
-            name=name,
-        )
-        if params is None:
+    params: dict | None = None
+
+    def validate_marker_params(self) -> None:
+        """Run extra logical validation for marker."""
+        if self.params is None:
             self.params = {"m": 2, "tol": 0.5, "scale": 10}
-        else:
-            self.params = params
 
     def compute_complexity(
         self,

@@ -6,10 +6,10 @@
 import pytest
 
 # done to keep line length 79
-import junifer.markers.temporal_snr as tsnr
+from junifer.markers.temporal_snr import temporal_snr_base as tsb
 
 
 def test_base_temporal_snr_marker_abstractness() -> None:
     """Test TemporalSNRBase is an abstract base class."""
     with pytest.raises(TypeError, match="abstract"):
-        tsnr.temporal_snr_base.TemporalSNRBase()
+        tsb.TemporalSNRBase()

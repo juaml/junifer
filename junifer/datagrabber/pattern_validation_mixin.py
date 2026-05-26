@@ -3,9 +3,20 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import Iterator, MutableMapping
-from typing import TypedDict
+import sys
 
+
+if sys.version_info < (3, 12):  # pragma: no cover
+    from typing_extensions import TypedDict
+else:
+    from typing import TypedDict
+
+
+from collections.abc import Iterator, MutableMapping
+
+from aenum import extend_enum
+
+from ..datagrabber import DataType
 from ..typing import DataGrabberPatterns
 from ..utils import logger, raise_error, warn_with_log
 
@@ -191,36 +202,16 @@ def register_data_type(name: str, schema: DataTypeSchema) -> None:
     ----------
     name : str
         The data type name.
-    schema : DataTypeSchema
+    schema : ``DataTypeSchema``
         The data type schema.
 
     """
     DataTypeManager()[name] = schema
+    extend_enum(DataType, name, name)
 
 
 class PatternValidationMixin:
     """Mixin class for pattern validation."""
-
-    def _validate_types(self, types: list[str]) -> None:
-        """Validate the types.
-
-        Parameters
-        ----------
-        types : list of str
-            The data types to validate.
-
-        Raises
-        ------
-        TypeError
-            If ``types`` is not a list or if the values are not string.
-
-        """
-        if not isinstance(types, list):
-            raise_error(msg="`types` must be a list", klass=TypeError)
-        if any(not isinstance(x, str) for x in types):
-            raise_error(
-                msg="`types` must be a list of strings", klass=TypeError
-            )
 
     def _validate_replacements(
         self,
@@ -234,15 +225,13 @@ class PatternValidationMixin:
         ----------
         replacements : list of str
             The replacements to validate.
-        patterns : dict
-            The patterns to validate replacements against.
+        patterns : ``DataGrabberPatterns``
+            The patterns to validate ``replacements`` against.
         partial_pattern_ok : bool
             Whether to raise error if partial pattern for a data type is found.
 
         Raises
         ------
-        TypeError
-            If ``replacements`` is not a list or if the values are not string.
         ValueError
             If a value in ``replacements`` is not part of a data type pattern
             and ``partial_pattern_ok=False`` or
@@ -256,15 +245,6 @@ class PatternValidationMixin:
             and ``partial_pattern_ok=True``.
 
         """
-        if not isinstance(replacements, list):
-            raise_error(msg="`replacements` must be a list.", klass=TypeError)
-
-        if any(not isinstance(x, str) for x in replacements):
-            raise_error(
-                msg="`replacements` must be a list of strings",
-                klass=TypeError,
-            )
-
         # Make a list of all patterns recursively
         all_patterns = []
         for dtype_val in patterns.values():
@@ -390,7 +370,7 @@ class PatternValidationMixin:
 
     def validate_patterns(
         self,
-        types: list[str],
+        types: list[DataType],
         replacements: list[str],
         patterns: DataGrabberPatterns,
         partial_pattern_ok: bool = False,
@@ -399,11 +379,11 @@ class PatternValidationMixin:
 
         Parameters
         ----------
-        types : list of str
-            The data types to check patterns of.
+        types : list of :enum:`.DataType`
+            The data type(s) to check patterns of.
         replacements : list of str
-            The replacements to be replaced in the patterns.
-        patterns : dict
+            The replacements to be replaced in the ``patterns``.
+        patterns : ``DataGrabberPatterns``
             The patterns to validate.
         partial_pattern_ok : bool, optional
             Whether to raise error if partial pattern for a data type is found.
@@ -412,8 +392,6 @@ class PatternValidationMixin:
 
         Raises
         ------
-        TypeError
-            If ``patterns`` is not a dictionary.
         ValueError
             If length of ``types`` and ``patterns`` are different or
             if ``patterns`` is missing entries from ``types`` or
@@ -421,12 +399,6 @@ class PatternValidationMixin:
             if data type pattern key contains '*' as value.
 
         """
-        # Validate types
-        self._validate_types(types=types)
-
-        # Validate patterns
-        if not isinstance(patterns, dict):
-            raise_error(msg="`patterns` must be a dict", klass=TypeError)
         # Unequal length of objects
         if len(types) > len(patterns):
             raise_error(

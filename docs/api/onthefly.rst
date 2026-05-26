@@ -5,5 +5,5 @@ On-the-fly
    :members:
    :imported-members:
 
-.. automodule:: junifer.onthefly.brainprint
+.. automodule:: junifer.onthefly._brainprint
    :members:

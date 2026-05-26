@@ -158,16 +158,16 @@ Available
        | (subject-native or other template spaces)
      - Done
      - 0.0.4
-   * - ``Smoothing``
+   * - :class:`.Smoothing`
      - | Apply smoothing to data, particularly useful when dealing with
        | ``fMRIPrep``-ed data
      - In Progress
      - :gh:`161`
-   * - ``TemporalSlicer``
+   * - :class:`.TemporalSlicer`
      - Slice ``BOLD`` data temporally
      - | Done
      - :gh:`443`
-   * - ``TemporalFilter``
+   * - :class:`.TemporalFilter`
      - Filter (clean) ``BOLD`` data temporally
      - | Done
      - :gh:`432`

@@ -46,7 +46,7 @@ by having a class attribute like so:
 
     _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
         {
-            "name": "afni",
+            "name": ExtDep.AFNI,
             "commands": ["3dReHo", "3dAFNItoNIFTI"],
         },
     ]
@@ -55,7 +55,7 @@ The above example is taken from the class which computes regional homogeneity
 (ReHo) using AFNI. The general pattern is that you need to have the value of
 ``_EXT_DEPENDENCIES`` as a list of dictionary with two keys:
 
-* ``name`` (str) : lowercased name of the toolbox
+* ``name`` (:enum:`.ExtDep`) : name of the toolbox
 * ``commands`` (list of str) : actual names of the commands you need to use
 
 This is simple but powerful as we will see in the following sub-sections.
@@ -81,11 +81,11 @@ that it shows the problem a bit better and how we solve it:
         _CONDITIONAL_DEPENDENCIES: ClassVar[ConditionalDependencies] = [
             {
                 "using": "fsl",
-                "depends_on": FSLWarper,
+                "depends_on": [FSLWarper],
             },
             {
                 "using": "ants",
-                "depends_on": ANTsWarper,
+                "depends_on": [ANTSWarper],
             },
             {
                 "using": "auto",
@@ -93,18 +93,16 @@ that it shows the problem a bit better and how we solve it:
             },
         ]
 
-        def __init__(
-            self, using: str, reference: str, on: Union[List[str], str]
-        ) -> None:
-            # validation and setting up
-            ...
+        using: str
+        reference: str
+        on: List[DataType]
 
 
 Here, you see a new class attribute ``_CONDITIONAL_DEPENDENCIES`` which is a
 list of dictionaries with two keys:
 
 * ``using`` (str) : lowercased name of the toolbox
-* ``depends_on`` (object or list of objects) : a class or list of classes which \
+* ``depends_on`` (list of objects) : list of classes which \
   implements the particular tool's use
 
 It is mandatory to have the ``using`` positional argument in the constructor in
@@ -128,7 +126,7 @@ similar. ``FSLWarper`` looks like this (only the relevant part is shown here):
 
         _EXT_DEPENDENCIES: ClassVar[ExternalDependencies] = [
             {
-                "name": "fsl",
+                "name": ExtDep.FSL,
                 "commands": ["flirt", "applywarp"],
             },
         ]

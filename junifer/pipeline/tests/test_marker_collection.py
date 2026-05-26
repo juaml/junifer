@@ -115,12 +115,12 @@ def test_marker_collection_with_preprocessing() -> None:
     """Test MarkerCollection with preprocessing."""
     markers = [
         FunctionalConnectivityParcels(
-            parcellation="Schaefer100x17",
+            parcellation=["Schaefer100x17"],
             agg_method="mean",
             name="Schaefer100x17_mean_FC",
         ),
         FunctionalConnectivityParcels(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
+            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
             agg_method="mean",
             name="TianxS2x3TxMNInonlinear2009cAsym_mean_FC",
         ),
@@ -170,7 +170,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
     dg = PartlyCloudyTestingDataGrabber()
     # Setup storage
     storage = SQLiteFeatureStorage(
-        tmp_path / "test_marker_collection_storage.sqlite"
+        uri=tmp_path / "test_marker_collection_storage.sqlite"
     )
     mc = MarkerCollection(
         markers=markers,  # type: ignore

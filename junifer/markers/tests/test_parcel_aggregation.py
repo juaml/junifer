@@ -17,9 +17,10 @@ from numpy.testing import assert_array_almost_equal, assert_array_equal
 from scipy.stats import trim_mean
 
 from junifer.data import MaskRegistry, ParcellationRegistry
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.parcel_aggregation import ParcelAggregation
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -27,58 +28,58 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
     "input_type, storage_type",
     [
         (
-            "T1w",
-            "vector",
+            DataType.T1w,
+            StorageType.Vector,
         ),
         (
-            "T2w",
-            "vector",
+            DataType.T2w,
+            StorageType.Vector,
         ),
         (
-            "BOLD",
-            "timeseries",
+            DataType.BOLD,
+            StorageType.Timeseries,
         ),
         (
-            "VBM_GM",
-            "vector",
+            DataType.VBM_GM,
+            StorageType.Vector,
         ),
         (
-            "VBM_WM",
-            "vector",
+            DataType.VBM_WM,
+            StorageType.Vector,
         ),
         (
-            "VBM_CSF",
-            "vector",
+            DataType.VBM_CSF,
+            StorageType.Vector,
         ),
         (
-            "fALFF",
-            "vector",
+            DataType.FALFF,
+            StorageType.Vector,
         ),
         (
-            "GCOR",
-            "vector",
+            DataType.GCOR,
+            StorageType.Vector,
         ),
         (
-            "LCOR",
-            "vector",
+            DataType.LCOR,
+            StorageType.Vector,
         ),
     ],
 )
 def test_ParcelAggregation_input_output(
-    input_type: str, storage_type: str
+    input_type: DataType, storage_type: StorageType
 ) -> None:
     """Test ParcelAggregation input and output types.
 
     Parameters
     ----------
-    input_type : str
+    input_type : DataType
         The parametrized input type.
-    storage_type : str
+    storage_type : StorageType
         The parametrized storage type.
 
     """
     assert storage_type == ParcelAggregation(
-        parcellation="Schaefer100x7", method="mean", on=input_type
+        parcellation=["Schaefer100x7"], method="mean", on=[input_type]
     ).storage_type(input_type=input_type, output_feature="aggregation")
 
 
@@ -90,7 +91,7 @@ def test_ParcelAggregation_3D() -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -157,7 +158,7 @@ def test_ParcelAggregation_3D() -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="std",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         parcel_agg_std_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -182,7 +183,7 @@ def test_ParcelAggregation_3D() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
-            on="BOLD",
+            on=DataType.BOLD,
         )
         parcel_agg_trim_mean_bold_data = marker.fit_transform(element_data)[
             "BOLD"
@@ -238,12 +239,13 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_parcel_storage_3D.sqlite", upsert="ignore"
+            uri=tmp_path / "test_parcel_storage_3D.sqlite",
+            upsert=Upsert.Ignore,
         )
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -259,12 +261,13 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_parcel_storage_4D.sqlite", upsert="ignore"
+            uri=tmp_path / "test_parcel_storage_4D.sqlite",
+            upsert=Upsert.Ignore,
         )
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
@@ -283,8 +286,8 @@ def test_ParcelAggregation_3D_mask() -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on="BOLD",
-            masks="compute_brain_mask",
+            on=DataType.BOLD,
+            masks=["compute_brain_mask"],
         )
         element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
             ..., 0:1
@@ -360,9 +363,9 @@ def test_ParcelAggregation_3D_mask_computed() -> None:
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
-            masks={"compute_brain_mask": {"threshold": 0.2}},
+            masks=[{"compute_brain_mask": {"threshold": 0.2}}],
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         parcel_agg_mean_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -444,7 +447,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -462,7 +465,7 @@ def test_ParcelAggregation_3D_multiple_non_overlapping(tmp_path: Path) -> None:
             ],
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
 
         # No warnings should be raised
@@ -549,7 +552,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -567,7 +570,7 @@ def test_ParcelAggregation_3D_multiple_overlapping(tmp_path: Path) -> None:
             ],
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         # Warning should be raised
         with pytest.warns(RuntimeWarning, match="overlapping voxels"):
@@ -658,7 +661,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         orig_mean = marker_original.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -676,7 +679,7 @@ def test_ParcelAggregation_3D_multiple_duplicated_labels(
             ],
             method="mean",
             name="tian_mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
 
         # Warning should be raised
@@ -712,7 +715,7 @@ def test_ParcelAggregation_4D_agg_time():
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method="mean",
             time_method="mean",
-            on="BOLD",
+            on=DataType.BOLD,
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -744,11 +747,11 @@ def test_ParcelAggregation_4D_agg_time():
         # Test picking first time point
         nifti_labels_masked_bold_pick_0 = nifti_labels_masked_bold[:1, :]
         marker = ParcelAggregation(
-            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
+            parcellation=["TianxS1x3TxMNInonlinear2009cAsym"],
             method="mean",
             time_method="select",
             time_method_params={"pick": [0]},
-            on="BOLD",
+            on=DataType.BOLD,
         )
         parcel_agg_bold_data = marker.fit_transform(element_data)["BOLD"][
             "aggregation"
@@ -771,7 +774,7 @@ def test_ParcelAggregation_errors() -> None:
             method="mean",
             time_method="select",
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
     with pytest.raises(
@@ -781,7 +784,7 @@ def test_ParcelAggregation_errors() -> None:
             parcellation="Schaefer100x7",
             method="mean",
             time_method_params={"pick": [0]},
-            on="VBM_GM",
+            on=[DataType.VBM_GM],
         )
 
 
@@ -797,7 +800,7 @@ def test_ParcelAggregation_warning() -> None:
                 method="mean",
                 time_method="select",
                 time_method_params={"pick": [0]},
-                on="BOLD",
+                on=DataType.BOLD,
             )
             element_data["BOLD"]["data"] = element_data["BOLD"]["data"].slicer[
                 ..., 0:1

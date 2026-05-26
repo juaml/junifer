@@ -13,7 +13,7 @@ from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from junifer.data import MapsRegistry
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
 from junifer.markers import FunctionalConnectivityMaps
 from junifer.storage import HDF5FeatureStorage
@@ -61,7 +61,7 @@ def test_FunctionalConnectivityMaps(
         )
         # Check correct output
         assert "matrix" == marker.storage_type(
-            input_type="BOLD", output_feature="functional_connectivity"
+            input_type=DataType.BOLD, output_feature="functional_connectivity"
         )
 
         # Fit-transform the data

@@ -20,7 +20,7 @@ from julearn import run_cross_validation, PipelineCreator
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
-from junifer.storage.sqlite import SQLiteFeatureStorage
+from junifer.storage import SQLiteFeatureStorage
 from junifer.utils import configure_logging
 
 

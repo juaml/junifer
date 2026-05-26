@@ -6,11 +6,12 @@
 import collections.abc
 import subprocess
 import sys
+from typing import Any
 
 from .logging import logger, raise_error
 
 
-__all__ = ["deep_update", "run_ext_cmd"]
+__all__ = ["deep_update", "ensure_list", "ensure_list_or_none", "run_ext_cmd"]
 
 
 def run_ext_cmd(name: str, cmd: list[str]) -> None:
@@ -82,3 +83,21 @@ def deep_update(d: dict, u: dict) -> dict:
         else:
             d[k] = v
     return d
+
+
+def ensure_list(value: Any) -> Any:
+    """Ensure list."""
+    if not isinstance(value, list):
+        return [value]
+    else:
+        return value
+
+
+def ensure_list_or_none(value: Any) -> Any:
+    """Ensure list or None."""
+    if value is None:
+        return None
+    if not isinstance(value, list):
+        return [value]
+    else:
+        return value

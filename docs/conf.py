@@ -65,6 +65,8 @@ extensions = [
     "sphinx_copybutton",  # copy button for code blocks
     "sphinxcontrib.mermaid",  # mermaid support
     "sphinxcontrib.towncrier.ext",  # towncrier fragment support
+    "sphinxcontrib.autodoc_pydantic",  # autodoc support for pydantic models
+    "enum_tools.autoenum",  # enum support
 ]
 
 if use_multiversion:
@@ -97,6 +99,15 @@ nitpick_ignore_regex = [
     ("py:class", "pipeline.Pipeline"),  # nilearn
     ("py:obj", "neurokit2.*"),  # ignore neurokit2
     ("py:obj", "datalad.*"),  # ignore datalad
+    ("py:obj", "junifer.*"),  # ignore junifer internal
+    ("py:class", "annotated_types.*"),  # ignore pydantic annotated types
+    ("py:obj", "variants"),  # ignore variants
+    ("py:obj", "them"),  # ignore them
+    ("py:class", "junifer.utils.helpers.ensure_list"),  # ignore ensure_list
+    ("py:class", "junifer.utils.helpers.ensure_list_or_none"),  # ignore ensure_list_or_none
+    ("py:class", "PydanticUndefined"),  # ignore PydanticUndefined
+    ("py:class", "FieldInfo"),  # ignore FieldInfo
+    ("py:class", "NoneType"),  # ignore NoneType
 ]
 
 # -- Options for HTML output -------------------------------------------------
@@ -154,6 +165,7 @@ intersphinx_mapping = {
     "pandas": ("https://pandas.pydata.org/pandas-docs/dev", None),
     # "sqlalchemy": ("https://docs.sqlalchemy.org/en/20/", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/", None),
+    "pydantic": ("https://docs.pydantic.dev/latest/", None),
 }
 
 # -- sphinx.ext.extlinks configuration ---------------------------------------

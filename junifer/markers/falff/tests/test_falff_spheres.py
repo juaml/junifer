@@ -8,10 +8,11 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy as sp
+import scipy.stats as sps
 
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
-from junifer.markers.falff import ALFFSpheres
+from junifer.markers import ALFFImpl, ALFFSpheres
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
@@ -39,8 +40,8 @@ def test_ALFFSpheres_storage_type(feature: str) -> None:
     """
     assert "vector" == ALFFSpheres(
         coords=COORDINATES,
-        using="junifer",
-    ).storage_type(input_type="BOLD", output_feature=feature)
+        using=ALFFImpl.junifer,
+    ).storage_type(input_type=DataType.BOLD, output_feature=feature)
 
 
 def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
@@ -63,7 +64,7 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Initialize marker
             marker = ALFFSpheres(
                 coords=COORDINATES,
-                using="junifer",
+                using=ALFFImpl.junifer,
                 radius=5.0,
             )
             # Fit transform marker on data
@@ -89,7 +90,9 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = SQLiteFeatureStorage(tmp_path / "falff_spheres.sqlite")
+            storage = SQLiteFeatureStorage(
+                uri=tmp_path / "falff_spheres.sqlite"
+            )
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
@@ -119,7 +122,7 @@ def test_ALFFSpheres_comparison(tmp_path: Path) -> None:
         # Initialize marker
         junifer_marker = ALFFSpheres(
             coords=COORDINATES,
-            using="junifer",
+            using=ALFFImpl.junifer,
             radius=5.0,
         )
         # Fit transform marker on data
@@ -130,7 +133,7 @@ def test_ALFFSpheres_comparison(tmp_path: Path) -> None:
         # Initialize marker
         afni_marker = ALFFSpheres(
             coords=COORDINATES,
-            using="afni",
+            using=ALFFImpl.afni,
             radius=5.0,
         )
         # Fit transform marker on data
@@ -140,7 +143,7 @@ def test_ALFFSpheres_comparison(tmp_path: Path) -> None:
 
         for feature in afni_output_bold.keys():
             # Check for Pearson correlation coefficient
-            r, _ = sp.stats.pearsonr(
+            r, _ = sps.pearsonr(
                 junifer_output_bold[feature]["data"][0],
                 afni_output_bold[feature]["data"][0],
             )

@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import atexit
 import os
 import shutil
 from pathlib import Path
@@ -182,6 +183,7 @@ def run(
                 "elements will be processed"
             )
     WorkDirManager(**workdir)
+    atexit.register(WorkDirManager()._cleanup)
 
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber.copy())

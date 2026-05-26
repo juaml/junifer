@@ -7,8 +7,9 @@
 from pathlib import Path
 
 import pytest
+from pydantic import AnyUrl
 
-from junifer.datagrabber import PatternDataladDataGrabber
+from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils.singleton import Singleton
 
 
@@ -40,8 +41,8 @@ def maps_datagrabber(tmp_path: Path) -> PatternDataladDataGrabber:
 
     """
     dg = PatternDataladDataGrabber(
-        uri="https://github.com/OpenNeuroDatasets/ds005226.git",
-        types=["BOLD"],
+        uri=AnyUrl("https://github.com/OpenNeuroDatasets/ds005226.git"),
+        types=DataType.BOLD,
         patterns={
             "BOLD": {
                 "pattern": (
