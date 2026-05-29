@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import AnyUrl
 
@@ -31,6 +31,19 @@ class JuselessDataladCamCANVBM(PatternDataladDataGrabber):
         directory.
 
     """
+
+    _dump_exclude: ClassVar[set[str]] = {
+        "patterns",
+        "replacements",
+        "confounds_format",
+        "partial_pattern_ok",
+        "uri",
+        "rootdir",
+        "datadir",
+        "datalad_id",
+        "datalad_dirty",
+        "datalad_commit_id",
+    }
 
     uri: AnyUrl = AnyUrl(
         "ria+http://cat_12.5.ds.inm7.de#a139b26a-8406-11ea-8f94-a0369f287950"

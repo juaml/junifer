@@ -48,6 +48,19 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
 
     """
 
+    _dump_exclude: ClassVar[set[str]] = {
+        "patterns",
+        "replacements",
+        "confounds_format",
+        "partial_pattern_ok",
+        "uri",
+        "rootdir",
+        "datadir",
+        "datalad_id",
+        "datalad_dirty",
+        "datalad_commit_id",
+    }
+
     uri: AnyUrl = AnyUrl(
         "ria+http://cat_12.5.ds.inm7.de#b7107c52-8408-11ea-89c6-a0369f287950"
     )

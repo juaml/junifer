@@ -7,7 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -51,6 +51,19 @@ class DataladAOMICID1000(PatternDataladDataGrabber):
         AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).
 
     """
+
+    _dump_exclude: ClassVar[set[str]] = {
+        "patterns",
+        "replacements",
+        "confounds_format",
+        "partial_pattern_ok",
+        "uri",
+        "rootdir",
+        "datadir",
+        "datalad_id",
+        "datalad_dirty",
+        "datalad_commit_id",
+    }
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds003097.git")
     types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
