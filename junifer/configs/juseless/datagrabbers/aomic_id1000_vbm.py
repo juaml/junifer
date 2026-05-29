@@ -4,7 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import AnyUrl
 
@@ -30,6 +30,19 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
         directory.
 
     """
+
+    _dump_exclude: ClassVar[set[str]] = {
+        "patterns",
+        "replacements",
+        "confounds_format",
+        "partial_pattern_ok",
+        "uri",
+        "rootdir",
+        "datadir",
+        "datalad_id",
+        "datalad_dirty",
+        "datalad_commit_id",
+    }
 
     uri: AnyUrl = AnyUrl("https://gin.g-node.org/felixh/ds003097_ReproVBM")
     types: list[Literal[DataType.VBM_GM]] = [DataType.VBM_GM]  # noqa: RUF012
