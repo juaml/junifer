@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import ClassVar, Literal
+from typing import Literal
 
 from pydantic import AnyUrl
 
@@ -32,19 +32,6 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
         directory.
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "patterns",
-        "replacements",
-        "confounds_format",
-        "partial_pattern_ok",
-        "uri",
-        "rootdir",
-        "datadir",
-        "datalad_id",
-        "datalad_dirty",
-        "datalad_commit_id",
-    }
 
     uri: AnyUrl = AnyUrl("ria+http://ukb.ds.inm7.de#~cat_m0wp1")
     rootdir: Path = Path("m0wp1")
