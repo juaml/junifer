@@ -610,6 +610,45 @@ def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
     return contents
 
 
+def _dg_dump_exclude(dg: str) -> set[str]:
+    """Generate datagrabber model dump exclusion set.
+
+    Parameters
+    ----------
+    dg : str
+        The datagrabber kind.
+
+    Returns
+    -------
+    set of str
+
+    """
+    if dg == "PatternDataGrabber":
+        return set()
+    elif dg == "PatternDataladDataGrabber":
+        return {
+            "datadir",
+            "datalad_dirty",
+            "datalad_commit_id",
+            "datalad_id",
+        }
+    else:
+        return {
+            # from PatternDataGrabber
+            "patterns",
+            "replacements",
+            "confounds_format",
+            "partial_pattern_ok",
+            # from DataladDataGrabber
+            "uri",
+            "rootdir",
+            "datadir",
+            "datalad_dirty",
+            "datalad_commit_id",
+            "datalad_id",
+        }
+
+
 def generate_yaml(meta: dict) -> "CommentedMap":
     """Generate the feature YAML from metadata.
 
@@ -638,9 +677,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
         "kind": a,
         **dg_model.model_dump(
             mode="json",
-            exclude=dg_model._dump_exclude
-            if hasattr(dg_model, "_dump_exclude")
-            else {},
+            exclude=_dg_dump_exclude(a),
             exclude_defaults=True,
             exclude_none=True,
         ),
