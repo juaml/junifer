@@ -8,7 +8,6 @@
 import re
 from copy import deepcopy
 from pathlib import Path
-from typing import ClassVar
 
 import numpy as np
 from aenum import Enum as AEnum
@@ -82,13 +81,6 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
     skip_file_check
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "patterns",
-        "replacements",
-        "confounds_format",
-        "partial_pattern_ok",
-    }
 
     patterns: DataGrabberPatterns = Field(frozen=True)
     replacements: list[str] = Field(frozen=True)

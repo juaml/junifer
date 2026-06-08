@@ -5,8 +5,6 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from typing import ClassVar
-
 from pydantic import ConfigDict
 
 from ..api.decorators import register_datagrabber
@@ -54,14 +52,6 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
         Concrete implementation for pattern-based data fetching.
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "uri",
-        "datadir",
-        "datalad_dirty",
-        "datalad_commit_id",
-        "datalad_id",
-    }
 
     model_config = ConfigDict(extra="allow")
 

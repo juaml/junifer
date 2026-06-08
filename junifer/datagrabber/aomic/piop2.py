@@ -8,7 +8,7 @@
 # License: AGPL
 
 from itertools import product
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -63,19 +63,6 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
         AOMIC space (default ``AOMICSpace.MNI152NLin2009cAsym``).
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "patterns",
-        "replacements",
-        "confounds_format",
-        "partial_pattern_ok",
-        "uri",
-        "rootdir",
-        "datadir",
-        "datalad_id",
-        "datalad_dirty",
-        "datalad_commit_id",
-    }
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds002790")
     types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012

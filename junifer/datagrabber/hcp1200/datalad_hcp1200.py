@@ -6,7 +6,7 @@
 # License: AGPL
 
 from pathlib import Path
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -49,19 +49,6 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
         (default False).
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "patterns",
-        "replacements",
-        "confounds_format",
-        "partial_pattern_ok",
-        "uri",
-        "rootdir",
-        "datadir",
-        "datalad_id",
-        "datalad_dirty",
-        "datalad_commit_id",
-    }
 
     uri: AnyUrl = AnyUrl(
         "https://github.com/datalad-datasets/"

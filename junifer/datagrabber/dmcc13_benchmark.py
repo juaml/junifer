@@ -5,7 +5,7 @@
 
 from enum import Enum
 from itertools import product
-from typing import Annotated, ClassVar, Literal
+from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -123,19 +123,6 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         Whether to use T1w in native space (default False).
 
     """
-
-    _dump_exclude: ClassVar[set[str]] = {
-        "patterns",
-        "replacements",
-        "confounds_format",
-        "partial_pattern_ok",
-        "uri",
-        "rootdir",
-        "datadir",
-        "datalad_id",
-        "datalad_dirty",
-        "datalad_commit_id",
-    }
 
     uri: AnyUrl = AnyUrl("https://github.com/OpenNeuroDatasets/ds003452.git")
     types: Annotated[_types | list[_types], BeforeValidator(ensure_list)] = [  # noqa: RUF012
