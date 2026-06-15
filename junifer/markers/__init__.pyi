@@ -23,9 +23,10 @@ __all__ = [
     "TemporalSNRParcels",
     "TemporalSNRSpheres",
     "BrainPrint",
+    "logger",
 ]
 
-from .base import BaseMarker
+from .base import BaseMarker, logger
 from .ets_rss import RSSETSMarker
 from .maps_aggregation import MapsAggregation
 from .parcel_aggregation import ParcelAggregation

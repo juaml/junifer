@@ -9,9 +9,10 @@ __all__ = [
     "SmoothingImpl",
     "TemporalSlicer",
     "TemporalFilter",
+    "logger",
 ]
 
-from .base import BasePreprocessor
+from .base import BasePreprocessor, logger
 from .confounds import fMRIPrepConfoundRemover, Confounds, Strategy
 from .warping import SpaceWarper, SpaceWarpingImpl
 from .smoothing import Smoothing, SmoothingImpl

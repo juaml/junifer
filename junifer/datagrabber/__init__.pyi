@@ -26,10 +26,11 @@ __all__ = [
     "DataType",
     "ConfoundsFormat",
     "register_confounds_format",
+    "logger",
 ]
 
 # These 4 need to be in this order, otherwise it is a circular import
-from .base import BaseDataGrabber, DataType
+from .base import BaseDataGrabber, DataType, logger
 from .datalad_base import DataladDataGrabber
 from .pattern import (
     PatternDataGrabber,
