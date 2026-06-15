@@ -20,8 +20,8 @@ from pydantic import BeforeValidator, PositiveFloat
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
-from ...utils import ensure_list_or_none, logger
-from ..base import BaseMarker
+from ...utils import ensure_list_or_none
+from ..base import BaseMarker, logger
 from ._afni_falff import AFNIALFF
 from ._junifer_falff import JuniferALFF
 

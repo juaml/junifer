@@ -9,11 +9,12 @@ from enum import Enum
 from typing import Any
 
 import numpy as np
+import structlog
 from pydantic import validate_call
 from scipy.stats import mode, trim_mean
 from scipy.stats.mstats import winsorize
 
-from .utils import logger, raise_error
+from .utils import raise_error
 
 
 __all__ = [
@@ -23,6 +24,9 @@ __all__ = [
     "select",
     "winsorized_mean",
 ]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="stats")
 
 
 class AggFunc(str, Enum):

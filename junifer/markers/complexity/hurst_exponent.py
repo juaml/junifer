@@ -9,7 +9,8 @@ import neurokit2 as nk
 import numpy as np
 
 from ...api.decorators import register_marker
-from ...utils import logger, warn_with_log
+from ...utils import warn_with_log
+from ..base import logger
 from .complexity_base import ComplexityBase
 
 

@@ -12,9 +12,10 @@ from typing import Any, ClassVar
 
 import numpy as np
 import pandas as pd
+import structlog
 from pydantic import BaseModel, ConfigDict
 
-from ..utils import logger, raise_error
+from ..utils import raise_error
 
 
 __all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
@@ -26,6 +27,10 @@ class MatrixKind(str, Enum):
     UpperTriangle = "triu"
     LowerTriangle = "tril"
     Full = "full"
+
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="storage", step="storage")
 
 
 class StorageType(str, Enum):
@@ -79,6 +84,10 @@ class BaseFeatureStorage(BaseModel, ABC):
                 "does not exist, creating now"
             )
             self.uri.parent.mkdir(parents=True, exist_ok=True)
+        logger.info(
+            f"Parameters: {self.model_dump(mode='json')}",
+            component=self.__class__.__name__,
+        )
 
     def validate_input(self, input_: list[str]) -> None:
         """Validate the input to the pipeline step.

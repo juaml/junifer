@@ -8,12 +8,17 @@
 import importlib
 from collections.abc import Mapping
 
+import structlog
+
 from ..typing import DataGrabberLike, MarkerLike, PreprocessorLike, StorageLike
-from ..utils import logger, raise_error
+from ..utils import raise_error
 from ..utils.singleton import Singleton
 
 
 __all__ = ["PipelineComponentRegistry"]
+
+_log = structlog.get_logger("junifer")
+logger = _log.bind(pkg="pipeline")
 
 
 class PipelineComponentRegistry(metaclass=Singleton):

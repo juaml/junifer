@@ -9,7 +9,7 @@ import numpy as np
 
 from ...api.decorators import register_marker
 from ...datagrabber import DataType
-from ...utils import logger
+from ..base import logger
 from ..maps_aggregation import MapsAggregation
 from .reho_base import ReHoBase
 

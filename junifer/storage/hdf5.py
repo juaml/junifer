@@ -22,8 +22,8 @@ from ..external.h5io.h5io import (
     read_hdf5,
     write_hdf5,
 )
-from ..utils import logger, raise_error
-from .base import BaseFeatureStorage, MatrixKind, StorageType
+from ..utils import raise_error
+from .base import BaseFeatureStorage, MatrixKind, StorageType, logger
 from .utils import (
     element_to_prefix,
     matrix_to_vector,

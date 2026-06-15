@@ -20,8 +20,8 @@ from pydantic import AnyUrl, Field, field_validator
 from ..api.decorators import register_datagrabber
 from ..pipeline import WorkDirManager
 from ..typing import Element
-from ..utils import config, logger, raise_error, warn_with_log
-from .base import BaseDataGrabber
+from ..utils import config, raise_error, warn_with_log
+from .base import BaseDataGrabber, logger
 
 
 __all__ = ["DataladDataGrabber"]

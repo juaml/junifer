@@ -23,6 +23,7 @@ DataGrabbers, Preprocessors, Markers, etc.,  following the *junifer* way.
    :caption: Contents:
 
    extension
+   logging
    datagrabber
    marker
    preprocessor

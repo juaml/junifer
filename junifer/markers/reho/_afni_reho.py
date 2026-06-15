@@ -15,8 +15,9 @@ import nibabel as nib
 
 from ...pipeline import ExtDep, WorkDirManager
 from ...typing import ExternalDependencies
-from ...utils import logger, run_ext_cmd
+from ...utils import run_ext_cmd
 from ...utils.singleton import Singleton
+from ..base import logger
 
 
 if TYPE_CHECKING:

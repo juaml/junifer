@@ -10,7 +10,7 @@ import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
-from ...utils import logger, raise_error, run_ext_cmd
+from ...utils import raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
 
@@ -92,6 +92,9 @@ class ANTsMaskWarper:
             If ``warp_data`` is None when ``dst="T1w"``.
 
         """
+        # Imported here to avoid circular import
+        from ._masks import logger
+
         # Create element-scoped tempdir so that warped mask is
         # available later as nibabel stores file path reference for
         # loading on computation
