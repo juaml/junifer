@@ -74,7 +74,9 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         # Run extra validation for datagrabbers and fail early if needed
         self.validate_datagrabber_params()
         # Convert to correct data type
-        # self.types = [DataType(t) for t in self.types]
+        self.types = [
+            DataType(t) if isinstance(t, str) else t for t in self.types
+        ]
         logger.info(
             f"Parameters: {self.model_dump(mode='json')}",
             component=self.__class__.__name__,
