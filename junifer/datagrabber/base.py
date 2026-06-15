@@ -68,9 +68,6 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
     datadir: Path
 
     def model_post_init(self, context: Any):  # noqa: D102
-        logger.debug("Initializing BaseDataGrabber")
-        logger.debug(f"\tdatadir = {self.datadir}")
-        logger.debug(f"\ttypes = {self.types}")
         # Run extra validation for datagrabbers and fail early if needed
         self.validate_datagrabber_params()
         # Convert to correct data type
