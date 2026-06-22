@@ -57,7 +57,7 @@ jobs:
           mkdir -p $HOME/junifer_data/v7
           cp -ar /root/junifer_data/v7/. $HOME/junifer_data/v7/
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           submodules: true
       - name: Set up Python ${{ matrix.python-version }}
@@ -78,7 +78,7 @@ jobs:
           git config --system --add safe.directory $(pwd)
           tox
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
