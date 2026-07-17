@@ -65,7 +65,9 @@ class BaseFeatureStorage(BaseModel, ABC):
 
     _STORAGE_TYPES: ClassVar[Sequence[StorageType]]
 
-    model_config = ConfigDict(frozen=True, use_enum_values=True)
+    model_config = ConfigDict(
+        extra="forbid", frozen=True, use_enum_values=True
+    )
 
     uri: Path
     single_output: bool = True

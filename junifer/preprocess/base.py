@@ -55,7 +55,7 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]]
 
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     on: Annotated[
         DataType | list[DataType] | None,

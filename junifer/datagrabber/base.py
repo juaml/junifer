@@ -13,7 +13,7 @@ from typing import Annotated, Any
 
 import structlog
 from aenum import Enum as AEnum
-from pydantic import BaseModel, BeforeValidator, ConfigDict, Field
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 
 from ..pipeline import UpdateMetaMixin
 from ..typing import Element, Elements
@@ -58,11 +58,10 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
     """
 
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     types: Annotated[
         DataType | list[DataType],
-        Field(frozen=True),
         BeforeValidator(ensure_list),
     ]
     datadir: Path
