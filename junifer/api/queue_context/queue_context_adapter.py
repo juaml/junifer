@@ -64,7 +64,7 @@ class QueueContextAdapter(BaseModel, ABC):
 
     model_config = ConfigDict(
         use_enum_values=True,
-        extra="allow",
+        extra="forbid",
     )
 
     @abstractmethod
