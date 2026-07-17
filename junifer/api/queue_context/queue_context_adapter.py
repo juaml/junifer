@@ -68,7 +68,7 @@ class QueueContextAdapter(BaseModel, ABC):
     )
 
     @abstractmethod
-    def pre_run(self) -> str:
+    def pre_run_cmds(self) -> str:
         """Return pre-run commands."""
         raise_error(
             msg="Concrete classes need to implement pre_run()",
@@ -76,7 +76,7 @@ class QueueContextAdapter(BaseModel, ABC):
         )
 
     @abstractmethod
-    def run(self) -> str:
+    def run_cmds(self) -> str:
         """Return run commands."""
         raise_error(
             msg="Concrete classes need to implement run()",
@@ -84,7 +84,7 @@ class QueueContextAdapter(BaseModel, ABC):
         )
 
     @abstractmethod
-    def pre_collect(self) -> str:
+    def pre_collect_cmds(self) -> str:
         """Return pre-collect commands."""
         raise_error(
             msg="Concrete classes need to implement pre_collect()",
@@ -92,7 +92,7 @@ class QueueContextAdapter(BaseModel, ABC):
         )
 
     @abstractmethod
-    def collect(self) -> str:
+    def collect_cmds(self) -> str:
         """Return collect commands."""
         raise_error(
             msg="Concrete classes need to implement collect()",

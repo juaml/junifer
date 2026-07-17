@@ -43,10 +43,10 @@ def test_HTCondorAdapter_pre_run(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "conda", "name": "junifer", "shell": shell},
-        pre_run_cmds=pre_run,
+        pre_run=pre_run,
     )
-    assert shell in adapter.pre_run()
-    assert expected_text in adapter.pre_run()
+    assert shell in adapter.pre_run_cmds()
+    assert expected_text in adapter.pre_run_cmds()
 
 
 @pytest.mark.parametrize(
@@ -88,11 +88,11 @@ def test_HTCondorAdapter_pre_collect(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "venv", "name": "junifer", "shell": shell},
-        pre_collect_cmds=pre_collect,
+        pre_collect=pre_collect,
         collect_task=collect,
     )
-    assert shell in adapter.pre_collect()
-    assert expected_text in adapter.pre_collect()
+    assert shell in adapter.pre_collect_cmds()
+    assert expected_text in adapter.pre_collect_cmds()
 
 
 @pytest.mark.parametrize(
@@ -122,8 +122,8 @@ def test_HTCondorAdapter_run_collect(
         elements=["sub01"],
         extra_preamble=extra_preamble,
     )
-    assert expected_text in adapter.run()
-    assert expected_text in adapter.collect()
+    assert expected_text in adapter.run_cmds()
+    assert expected_text in adapter.collect_cmds()
 
 
 @pytest.mark.parametrize(
@@ -165,7 +165,7 @@ def test_HTCondor_dag(
         elements=elements,
         collect_task=collect,
     )
-    assert expected_text in adapter.dag()
+    assert expected_text in adapter.dag_cmds()
 
 
 @pytest.mark.parametrize(
