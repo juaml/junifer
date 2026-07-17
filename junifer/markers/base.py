@@ -55,7 +55,7 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings]
 
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     on: Annotated[
         DataType | list[DataType] | None,

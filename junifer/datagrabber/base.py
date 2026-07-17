@@ -58,7 +58,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
 
     """
 
-    model_config = ConfigDict(use_enum_values=True)
+    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     types: Annotated[
         DataType | list[DataType],
