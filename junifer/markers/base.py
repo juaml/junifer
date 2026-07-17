@@ -6,16 +6,16 @@
 
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import Any, ClassVar
+from typing import Annotated, Any, ClassVar
 
 import structlog
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, BeforeValidator, ConfigDict
 
 from ..datagrabber import DataType
 from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..storage import StorageType
 from ..typing import MarkerInOutMappings, StorageLike
-from ..utils import raise_error
+from ..utils import ensure_list_or_none, raise_error
 
 
 __all__ = ["BaseMarker"]
@@ -57,7 +57,10 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
 
     model_config = ConfigDict(use_enum_values=True)
 
-    on: list[DataType] | None = None
+    on: Annotated[
+        DataType | list[DataType] | None,
+        BeforeValidator(ensure_list_or_none),
+    ] = None
     name: str | None = None
 
     def model_post_init(self, context: Any):  # noqa: D102
