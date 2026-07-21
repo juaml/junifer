@@ -146,7 +146,7 @@ class JuselessUCLA(PatternDataGrabber):
     @classmethod
     def dump_fields(cls) -> list[str]:
         """Fields to include when dumping model."""
-        return [*super().dump_fields(), "tasks"]
+        return ["types", "tasks"]
 
     def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
