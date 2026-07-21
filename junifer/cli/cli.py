@@ -17,7 +17,7 @@ from ..utils import (
     raise_error,
     yaml,
 )
-from .parser import parse_elements, parse_yaml
+from .parser import parse_elements
 from .utils import (
     _get_dependency_information,
     _get_environment_information,
@@ -162,7 +162,7 @@ def run(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO(synchon): add validation
     # Parse YAML
-    config = parse_yaml(filepath)
+    config = cli_func.parse_yaml(filepath)
     # Retrieve working directory
     workdir = config["workdir"]
     # Fetch datagrabber
@@ -232,7 +232,7 @@ def collect(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
-    config = parse_yaml(filepath)
+    config = cli_func.parse_yaml(filepath)
     # Fetch storage
     storage = config["storage"]
     # Perform operation
@@ -299,7 +299,7 @@ def queue(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
-    config = parse_yaml(filepath)  # type: ignore
+    config = cli_func.parse_yaml(filepath)  # type: ignore
     # Check queue section
     if "queue" not in config:
         raise_error(f"No queue configuration found in {filepath}.")
@@ -450,7 +450,7 @@ def reset(
     # Setup logging
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
-    config = parse_yaml(filepath)
+    config = cli_func.parse_yaml(filepath)
     # Perform operation
     cli_func.reset(config)
 
@@ -510,7 +510,7 @@ def list_elements(
     # Setup logging
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
-    config = parse_yaml(filepath)
+    config = cli_func.parse_yaml(filepath)
     # Fetch datagrabber
     datagrabber = config["datagrabber"]
     # Parse elements
