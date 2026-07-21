@@ -85,6 +85,11 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         """
         pass
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "datadir"]
+
     def __iter__(self) -> Iterator[Elements]:
         """Enable iterable support.
 

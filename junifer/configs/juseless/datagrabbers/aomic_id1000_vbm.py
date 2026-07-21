@@ -40,3 +40,8 @@ class JuselessDataladAOMICID1000VBM(PatternDataladDataGrabber):
         },
     }
     replacements: list[str] = ["subject"]  # noqa: RUF012
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return []
