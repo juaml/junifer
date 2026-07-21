@@ -73,10 +73,10 @@ def test_GnuParallelLocalAdapter_pre_run(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "conda", "name": "junifer", "shell": shell},
-        pre_run_cmds=pre_run,
+        pre_run=pre_run,
     )
-    assert shell in adapter.pre_run()
-    assert expected_text in adapter.pre_run()
+    assert shell in adapter.pre_run_cmds()
+    assert expected_text in adapter.pre_run_cmds()
 
 
 @pytest.mark.parametrize(
@@ -111,10 +111,10 @@ def test_GnuParallelLocalAdapter_pre_collect(
         yaml_config_path=Path("."),
         elements=["sub01"],
         env={"kind": "venv", "name": "junifer", "shell": shell},
-        pre_collect_cmds=pre_collect,
+        pre_collect=pre_collect,
     )
-    assert shell in adapter.pre_collect()
-    assert expected_text in adapter.pre_collect()
+    assert shell in adapter.pre_collect_cmds()
+    assert expected_text in adapter.pre_collect_cmds()
 
 
 def test_GnuParallelLocalAdapter_run() -> None:
@@ -125,7 +125,7 @@ def test_GnuParallelLocalAdapter_run() -> None:
         yaml_config_path=Path("."),
         elements=["sub01"],
     )
-    assert "run" in adapter.run()
+    assert "run" in adapter.run_cmds()
 
 
 def test_GnuParallelLocalAdapter_collect() -> None:
@@ -136,7 +136,7 @@ def test_GnuParallelLocalAdapter_collect() -> None:
         yaml_config_path=Path("."),
         elements=["sub01"],
     )
-    assert "collect" in adapter.collect()
+    assert "collect" in adapter.collect_cmds()
 
 
 @pytest.mark.parametrize(
