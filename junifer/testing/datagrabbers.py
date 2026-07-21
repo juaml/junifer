@@ -34,6 +34,11 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
     datadir: Path = Path(tempfile.mkdtemp())
     _dataset: Any = None
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types"]
+
     def get_element_keys(self) -> list[str]:
         """Get element keys.
 
@@ -100,6 +105,11 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
     types: list[DataType] = [DataType.BOLD, DataType.T1w]  # noqa: RUF012
     datadir: Path = Path(tempfile.mkdtemp())
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types"]
 
     def get_element_keys(self) -> list[str]:
         """Get element keys.
@@ -188,6 +198,11 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
     datadir: Path = Path(tempfile.mkdtemp())
     reduce_confounds: bool = True
     age_group: PartlyCloudyAgeGroup = PartlyCloudyAgeGroup.Both
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "reduce_confounds", "age_group"]
 
     def __enter__(self) -> "PartlyCloudyTestingDataGrabber":
         """Implement context entry.

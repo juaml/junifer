@@ -66,3 +66,8 @@ class JuselessDataladIXIVBM(PatternDataladDataGrabber):
         },
     }
     replacements: list[str] = ["site", "subject"]  # noqa: RUF012
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return []

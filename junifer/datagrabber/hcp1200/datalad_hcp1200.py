@@ -61,6 +61,11 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     ]
     rootdir: Path = Path("HCP1200")
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "tasks", "phase_encodings", "ica_fix"]
+
     # Needed here as HCP1200's subjects are sub-datasets, so will not be
     # found when elements are checked.
     @property

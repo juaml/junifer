@@ -159,6 +159,11 @@ class HCP1200(PatternDataGrabber):
         ].replace("{suffix}", suffix)
         super().validate_datagrabber_params()
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "datadir", "tasks", "phase_encodings", "ica_fix"]
+
     def get_item(self, subject: str, task: str, phase_encoding: str) -> dict:
         """Get the specified item from the dataset.
 

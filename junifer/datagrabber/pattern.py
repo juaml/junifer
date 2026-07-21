@@ -101,6 +101,17 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         logger.debug(f"\treplacements = {self.replacements}")
         logger.debug(f"\tconfounds_format = {self.confounds_format}")
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return [
+            *super().dump_fields(),
+            "patterns",
+            "replacements",
+            "confounds_format",
+            "partial_pattern_ok",
+        ]
+
     @property
     def skip_file_check(self) -> bool:
         """Skip file check existence."""
