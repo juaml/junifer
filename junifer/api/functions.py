@@ -708,6 +708,13 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     if "dependencies" in meta:
         for k, v in meta["dependencies"].items():
             pre += f"{k}=={v}\n"
+    pre += (
+        "\n`datadir` is ignored and not reproduced.\n"
+        "If `datadir` used was not a temporary directory, you will have to "
+        "manually edit this YAML.\n"
+        "In case the dataset was 'dirty', there is no guarantee that the "
+        "results will be reproducible.\n "
+    )
     d.yaml_set_start_comment(pre)
     # Add newline between sections
     for s in d.keys():
