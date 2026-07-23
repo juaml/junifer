@@ -641,6 +641,10 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     a = meta_dg.pop("class")
     try:
         dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
+    except ValueError:
+        y["datagrabber"] = {"kind": a}
+        post += f"- datagrabber:\n{issue.format(a)}"
+    else:
         dg_model = dg.model_construct(**meta_dg)
         y["datagrabber"] = {
             "kind": a,
@@ -651,9 +655,6 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                 exclude_none=True,
             ),
         }
-    except ValueError:
-        y["datagrabber"] = {"kind": a}
-        post += f"- datagrabber:\n{issue.format(a)}"
     # Set preprocessor(s)
     if "preprocess" in meta:
         y["preprocess"] = []
@@ -666,6 +667,13 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                 p = PipelineComponentRegistry().get_class(
                     step="preprocessing", name=b
                 )
+            except ValueError:
+                y["preprocess"].append({"kind": b})
+                if "- preprocess:\n" in post:
+                    post += f"{issue.format(b)}"
+                else:
+                    post += f"- preprocess:\n{issue.format(b)}"
+            else:
                 p_model = p.model_construct(**mp)
                 y["preprocess"].append(
                     {
@@ -678,18 +686,16 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                         ),
                     }
                 )
-            except ValueError:
-                y["preprocess"].append({"kind": b})
-                if "- preprocess:\n" in post:
-                    post += f"{issue.format(b)}"
-                else:
-                    post += f"- preprocess:\n{issue.format(b)}"
     # Set marker
     meta_m = meta["marker"].copy()
     c = meta_m.pop("class")
     y["markers"] = []
     try:
         m = PipelineComponentRegistry().get_class(step="marker", name=c)
+    except ValueError:
+        y["markers"].append({"kind": c})
+        post += f"- markers:\n{issue.format(c)}"
+    else:
         m_model = m.model_construct(**meta_m)
         y["markers"].append(
             {
@@ -701,9 +707,6 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                 ),
             }
         )
-    except ValueError:
-        y["markers"].append({"kind": c})
-        post += f"- markers:\n{issue.format(c)}"
     # Set storage
     y["storage"] = {
         "kind": "HDF5FeatureStorage",
