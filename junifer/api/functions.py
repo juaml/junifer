@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import structlog
+from pydantic import ValidationError
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber import BaseDataGrabber
@@ -610,7 +611,7 @@ def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
     return contents
 
 
-def generate_yaml(meta: dict) -> "CommentedMap":
+def generate_yaml(meta: dict) -> "CommentedMap":  # noqa: C901
     """Generate the feature YAML from metadata.
 
     Parameters
@@ -631,11 +632,18 @@ def generate_yaml(meta: dict) -> "CommentedMap":
         y["with"] = meta["with"].copy()
     # Init var for post comment and issues
     post = "\nIssues:\n"
-    issue = (
+    issue_ext = (
         "  - `{0}` is not a built-in component and thus could not be properly "
         "regenerated. Some of these entries in the YAML section might be "
         "redundant and not needed. Please check the "
-        "documentation/implementation of this specific datagrabber and remove "
+        "documentation/implementation of this specific component and remove "
+        "the unnecessary entries.\n"
+    )
+    issue_inv = (
+        "  - `{0}` failed to initialise and thus could not be properly "
+        "regenerated. Some of these entries in the YAML section might be "
+        "redundant and not needed. Please check the "
+        "documentation/implementation of this specific component and remove "
         "the unnecessary entries.\n"
     )
     var = ""
@@ -644,19 +652,24 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     a = meta_dg.pop("class")
     if a not in PipelineComponentRegistry()._components["datagrabber"]:
         y["datagrabber"] = {"kind": a, **meta_dg}
-        post += f"- datagrabber:\n{issue.format(a)}"
+        post += f"- datagrabber:\n{issue_ext.format(a)}"
     else:
         dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
-        dg_model = dg.model_construct(**meta_dg)
-        y["datagrabber"] = {
-            "kind": a,
-            **dg_model.model_dump(
-                mode="json",
-                include=set(dg_model.dump_fields()),
-                exclude_defaults=True,
-                exclude_none=True,
-            ),
-        }
+        try:
+            dg_model = dg.model_validate(**meta_dg)
+        except (ValidationError, TypeError):
+            y["datagrabber"] = {"kind": a, **meta_dg}
+            post += f"- datagrabber:\n{issue_inv.format(a)}"
+        else:
+            y["datagrabber"] = {
+                "kind": a,
+                **dg_model.model_dump(
+                    mode="json",
+                    include=set(dg_model.dump_fields()),
+                    exclude_defaults=True,
+                    exclude_none=True,
+                ),
+            }
         if meta_dg.get("datalad_dirty"):
             var = (
                 "- The dataset was 'dirty', there is no guarantee that the "
@@ -676,45 +689,58 @@ def generate_yaml(meta: dict) -> "CommentedMap":
             ):
                 y["preprocess"].append({"kind": b, **mp})
                 if "- preprocess:\n" in post:
-                    post += f"{issue.format(b)}"
+                    post += f"{issue_ext.format(b)}"
                 else:
-                    post += f"- preprocess:\n{issue.format(b)}"
+                    post += f"- preprocess:\n{issue_ext.format(b)}"
             else:
                 p = PipelineComponentRegistry().get_class(
                     step="preprocessing", name=b
                 )
-                p_model = p.model_construct(**mp)
-                y["preprocess"].append(
-                    {
-                        "kind": b,
-                        **p_model.model_dump(
-                            mode="json",
-                            exclude={"required_data_types"},
-                            exclude_defaults=True,
-                            exclude_none=True,
-                        ),
-                    }
-                )
+                try:
+                    p_model = p.model_validate(**mp)
+                except (ValidationError, TypeError):
+                    y["preprocess"].append({"kind": b, **mp})
+                    if "- preprocess:\n" in post:
+                        post += f"{issue_inv.format(b)}"
+                    else:
+                        post += f"- preprocess:\n{issue_inv.format(b)}"
+                else:
+                    y["preprocess"].append(
+                        {
+                            "kind": b,
+                            **p_model.model_dump(
+                                mode="json",
+                                exclude={"required_data_types"},
+                                exclude_defaults=True,
+                                exclude_none=True,
+                            ),
+                        }
+                    )
     # Set marker
     meta_m = meta["marker"].copy()
     c = meta_m.pop("class")
     y["markers"] = []
     if c not in PipelineComponentRegistry()._components["marker"]:
         y["markers"].append({"kind": c, **meta_m})
-        post += f"- markers:\n{issue.format(c)}"
+        post += f"- markers:\n{issue_ext.format(c)}"
     else:
         m = PipelineComponentRegistry().get_class(step="marker", name=c)
-        m_model = m.model_construct(**meta_m)
-        y["markers"].append(
-            {
-                "kind": c,
-                **m_model.model_dump(
-                    mode="json",
-                    exclude_defaults=True,
-                    exclude_none=True,
-                ),
-            }
-        )
+        try:
+            m_model = m.model_validate(**meta_m)
+        except (ValidationError, TypeError):
+            y["markers"].append({"kind": c, **meta_m})
+            post += f"- markers:\n{issue_inv.format(c)}"
+        else:
+            y["markers"].append(
+                {
+                    "kind": c,
+                    **m_model.model_dump(
+                        mode="json",
+                        exclude_defaults=True,
+                        exclude_none=True,
+                    ),
+                }
+            )
     # Set storage
     y["storage"] = {
         "kind": "HDF5FeatureStorage",
@@ -744,6 +770,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
             pre += f"{k}=={v}\n"
     const = (
         "\nNotes:\n"
+        "- Check the components for possible changes in the API.\n"
         "- `datadir` is ignored and not reproduced. "
         "If `datadir` used was not a temporary directory, you will have to "
         "manually edit this YAML.\n"
