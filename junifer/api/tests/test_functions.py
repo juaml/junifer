@@ -1045,7 +1045,7 @@ def test_parse_yaml_queue_venv_relative(tmp_path: Path) -> None:
                 "datadir": (
                     "/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpjeqj9nou"
                 ),
-                "reduce_confounds": True,
+                "reduce_confounds": False,
                 "age_group": "both",
             },
             "dependencies": {"scikit-learn": "1.4.2", "nilearn": "0.10.4"},

@@ -656,8 +656,8 @@ def generate_yaml(meta: dict) -> "CommentedMap":  # noqa: C901
     else:
         dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
         try:
-            dg_model = dg.model_validate(**meta_dg)
-        except (ValidationError, TypeError):
+            dg_model = dg.model_validate(meta_dg)
+        except ValidationError:
             y["datagrabber"] = {"kind": a, **meta_dg}
             post += f"- datagrabber:\n{issue_inv.format(a)}"
         else:
@@ -697,8 +697,8 @@ def generate_yaml(meta: dict) -> "CommentedMap":  # noqa: C901
                     step="preprocessing", name=b
                 )
                 try:
-                    p_model = p.model_validate(**mp)
-                except (ValidationError, TypeError):
+                    p_model = p.model_validate(mp)
+                except ValidationError:
                     y["preprocess"].append({"kind": b, **mp})
                     if "- preprocess:\n" in post:
                         post += f"{issue_inv.format(b)}"
@@ -726,8 +726,8 @@ def generate_yaml(meta: dict) -> "CommentedMap":  # noqa: C901
     else:
         m = PipelineComponentRegistry().get_class(step="marker", name=c)
         try:
-            m_model = m.model_validate(**meta_m)
-        except (ValidationError, TypeError):
+            m_model = m.model_validate(meta_m)
+        except ValidationError:
             y["markers"].append({"kind": c, **meta_m})
             post += f"- markers:\n{issue_inv.format(c)}"
         else:
