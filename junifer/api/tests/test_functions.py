@@ -1067,6 +1067,33 @@ def test_parse_yaml_queue_venv_relative(tmp_path: Path) -> None:
         },
         {
             "datagrabber": {
+                "class": "PartlyCloudyTestingDataGrabber",
+                "types": ["BOLD"],
+                "datadir": (
+                    "/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpjeqj9nou"
+                ),
+                "reduce_confound": True,
+                "age": "both",
+            },
+            "dependencies": {"scikit-learn": "1.4.2", "nilearn": "0.10.4"},
+            "datareader": {"class": "DefaultDataReader"},
+            "type": "BOLD",
+            "marker": {
+                "class": "FunctionalConnectivityParcels",
+                "on": ["BOLD"],
+                "name": "fc_mean-shen_2015_268_functional_connectivity",
+                "ag_method": "mean",
+                "ag_method_params": None,
+                "con_method": "correlation",
+                "con_method_params": {"empirical": True},
+                "masks": None,
+                "parcellation": ["Shen_2015_268"],
+            },
+            "_element_keys": ["subject"],
+            "name": "BOLD_fc_mean-shen_2015_268_functional_connectivity",
+        },
+        {
+            "datagrabber": {
                 "class": "DMCC13Benchmark",
                 "types": ["BOLD"],
                 "patterns": {
