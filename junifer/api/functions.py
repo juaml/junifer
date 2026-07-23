@@ -636,6 +636,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
         "reproduced. Either replace (or remove) the component or fill it in "
         "manually.\n"
     )
+    var = ""
     # Set datagrabber
     meta_dg = meta["datagrabber"].copy()
     a = meta_dg.pop("class")
@@ -655,6 +656,11 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                 exclude_none=True,
             ),
         }
+        if meta_dg.get("datalad_dirty"):
+            var = (
+                "- The dataset was 'dirty', there is no guarantee that the "
+                "results will be reproducible.\n"
+            )
     # Set preprocessor(s)
     if "preprocess" in meta:
         y["preprocess"] = []
@@ -739,11 +745,9 @@ def generate_yaml(meta: dict) -> "CommentedMap":
         "- `datadir` is ignored and not reproduced. "
         "If `datadir` used was not a temporary directory, you will have to "
         "manually edit this YAML.\n"
-        "- In case the dataset was 'dirty', there is no guarantee that the "
-        "results will be reproducible.\n"
     )
     post = post if post != "\nIssues:\n" else ""
-    d.yaml_set_start_comment(pre + const + post)
+    d.yaml_set_start_comment(pre + const + var + post)
     # Add newline between sections
     for s in d.keys():
         d.yaml_set_comment_before_after_key(s, before="\n")
