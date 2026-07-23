@@ -632,9 +632,11 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     # Init var for post comment and issues
     post = "\nIssues:\n"
     issue = (
-        "  - `{0}` is not a built-in component and thus could not be "
-        "reproduced. Either replace (or remove) the component or fill it in "
-        "manually.\n"
+        "  - `{0}` is not a built-in component and thus could not be properly "
+        "regenerated. Some of these entries in the YAML section might be "
+        "redundant and not needed. Please check the "
+        "documentation/implementation of this specific datagrabber and remove "
+        "the unnecessary entries.\n"
     )
     var = ""
     # Set datagrabber
