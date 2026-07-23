@@ -643,7 +643,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     try:
         dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
     except ValueError:
-        y["datagrabber"] = {"kind": a}
+        y["datagrabber"] = {"kind": a, **meta_dg}
         post += f"- datagrabber:\n{issue.format(a)}"
     else:
         dg_model = dg.model_construct(**meta_dg)
@@ -674,7 +674,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
                     step="preprocessing", name=b
                 )
             except ValueError:
-                y["preprocess"].append({"kind": b})
+                y["preprocess"].append({"kind": b, **mp})
                 if "- preprocess:\n" in post:
                     post += f"{issue.format(b)}"
                 else:
@@ -699,7 +699,7 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     try:
         m = PipelineComponentRegistry().get_class(step="marker", name=c)
     except ValueError:
-        y["markers"].append({"kind": c})
+        y["markers"].append({"kind": c, **meta_m})
         post += f"- markers:\n{issue.format(c)}"
     else:
         m_model = m.model_construct(**meta_m)
