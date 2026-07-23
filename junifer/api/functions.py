@@ -642,12 +642,11 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     # Set datagrabber
     meta_dg = meta["datagrabber"].copy()
     a = meta_dg.pop("class")
-    try:
-        dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
-    except ValueError:
+    if a not in PipelineComponentRegistry()._components["datagrabber"]:
         y["datagrabber"] = {"kind": a, **meta_dg}
         post += f"- datagrabber:\n{issue.format(a)}"
     else:
+        dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
         dg_model = dg.model_construct(**meta_dg)
         y["datagrabber"] = {
             "kind": a,
@@ -671,17 +670,19 @@ def generate_yaml(meta: dict) -> "CommentedMap":
             meta_p = [meta_p]
         for mp in meta_p:
             b = mp.pop("class")
-            try:
-                p = PipelineComponentRegistry().get_class(
-                    step="preprocessing", name=b
-                )
-            except ValueError:
+            if (
+                b
+                not in PipelineComponentRegistry()._components["preprocessing"]
+            ):
                 y["preprocess"].append({"kind": b, **mp})
                 if "- preprocess:\n" in post:
                     post += f"{issue.format(b)}"
                 else:
                     post += f"- preprocess:\n{issue.format(b)}"
             else:
+                p = PipelineComponentRegistry().get_class(
+                    step="preprocessing", name=b
+                )
                 p_model = p.model_construct(**mp)
                 y["preprocess"].append(
                     {
@@ -698,12 +699,11 @@ def generate_yaml(meta: dict) -> "CommentedMap":
     meta_m = meta["marker"].copy()
     c = meta_m.pop("class")
     y["markers"] = []
-    try:
-        m = PipelineComponentRegistry().get_class(step="marker", name=c)
-    except ValueError:
+    if c not in PipelineComponentRegistry()._components["marker"]:
         y["markers"].append({"kind": c, **meta_m})
         post += f"- markers:\n{issue.format(c)}"
     else:
+        m = PipelineComponentRegistry().get_class(step="marker", name=c)
         m_model = m.model_construct(**meta_m)
         y["markers"].append(
             {
