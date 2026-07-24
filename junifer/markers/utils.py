@@ -19,7 +19,7 @@ from ..utils import raise_error
 
 def _ets(
     bold_ts: np.ndarray,
-    roi_names: None | list[str] = None,
+    roi_names: list[str] | None = None,
 ) -> tuple[np.ndarray, list[str] | None]:
     """Compute the edge-wise time series based on BOLD time series.
 
