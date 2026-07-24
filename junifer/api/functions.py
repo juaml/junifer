@@ -6,14 +6,18 @@
 # License: AGPL
 
 import atexit
+import datetime as dt
 import importlib
 import importlib.util
+import io
 import os
 import shutil
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import structlog
+from pydantic import ValidationError
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
 from ..datagrabber import BaseDataGrabber
@@ -35,8 +39,13 @@ from ..typing import (
 from ..utils import raise_error, warn_with_log, yaml
 
 
+if TYPE_CHECKING:
+    from ruamel.yaml.comments import CommentedMap
+
+
 __all__ = [
     "collect",
+    "generate_yaml",
     "list_elements",
     "parse_yaml",
     "queue",
@@ -600,3 +609,175 @@ def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
                     )
 
     return contents
+
+
+def generate_yaml(meta: dict) -> "CommentedMap":  # noqa: C901
+    """Generate the feature YAML from metadata.
+
+    Parameters
+    ----------
+    meta : dict
+        Feature metadata as dictionary.
+
+    Returns
+    -------
+    ruamel.yaml.comments.CommentedMap
+        Feature YAML.
+
+    """
+    y: dict[str, Any] = {}
+    y["workdir"] = ""
+    # Add "with" section if present
+    if "with" in meta:
+        y["with"] = meta["with"].copy()
+    # Init var for post comment and issues
+    post = "\nIssues:\n"
+    issue_ext = (
+        "  - `{0}` is not a built-in component and thus could not be properly "
+        "regenerated. Some of these entries in the YAML section might be "
+        "redundant and not needed. Please check the "
+        "documentation/implementation of this specific component and remove "
+        "the unnecessary entries.\n"
+    )
+    issue_inv = (
+        "  - `{0}` failed to initialise and thus could not be properly "
+        "regenerated. Some of these entries in the YAML section might be "
+        "redundant and not needed. Please check the "
+        "documentation/implementation of this specific component and remove "
+        "the unnecessary entries.\n"
+    )
+    var = ""
+    # Set datagrabber
+    meta_dg = meta["datagrabber"].copy()
+    a = meta_dg.pop("class")
+    if a not in PipelineComponentRegistry()._components["datagrabber"]:
+        y["datagrabber"] = {"kind": a, **meta_dg}
+        post += f"- datagrabber:\n{issue_ext.format(a)}"
+    else:
+        dg = PipelineComponentRegistry().get_class(step="datagrabber", name=a)
+        try:
+            dg_model = dg.model_validate(meta_dg)
+        except ValidationError:
+            y["datagrabber"] = {"kind": a, **meta_dg}
+            post += f"- datagrabber:\n{issue_inv.format(a)}"
+        else:
+            y["datagrabber"] = {
+                "kind": a,
+                **dg_model.model_dump(
+                    mode="json",
+                    include=set(dg_model.dump_fields()),
+                    exclude_defaults=True,
+                    exclude_none=True,
+                ),
+            }
+        if meta_dg.get("datalad_dirty"):
+            var = (
+                "- The dataset was 'dirty', there is no guarantee that the "
+                "results will be reproducible.\n"
+            )
+    # Set preprocessor(s)
+    if "preprocess" in meta:
+        y["preprocess"] = []
+        meta_p = meta["preprocess"].copy()
+        if not isinstance(meta_p, list):
+            meta_p = [meta_p]
+        for mp in meta_p:
+            b = mp.pop("class")
+            if (
+                b
+                not in PipelineComponentRegistry()._components["preprocessing"]
+            ):
+                y["preprocess"].append({"kind": b, **mp})
+                if "- preprocess:\n" in post:
+                    post += f"{issue_ext.format(b)}"
+                else:
+                    post += f"- preprocess:\n{issue_ext.format(b)}"
+            else:
+                p = PipelineComponentRegistry().get_class(
+                    step="preprocessing", name=b
+                )
+                try:
+                    p_model = p.model_validate(mp)
+                except ValidationError:
+                    y["preprocess"].append({"kind": b, **mp})
+                    if "- preprocess:\n" in post:
+                        post += f"{issue_inv.format(b)}"
+                    else:
+                        post += f"- preprocess:\n{issue_inv.format(b)}"
+                else:
+                    y["preprocess"].append(
+                        {
+                            "kind": b,
+                            **p_model.model_dump(
+                                mode="json",
+                                exclude={"required_data_types"},
+                                exclude_defaults=True,
+                                exclude_none=True,
+                            ),
+                        }
+                    )
+    # Set marker
+    meta_m = meta["marker"].copy()
+    c = meta_m.pop("class")
+    y["markers"] = []
+    if c not in PipelineComponentRegistry()._components["marker"]:
+        y["markers"].append({"kind": c, **meta_m})
+        post += f"- markers:\n{issue_ext.format(c)}"
+    else:
+        m = PipelineComponentRegistry().get_class(step="marker", name=c)
+        try:
+            m_model = m.model_validate(meta_m)
+        except ValidationError:
+            y["markers"].append({"kind": c, **meta_m})
+            post += f"- markers:\n{issue_inv.format(c)}"
+        else:
+            y["markers"].append(
+                {
+                    "kind": c,
+                    **m_model.model_dump(
+                        mode="json",
+                        exclude_defaults=True,
+                        exclude_none=True,
+                    ),
+                }
+            )
+    # Set storage
+    y["storage"] = {
+        "kind": "HDF5FeatureStorage",
+        "uri": "",
+    }
+    # Set queue
+    if "queue" in meta:
+        y["queue"] = meta["queue"].copy()
+    else:
+        y["queue"] = {
+            "jobname": meta["name"],
+            "kind": "",
+        }
+    # Dump and load yaml to format
+    f = io.StringIO()
+    yaml.dump(y, stream=f)
+    f.seek(0)
+    d = yaml.load(f)
+    # Write comments
+    pre = (
+        "Auto-generated by junifer on "
+        f"{dt.datetime.now(tz=dt.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} "
+        "UTC\n\n"
+    )
+    if "dependencies" in meta:
+        for k, v in meta["dependencies"].items():
+            pre += f"{k}=={v}\n"
+    const = (
+        "\nNotes:\n"
+        "- Check the components for possible changes in the API.\n"
+        "- `datadir` is ignored and not reproduced. "
+        "If `datadir` used was not a temporary directory, you will have to "
+        "manually edit this YAML.\n"
+    )
+    post = post if post != "\nIssues:\n" else ""
+    d.yaml_set_start_comment(pre + const + var + post)
+    # Add newline between sections
+    for s in d.keys():
+        d.yaml_set_comment_before_after_key(s, before="\n")
+    return d

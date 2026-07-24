@@ -94,6 +94,11 @@ class MultipleDataGrabber(BaseDataGrabber):
                     klass=RuntimeError,
                 )
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return [*super().dump_fields(), "datagrabbers"]
+
     def __getitem__(self, element: Element) -> dict:
         """Implement indexing.
 

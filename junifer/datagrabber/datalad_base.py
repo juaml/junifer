@@ -176,6 +176,11 @@ class DataladDataGrabber(BaseDataGrabber):
         ) and self.datadir.stem.endswith("juniferauto"):
             _remove_datadir(self.datadir)
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "uri", "rootdir"]
+
     @property
     def fulldir(self) -> Path:
         """Get complete data directory path.

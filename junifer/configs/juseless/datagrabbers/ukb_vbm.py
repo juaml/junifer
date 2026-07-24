@@ -43,3 +43,8 @@ class JuselessDataladUKBVBM(PatternDataladDataGrabber):
         },
     }
     replacements: list[str] = ["subject", "session"]  # noqa: RUF012
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return []

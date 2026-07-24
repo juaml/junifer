@@ -262,6 +262,11 @@ class DataladAOMICPIOP2(PatternDataladDataGrabber):
             self.patterns["BOLD"]["prewarp_space"] = "native"
         super().validate_datagrabber_params()
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "tasks", "space"]
+
     def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
