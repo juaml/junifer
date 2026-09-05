@@ -276,6 +276,18 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             self.types.append(DataType.Warp)
         super().validate_datagrabber_params()
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return [
+            "types",
+            "sessions",
+            "tasks",
+            "phase_encodings",
+            "runs",
+            "native_t1w",
+        ]
+
     def get_item(
         self,
         subject: str,

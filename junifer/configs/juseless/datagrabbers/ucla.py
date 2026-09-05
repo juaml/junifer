@@ -143,6 +143,11 @@ class JuselessUCLA(PatternDataGrabber):
     replacements: list[str] = ["subject", "task"]  # noqa: RUF012
     confounds_format: ConfoundsFormat = ConfoundsFormat.FMRIPrep
 
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return ["types", "tasks"]
+
     def get_elements(self) -> list:
         """Implement fetching list of elements in the dataset.
 
