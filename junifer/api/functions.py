@@ -342,6 +342,9 @@ def queue(
             # Set cleanup
             config["workdir"]["cleanup"] = True
 
+        WorkDirManager(**config["workdir"])
+        atexit.register(WorkDirManager()._cleanup)
+
     # Load modules
     if "with" in config:
         to_load = config["with"]
