@@ -12,6 +12,7 @@ __all__ = [
     "MarkerInOutMappings",
     "DataGrabberPatterns",
     "ConfigVal",
+    "SpaceLike",
     "Element",
     "Elements",
 ]
@@ -30,6 +31,7 @@ from ._typing import (
     MarkerInOutMappings,
     DataGrabberPatterns,
     ConfigVal,
+    SpaceLike,
     Element,
     Elements,
 )

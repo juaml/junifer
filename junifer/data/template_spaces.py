@@ -12,6 +12,7 @@ import structlog
 from junifer_data import get
 from templateflow import api as tflow
 
+from ..typing import SpaceLike
 from ..utils import raise_error
 from .utils import JUNIFER_DATA_PARAMS, closest_resolution, get_dataset_path
 
@@ -22,14 +23,14 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="data")
 
 
-def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
+def get_xfm(src: SpaceLike, dst: SpaceLike) -> Path:  # pragma: no cover
     """Fetch warp files to convert from ``src`` to ``dst``.
 
     Parameters
     ----------
-    src : str
+    src : str or Enum
         The template space to transform from.
-    dst : str
+    dst : str or Enum
         The template space to transform to.
 
     Returns
@@ -38,6 +39,9 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
         The path to the transformation file.
 
     """
+    # Normalise enum-based spaces (e.g. `AOMICSpace`) to their values
+    src = getattr(src, "value", src)
+    dst = getattr(dst, "value", dst)
     # Set file path to retrieve
     xfm_file_path = Path(f"xfms/{src}_to_{dst}/{src}_to_{dst}_Composite.h5")
     # Retrieve file
@@ -49,7 +53,7 @@ def get_xfm(src: str, dst: str) -> Path:  # pragma: no cover
 
 
 def get_template(
-    space: str,
+    space: SpaceLike,
     target_img: nib.Nifti1Image,
     extra_input: dict[str, Any] | None = None,
     template_type: str = "T1w",
@@ -59,7 +63,7 @@ def get_template(
 
     Parameters
     ----------
-    space : str
+    space : str or Enum
         The name of the template space.
     target_img : Nifti1Image
         The corresponding image for which the template space will be loaded.
@@ -88,6 +92,8 @@ def get_template(
         If required template is not found.
 
     """
+    # Normalise enum-based spaces (e.g. `AOMICSpace`) to their values
+    space = getattr(space, "value", space)
     # Check for invalid space; early check to raise proper error
     if space not in tflow.templates():
         raise_error(f"Unknown template space: {space}")

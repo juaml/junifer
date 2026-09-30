@@ -13,7 +13,7 @@ import numpy as np
 
 from ...data import get_template, get_xfm
 from ...pipeline import ExtDep, WorkDirManager
-from ...typing import Dependencies, ExternalDependencies
+from ...typing import Dependencies, ExternalDependencies, SpaceLike
 from ...utils import raise_error, run_ext_cmd
 from ..base import logger
 
@@ -42,7 +42,7 @@ class ANTsWarper:
         self,
         input: dict[str, Any],
         extra_input: dict[str, Any],
-        reference: str,
+        reference: SpaceLike,
     ) -> dict[str, Any]:
         """Preprocess using ANTs.
 
@@ -53,7 +53,7 @@ class ANTsWarper:
         extra_input : dict
             The other fields in the Junifer Data object. Should have ``T1w``
             and ``Warp`` data types.
-        reference : str
+        reference : str or Enum
             The data type or template space to use as reference for warping.
 
         Returns

@@ -10,6 +10,7 @@ import nibabel as nib
 import numpy as np
 
 from ...pipeline import WorkDirManager
+from ...typing import SpaceLike
 from ...utils import raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
@@ -52,8 +53,8 @@ class ANTsMaskWarper:
         self,
         mask_name: str,
         mask_img: "Nifti1Image",
-        src: str,
-        dst: str,
+        src: SpaceLike,
+        dst: SpaceLike,
         target_data: dict[str, Any],
         warp_data: dict[str, Any] | None,
     ) -> "Nifti1Image":  # pragma: no cover
@@ -65,10 +66,10 @@ class ANTsMaskWarper:
             The name of the mask.
         mask_img : nibabel.nifti1.Nifti1Image
             The mask image to transform.
-        src : str
+        src : str or Enum
             The data type or template space to warp from.
             It should be empty string if ``dst="native"``.
-        dst : str
+        dst : str or Enum
             The data type or template space to warp to.
             `"native"` is the only allowed data type and it uses the resampled
             T1w found in ``target_data.reference``. The

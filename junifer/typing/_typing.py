@@ -12,6 +12,7 @@ else:
     from typing import TypedDict
 
 from collections.abc import Sequence
+from enum import Enum
 from typing import (
     TYPE_CHECKING,
     Union,
@@ -43,6 +44,7 @@ __all__ = [
     "MarkerLike",
     "PipelineComponent",
     "PreprocessorLike",
+    "SpaceLike",
     "StorageLike",
 ]
 
@@ -79,5 +81,6 @@ DataGrabberPatterns = dict[
     dict[str, dict[str, str] | str] | dict[str, str] | list[dict[str, str]],
 ]
 ConfigVal = bool | int | float | str
+SpaceLike = str | Enum
 Element = str | tuple[str, ...]
 Elements = Sequence[Element]
