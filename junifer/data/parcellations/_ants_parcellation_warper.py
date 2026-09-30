@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Any
 import nibabel as nib
 
 from ...pipeline import WorkDirManager
+from ...typing import SpaceLike
 from ...utils import raise_error, run_ext_cmd
 from ..template_spaces import get_template, get_xfm
 
@@ -31,8 +32,8 @@ class ANTsParcellationWarper:
         self,
         parcellation_name: str,
         parcellation_img: "Nifti1Image",
-        src: str,
-        dst: str,
+        src: SpaceLike,
+        dst: SpaceLike,
         target_data: dict[str, Any],
         warp_data: dict[str, Any] | None,
     ) -> "Nifti1Image":
@@ -44,10 +45,10 @@ class ANTsParcellationWarper:
             The name of the parcellation.
         parcellation_img : nibabel.nifti1.Nifti1Image
             The parcellation image to transform.
-        src : str
+        src : str or Enum
             The data type or template space to warp from.
             It should be empty string if ``dst="T1w"``.
-        dst : str
+        dst : str or Enum
             The data type or template space to warp to.
             `"T1w"` is the only allowed data type and it uses the resampled T1w
             found in ``target_data.reference``. The ``"reference"``
