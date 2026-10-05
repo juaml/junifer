@@ -6,9 +6,19 @@ LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
 LABEL org.opencontainers.image.description="Junifer CI container image"
 LABEL org.opencontainers.image.licenses=AGPL-3.0-only
 
+ARG RUNNER_VERSION
+ENV DEBIAN_FRONTEND=noninteractive
+
+LABEL Author="Fede Raimondo"
+LABEL Email="f.raimondo@fz-juelich.de"
+LABEL GitHub="https://github.com/fraimondo"
+LABEL BaseImage="python:3.12-slim-bookworm"
+LABEL RunnerVersion=${RUNNER_VERSION}
+
 RUN apt-get update && \
     apt-get install -y \
     pkg-config \
+    sudo \
     gcc \
     git \
     make \
@@ -42,10 +52,18 @@ RUN apt-get update && \
     dc \
     libquadmath0 \
     libgomp1 \
+    # Github Actions runner dependencies
+    nodejs \
+    wget \
+    unzip \
+    vim \
+    azure-cli \
+    jq \
+    libssl-dev \
+    libffi-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Add junifer-data
-COPY --from=ghcr.io/juaml/junifer-data:v7 /opt/junifer-data /root/junifer_data/v7
+RUN useradd -m docker
 
 # Add ANTs
 COPY --from=antsx/ants:latest /opt/ants /opt/ants
@@ -70,3 +88,50 @@ ENV FSLDIR=/opt/fsl \
 
 # Clean apt cache
 RUN apt-get autoremove --purge && apt-get clean
+
+# cd into the user directory, download and unzip the github actions runner
+RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
+    && curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+    && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
+
+# install some additional dependencies
+RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
+
+# add over the start.sh script
+ADD scripts/start.sh start.sh
+
+# make the script executable
+RUN chmod +x start.sh
+
+# Setup sudo
+RUN adduser docker sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+# Setup Hosted Tool Cache for Python versions
+ARG PYTHON_VERSIONS="3.10 3.11 3.12 3.13"
+ARG UBUNTU_TAG=22.04
+ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
+RUN set -eux; \
+    mkdir -p "$AGENT_TOOLSDIRECTORY"; \
+    curl -fsSL https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json -o /tmp/manifest.json; \
+    filter='[ .[] | select(.stable and (.version | startswith($v + "."))) | .files[] | select(.platform=="linux" and .platform_version==$os and .arch=="x64") ][0].download_url'; \
+    for v in $PYTHON_VERSIONS; do \
+      url=$(jq -r --arg v "$v" --arg os "$UBUNTU_TAG" "$filter" /tmp/manifest.json); \
+      test "$url" != "null"; \
+      tmp=$(mktemp -d); \
+      curl -fsSL "$url" | tar -xz -C "$tmp"; \
+      (cd "$tmp" && chmod +x ./setup.sh && ./setup.sh); \
+      rm -rf "$tmp"; \
+    done; \
+    rm /tmp/manifest.json; \
+    chown -R docker:docker "$AGENT_TOOLSDIRECTORY"
+
+# set the user to "docker" so all subsequent commands are run as the docker user
+USER docker
+
+# Add junifer-data
+COPY --from=ghcr.io/juaml/junifer-data:v7 /opt/junifer-data /home/docker/junifer_data/v7
+RUN echo v7 > /home/docker/junifer-data-version
+
+# set the entrypoint to the start.sh script
+ENTRYPOINT ["./start.sh"]
