@@ -39,9 +39,11 @@ def aomic_datadir(tmp_path_factory) -> Iterator[Path]:
     """
     datadir = tmp_path_factory.mktemp("aomic_data")
     datadir.mkdir(parents=True, exist_ok=True)
+    config.set("datagrabber.skipidcheck", True)
     dg = DataladAOMICID1000(uri=URI, types=["T1w"], datadir=datadir)
     with dg:
         yield datadir
+    config.set("datagrabber.skipidcheck", False)
 
 
 @pytest.mark.parametrize(
@@ -80,7 +82,7 @@ def test_DataladAOMICID1000(
         The path to the AOMIC data directory.
 
     """
-    config.set("datagrabber.skipidcheck", True)
+    
     dg = DataladAOMICID1000(
         uri=URI, types=type_, space=space, datadir=aomic_datadir
     )
@@ -106,8 +108,6 @@ def test_DataladAOMICID1000(
                 for nested_type in nested_types:
                     assert out[t][nested_type]["path"].exists()
                     assert out[t][nested_type]["path"].is_file()
-    config.set("datagrabber.skipidcheck", False)
-
 
 @pytest.mark.parametrize(
     "types",
@@ -138,7 +138,6 @@ def test_DataladAOMICID1000_partial_data_access(
         The path to the AOMIC data directory.
 
     """
-    config.set("datagrabber.skipidcheck", True)
     dg = DataladAOMICID1000(uri=URI, types=types, datadir=aomic_datadir)
     with dg:
         all_elements = dg.get_elements()
@@ -149,4 +148,3 @@ def test_DataladAOMICID1000_partial_data_access(
             types = [types]
         for t in types:
             assert t in out
-    config.set("datagrabber.skipidcheck", False)

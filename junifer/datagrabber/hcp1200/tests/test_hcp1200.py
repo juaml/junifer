@@ -21,7 +21,9 @@ def hcpdg() -> Iterable[DataladHCP1200]:
     tmpdir = Path(tempfile.gettempdir())
     config.set(key="datagrabber.skipidcheck", val=True)
     dg = DataladHCP1200(
-        uri=AnyUrl("https://gin.g-node.org/juaml/datalad-example-hcp1200"),
+        uri=AnyUrl(
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-hcp1200.git"
+        ),
         datadir=tmpdir / "hcp1200_test",
         rootdir=Path("."),
     )

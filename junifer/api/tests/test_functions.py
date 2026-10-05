@@ -35,7 +35,9 @@ _datagrabber = {
 }
 _bids_ses_datagrabber = {
     "kind": "PatternDataladDataGrabber",
-    "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
+    "uri": (
+        "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
+    ),
     "types": ["T1w", "BOLD"],
     "patterns": {
         "T1w": {

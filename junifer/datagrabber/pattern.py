@@ -350,8 +350,16 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
             dtype_val = [dtype_val]
         counts = []
         for val in dtype_val:
+            # Get all patterns for this dtype, including nested ones
+            t_dtype_patterns = [
+                v["pattern"]
+                for v in val.values()
+                if isinstance(v, dict) and "pattern" in v
+            ]
+            if "pattern" in val:
+                t_dtype_patterns.append(val["pattern"])
             counts.append(
-                np.sum([x in val.get("pattern") for x in self.replacements])
+                np.sum([x in t_dtype_patterns for x in self.replacements])
             )
         return np.max(counts).astype(int)
 

@@ -13,11 +13,15 @@ from junifer.datagrabber import MultipleDataGrabber, PatternDataladDataGrabber
 
 _testing_dataset = {
     "example_bids": {
-        "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
+        "uri": (
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-bids.git"
+        ),
         "id": "522dfb203afcd2cd55799bf347f9b211919a7338",
     },
     "example_bids_ses": {
-        "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
+        "uri": (
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
+        ),
         "id": "3d08d55d1faad4f12ab64ac9497544a0d924d47a",
     },
 }

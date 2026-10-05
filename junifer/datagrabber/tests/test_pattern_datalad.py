@@ -14,12 +14,16 @@ from junifer.datagrabber import DataType, PatternDataladDataGrabber
 
 _testing_dataset = {
     "example_bids": {
-        "uri": "https://gin.g-node.org/juaml/datalad-example-bids",
+        "uri": (
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-bids.git"
+        ),
         "commit": "3f288c8725207ae0c9b3616e093e78cda192b570",
         "id": "8fddff30-6993-420a-9d1e-b5b028c59468",
     },
     "example_bids_ses": {
-        "uri": "https://gin.g-node.org/juaml/datalad-example-bids-ses",
+        "uri": (
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
+        ),
         "commit": "6b163aa98af76a9eac0272273c27e14127850181",
         "id": "715c17cf-a1b9-42d6-9af8-9f74c1a4a724",
     },
