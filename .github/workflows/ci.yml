@@ -17,24 +17,15 @@ on:
 
 jobs:
   run-tests:
-    runs-on: ${{ matrix.runner }}
-    # Use custom CI image
-    container: ghcr.io/juaml/junifer-ci:main
+    runs-on: [self-hosted, linux, x64, data-v7]
     strategy:
       fail-fast: false
       matrix:
         python-version: ['3.9', '3.10', '3.11', '3.12']
         # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
-        runner: [ubuntu-22.04, self-hosted]
     steps:
       - run: df -h
-      - name: Clean runner
-        run: |
-          rm -rf /usr/share/dotnet \
-                 /usr/local/lib/android \
-                 /opt/ghc \
-                 /opt/hostedtoolcache
-      - run: df -h
+      - run: echo $HOME
       - name: Check ANTs
         run: |
           echo "Using ANTs : $(antsRegistration --version)"
