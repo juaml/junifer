@@ -7,13 +7,41 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Iterator
+from pathlib import Path
+
 import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber.aomic.id1000 import DataladAOMICID1000
+from junifer.utils import config
 
 
-URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomic1000")
+URI = AnyUrl(
+    "https://cerebra.fz-juelich.de/junifer/datalad-example-aomic1000.git"
+)
+
+
+@pytest.fixture(scope="session")
+def aomic_datadir(tmp_path_factory) -> Iterator[Path]:
+    """Return the path to the AOMIC data directory.
+
+    Parameters
+    ----------
+    tmp_path_factory : pathlib.Path
+        The path to the test directory.
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the AOMIC data directory.
+
+    """
+    datadir = tmp_path_factory.mktemp("aomic_data")
+    datadir.mkdir(parents=True, exist_ok=True)
+    dg = DataladAOMICID1000(uri=URI, types=["T1w"], datadir=datadir)
+    with dg:
+        yield datadir
 
 
 @pytest.mark.parametrize(
@@ -36,6 +64,7 @@ def test_DataladAOMICID1000(
     type_: str | list[str],
     nested_types: list[str] | None,
     space: str,
+    aomic_datadir: Path,
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber.
 
@@ -47,9 +76,14 @@ def test_DataladAOMICID1000(
         The parametrized nested types.
     space: str
         The parametrized space.
+    aomic_datadir: pathlib.Path
+        The path to the AOMIC data directory.
 
     """
-    dg = DataladAOMICID1000(uri=URI, types=type_, space=space)
+    config.set("datagrabber.skipidcheck", True)
+    dg = DataladAOMICID1000(
+        uri=URI, types=type_, space=space, datadir=aomic_datadir
+    )
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -72,6 +106,7 @@ def test_DataladAOMICID1000(
                 for nested_type in nested_types:
                     assert out[t][nested_type]["path"].exists()
                     assert out[t][nested_type]["path"].is_file()
+    config.set("datagrabber.skipidcheck", False)
 
 
 @pytest.mark.parametrize(
@@ -91,6 +126,7 @@ def test_DataladAOMICID1000(
 )
 def test_DataladAOMICID1000_partial_data_access(
     types: str | list[str],
+    aomic_datadir: Path,
 ) -> None:
     """Test DataladAOMICID1000 DataGrabber partial data access.
 
@@ -98,9 +134,12 @@ def test_DataladAOMICID1000_partial_data_access(
     ----------
     types : str or list of str
         The parametrized types.
+    aomic_datadir: pathlib.Path
+        The path to the AOMIC data directory.
 
     """
-    dg = DataladAOMICID1000(uri=URI, types=types)
+    config.set("datagrabber.skipidcheck", True)
+    dg = DataladAOMICID1000(uri=URI, types=types, datadir=aomic_datadir)
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -110,3 +149,4 @@ def test_DataladAOMICID1000_partial_data_access(
             types = [types]
         for t in types:
             assert t in out
+    config.set("datagrabber.skipidcheck", False)
