@@ -8,8 +8,10 @@ import tempfile
 from enum import Enum
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import nibabel as nib
+import numpy as np
 from nilearn import datasets, image
 
 from ..datagrabber import BaseDataGrabber, DataType
@@ -260,12 +262,26 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
 class ADHDTestingDataGrabber(BaseDataGrabber):
     """DataGrabber for ADHD dataset.
 
-    Wrapper for :func:`nilearn.datasets.fetch_adhd`.
+    Wrapper for :func:`nilearn.datasets.fetch_adhd`. The BOLD images are
+    truncated to the first ``n_timepoints``, resampled to the requested
+    resolution on the MNI152NLin6Asym (FSL) grid and cached (uncompressed)
+    next to the original files in the nilearn data directory.
+
+    Parameters
+    ----------
+    resolution : float, optional
+        The resolution (in mm) of the BOLD images. The original data is in
+        3mm (default 2.0).
+    n_timepoints : int or None, optional
+        The number of timepoints to keep. If None, all the 176 timepoints
+        are kept (default 50).
 
     """
 
     types: list[DataType] = [DataType.BOLD]  # noqa: RUF012
     datadir: Path = Path(tempfile.mkdtemp())
+    resolution: float = 2.0
+    n_timepoints: int | None = 50
 
     def __enter__(self) -> "ADHDTestingDataGrabber":
         """Implement context entry.
@@ -317,8 +333,81 @@ class ADHDTestingDataGrabber(BaseDataGrabber):
         out = {}
         i_sub = int(subject.split("-")[1]) - 1
         out["BOLD"] = {
-            "path": Path(self._dataset["func"][i_sub]),
+            "path": self._get_bold(Path(self._dataset["func"][i_sub])),
             "space": "MNI152NLin6Asym",
         }
 
         return out
+
+    def _get_bold(self, path: Path) -> Path:
+        """Get the BOLD image truncated and resampled as requested.
+
+        The resulting image is cached next to the original one, so it is
+        computed only once.
+
+        Parameters
+        ----------
+        path : pathlib.Path
+            The path to the original BOLD image.
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the BOLD image.
+
+        """
+        res = self.resolution
+        n_tp = self.n_timepoints
+        # FSL MNI152 grid: x is flipped and the bounding box is
+        # 180 x 216 x 180 mm, with the origin at (90, -126, -72)
+        target_affine = np.array(
+            [
+                [-res, 0, 0, 90],
+                [0, res, 0, -126],
+                [0, 0, res, -72],
+                [0, 0, 0, 1],
+            ]
+        )
+        target_shape = (
+            round(180 / res) + 1,
+            round(216 / res) + 1,
+            round(180 / res) + 1,
+        )
+        img = nib.load(path)
+        needs_resample = img.shape[:3] != target_shape or not np.allclose(
+            img.affine, target_affine
+        )
+        needs_truncate = n_tp is not None and n_tp < img.shape[3]
+        # Original data is already as requested
+        if not needs_resample and not needs_truncate:
+            return path
+
+        # Store uncompressed so it can be memory-mapped; otherwise every
+        # load decompresses the whole file again
+        tp_suffix = f"_tp-{n_tp}" if needs_truncate else ""
+        out_path = path.with_name(
+            path.name.replace(".nii.gz", f"_res-{res:g}mm{tp_suffix}.nii")
+        )
+        if not out_path.exists():
+            if needs_truncate:
+                img = img.slicer[..., :n_tp]
+            if needs_resample:
+                tr = img.header.get_zooms()[3]
+                img = image.resample_img(
+                    img,
+                    target_affine=target_affine,
+                    target_shape=target_shape,
+                    interpolation="continuous",
+                )
+                # Resampling creates a new header, so restore the TR
+                img.header.set_zooms((res, res, res, tr))
+                img.header.set_xyzt_units(xyz="mm", t="sec")
+            img.set_data_dtype(np.float32)
+            # Write to a temporary file and rename, so concurrent test
+            # workers never read a partially written file
+            tmp_path = out_path.with_name(
+                f".{out_path.stem}.{uuid4().hex}.nii"
+            )
+            nib.save(img, tmp_path)
+            tmp_path.replace(out_path)
+        return out_path

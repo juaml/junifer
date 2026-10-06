@@ -7,10 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import EdgeCentricFCMaps
 from junifer.storage import HDF5FeatureStorage
+from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
 @pytest.mark.parametrize(
@@ -22,7 +23,6 @@ from junifer.storage import HDF5FeatureStorage
 )
 def test_EdgeCentricFCMaps(
     tmp_path: Path,
-    maps_datagrabber: PatternDataladDataGrabber,
     conn_method_params: dict[str, bool],
 ) -> None:
     """Test EdgeCentricFCMaps.
@@ -31,14 +31,12 @@ def test_EdgeCentricFCMaps(
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
     conn_method_params : dict
         The parametrized parameters to connectivity measure method.
 
     """
-    with maps_datagrabber as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         # Setup marker
         marker = EdgeCentricFCMaps(

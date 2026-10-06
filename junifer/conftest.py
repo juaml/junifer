@@ -4,12 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
-
 import pytest
-from pydantic import AnyUrl
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils.singleton import Singleton
 
 
@@ -28,31 +24,3 @@ def reset_singletons() -> None:
     # Force deleting the singletons
     for elem in to_remove:
         del elem
-
-
-@pytest.fixture
-def maps_datagrabber(tmp_path: Path) -> PatternDataladDataGrabber:
-    """Return a PatternDataladDataGrabber for maps testing.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-
-    """
-    dg = PatternDataladDataGrabber(
-        uri=AnyUrl("https://github.com/OpenNeuroDatasets/ds005226.git"),
-        types=DataType.BOLD,
-        patterns={
-            "BOLD": {
-                "pattern": (
-                    "derivatives/pre-processed_data/space-MNI/{subject}/"
-                    "{subject-padded}_task-{task}_run-{run}_space-MNI152NLin6Asym"
-                    "_res-2_desc-preproc_bold.nii.gz"
-                ),
-                "space": "MNI152NLin6Asym",
-            },
-        },
-        replacements=["subject", "subject-padded", "task", "run"],
-    )
-    return dg

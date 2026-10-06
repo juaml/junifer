@@ -9,12 +9,13 @@ from pathlib import Path
 import pytest
 import scipy.stats as sps
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import ALFFImpl, ALFFMaps
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import HDF5FeatureStorage
+from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
 MAPS = "Smith_rsn_10"
@@ -45,7 +46,6 @@ def test_ALFFMaps_storage_type(feature: str) -> None:
 def test_ALFFMaps(
     caplog: pytest.LogCaptureFixture,
     tmp_path: Path,
-    maps_datagrabber: PatternDataladDataGrabber,
 ) -> None:
     """Test ALFFMaps.
 
@@ -55,16 +55,14 @@ def test_ALFFMaps(
         The pytest.LogCaptureFixture object.
     tmp_path : pathlib.Path
         The path to the test directory.
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
 
     """
     # Update workdir to current test's tmp_path
     WorkDirManager().workdir = tmp_path
 
     with caplog.at_level(logging.DEBUG):
-        with maps_datagrabber as dg:
-            element = dg[("sub-01", "sub-001", "rest", "1")]
+        with ADHDTestingDataGrabber() as dg:
+            element = dg["sub-01"]
             element_data = DefaultDataReader().fit_transform(element)
 
             # Initialize marker
@@ -118,24 +116,20 @@ def test_ALFFMaps(
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-def test_ALFFMaps_comparison(
-    tmp_path: Path, maps_datagrabber: PatternDataladDataGrabber
-) -> None:
+def test_ALFFMaps_comparison(tmp_path: Path) -> None:
     """Test ALFFMaps implementation comparison.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
 
     """
     # Update workdir to current test's tmp_path
     WorkDirManager().workdir = tmp_path
 
-    with maps_datagrabber as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
 
         # Initialize marker
