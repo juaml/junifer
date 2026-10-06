@@ -24,3 +24,20 @@ def reset_singletons() -> None:
     # Force deleting the singletons
     for elem in to_remove:
         del elem
+
+
+@pytest.fixture(autouse=True)
+def clear_computation_caches() -> None:
+    """Clear the cached computations of ReHo and ALFF estimators.
+
+    The estimators are singletons whose ``compute`` is cached per input
+    path, so results from earlier tests would otherwise be reused.
+
+    """
+    from junifer.markers.falff._afni_falff import AFNIALFF
+    from junifer.markers.falff._junifer_falff import JuniferALFF
+    from junifer.markers.reho._afni_reho import AFNIReHo
+    from junifer.markers.reho._junifer_reho import JuniferReHo
+
+    for klass in (AFNIALFF, JuniferALFF, AFNIReHo, JuniferReHo):
+        klass.compute.cache_clear()

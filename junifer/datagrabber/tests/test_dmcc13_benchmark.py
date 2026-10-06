@@ -9,7 +9,7 @@ import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import DataType, DMCC13Benchmark
-from junifer.utils import config
+from junifer.testing import config_override
 
 
 URI = AnyUrl(
@@ -17,7 +17,7 @@ URI = AnyUrl(
 )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def dmcc13_datadir(tmp_path_factory) -> Iterator[Path]:
     """Return the path to the DMCC13 benchmark data directory.
 
@@ -34,11 +34,9 @@ def dmcc13_datadir(tmp_path_factory) -> Iterator[Path]:
     """
     datadir = tmp_path_factory.mktemp("dmcc13_datadir")
     datadir.mkdir(parents=True, exist_ok=True)
-    config.set("datagrabber.skipidcheck", True)
     dg = DMCC13Benchmark(uri=URI, types=["T1w"], datadir=datadir)
-    with dg:
+    with config_override("datagrabber.skipidcheck", True), dg:
         yield datadir
-    config.set("datagrabber.skipidcheck", False)
 
 
 @pytest.mark.parametrize(

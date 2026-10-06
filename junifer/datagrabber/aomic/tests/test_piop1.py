@@ -13,7 +13,7 @@ import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import DataladAOMICPIOP1
-from junifer.utils import config
+from junifer.testing import config_override
 
 
 URI = AnyUrl(
@@ -21,7 +21,7 @@ URI = AnyUrl(
 )
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def aomic_datadir(tmp_path_factory) -> Iterator[Path]:
     """Return the path to the AOMIC data directory.
 
@@ -38,11 +38,9 @@ def aomic_datadir(tmp_path_factory) -> Iterator[Path]:
     """
     datadir = tmp_path_factory.mktemp("aomic_data")
     datadir.mkdir(parents=True, exist_ok=True)
-    config.set("datagrabber.skipidcheck", True)
     dg = DataladAOMICPIOP1(uri=URI, types=["T1w"], datadir=datadir)
-    with dg:
+    with config_override("datagrabber.skipidcheck", True), dg:
         yield datadir
-    config.set("datagrabber.skipidcheck", False)
 
 
 @pytest.mark.parametrize(
