@@ -82,7 +82,6 @@ def test_DataladAOMICID1000(
         The path to the AOMIC data directory.
 
     """
-    
     dg = DataladAOMICID1000(
         uri=URI, types=type_, space=space, datadir=aomic_datadir
     )
@@ -108,6 +107,7 @@ def test_DataladAOMICID1000(
                 for nested_type in nested_types:
                     assert out[t][nested_type]["path"].exists()
                     assert out[t][nested_type]["path"].is_file()
+
 
 @pytest.mark.parametrize(
     "types",
