@@ -11,36 +11,52 @@ import pytest
 
 pytest.importorskip("neurokit2")
 
+
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.complexity import MultiscaleEntropyAUC
-from junifer.pipeline.utils import _check_ants
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import (
-    SPMAuditoryTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
 )
 
 
 # Set parcellation
-PARCELLATION = "Schaefer100x17"
+PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 
 
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
-def test_compute() -> None:
-    """Test MultiscaleEntropyAUC compute()."""
-    with SPMAuditoryTestingDataGrabber() as dg:
+@pytest.fixture(scope="module")
+def element_data() -> dict:
+    """Load the data element once for all tests in the module.
+
+    Returns
+    -------
+    dict
+        The element data.
+
+    """
+    with PartlyCloudyTestingDataGrabber() as dg:
         # Fetch element
-        element = dg["sub001"]
+        element = dg["sub-01"]
         # Fetch element data
-        element_data = DefaultDataReader().fit_transform(element)
-        # Initialize the marker
-        marker = MultiscaleEntropyAUC(parcellation=PARCELLATION)
-        # Compute the marker
-        feature_map = marker.fit_transform(element_data)
-        # Assert the dimension of timeseries
-        assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
+        return DefaultDataReader().fit_transform(element)
+
+
+def test_compute(element_data: dict) -> None:
+    """Test MultiscaleEntropyAUC compute().
+
+    Parameters
+    ----------
+    element_data : dict
+        The element data.
+
+    """
+    # Initialize the marker
+    marker = MultiscaleEntropyAUC(parcellation=PARCELLATION)
+    # Compute the marker
+    feature_map = marker.fit_transform(element_data)
+    # Assert the dimension of timeseries
+    assert feature_map["BOLD"]["complexity"]["data"].ndim == 2
 
 
 def test_storage_type() -> None:
@@ -50,28 +66,22 @@ def test_storage_type() -> None:
     ).storage_type(input_type=DataType.BOLD, output_feature="complexity")
 
 
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
-def test_store(tmp_path: Path) -> None:
+def test_store(element_data: dict, tmp_path: Path) -> None:
     """Test MultiscaleEntropyAUC store().
 
     Parameters
     ----------
+    element_data : dict
+        The element data.
     tmp_path : pathlib.Path
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        # Fetch element
-        element = dg["sub001"]
-        # Fetch element data
-        element_data = DefaultDataReader().fit_transform(element)
-        # Initialize the marker
-        marker = MultiscaleEntropyAUC(parcellation=PARCELLATION)
-        # Create storage
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_multiscale_entropy_auc.sqlite"
-        )
-        # Compute the marker and store
-        marker.fit_transform(input=element_data, storage=storage)
+    # Initialize the marker
+    marker = MultiscaleEntropyAUC(parcellation=PARCELLATION)
+    # Create storage
+    storage = SQLiteFeatureStorage(
+        uri=tmp_path / "test_multiscale_entropy_auc.sqlite"
+    )
+    # Compute the marker and store
+    marker.fit_transform(input=element_data, storage=storage)
