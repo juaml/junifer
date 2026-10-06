@@ -33,15 +33,6 @@ jobs:
       - name: Check FSL
         run: |
           echo "Using FSL : $(flirt -version)"
-      - name: Install system dependencies
-        # actions/checkout fails to identify Git as it's not in the CI image
-        run: |
-          sudo apt-get -qq update
-          sudo apt-get -qq install -y \
-          git \
-          git-annex \
-          make \
-          jq
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
