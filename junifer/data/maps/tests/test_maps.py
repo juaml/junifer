@@ -14,10 +14,12 @@ from junifer.data import (
     register_data,
 )
 from junifer.data.maps._maps import _retrieve_smith
-from junifer.datagrabber import PatternDataladDataGrabber
 from junifer.datareader import DefaultDataReader
 from junifer.pipeline.utils import _check_ants
-from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
+from junifer.testing.datagrabbers import (
+    ADHDTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
+)
 
 
 def test_register_built_in_check() -> None:
@@ -116,22 +118,8 @@ def test_load_nonexisting() -> None:
 
 def test_get() -> None:
     """Test tailored maps fetch."""
-    with PatternDataladDataGrabber(
-        uri="https://github.com/OpenNeuroDatasets/ds005226.git",
-        types=["BOLD"],
-        patterns={
-            "BOLD": {
-                "pattern": (
-                    "derivatives/pre-processed_data/space-MNI/{subject}/"
-                    "{subject-padded}_task-{task}_run-{run}_space-MNI152NLin6Asym"
-                    "_res-2_desc-preproc_bold.nii.gz"
-                ),
-                "space": "MNI152NLin6Asym",
-            },
-        },
-        replacements=["subject", "subject-padded", "task", "run"],
-    ) as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         bold = element_data["BOLD"]
         bold_img = bold["data"]
