@@ -33,6 +33,11 @@ jobs:
       - name: Check FSL
         run: |
           echo "Using FSL : $(flirt -version)"
+      - name: Check tooling
+        run: |
+          echo "HOME=$HOME"
+          which git-annex && git annex version | head -1
+          ls -d "$HOME"/junifer_data/* && cat "$HOME/junifer-data-version"
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
