@@ -16,6 +16,7 @@ from ..datagrabber import BaseDataGrabber, DataType
 
 
 __all__ = [
+    "ADHDTestingDataGrabber",
     "OasisVBMTestingDataGrabber",
     "PartlyCloudyAgeGroup",
     "PartlyCloudyTestingDataGrabber",
@@ -251,6 +252,73 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
                 "path": Path(self._dataset["confounds"][i_sub]),
                 "format": "fmriprep",
             },
+        }
+
+        return out
+
+
+class ADHDTestingDataGrabber(BaseDataGrabber):
+    """DataGrabber for ADHD dataset.
+
+    Wrapper for :func:`nilearn.datasets.fetch_adhd`.
+
+    """
+
+    types: list[DataType] = [DataType.BOLD]  # noqa: RUF012
+    datadir: Path = Path(tempfile.mkdtemp())
+
+    def __enter__(self) -> "ADHDTestingDataGrabber":
+        """Implement context entry.
+
+        Returns
+        -------
+        ADHDTestingDataGrabber
+
+        """
+        self._dataset = datasets.fetch_adhd(n_subjects=10)
+        return self
+
+    def get_element_keys(self) -> list[str]:
+        """Get element keys.
+
+        Returns
+        -------
+        list of str
+            The element keys.
+
+        """
+        return ["subject"]
+
+    def get_elements(self) -> list[str]:
+        """Get elements.
+
+        Returns
+        -------
+        list of str
+            List of elements that can be grabbed.
+
+        """
+        return [f"sub-{x:02d}" for x in list(range(1, 11))]
+
+    def get_item(self, subject: str) -> dict[str, dict]:
+        """Implement indexing support.
+
+        Parameters
+        ----------
+        subject : str
+            The subject to retrieve.
+
+        Returns
+        -------
+        dict
+            The data along with the metadata.
+
+        """
+        out = {}
+        i_sub = int(subject.split("-")[1]) - 1
+        out["BOLD"] = {
+            "path": Path(self._dataset["func"][i_sub]),
+            "space": "MNI152NLin6Asym",
         }
 
         return out

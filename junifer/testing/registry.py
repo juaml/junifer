@@ -6,6 +6,7 @@
 
 from ..pipeline import PipelineComponentRegistry
 from .datagrabbers import (
+    ADHDTestingDataGrabber,
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
@@ -26,4 +27,9 @@ PipelineComponentRegistry().register(
 PipelineComponentRegistry().register(
     step="datagrabber",
     klass=PartlyCloudyTestingDataGrabber,
+)
+
+PipelineComponentRegistry().register(
+    step="datagrabber",
+    klass=ADHDTestingDataGrabber,
 )

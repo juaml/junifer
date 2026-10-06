@@ -6,6 +6,7 @@
 
 from junifer.pipeline import PipelineComponentRegistry
 from junifer.testing.datagrabbers import (
+    ADHDTestingDataGrabber,
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
@@ -15,6 +16,7 @@ from junifer.testing.datagrabbers import (
 def test_testing_registry() -> None:
     """Test testing registry."""
     for dg in [
+        ADHDTestingDataGrabber,
         OasisVBMTestingDataGrabber,
         SPMAuditoryTestingDataGrabber,
         PartlyCloudyTestingDataGrabber,
@@ -24,11 +26,13 @@ def test_testing_registry() -> None:
             klass=dg,
         )
     assert {
+        "ADHDTestingDataGrabber",
         "OasisVBMTestingDataGrabber",
         "SPMAuditoryTestingDataGrabber",
         "PartlyCloudyTestingDataGrabber",
     }.issubset(set(PipelineComponentRegistry().step_components("datagrabber")))
     for dg in [
+        ADHDTestingDataGrabber,
         OasisVBMTestingDataGrabber,
         SPMAuditoryTestingDataGrabber,
         PartlyCloudyTestingDataGrabber,
