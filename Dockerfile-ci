@@ -1,115 +1,70 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim-bookworm
+ARG DATA_VERSION
+FROM ghcr.io/juaml/junifer-data:${DATA_VERSION} AS junifer_data_image
 
-LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
-LABEL org.opencontainers.image.description="Junifer CI container image"
-LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+FROM ubuntu:24.04
 
-ARG RUNNER_VERSION
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
 
-LABEL Author="Fede Raimondo"
-LABEL Email="f.raimondo@fz-juelich.de"
-LABEL GitHub="https://github.com/fraimondo"
-LABEL BaseImage="python:3.12-slim-bookworm"
-LABEL RunnerVersion=${RUNNER_VERSION}
+LABEL org.opencontainers.image.source=https://github.com/juaml/junifer \
+      org.opencontainers.image.description="Junifer CI container image" \
+      org.opencontainers.image.licenses=AGPL-3.0-only \
+      Author="Fede Raimondo" \
+      Email="f.raimondo@fz-juelich.de" \
+      GitHub="https://github.com/fraimondo" \
+      BaseImage="ubuntu:24.04"
 
 RUN apt-get update && \
-    apt-get install -y \
-    pkg-config \
-    sudo \
-    gcc \
-    git \
-    make \
-    curl \
-    # ANTs runtime stuff
-    libhdf5-dev \
+    apt-get install -y --no-install-recommends \
+    # Base / runner tooling
+    ca-certificates curl wget git jq sudo unzip vim file \
+    xz-utils bzip2 zstd \
+    python3 python3-venv python-is-python3 \
+    # ANTs runtime
     bc \
-    # AFNI runtime stuff
-    libf2c2-dev \
-    libglew-dev \
-    libglib2.0-dev \
-    libglu1-mesa-dev \
-    libglw1-mesa-dev \
-    libgsl-dev \
-    libgts-dev \
-    libjpeg62-turbo-dev \
-    libmotif-dev \
-    libxi-dev \
-    libxmhtml-dev \
-    libxmu-dev \
-    libxpm-dev \
-    libxt-dev \
-    netpbm \
-    libjpeg-progs \
-    qhull-bin \
-    r-base \
-    tcsh \
-    xvfb \
-    # FSL runtime stuff
-    file \
-    dc \
-    libquadmath0 \
-    libgomp1 \
-    # Github Actions runner dependencies
-    nodejs \
-    wget \
-    unzip \
-    vim \
-    azure-cli \
-    jq \
-    libssl-dev \
-    libffi-dev \
+    # AFNI runtime (non-GUI subset of AFNI's Ubuntu 24 list)
+    tcsh gsl-bin libgsl27 libglu1-mesa libglw1-mesa libxm4 libjpeg62 \
+    libxmu6 libxpm4 libxi6 libxext6 libglib2.0-0t64 libgomp1 \
+    netpbm xvfb xfonts-base python3-numpy python3-matplotlib r-base \
+    # FSL runtime
+    dc libquadmath0 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m docker
+# Ubuntu 24.04 ships a default 'ubuntu' user (uid 1000); give that uid to our user
+RUN userdel -r ubuntu 2>/dev/null || true; \
+    useradd -m -u 1000 -s /bin/bash docker \
+    && usermod -aG sudo docker \
+    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/nopasswd
 
-# Add ANTs
+# --- Heavy, rarely-changing neuroimaging tools ---
+
+# ANTs
 COPY --from=antsx/ants:latest /opt/ants /opt/ants
-# Set env vars for ANTs
 ENV PATH="/opt/ants/bin:$PATH" \
     LD_LIBRARY_PATH="/opt/ants/lib"
 
-# Add AFNI
-COPY --from=afni/afni_make_build:latest /opt/afni/install /opt/afni/bin
-# Set env vars for AFNI
-ENV PATH="/opt/afni/bin:$PATH"
-# Patch gsl
-RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgsl.so.23
+# AFNI — native Ubuntu 24.04 build
+RUN mkdir -p /opt/afni \
+    && curl -fsSL https://afni.nimh.nih.gov/pub/dist/tgz/linux_ubuntu_24_64.tgz \
+       | tar -xz -C /opt/afni --strip-components=1
+ENV PATH="/opt/afni:$PATH"
 
-# Add FSL
-RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
-    python - -d /opt/fsl/ --skip_registration
-# Set env vars for FSL
+# FSL — clean conda package cache in the same layer
+RUN curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py -o /tmp/fslinstaller.py \
+    && (python3 /tmp/fslinstaller.py -d /opt/fsl/ --skip_registration \
+        || { cat /root/fsl_installation_*.log; exit 1; }) \
+    && rm -rf /opt/fsl/pkgs /tmp/fslinstaller.py /root/fsl_installation_*.log \
+    && find /opt/fsl -name '__pycache__' -prune -exec rm -rf {} + \
+    && ls /opt/fsl/bin | head -50
 ENV FSLDIR=/opt/fsl \
     FSLOUTPUTTYPE=NIFTI_GZ \
     PATH="/opt/fsl/share/fsl/bin:$PATH"
 
-# Clean apt cache
-RUN apt-get autoremove --purge && apt-get clean
-
-# cd into the user directory, download and unzip the github actions runner
-RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
-    && curl -O -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
-    && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
-
-# install some additional dependencies
-RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
-
-# add over the start.sh script
-ADD scripts/start.sh start.sh
-
-# make the script executable
-RUN chmod +x start.sh
-
-# Setup sudo
-RUN adduser docker sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# Setup Hosted Tool Cache for Python versions
-ARG PYTHON_VERSIONS="3.10 3.11 3.12 3.13"
-ARG UBUNTU_TAG=22.04
+# --- Hosted tool cache for setup-python ---
+ARG PYTHON_VERSIONS="3.10 3.11 3.12 3.13 3.14"
+ARG UBUNTU_TAG=24.04
 ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
 RUN set -eux; \
     mkdir -p "$AGENT_TOOLSDIRECTORY"; \
@@ -126,12 +81,25 @@ RUN set -eux; \
     rm /tmp/manifest.json; \
     chown -R docker:docker "$AGENT_TOOLSDIRECTORY"
 
-# set the user to "docker" so all subsequent commands are run as the docker user
+# --- GitHub Actions runner ---
+ARG RUNNER_VERSION
+LABEL RunnerVersion=${RUNNER_VERSION}
+RUN mkdir -p /home/docker/actions-runner && cd /home/docker/actions-runner \
+    && curl -fsSL -o runner.tar.gz \
+       https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+    && tar xzf runner.tar.gz && rm runner.tar.gz \
+    && ./bin/installdependencies.sh \
+    && rm -rf /var/lib/apt/lists/* \
+    && chown -R docker:docker /home/docker
+
+COPY --chmod=755 scripts/start.sh /start.sh
+
+# --- Test data (changes most often → last) ---
+ARG DATA_VERSION
+COPY --from=junifer_data_image --chown=docker:docker \
+     /opt/junifer-data /home/docker/junifer_data/${DATA_VERSION}
+RUN echo ${DATA_VERSION} > /home/docker/junifer-data-version
+
 USER docker
-
-# Add junifer-data
-COPY --from=ghcr.io/juaml/junifer-data:v7 /opt/junifer-data /home/docker/junifer_data/v7
-RUN echo v7 > /home/docker/junifer-data-version
-
-# set the entrypoint to the start.sh script
-ENTRYPOINT ["./start.sh"]
+WORKDIR /home/docker
+ENTRYPOINT ["/start.sh"]
