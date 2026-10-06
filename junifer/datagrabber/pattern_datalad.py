@@ -61,3 +61,16 @@ class PatternDataladDataGrabber(DataladDataGrabber, PatternDataGrabber):
         logger.debug("Initializing PatternDataladDataGrabber")
         for key, val in self.__pydantic_extra__.items():
             logger.debug(f"\t{key} = {val}")
+
+    @classmethod
+    def dump_fields(cls) -> list[str]:
+        """Fields to include when dumping model."""
+        return [
+            "types",
+            "patterns",
+            "replacements",
+            "confounds_format",
+            "partial_pattern_ok",
+            "uri",
+            "rootdir",
+        ]
