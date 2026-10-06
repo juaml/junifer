@@ -5,6 +5,7 @@
 # License: AGPL
 
 import tempfile
+from collections.abc import Callable
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,24 @@ __all__ = [
     "PartlyCloudyTestingDataGrabber",
     "SPMAuditoryTestingDataGrabber",
 ]
+
+
+def _save_atomic(out_path: Path, save: Callable[[Path], None]) -> None:
+    """Save a file by writing to a temporary file and renaming it.
+
+    Concurrent test workers never read a partially written file.
+
+    Parameters
+    ----------
+    out_path : pathlib.Path
+        The path to save to.
+    save : callable
+        Function that writes the file to the path it is given.
+
+    """
+    tmp_path = out_path.with_name(f".{uuid4().hex}.{out_path.name}")
+    save(tmp_path)
+    tmp_path.replace(out_path)
 
 
 class OasisVBMTestingDataGrabber(BaseDataGrabber):
@@ -195,6 +214,10 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         If False, returns all :term:`fMRIPrep` confounds (default True).
     age_group : {"adult", "child", "both"}, optional
        Age group to fetch (default ``PartlyCloudyAgeGroup.Both``).
+    n_timepoints : int or None, optional
+        The number of timepoints to keep. The truncated BOLD images and
+        confounds are cached next to the original files in the nilearn data
+        directory. If None, all the 168 timepoints are kept (default None).
 
     """
 
@@ -202,6 +225,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
     datadir: Path = Path(tempfile.mkdtemp())
     reduce_confounds: bool = True
     age_group: PartlyCloudyAgeGroup = PartlyCloudyAgeGroup.Both
+    n_timepoints: int | None = None
 
     def __enter__(self) -> "PartlyCloudyTestingDataGrabber":
         """Implement context entry.
@@ -258,16 +282,81 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         """
         out = {}
         i_sub = int(subject.split("-")[1]) - 1
+        bold_path = Path(self._dataset["func"][i_sub])
+        confounds_path = Path(self._dataset["confounds"][i_sub])
+        if self.n_timepoints is not None:
+            bold_path, confounds_path = self._truncate(
+                bold_path, confounds_path
+            )
         out["BOLD"] = {
-            "path": Path(self._dataset["func"][i_sub]),
+            "path": bold_path,
             "space": "MNI152NLin2009cAsym",
             "confounds": {
-                "path": Path(self._dataset["confounds"][i_sub]),
+                "path": confounds_path,
                 "format": "fmriprep",
             },
         }
 
         return out
+
+    def _truncate(
+        self, bold_path: Path, confounds_path: Path
+    ) -> tuple[Path, Path]:
+        """Truncate the BOLD image and confounds to ``n_timepoints``.
+
+        The truncated files are cached next to the original ones, so they
+        are computed only once.
+
+        Parameters
+        ----------
+        bold_path : pathlib.Path
+            The path to the original BOLD image.
+        confounds_path : pathlib.Path
+            The path to the original confounds file.
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the truncated BOLD image.
+        pathlib.Path
+            The path to the truncated confounds file.
+
+        """
+        n_tp = self.n_timepoints
+        img = nib.load(bold_path)
+        if n_tp >= img.shape[3]:
+            return bold_path, confounds_path
+
+        # Store uncompressed so it can be memory-mapped
+        out_bold = bold_path.with_name(
+            bold_path.name.replace("_bold.nii.gz", f"_tp-{n_tp}_bold.nii")
+        )
+        if not out_bold.exists():
+            # Keep the raw values and the original scaling; letting nibabel
+            # rescale the subset would re-quantize the data
+            truncated = nib.Nifti1Image(
+                np.asanyarray(img.dataobj.get_unscaled())[..., :n_tp],
+                img.affine,
+                img.header,
+            )
+            truncated.header.set_slope_inter(
+                img.dataobj.slope, img.dataobj.inter
+            )
+            _save_atomic(out_bold, lambda x: nib.save(truncated, x))
+
+        out_confounds = confounds_path.with_name(
+            confounds_path.name.replace(
+                "_regressors.tsv", f"_tp-{n_tp}_regressors.tsv"
+            )
+        )
+        if not out_confounds.exists():
+            # Copy the header and the first rows verbatim
+            lines = confounds_path.read_text().splitlines(keepends=True)
+            _save_atomic(
+                out_confounds,
+                lambda x: x.write_text("".join(lines[: n_tp + 1])),
+            )
+        return out_bold, out_confounds
 
 
 class ADHDTestingDataGrabber(BaseDataGrabber):
@@ -414,11 +503,5 @@ class ADHDTestingDataGrabber(BaseDataGrabber):
                 img.header.set_zooms((res, res, res, tr))
                 img.header.set_xyzt_units(xyz="mm", t="sec")
             img.set_data_dtype(np.float32)
-            # Write to a temporary file and rename, so concurrent test
-            # workers never read a partially written file
-            tmp_path = out_path.with_name(
-                f".{out_path.stem}.{uuid4().hex}.nii"
-            )
-            nib.save(img, tmp_path)
-            tmp_path.replace(out_path)
+            _save_atomic(out_path, lambda x: nib.save(img, x))
         return out_path
