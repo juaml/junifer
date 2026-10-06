@@ -99,10 +99,17 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
     Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
 
+    Parameters
+    ----------
+    n_timepoints : int or None, optional
+        The number of BOLD timepoints to keep. If None, all the 96
+        timepoints are kept (default None).
+
     """
 
     types: list[DataType] = [DataType.BOLD, DataType.T1w]  # noqa: RUF012
     datadir: Path = Path(tempfile.mkdtemp())
+    n_timepoints: int | None = None
 
     def get_element_keys(self) -> list[str]:
         """Get element keys.
@@ -142,10 +149,14 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         """
         out = {}
         nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
-        fmri_img = image.concat_imgs(nilearn_data.func)
+        # Each BOLD volume is a separate file, so keep only the ones needed
+        fmri_img = image.concat_imgs(nilearn_data.func[: self.n_timepoints])
         anat_img = image.concat_imgs(nilearn_data.anat)
 
-        fmri_fname = self.datadir / f"{subject}_bold.nii.gz"
+        tp_suffix = (
+            f"_tp-{self.n_timepoints}" if self.n_timepoints is not None else ""
+        )
+        fmri_fname = self.datadir / f"{subject}{tp_suffix}_bold.nii.gz"
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
         nib.save(fmri_img, fmri_fname)
         nib.save(anat_img, anat_fname)
