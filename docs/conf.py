@@ -7,26 +7,15 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
 import datetime
-from functools import partial
+import os
 from pathlib import Path
 
 from setuptools_scm import get_version
 
 
-# Check if sphinx-multiversion is installed
-use_multiversion = False
-try:
-    import sphinx_multiversion  # noqa: F401
-
-    use_multiversion = True
-except ImportError:
-    pass
-
-
 # -- Path setup --------------------------------------------------------------
 
 PROJECT_ROOT_DIR = Path(__file__).parents[1].resolve()
-get_scm_version = partial(get_version, root=PROJECT_ROOT_DIR)
 
 # -- Project information -----------------------------------------------------
 
@@ -39,12 +28,6 @@ github_repo_url = f"{github_url}/{github_repo_slug}"
 project = github_repo_name
 author = f"{project} Contributors"
 copyright = f"{datetime.date.today().year}, {author}"
-
-# The version along with dev tag
-release = get_scm_version(
-    version_scheme="guess-next-dev",
-    local_scheme="no-local-version",
-)
 
 # -- General configuration ---------------------------------------------------
 
@@ -68,9 +51,6 @@ extensions = [
     "sphinxcontrib.autodoc_pydantic",  # autodoc support for pydantic models
     "enum_tools.autoenum",  # enum support
 ]
-
-if use_multiversion:
-    extensions.append("sphinx_multiversion")
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = [
@@ -105,6 +85,10 @@ nitpick_ignore_regex = [
     ("py:obj", "them"),  # ignore them
     ("py:class", "junifer.utils.helpers.ensure_list"),  # ignore ensure_list
     ("py:class", "junifer.utils.helpers.ensure_list_or_none"),  # ignore ensure_list_or_none
+    # Unresolved names in source annotations, e.g. ``types`` of
+    # PatternDataladDataGrabber when building with sphinx-polyversion
+    ("py:class", "BeforeValidator"),
+    ("py:class", "ensure_list"),
     ("py:class", "PydanticUndefined"),  # ignore PydanticUndefined
     ("py:class", "FieldInfo"),  # ignore FieldInfo
     ("py:class", "NoneType"),  # ignore NoneType
@@ -120,6 +104,7 @@ html_logo = "./images/junifer_logo.png"
 # or fully qualified paths (eg. https://...)
 html_css_files = [
     "css/custom.css",
+    "css/version_selector.css",
 ]
 
 html_js_files = [
@@ -176,6 +161,43 @@ def _load_junifer() -> None:
 
 
 _load_junifer()
+
+# -- Version information -----------------------------------------------------
+
+# sphinx-polyversion is only imported (and needed) for multi-version builds;
+# local builds get the version from setuptools-scm.
+if os.getenv("POLYVERSION_DATA") is None:
+    # If POLYVERSION_DATA is not set, we are likely building the docs locally.
+    # In this case, we can use setuptools_scm to get the version information.
+    release = get_version(
+        root=PROJECT_ROOT_DIR,
+        version_scheme="guess-next-dev",
+        local_scheme="no-local-version",
+    )
+else:
+    # Only needed (and installed) when building with sphinx-polyversion
+    from sphinx_polyversion.api import load
+    from sphinx_polyversion.git import GitRefType
+
+    load(globals())
+    # This adds the following to the global scope
+    # html_context = {
+    #     "revisions": [GitRef('main', ...), GitRef('v6.8.9', ...), ...],
+    #     "current": GitRef('v1.4.6', ...),
+    # }
+
+    # process the loaded version information as you wish
+    html_context = globals().get("html_context", {})
+
+    if (
+        html_context["current"].type_ == GitRefType.BRANCH
+        and html_context["current"].name == "main"
+    ):
+        release = os.getenv("SETUPTOOLS_SCM_PRETEND_VERSION_FOR_JUNIFER")
+    else:
+        release = html_context["current"].name
+
+version = release
 
 # -- sphinx.ext.autosummary configuration ------------------------------------
 
@@ -247,13 +269,6 @@ sphinx_gallery_conf = {
     "filename_pattern": "/(plot|run)_",
     "backreferences_dir": "generated",
 }
-
-# -- sphinx-multiversion configuration ---------------------------------------
-
-smv_rebuild_tags = False
-smv_tag_whitelist = r"^v\d+\.\d+.\d+$"
-smv_branch_whitelist = r"main"
-smv_released_pattern = r"^tags/v.*$"
 
 # -- sphinxcontrib-towncrier configuration -----------------------------------
 
