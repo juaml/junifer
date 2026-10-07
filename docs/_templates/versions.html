@@ -1,25 +1,11 @@
-{% if versions %}
-<div class="sidebar-tree">
-  <p class="version-select">
-    <span class="caption-text">Other Versions</span>
-  </p>
-  <div id="versions">
-    {% if versions.branches %}
-    <span class="caption-text">{{ _('Branches') }}</span>
-    <ul>
-      {%- for item in versions.branches %}
-      <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>
-      {%- endfor %}
-    </ul>
-    {% endif %}
-    {% if versions.tags %}
-    <span class="caption-text">{{ _('Tags') }}</span>
-    <ul>
-      {%- for item in versions.tags %}
-      <li><a class="reference internal" href="{{ item.url }}">{{ item.name }}</a></li>
-      {%- endfor %}
-    </ul>
-    {% endif %}
-  </div>
+{# Furo-native version selector.
+   This placeholder is rendered by Sphinx at build time.
+   poly.py replaces it with the full multi-version list when patching. #}
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
 </div>
-{% endif %}

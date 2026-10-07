@@ -22,9 +22,11 @@ jobs:
       contents: write
     steps:
     - name: Check ANTs
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
     - name: Check tooling
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
         which make git-annex jq
         ls -d "$HOME"/junifer_data/v7
@@ -34,21 +36,26 @@ jobs:
         fetch-depth: 0
         submodules: true
     - name: Set up Python
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       uses: actions/setup-python@v7
       with:
         python-version: "3.12"
     - name: Set up uv
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       uses: astral-sh/setup-uv@v10.2.0
     - name: Install Python dependencies
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
-        uv pip install --system -e ".[docs,neurokit2]"
+        uv sync --locked --extra docs
     - name: Configure Git for DataLad
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
         git config --global user.email "junifer-runner@github.com"
         git config --global user.name "GitHub Runner"
     - name: Test build docs
+      if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
-        BUILDDIR=_build/main make -C docs/ local
+        BUILDDIR=_build/main uv run make -C docs/ local
     - name: Deploy preview
       if: github.event_name == 'pull_request'
       uses: rossjrw/pr-preview-action@v1

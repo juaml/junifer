@@ -47,3 +47,4 @@
 .. _`HTCondor`: https://research.cs.wisc.edu/htcondor/
 .. _`SLURM`: https://slurm.schedmd.com
 .. _`GNU Parallel`: https://www.gnu.org/software/parallel/
+.. _`sphinx-polyversion`: https://real-yfprojects.github.io/sphinx-polyversion

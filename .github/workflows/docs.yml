@@ -35,8 +35,7 @@ jobs:
       uses: astral-sh/setup-uv@v10.2.0
     - name: Install Python dependencies
       run: |
-        uv pip install --system -e ".[docs,neurokit2]"
-        uv pip install --system git+https://github.com/dls-controls/sphinx-multiversion@only-arg
+        uv sync --locked --extra docs
     - name: Configure Git for DataLad
       run: |
         git config --global user.email "junifer-runner@github.com"
@@ -49,11 +48,12 @@ jobs:
           ref: gh-pages
           path: docs/_build
     - name: Build docs
-      # Use the args we normally pass to sphinx-build, but run sphinx-multiversion
+      # Build all the versions with sphinx-polyversion; the versions already
+      # in gh-pages are kept and only the missing ones are built
       # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
       run: |
         git config --global --add safe.directory $(pwd)
-        make -C docs/ html
+        uv run make -C docs/ html
         touch docs/_build/.nojekyll
         cp docs/redirect.html docs/_build/index.html
     - name: Publish docs to gh-pages
