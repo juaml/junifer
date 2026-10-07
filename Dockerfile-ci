@@ -141,8 +141,10 @@ COPY --chown=docker:docker junifer /tmp/junifer-src/junifer
 RUN <<'EOF'
 set -eux
 python3 -m venv /tmp/junifer-venv
+# Editable: without .git, setuptools-scm cannot list the subpackages for a
+# regular install
 SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0 \
-    /tmp/junifer-venv/bin/pip install --no-cache-dir -q /tmp/junifer-src
+    /tmp/junifer-venv/bin/pip install --no-cache-dir -q -e /tmp/junifer-src
 /tmp/junifer-venv/bin/python - <<'PY'
 from templateflow import api as tflow
 
