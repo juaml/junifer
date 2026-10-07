@@ -12,7 +12,6 @@ from typing import (
 )
 
 import nibabel as nib
-from nilearn import masking as nmask
 
 from ...pipeline import ExtDep, WorkDirManager
 from ...typing import ExternalDependencies
@@ -56,6 +55,7 @@ class AFNIReHo(metaclass=Singleton):
         self,
         input_path: Path,
         nneigh: int = 27,
+        mask_path: Path | None = None,
         neigh_rad: float | None = None,
         neigh_x: float | None = None,
         neigh_y: float | None = None,
@@ -79,6 +79,9 @@ class AFNIReHo(metaclass=Singleton):
             * 27 : for face-, edge-, and node-wise neighbors
 
             (default 27).
+        mask_path : pathlib.Path or None, optional
+            Path to the mask to restrict the computation to, passed to
+            ``3dReHo`` as ``-mask``. If None, no mask is used (default None).
         neigh_rad : positive float, optional
             The radius of a desired neighbourhood (default None).
         neigh_x : positive float, optional
@@ -137,27 +140,15 @@ class AFNIReHo(metaclass=Singleton):
             prefix="afni_reho"
         )
 
-        niimg = nib.load(input_path)
-        # Calculate whole brain mask, same as JuniferReHo, so that
-        # neighbours outside the brain are excluded
-        brain_mask_path = element_tempdir / "brain_mask.nii.gz"
-        nib.save(
-            nmask.compute_brain_mask(
-                target_img=niimg,
-                threshold=0.5,
-                mask_type="whole-brain",
-            ),
-            brain_mask_path,
-        )
-
         # Set 3dReHo command
         reho_out_path_prefix = element_tempdir / "output"
         reho_cmd = [
             "3dReHo",
             f"-prefix {reho_out_path_prefix.resolve()}",
             f"-inset {input_path.resolve()}",
-            f"-mask {brain_mask_path.resolve()}",
         ]
+        if mask_path is not None:
+            reho_cmd.append(f"-mask {mask_path.resolve()}")
         # Check ellipsoidal / cuboidal volume arguments
         if neigh_rad:
             reho_cmd.append(f"-neigh_RAD {neigh_rad}")
@@ -181,6 +172,7 @@ class AFNIReHo(metaclass=Singleton):
         run_ext_cmd(name="3dReHo", cmd=reho_cmd)
 
         # Read header to get output suffix
+        niimg = nib.load(input_path)
         header = niimg.header
         sform_code = header.get_sform(coded=True)[1]
         if sform_code == 4:

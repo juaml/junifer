@@ -116,10 +116,12 @@ class ReHoMaps(ReHoBase):
         # transformation to native space.
         if self.reho_params is not None:
             reho_map, reho_file_path = self._compute(
-                input_data=input, **self.reho_params
+                input_data=input, extra_input=extra_input, **self.reho_params
             )
         else:
-            reho_map, reho_file_path = self._compute(input_data=input)
+            reho_map, reho_file_path = self._compute(
+                input_data=input, extra_input=extra_input
+            )
 
         # Perform aggregation on reho map
         aggregation_input = dict(input.items())

@@ -14,7 +14,6 @@ import nibabel as nib
 import numpy as np
 import scipy as sp
 from nilearn import image as nimg
-from nilearn import masking as nmask
 
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
@@ -50,6 +49,7 @@ class JuniferReHo(metaclass=Singleton):
         self,
         input_path: Path,
         nneigh: int = 27,
+        mask_path: Path | None = None,
     ) -> tuple["Nifti1Image", Path]:
         """Compute ReHo map.
 
@@ -66,6 +66,11 @@ class JuniferReHo(metaclass=Singleton):
             * 125 : for 5x5 cuboidal volume
 
             (default 27).
+        mask_path : pathlib.Path or None, optional
+            Path to the mask to restrict the computation to. Voxels outside
+            the mask are excluded from every neighbourhood and set to 0 in
+            the output. If None, voxels with non-zero time series are used,
+            same as AFNI's ``3dReHo`` without ``-mask`` (default None).
 
         Returns
         -------
@@ -94,24 +99,17 @@ class JuniferReHo(metaclass=Singleton):
         # Get scan dimensions
         n_x, n_y, n_z, n_t = niimg_data.shape
 
+        # Get mask as bool array
+        if mask_path is not None:
+            logical_mask = np.squeeze(nib.load(mask_path).get_fdata()) != 0
+        else:
+            # Same as AFNI's 3dReHo without -mask
+            logical_mask = np.sum(np.abs(niimg_data), axis=-1) > 1e-6
+
         # Get rank of every voxel across time series and tied rank correction
         # for every voxel
         ranks_niimg_data, tied_rank_corrections = _rank_with_ties(niimg_data)
         del niimg_data
-
-        # TODO(synchon): this will give incorrect results if
-        # template doesn't match, hence needs to be changed
-        # after #299 is merged
-        # Calculate whole brain mask
-        mni152_whole_brain_mask = nmask.compute_brain_mask(
-            target_img=niimg,
-            threshold=0.5,
-            mask_type="whole-brain",
-        )
-        # Convert 0 / 1 array to bool
-        logical_mni152_whole_brain_mask = (
-            mni152_whole_brain_mask.get_fdata().astype(bool)
-        )
 
         # Create mask cluster and set start and end indices
         if nneigh in (7, 19, 27):
@@ -149,21 +147,17 @@ class JuniferReHo(metaclass=Singleton):
                 mask_cluster[2, 0, 2] = 0
                 mask_cluster[2, 2, 2] = 0
 
-            start_idx = 1
-            end_idx = 2
-
         elif nneigh == 125:
             mask_cluster = np.ones((5, 5, 5))
-            start_idx = 2
-            end_idx = 3
 
-        # Exclude voxels outside the brain from every neighbourhood
-        ranks_niimg_data[~logical_mni152_whole_brain_mask] = 0
-        tied_rank_corrections[~logical_mni152_whole_brain_mask] = 0
+        # Exclude voxels outside the mask from every neighbourhood
+        ranks_niimg_data[~logical_mask] = 0
+        tied_rank_corrections[~logical_mask] = 0
         # Sum over the neighbourhood of every voxel: number of voxels in the
-        # brain, ranks per timepoint and tied rank corrections
+        # mask, ranks per timepoint and tied rank corrections; at the edges
+        # of the volume, only the neighbours within it are used
         n_neighbours = sp.ndimage.correlate(
-            logical_mni152_whole_brain_mask.astype(np.float64),
+            logical_mask.astype(np.float64),
             mask_cluster,
             mode="constant",
         )
@@ -187,23 +181,15 @@ class JuniferReHo(metaclass=Singleton):
         denominator = (n_neighbours**2 * n_t * (n_t**2 - 1)) - (
             n_neighbours * neighbourhood_tied_rank_corrections
         )
+        # If all the time series in the neighbourhood are fully tied, the
+        # denominator is 0 and KCC is set to 0, same as AFNI's 3dReHo
         with np.errstate(divide="ignore", invalid="ignore"):
-            kcc = np.where(denominator == 0, 1.0, numerator / denominator)
+            kcc = np.where(denominator == 0, 0.0, numerator / denominator)
 
-        # Only calculate for voxels in the brain that have a full
-        # neighbourhood within the volume
-        valid_voxels = np.zeros((n_x, n_y, n_z), dtype=bool)
-        valid_voxels[
-            start_idx : n_x - (end_idx - 1),
-            start_idx : n_y - (end_idx - 1),
-            start_idx : n_z - (end_idx - 1),
-        ] = True
-        valid_voxels &= logical_mni152_whole_brain_mask
-
-        # Initialize 3D array to store reho map; voxels outside the brain mask
-        # stay at 0, same as AFNI's 3dReHo with -mask
+        # Initialize 3D array to store reho map; voxels outside the mask stay
+        # at 0, same as AFNI's 3dReHo
         reho_map = np.zeros((n_x, n_y, n_z), dtype=np.float32)
-        reho_map[valid_voxels] = kcc[valid_voxels]
+        reho_map[logical_mask] = kcc[logical_mask]
 
         # Create new image like target image
         output_data = nimg.new_img_like(
@@ -229,7 +215,8 @@ def _rank_with_ties(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     """Rank data along the last axis and compute tied rank corrections.
 
     Equivalent to ``scipy.stats.rankdata(data, axis=-1)`` (tied values get
-    their average rank), but sorting only once.
+    their average rank and NaN propagates to the whole time series), but
+    sorting only once.
 
     Parameters
     ----------
@@ -278,4 +265,8 @@ def _rank_with_ties(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     # Tied values get their average rank; put back in the original order
     ranks = np.empty(data.shape, dtype=np.float64)
     np.put_along_axis(ranks, sort_idx, (min_ranks + max_ranks) / 2, axis=-1)
+    # Propagate NaN to the whole time series, same as scipy.stats.rankdata
+    has_nan = np.isnan(data).any(axis=-1)
+    ranks[has_nan] = np.nan
+    tied_rank_corrections[has_nan] = np.nan
     return ranks, tied_rank_corrections

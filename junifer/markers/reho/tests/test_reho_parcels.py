@@ -7,7 +7,7 @@ import logging
 from pathlib import Path
 
 import pytest
-import scipy.stats as sps
+from numpy.testing import assert_allclose
 
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
@@ -89,13 +89,16 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-def test_ReHoParcels_comparison(tmp_path: Path) -> None:
+@pytest.mark.parametrize("masks", [None, "compute_brain_mask"])
+def test_ReHoParcels_comparison(tmp_path: Path, masks: str | None) -> None:
     """Test ReHoParcels implementation comparison.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
+    masks : str or None
+        The masks to use.
 
     """
     # Use float data with few ties: ReHo is rank-based and the
@@ -107,7 +110,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         junifer_marker = ReHoParcels(
-            parcellation="Schaefer100x7", using=ReHoImpl.junifer
+            parcellation="Schaefer100x7", using=ReHoImpl.junifer, masks=masks
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -116,16 +119,14 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         afni_marker = ReHoParcels(
-            parcellation="Schaefer100x7", using=ReHoImpl.afni
+            parcellation="Schaefer100x7", using=ReHoImpl.afni, masks=masks
         )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
         # Get BOLD output
         afni_output_bold = afni_output["BOLD"]["reho"]
 
-        # Check for Pearson correlation coefficient
-        r, _ = sps.pearsonr(
-            junifer_output_bold["data"].flatten(),
-            afni_output_bold["data"].flatten(),
+        # Both implementations should give the same results
+        assert_allclose(
+            junifer_output_bold["data"], afni_output_bold["data"], atol=1e-6
         )
-        assert r >= 0.99
