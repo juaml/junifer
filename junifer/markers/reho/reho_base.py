@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import hashlib
 from enum import Enum
 from pathlib import Path
 from typing import (
@@ -12,9 +13,13 @@ from typing import (
     ClassVar,
 )
 
+import nibabel as nib
+import numpy as np
 from pydantic import BeforeValidator
 
+from ...data import get_data
 from ...datagrabber import DataType
+from ...pipeline import WorkDirManager
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils import ensure_list_or_none
@@ -98,8 +103,10 @@ class ReHoBase(BaseMarker):
         The parameters to pass to the aggregation function.
         See :func:`.get_aggfunc_by_name` for options (default None).
     masks : str, dict, list of them or None, optional
-        The specification of the masks to apply to regions before extracting
-        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        The specification of the masks to apply. The ReHo computation is
+        restricted to the voxels in the mask, and the mask is also applied
+        to regions before extracting signals. Check
+        :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
     name : str or None, optional
         The name of the marker.
@@ -136,6 +143,7 @@ class ReHoBase(BaseMarker):
     def _compute(
         self,
         input_data: dict[str, Any],
+        extra_input: dict[str, Any] | None = None,
         **reho_params: Any,
     ) -> tuple["Nifti1Image", Path]:
         """Compute voxel-wise ReHo.
@@ -151,6 +159,9 @@ class ReHoBase(BaseMarker):
         ----------
         input_data : dict
             The BOLD data as dictionary.
+        extra_input : dict, optional
+            The other fields in the pipeline data object. Used to compute
+            the mask in the space of ``input_data`` (default None).
         **reho_params : dict
             Extra keyword arguments for ReHo.
 
@@ -178,9 +189,22 @@ class ReHoBase(BaseMarker):
             estimator = AFNIReHo()
         elif self.using == "junifer":
             estimator = JuniferReHo()
+        # Get mask in the space of the input data
+        mask_path = None
+        if self.masks is not None:
+            logger.debug(f"Masking with {self.masks}")
+            mask_path = _save_mask(
+                get_data(
+                    kind="mask",
+                    names=self.masks,
+                    target_data=input_data,
+                    extra_input=extra_input,
+                )
+            )
         # Compute reho
         reho_map, reho_map_path = estimator.compute(  # type: ignore
             input_path=input_data["path"],
+            mask_path=mask_path,
             **reho_params,
         )
 
@@ -193,3 +217,38 @@ class ReHoBase(BaseMarker):
             return reho_map, input_data["path"]
 
         return reho_map, reho_map_path
+
+
+def _save_mask(mask_img: "Nifti1Image") -> Path:
+    """Save mask to the working directory, named by its content.
+
+    The same mask always gets the same path, so that the cached ReHo
+    computation can be reused by markers using the same mask.
+
+    Parameters
+    ----------
+    mask_img : Niimg-like object
+        The mask to save.
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the saved mask.
+
+    """
+    mask_data = np.squeeze(np.asarray(mask_img.dataobj)) != 0
+    digest = hashlib.sha256()
+    digest.update(str(mask_data.shape).encode())
+    digest.update(np.packbits(mask_data).tobytes())
+    digest.update(mask_img.affine.tobytes())
+    mask_path = (
+        WorkDirManager().workdir / f"reho_mask_{digest.hexdigest()[:16]}.nii"
+    )
+    if not mask_path.exists():
+        nib.save(
+            nib.Nifti1Image(
+                mask_data.astype(np.uint8), mask_img.affine, mask_img.header
+            ),
+            mask_path,
+        )
+    return mask_path

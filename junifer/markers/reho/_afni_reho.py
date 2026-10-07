@@ -55,6 +55,7 @@ class AFNIReHo(metaclass=Singleton):
         self,
         input_path: Path,
         nneigh: int = 27,
+        mask_path: Path | None = None,
         neigh_rad: float | None = None,
         neigh_x: float | None = None,
         neigh_y: float | None = None,
@@ -78,6 +79,9 @@ class AFNIReHo(metaclass=Singleton):
             * 27 : for face-, edge-, and node-wise neighbors
 
             (default 27).
+        mask_path : pathlib.Path or None, optional
+            Path to the mask to restrict the computation to, passed to
+            ``3dReHo`` as ``-mask``. If None, no mask is used (default None).
         neigh_rad : positive float, optional
             The radius of a desired neighbourhood (default None).
         neigh_x : positive float, optional
@@ -143,6 +147,8 @@ class AFNIReHo(metaclass=Singleton):
             f"-prefix {reho_out_path_prefix.resolve()}",
             f"-inset {input_path.resolve()}",
         ]
+        if mask_path is not None:
+            reho_cmd.append(f"-mask {mask_path.resolve()}")
         # Check ellipsoidal / cuboidal volume arguments
         if neigh_rad:
             reho_cmd.append(f"-neigh_RAD {neigh_rad}")
