@@ -26,13 +26,11 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: "3.x"
-    - name: Install build
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install build
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v10.2.0
     - name: Build package
       run:
-        python -m build
+        uv build
     - name: Publish package to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
     - name: Make release on GitHub

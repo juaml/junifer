@@ -18,11 +18,12 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: "3.x"
-      - name: Install dependencies
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Install tox
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install tox "ruff>=0.1.0"
+          uv tool install tox --with tox-uv
       - name: Run ruff
-        run: ruff check --output-format=github .
+        run: uvx "ruff>=0.1.0" check --output-format=github .
       - name: Run codespell
         run: tox -e codespell

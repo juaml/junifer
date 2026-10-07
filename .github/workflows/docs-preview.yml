@@ -37,10 +37,11 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: "3.12"
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v10.2.0
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip setuptools wheel
-        python -m pip install -e ".[docs,neurokit2]"
+        uv pip install --system -e ".[docs,neurokit2]"
     - name: Configure Git for DataLad
       run: |
         git config --global user.email "junifer-runner@github.com"
