@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -342,26 +351,26 @@ NIfTI.</p>
 </pre></div>
 </div>
 <p>Set the logging level to info to see extra information</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:15:28 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] click: 8.1.8                   [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] numpy: 2.3.5                   [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] pandas: 2.3.3                  [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] nibabel: 5.3.3                 [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] sqlalchemy: 2.1.0              [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] ruamel.yaml: 0.18.17           [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] h5py: 3.16.0                   [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] tqdm: 4.67.3                   [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] lapy: 1.6.0                    [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] junifer: 0.0.8.dev252          [junifer] pkg=utils
-2026-10-07 18:15:28 [info     ] ========================       [junifer] pkg=utils
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:10:33 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] click: 8.1.8                   [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] numpy: 1.26.4                  [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] pandas: 2.1.4                  [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] nibabel: 5.3.2                 [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] sqlalchemy: 2.0.44             [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] ruamel.yaml: 0.18.16           [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] h5py: 3.15.1                   [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] tqdm: 4.67.1                   [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] lapy: 1.3.0                    [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] junifer: 0.0.8.dev257          [junifer] pkg=utils
+2026-10-07 19:10:33 [info     ] ========================       [junifer] pkg=utils
 </pre></div>
 </div>
 <p>Perform sphere aggregation on VBM GM data (3D) from OASIS dataset</p>
@@ -372,27 +381,27 @@ NIfTI.</p>
     <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element_data</span></a> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">DefaultDataReader</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">dg</span><span class="p">[</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element</span></a><span class="p">])</span>
     <span class="c1"># Initialize marker</span>
     <span class="n">marker</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">SphereAggregation</span></a><span class="p">(</span>
-        <span class="n">coords</span><span class="o">=</span><span class="s2">"extDMN"</span><span class="p">,</span>
+        <span class="n">coords</span><span class="o">=</span><span class="s2">&quot;extDMN&quot;</span><span class="p">,</span>
         <span class="n">radius</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
         <span class="n">method</span><span class="o">=</span><span class="n">AggFunc</span><span class="o">.</span><span class="n">Mean</span><span class="p">,</span>
-        <span class="n">masks</span><span class="o">=</span><span class="s2">"compute_brain_mask"</span><span class="p">,</span>
+        <span class="n">masks</span><span class="o">=</span><span class="s2">&quot;compute_brain_mask&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="c1"># Compute feature</span>
     <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element_data</span></a><span class="p">)</span>
     <span class="c1"># Print the output</span>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">"VBM_GM"</span><span class="p">][</span><span class="s2">"aggregation"</span><span class="p">][</span><span class="s2">"data"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (1 x spheres)</span>
+    <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">&quot;VBM_GM&quot;</span><span class="p">][</span><span class="s2">&quot;aggregation&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (1 x spheres)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:15:28 [info     ] Parameters: {'types': ['VBM_GM'], 'datadir': '/tmp/tmp_qwbv4qc'} [junifer] component=OasisVBMTestingDataGrabber pkg=datagrabber step=datagrabber
-2026-10-07 18:15:28 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:28 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:28 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:28 [info     ] Parameters: {'on': ['T1w', 'T2w', 'BOLD', 'VBM_GM', 'VBM_WM', 'VBM_CSF', 'fALFF', 'GCOR', 'LCOR'], 'name': 'SphereAggregation', 'coords': 'extDMN', 'radius': 5.0, 'allow_overlap': False, 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': ['compute_brain_mask']} [junifer] component=SphereAggregation pkg=markers step=marker
-2026-10-07 18:15:28 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:28 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:31 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
-dict_keys([&lt;DataType.VBM_GM: 'VBM_GM'&gt;])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:10:33 [info     ] Parameters: {&#39;types&#39;: [&#39;VBM_GM&#39;], &#39;datadir&#39;: &#39;/tmp/tmp0knontyh&#39;} [junifer] component=OasisVBMTestingDataGrabber pkg=datagrabber step=datagrabber
+2026-10-07 19:10:33 [info     ] Getting element (&#39;sub-01&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:10:33 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:33 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:33 [info     ] Parameters: {&#39;on&#39;: [&#39;T1w&#39;, &#39;T2w&#39;, &#39;BOLD&#39;, &#39;VBM_GM&#39;, &#39;VBM_WM&#39;, &#39;VBM_CSF&#39;, &#39;fALFF&#39;, &#39;GCOR&#39;, &#39;LCOR&#39;], &#39;name&#39;: &#39;SphereAggregation&#39;, &#39;coords&#39;: &#39;extDMN&#39;, &#39;radius&#39;: 5.0, &#39;allow_overlap&#39;: False, &#39;method&#39;: &#39;mean&#39;, &#39;method_params&#39;: None, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: [&#39;compute_brain_mask&#39;]} [junifer] component=SphereAggregation pkg=markers step=marker
+2026-10-07 19:10:33 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:10:33 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:10:37 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
+dict_keys([&lt;DataType.VBM_GM: &#39;VBM_GM&#39;&gt;])
 (1, 16)
 </pre></div>
 </div>
@@ -404,7 +413,7 @@ dict_keys([&lt;DataType.VBM_GM: 'VBM_GM'&gt;])
     <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element_data</span></a> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">DefaultDataReader</span></a><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">dg</span><span class="p">[</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element</span></a><span class="p">])</span>
     <span class="c1"># Initialize marker</span>
     <span class="n">marker</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">ParcelAggregation</span></a><span class="p">(</span>
-        <span class="n">parcellation</span><span class="o">=</span><span class="s2">"Schaefer100x7"</span><span class="p">,</span>
+        <span class="n">parcellation</span><span class="o">=</span><span class="s2">&quot;Schaefer100x7&quot;</span><span class="p">,</span>
         <span class="n">method</span><span class="o">=</span><span class="n">AggFunc</span><span class="o">.</span><span class="n">Mean</span><span class="p">,</span>
         <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">],</span>
     <span class="p">)</span>
@@ -412,26 +421,26 @@ dict_keys([&lt;DataType.VBM_GM: 'VBM_GM'&gt;])
     <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a> <span class="o">=</span> <span class="n">marker</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">element_data</span></a><span class="p">)</span>
     <span class="c1"># Print the output</span>
     <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-    <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">"BOLD"</span><span class="p">][</span><span class="s2">"aggregation"</span><span class="p">][</span><span class="s2">"data"</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
+    <span class="nb">print</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">feature</span></a><span class="p">[</span><span class="s2">&quot;BOLD&quot;</span><span class="p">][</span><span class="s2">&quot;aggregation&quot;</span><span class="p">][</span><span class="s2">&quot;data&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># Shape is (timepoints x parcels)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:15:31 [info     ] Parameters: {'types': ['BOLD'], 'datadir': '/tmp/tmpzjs_5hu3', 'resolution': 2.0, 'n_timepoints': 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
-2026-10-07 18:15:31 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:31 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-2mm_tp-50.nii [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:31 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:31 [info     ] Parameters: {'on': ['BOLD'], 'name': 'ParcelAggregation', 'parcellation': ['Schaefer100x7'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
-2026-10-07 18:15:31 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
-2026-10-07 18:15:31 [info     ] Parcellation parameters:       [junifer] pkg=data
-2026-10-07 18:15:31 [info     ]         resolution: 2.0               [junifer] pkg=data
-2026-10-07 18:15:31 [info     ]         n_rois: 100                   [junifer] pkg=data
-2026-10-07 18:15:31 [info     ]         yeo_networks: 7               [junifer] pkg=data
-2026-10-07 18:15:32 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
-2026-10-07 18:15:38 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
-dict_keys([&lt;DataType.BOLD: 'BOLD'&gt;])
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:10:37 [info     ] Parameters: {&#39;types&#39;: [&#39;BOLD&#39;], &#39;datadir&#39;: &#39;/tmp/tmpx32pclwx&#39;, &#39;resolution&#39;: 2.0, &#39;n_timepoints&#39;: 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
+2026-10-07 19:10:37 [info     ] Getting element (&#39;sub-01&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:10:37 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-2mm_tp-50.nii [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:37 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:37 [info     ] Parameters: {&#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;ParcelAggregation&#39;, &#39;parcellation&#39;: [&#39;Schaefer100x7&#39;], &#39;method&#39;: &#39;mean&#39;, &#39;method_params&#39;: None, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: None} [junifer] component=ParcelAggregation pkg=markers step=marker
+2026-10-07 19:10:37 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
+2026-10-07 19:10:37 [info     ] Parcellation parameters:       [junifer] pkg=data
+2026-10-07 19:10:37 [info     ]         resolution: 2.0               [junifer] pkg=data
+2026-10-07 19:10:37 [info     ]         n_rois: 100                   [junifer] pkg=data
+2026-10-07 19:10:37 [info     ]         yeo_networks: 7               [junifer] pkg=data
+2026-10-07 19:10:37 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
+2026-10-07 19:10:44 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
+dict_keys([&lt;DataType.BOLD: &#39;BOLD&#39;&gt;])
 (50, 100)
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 11.219 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 12.033 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-compute-parcel-mean-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/ef059f4719b06b8d88553c134bac43b4/run_compute_parcel_mean.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_compute_parcel_mean.ipynb</span></code></a></p>
@@ -495,7 +504,7 @@ dict_keys([&lt;DataType.BOLD: 'BOLD'&gt;])
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -319,7 +328,7 @@
           <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
 <section id="junifer-release-2026-10-07">
-<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev252 (2026-10-07)<a class="headerlink" href="#junifer-release-2026-10-07" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev257 (2026-10-07)<a class="headerlink" href="#junifer-release-2026-10-07" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -340,13 +349,18 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 <code class="docutils literal notranslate"><span class="pre">top_level.txt</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">looseversion</span></code>, <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code>) on Python
 3.10 by using <code class="docutils literal notranslate"><span class="pre">importlib_metadata</span></code> for Python &lt; 3.11 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/511">#511</a>)</p></li>
-<li><p>Pass the same brain mask used by <code class="docutils literal notranslate"><span class="pre">using=&quot;junifer&quot;</span></code> to AFNI’s <code class="docutils literal notranslate"><span class="pre">3dReHo</span></code> for
-ReHo computation with <code class="docutils literal notranslate"><span class="pre">using=&quot;afni&quot;</span></code>, so that both implementations give the
-same results by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/514">#514</a>)</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">masks</span></code> parameter of <a class="reference internal" href="api/markers.html#junifer.markers.ReHoMaps" title="junifer.markers.ReHoMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReHoMaps</span></code></a>, <a class="reference internal" href="api/markers.html#junifer.markers.ReHoParcels" title="junifer.markers.ReHoParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReHoParcels</span></code></a> and
+<a class="reference internal" href="api/markers.html#junifer.markers.ReHoSpheres" title="junifer.markers.ReHoSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReHoSpheres</span></code></a> to restrict the ReHo computation for both
+<code class="docutils literal notranslate"><span class="pre">using=&quot;junifer&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">using=&quot;afni&quot;</span></code>, instead of an MNI152 brain mask
+resampled to the input data (wrong for native space) only for
+<code class="docutils literal notranslate"><span class="pre">using=&quot;junifer&quot;</span></code>. Without <code class="docutils literal notranslate"><span class="pre">masks</span></code>, both use the voxels with non-zero
+time series, so that both implementations give the same results by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/514">#514</a>)</p></li>
 <li><p>Fix ReHo computation with <code class="docutils literal notranslate"><span class="pre">using=&quot;junifer&quot;</span></code> including neighbours outside
-the brain mask, checking the wrong centre voxel for <code class="docutils literal notranslate"><span class="pre">nneigh=125</span></code> and
-setting voxels outside the brain mask to 1 instead of 0 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
-(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/514">#514</a>)</p></li>
+the mask, checking the wrong centre voxel for <code class="docutils literal notranslate"><span class="pre">nneigh=125</span></code>, setting voxels
+outside the mask to 1 instead of 0, skipping voxels at the edges of the
+volume and setting fully tied neighbourhoods to 1 instead of 0, so that it
+matches AFNI’s <code class="docutils literal notranslate"><span class="pre">3dReHo</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/514">#514</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
@@ -362,6 +376,11 @@ names of e.g. <code class="docutils literal notranslate"><span class="pre">Dosen
 <h3><span class="section-number">14.1.3. </span>Improved Documentation<a class="headerlink" href="#improved-documentation" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add documentation on adding confounds format by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/364">#364</a>)</p></li>
+<li><p>Build the documentation of all the released versions with
+<code class="docutils literal notranslate"><span class="pre">sphinx-polyversion</span></code> instead of <code class="docutils literal notranslate"><span class="pre">sphinx-multiversion</span></code>, using a <code class="docutils literal notranslate"><span class="pre">uv</span></code>
+environment per version, and add a version selector and a banner showing
+whether the latest, an old or the development version is being viewed by
+<a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/513">#513</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements">
@@ -407,6 +426,10 @@ stop building the docs and CI images on GitHub Actions by <a class="reference ex
 (self-hosted) and the rest (GitHub-hosted), build the docs on the self-hosted
 runner, make the examples faster and use <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a>, and
 bump <code class="docutils literal notranslate"><span class="pre">julearn</span></code> to 0.3.5 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/511">#511</a>)</p></li>
+<li><p>Add the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> optional dependencies with the tools to build the
+documentation, make <code class="docutils literal notranslate"><span class="pre">docs</span></code> include everything needed to build it, and skip
+building the PR preview of the documentation when the PR is closed by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/513">#513</a>)</p></li>
 </ul>
 </section>
 </section>
@@ -1461,7 +1484,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2026-10-07">14.1. junifer 0.0.8.dev252 (2026-10-07)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2026-10-07">14.1. junifer 0.0.8.dev257 (2026-10-07)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1545,7 +1568,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="_static/documentation_options.js?v=b0846d1d"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -403,18 +412,18 @@ information for each data type.</p></li>
 should be replaced by the values of the element.</p></li>
 </ul>
 <p>For example, in our BIDS example, the variables will be:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"T1w"</span><span class="p">,</span> <span class="s2">"BOLD"</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
 <span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-        <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+    <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
     <span class="p">},</span>
-    <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-        <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+    <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
-<span class="n">replacements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+<span class="n">replacements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>An additional fourth variable is the <code class="docutils literal notranslate"><span class="pre">datadir</span></code>, which should be the path to
@@ -435,16 +444,16 @@ the following example.</p>
 
     <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">T1w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">]</span>
     <span class="n">patterns</span><span class="p">:</span> <span class="n">DataGrabberPatterns</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+        <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
-    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Our DataGrabber is ready to be used by <code class="docutils literal notranslate"><span class="pre">junifer</span></code>. However, it is still unknown
@@ -462,16 +471,16 @@ use the <a class="reference internal" href="../api/api.html#junifer.api.decorato
 
     <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">T1w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">]</span>
     <span class="n">patterns</span><span class="p">:</span> <span class="n">DataGrabberPatterns</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+        <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
-    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Now, we can use our DataGrabber in <code class="docutils literal notranslate"><span class="pre">junifer</span></code>, by setting the <code class="docutils literal notranslate"><span class="pre">datagrabber</span></code>
@@ -513,8 +522,8 @@ be used to specify the path to the root directory of the dataset after doing
 </div>
 <p>So the patterns will start after <code class="docutils literal notranslate"><span class="pre">example_bids_ses</span></code>. This is our <code class="docutils literal notranslate"><span class="pre">rootdir</span></code>.</p>
 <p>Now we have our 2 additional variables:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uri</span> <span class="o">=</span> <span class="s2">"https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"</span>
-<span class="n">rootdir</span> <span class="o">=</span> <span class="s2">"example_bids_ses"</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">uri</span> <span class="o">=</span> <span class="s2">&quot;https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git&quot;</span>
+<span class="n">rootdir</span> <span class="o">=</span> <span class="s2">&quot;example_bids_ses&quot;</span>
 </pre></div>
 </div>
 <p>And we can create our DataGrabber:</p>
@@ -528,20 +537,20 @@ be used to specify the path to the root directory of the dataset after doing
 <span class="nd">@register_datagrabber</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ExampleBIDSDataGrabber</span><span class="p">(</span><span class="n">PatternDataladDataGrabber</span><span class="p">):</span>
 
-    <span class="n">uri</span><span class="p">:</span> <span class="n">AnyUrl</span> <span class="o">=</span> <span class="s2">"https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"</span>
-    <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"T1w"</span><span class="p">,</span> <span class="s2">"BOLD"</span><span class="p">]</span>
+    <span class="n">uri</span><span class="p">:</span> <span class="n">AnyUrl</span> <span class="o">=</span> <span class="s2">&quot;https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git&quot;</span>
+    <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
     <span class="n">patterns</span><span class="p">:</span> <span class="n">DataGrabberPatterns</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+        <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;pattern&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
-    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
-    <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">"example_bids_ses"</span>
+    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
+    <span class="n">rootdir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">=</span> <span class="s2">&quot;example_bids_ses&quot;</span>
 </pre></div>
 </div>
 <p>This approach can be used directly from the YAML, like so:</p>
@@ -552,15 +561,15 @@ be used to specify the path to the root directory of the dataset after doing
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
 <span class="w">  </span><span class="nt">patterns</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">BOLD</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz&quot;</span>
 <span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin6Asym</span>
 <span class="w">    </span><span class="nt">T1w</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz&quot;</span>
 <span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
 <span class="w">  </span><span class="nt">replacements</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
-<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="s">"https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git&quot;</span>
 <span class="w">  </span><span class="nt">rootdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_bids_ses</span>
 </pre></div>
 </div>
@@ -571,7 +580,7 @@ be used to specify the path to the root directory of the dataset after doing
 define our patterns.</p>
 <p>A very common thing would be to use <code class="docutils literal notranslate"><span class="pre">*</span></code> to match any number of
 characters but we cannot use it right after a replacement like:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"derivatives/freesurfer/</span><span class="si">{subject}</span><span class="s2">*"</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;derivatives/freesurfer/</span><span class="si">{subject}</span><span class="s2">*&quot;</span>
 </pre></div>
 </div>
 <p>or if there are multiple files or no files which can be globbed.</p>
@@ -597,7 +606,7 @@ FreeSurfer derivative of a dataset (like <code class="docutils literal notransla
 </div>
 <p>With a structure like this, it would be cumbersome to write custom methods
 for the class and thus we could use a pattern like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"derivatives/freesurfer/[!f]</span><span class="si">{subject}</span><span class="s2">/mri/T1.mg[z]"</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;derivatives/freesurfer/[!f]</span><span class="si">{subject}</span><span class="s2">/mri/T1.mg[z]&quot;</span>
 </pre></div>
 </div>
 <p>This would ignore the <code class="docutils literal notranslate"><span class="pre">fsaverage</span></code> directory as a subject and let <code class="docutils literal notranslate"><span class="pre">T1.mgz</span></code> be
@@ -627,13 +636,13 @@ item from the dataset. Since this dataset requires two variables, <code class="d
 and <code class="docutils literal notranslate"><span class="pre">session</span></code>, we will use them as parameters of <code class="docutils literal notranslate"><span class="pre">get_item</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+        <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">out</span>
@@ -647,15 +656,15 @@ need to remember that for session <em>ses-03</em> there is no BOLD data.</p>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"sub-01"</span><span class="p">,</span> <span class="s2">"sub-02"</span><span class="p">,</span> <span class="s2">"sub-03"</span><span class="p">]</span>
-    <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ses-01"</span><span class="p">,</span> <span class="s2">"ses-02"</span><span class="p">]</span>
+    <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-03&quot;</span><span class="p">]</span>
+    <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ses-01&quot;</span><span class="p">,</span> <span class="s2">&quot;ses-02&quot;</span><span class="p">]</span>
 
-    <span class="c1"># If we are not working on BOLD data, we can add "ses-03"</span>
-    <span class="k">if</span> <span class="s2">"BOLD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
-        <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"ses-03"</span><span class="p">)</span>
+    <span class="c1"># If we are not working on BOLD data, we can add &quot;ses-03&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;BOLD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+        <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ses-03&quot;</span><span class="p">)</span>
     <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">subject</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">sessions</span><span class="p">):</span>
-        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"subject"</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
+        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
     <span class="k">return</span> <span class="n">elements</span>
 </pre></div>
 </div>
@@ -664,7 +673,7 @@ to return a list of the keys that represent each of the items in the element
 tuple. As a rule of thumb, they should be the parameters of the <code class="docutils literal notranslate"><span class="pre">get_item</span></code>
 method, in the same order.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>So, to summarise, our DataGrabber will look like this:</p>
@@ -678,32 +687,32 @@ method, in the same order.</p>
         <span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-                <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+            <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/anat/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
             <span class="p">},</span>
-            <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-                <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+            <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">out</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"sub-01"</span><span class="p">,</span> <span class="s2">"sub-02"</span><span class="p">,</span> <span class="s2">"sub-03"</span><span class="p">]</span>
-        <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ses-01"</span><span class="p">,</span> <span class="s2">"ses-02"</span><span class="p">]</span>
+        <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-02&quot;</span><span class="p">,</span> <span class="s2">&quot;sub-03&quot;</span><span class="p">]</span>
+        <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ses-01&quot;</span><span class="p">,</span> <span class="s2">&quot;ses-02&quot;</span><span class="p">]</span>
 
-        <span class="c1"># If we are not working on BOLD data, we can add "ses-03"</span>
-        <span class="k">if</span> <span class="s2">"BOLD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
-            <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"ses-03"</span><span class="p">)</span>
+        <span class="c1"># If we are not working on BOLD data, we can add &quot;ses-03&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;BOLD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+            <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;ses-03&quot;</span><span class="p">)</span>
         <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">:</span>
-                <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"subject"</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
+                <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">elements</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="id1">
@@ -747,17 +756,17 @@ the <code class="docutils literal notranslate"><span class="pre">fmriprep</span>
 this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
-            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
-            <span class="s2">"confounds"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"path"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_confounds.tsv"</span><span class="p">,</span>
-                <span class="s2">"format"</span><span class="p">:</span> <span class="s2">"adhoc"</span><span class="p">,</span>
-                <span class="s2">"mappings"</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">"fmriprep"</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="s2">"variable1"</span><span class="p">:</span> <span class="s2">"rot_x"</span><span class="p">,</span>
-                        <span class="s2">"variable2"</span><span class="p">:</span> <span class="s2">"rot_z"</span><span class="p">,</span>
-                        <span class="s2">"variable3"</span><span class="p">:</span> <span class="s2">"rot_y"</span><span class="p">,</span>
+        <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;confounds&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">/func/</span><span class="si">{</span><span class="n">subject</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">session</span><span class="si">}</span><span class="s2">_confounds.tsv&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;format&quot;</span><span class="p">:</span> <span class="s2">&quot;adhoc&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;mappings&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;fmriprep&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;variable1&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_x&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;variable2&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_z&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;variable3&quot;</span><span class="p">:</span> <span class="s2">&quot;rot_y&quot;</span><span class="p">,</span>
                     <span class="p">},</span>
                 <span class="p">},</span>
             <span class="p">},</span>
@@ -858,7 +867,7 @@ same dataset.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

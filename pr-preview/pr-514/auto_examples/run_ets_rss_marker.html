@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -337,45 +346,45 @@ of the edge-wise timeseries using the Schaefer parcellation
 </pre></div>
 </div>
 <p>Set the logging level to info to see extra information:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:14:47 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] click: 8.1.8                   [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] numpy: 2.3.5                   [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] pandas: 2.3.3                  [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] nibabel: 5.3.3                 [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] sqlalchemy: 2.1.0              [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] ruamel.yaml: 0.18.17           [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] h5py: 3.16.0                   [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] tqdm: 4.67.3                   [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] lapy: 1.6.0                    [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] junifer: 0.0.8.dev252          [junifer] pkg=utils
-2026-10-07 18:14:47 [info     ] ========================       [junifer] pkg=utils
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:09:45 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] click: 8.1.8                   [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] numpy: 1.26.4                  [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] pandas: 2.1.4                  [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] nibabel: 5.3.2                 [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] sqlalchemy: 2.0.44             [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] ruamel.yaml: 0.18.16           [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] h5py: 3.15.1                   [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] tqdm: 4.67.1                   [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] lapy: 1.3.0                    [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] junifer: 0.0.8.dev257          [junifer] pkg=utils
+2026-10-07 19:09:45 [info     ] ========================       [junifer] pkg=utils
 </pre></div>
 </div>
 <p>Define the DataGrabber interface</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ADHDTestingDataGrabber"</span><span class="p">,</span>
+    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ADHDTestingDataGrabber&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
 <p>Define the markers interface</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer100x17_RSSETS"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"RSSETSMarker"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer100x17"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17_RSSETS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;RSSETSMarker&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer200x17_RSSETS"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"RSSETSMarker"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer200x17"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17_RSSETS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;RSSETSMarker&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 </pre></div>
@@ -385,8 +394,8 @@ At the end you can read the extracted data into a <code class="docutils literal 
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
     <span class="c1"># Define the storage interface</span>
     <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"HDF5FeatureStorage"</span><span class="p">,</span>
-        <span class="s2">"uri"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.hdf5"</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;HDF5FeatureStorage&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.hdf5&quot;</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="c1"># Run the defined junifer feature extraction pipeline</span>
     <span class="n">run</span><span class="p">(</span>
@@ -394,91 +403,91 @@ At the end you can read the extracted data into a <code class="docutils literal 
         <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="p">,</span>
         <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="p">,</span>
         <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
-        <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">"sub-01"</span><span class="p">],</span>  <span class="c1"># we calculate for one subject only</span>
+        <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">],</span>  <span class="c1"># we calculate for one subject only</span>
     <span class="p">)</span>
     <span class="c1"># Collect extracted features data</span>
     <span class="n">collect</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">)</span>
     <span class="c1"># Create storage object to read in extracted features</span>
-    <span class="n">db</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">HDF5FeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">"uri"</span><span class="p">])</span>
+    <span class="n">db</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">HDF5FeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">])</span>
 
     <span class="c1"># List all the features</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">list_features</span><span class="p">())</span>
     <span class="c1"># Read extracted features</span>
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_rssets</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">"BOLD_Schaefer200x17_RSSETS_rss_ets"</span><span class="p">)</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_rssets</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;BOLD_Schaefer200x17_RSSETS_rss_ets&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:14:47 [info     ] Parameters: {'types': ['BOLD'], 'datadir': '/tmp/tmpzjs_5hu3', 'resolution': 2.0, 'n_timepoints': 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
-2026-10-07 18:14:47 [info     ] Parameters: {'on': ['BOLD'], 'name': 'Schaefer100x17_RSSETS', 'parcellation': ['Schaefer100x17'], 'agg_method': 'mean', 'agg_method_params': None, 'masks': None} [junifer] component=Schaefer100x17_RSSETS pkg=markers step=marker
-2026-10-07 18:14:47 [info     ] Parameters: {'on': ['BOLD'], 'name': 'Schaefer200x17_RSSETS', 'parcellation': ['Schaefer200x17'], 'agg_method': 'mean', 'agg_method_params': None, 'masks': None} [junifer] component=Schaefer200x17_RSSETS pkg=markers step=marker
-2026-10-07 18:14:47 [info     ] Parameters: {'uri': '/tmp/tmpu5mrzvol/test.hdf5', 'single_output': False, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:14:47 [info     ] Validating Marker Collection   [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] DataGrabber output type: ['BOLD'] [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Validating Data Reader:        [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Data Reader output type: ['BOLD'] [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Validating Marker: Schaefer100x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Marker output type: [&lt;StorageType.Timeseries: 'timeseries'&gt;] [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Validating storage for Schaefer100x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Validating Marker: Schaefer200x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Marker output type: [&lt;StorageType.Timeseries: 'timeseries'&gt;] [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Validating storage for Schaefer200x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:14:47 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:14 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:15:14 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-2mm_tp-50.nii [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:14 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:14 [info     ] Fitting marker Schaefer100x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:15:14 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
-2026-10-07 18:15:14 [info     ] Parameters: {'on': ['BOLD'], 'name': 'ParcelAggregation', 'parcellation': ['Schaefer100x17'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
-2026-10-07 18:15:14 [info     ] Parcellation parameters:       [junifer] pkg=data
-2026-10-07 18:15:14 [info     ]         resolution: 2.0               [junifer] pkg=data
-2026-10-07 18:15:14 [info     ]         n_rois: 100                   [junifer] pkg=data
-2026-10-07 18:15:14 [info     ]         yeo_networks: 17              [junifer] pkg=data
-2026-10-07 18:15:14 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
-2026-10-07 18:15:20 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpu5mrzvol/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:20 [info     ] Writing HDF5 metadata for f12a29e03a90ace3f56fae98c4b17e4b to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:20 [info     ] Wrote HDF5 metadata for f12a29e03a90ace3f56fae98c4b17e4b to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:20 [info     ] Writing HDF5 data for f12a29e03a90ace3f56fae98c4b17e4b to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:20 [info     ] Wrote HDF5 data for f12a29e03a90ace3f56fae98c4b17e4b to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:20 [info     ] Fitting marker Schaefer200x17_RSSETS [junifer] pkg=pipeline
-2026-10-07 18:15:20 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
-2026-10-07 18:15:20 [info     ] Parameters: {'on': ['BOLD'], 'name': 'ParcelAggregation', 'parcellation': ['Schaefer200x17'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
-2026-10-07 18:15:20 [info     ] Parcellation parameters:       [junifer] pkg=data
-2026-10-07 18:15:20 [info     ]         resolution: 2.0               [junifer] pkg=data
-2026-10-07 18:15:20 [info     ]         n_rois: 200                   [junifer] pkg=data
-2026-10-07 18:15:20 [info     ]         yeo_networks: 17              [junifer] pkg=data
-2026-10-07 18:15:20 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
-2026-10-07 18:15:26 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpu5mrzvol/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:26 [info     ] Writing HDF5 metadata for 63e548d329e313abeebd28da25c92151 to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Wrote HDF5 metadata for 63e548d329e313abeebd28da25c92151 to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Writing HDF5 data for 63e548d329e313abeebd28da25c92151 to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Wrote HDF5 data for 63e548d329e313abeebd28da25c92151 to: /tmp/tmpu5mrzvol/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:15:26 [info     ] Collecting data using HDF5FeatureStorage [junifer] pkg=api
-2026-10-07 18:15:26 [info     ] Parameters: {'uri': '/tmp/tmpu5mrzvol/test.hdf5', 'single_output': False, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Parameters: {'uri': '/tmp/tmpu5mrzvol/test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Collecting metadata from /tmp/tmpu5mrzvol/*_test.hdf5 [junifer] pkg=storage step=storage
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:09:45 [info     ] Parameters: {&#39;types&#39;: [&#39;BOLD&#39;], &#39;datadir&#39;: &#39;/tmp/tmpx32pclwx&#39;, &#39;resolution&#39;: 2.0, &#39;n_timepoints&#39;: 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
+2026-10-07 19:09:45 [info     ] Parameters: {&#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;Schaefer100x17_RSSETS&#39;, &#39;parcellation&#39;: [&#39;Schaefer100x17&#39;], &#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;masks&#39;: None} [junifer] component=Schaefer100x17_RSSETS pkg=markers step=marker
+2026-10-07 19:09:45 [info     ] Parameters: {&#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;Schaefer200x17_RSSETS&#39;, &#39;parcellation&#39;: [&#39;Schaefer200x17&#39;], &#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;masks&#39;: None} [junifer] component=Schaefer200x17_RSSETS pkg=markers step=marker
+2026-10-07 19:09:45 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpbnr0r94h/test.hdf5&#39;, &#39;single_output&#39;: False, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:09:45 [info     ] Validating Marker Collection   [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] DataGrabber output type: [&#39;BOLD&#39;] [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Validating Data Reader:        [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Data Reader output type: [&#39;BOLD&#39;] [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Validating Marker: Schaefer100x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Marker output type: [&lt;StorageType.Timeseries: &#39;timeseries&#39;&gt;] [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Validating storage for Schaefer100x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Validating Marker: Schaefer200x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Marker output type: [&lt;StorageType.Timeseries: &#39;timeseries&#39;&gt;] [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Validating storage for Schaefer200x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:09:45 [info     ] Getting element (&#39;sub-01&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:10:15 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:10:15 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-2mm_tp-50.nii [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:15 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:15 [info     ] Fitting marker Schaefer100x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:10:15 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
+2026-10-07 19:10:15 [info     ] Parameters: {&#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;ParcelAggregation&#39;, &#39;parcellation&#39;: [&#39;Schaefer100x17&#39;], &#39;method&#39;: &#39;mean&#39;, &#39;method_params&#39;: None, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: None} [junifer] component=ParcelAggregation pkg=markers step=marker
+2026-10-07 19:10:15 [info     ] Parcellation parameters:       [junifer] pkg=data
+2026-10-07 19:10:15 [info     ]         resolution: 2.0               [junifer] pkg=data
+2026-10-07 19:10:15 [info     ]         n_rois: 100                   [junifer] pkg=data
+2026-10-07 19:10:15 [info     ]         yeo_networks: 17              [junifer] pkg=data
+2026-10-07 19:10:16 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
+2026-10-07 19:10:23 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpbnr0r94h/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:10:23 [info     ] Writing HDF5 metadata for ad1c857027924bdbf459032b05ba11d3 to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:23 [info     ] Wrote HDF5 metadata for ad1c857027924bdbf459032b05ba11d3 to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:23 [info     ] Writing HDF5 data for ad1c857027924bdbf459032b05ba11d3 to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:23 [info     ] Wrote HDF5 data for ad1c857027924bdbf459032b05ba11d3 to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:23 [info     ] Fitting marker Schaefer200x17_RSSETS [junifer] pkg=pipeline
+2026-10-07 19:10:23 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
+2026-10-07 19:10:23 [info     ] Parameters: {&#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;ParcelAggregation&#39;, &#39;parcellation&#39;: [&#39;Schaefer200x17&#39;], &#39;method&#39;: &#39;mean&#39;, &#39;method_params&#39;: None, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: None} [junifer] component=ParcelAggregation pkg=markers step=marker
+2026-10-07 19:10:23 [info     ] Parcellation parameters:       [junifer] pkg=data
+2026-10-07 19:10:23 [info     ]         resolution: 2.0               [junifer] pkg=data
+2026-10-07 19:10:23 [info     ]         n_rois: 200                   [junifer] pkg=data
+2026-10-07 19:10:23 [info     ]         yeo_networks: 17              [junifer] pkg=data
+2026-10-07 19:10:24 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
+2026-10-07 19:10:32 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpbnr0r94h/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:10:32 [info     ] Writing HDF5 metadata for ac71ec08434996448f60a6e36b3e2b4b to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Wrote HDF5 metadata for ac71ec08434996448f60a6e36b3e2b4b to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Writing HDF5 data for ac71ec08434996448f60a6e36b3e2b4b to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Wrote HDF5 data for ac71ec08434996448f60a6e36b3e2b4b to: /tmp/tmpbnr0r94h/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:10:32 [info     ] Collecting data using HDF5FeatureStorage [junifer] pkg=api
+2026-10-07 19:10:32 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpbnr0r94h/test.hdf5&#39;, &#39;single_output&#39;: False, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpbnr0r94h/test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Collecting metadata from /tmp/tmpbnr0r94h/*_test.hdf5 [junifer] pkg=storage step=storage
 
-file-metadata: 0it [00:00, ?it/s]2026-10-07 18:15:26 [info     ] Parameters: {'uri': '/tmp/tmpu5mrzvol/element_sub-01_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+file-metadata: 0it [00:00, ?it/s]2026-10-07 19:10:32 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpbnr0r94h/element_sub-01_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
 
-file-metadata: 1it [00:00, 126.12it/s]
-2026-10-07 18:15:26 [info     ] Writing metadata to HDF5 file ... [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Collecting data from /tmp/tmpu5mrzvol/*_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Will collect 2 features.       [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Collecting 1 files for feature MD5: f12a29e03a90ace3f56fae98c4b17e4b. [junifer] pkg=storage step=storage
-2026-10-07 18:15:26 [info     ] Collecting 1 files for feature MD5: 63e548d329e313abeebd28da25c92151. [junifer] pkg=storage step=storage
+file-metadata: 1it [00:00, 232.11it/s]
+2026-10-07 19:10:32 [info     ] Writing metadata to HDF5 file ... [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Collecting data from /tmp/tmpbnr0r94h/*_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Will collect 2 features.       [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Collecting 1 files for feature MD5: ad1c857027924bdbf459032b05ba11d3. [junifer] pkg=storage step=storage
+2026-10-07 19:10:32 [info     ] Collecting 1 files for feature MD5: ac71ec08434996448f60a6e36b3e2b4b. [junifer] pkg=storage step=storage
 
 feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
 
 file-data:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-file-data: 100%|██████████| 1/1 [00:00&lt;00:00, 67.52it/s]
+file-data: 100%|██████████| 1/1 [00:00&lt;00:00, 75.88it/s]
 
 
 file-data:   0%|          | 0/1 [00:00&lt;?, ?it/s]
-file-data: 100%|██████████| 1/1 [00:00&lt;00:00, 73.22it/s]
+file-data: 100%|██████████| 1/1 [00:00&lt;00:00, 85.76it/s]
 
-feature: 100%|██████████| 2/2 [00:00&lt;00:00, 66.16it/s]
-2026-10-07 18:15:26 [info     ] Collect done                   [junifer] pkg=api
-2026-10-07 18:15:26 [info     ] Parameters: {'uri': '/tmp/tmpu5mrzvol/test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-{'f12a29e03a90ace3f56fae98c4b17e4b': {'datagrabber': {'class': 'ADHDTestingDataGrabber', 'types': ['BOLD'], 'datadir': '/tmp/tmpzjs_5hu3', 'resolution': 2.0, 'n_timepoints': 50}, 'dependencies': {'nilearn': '0.10.4'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'class': 'RSSETSMarker', 'on': ['BOLD'], 'name': 'Schaefer100x17_RSSETS_rss_ets', 'parcellation': ['Schaefer100x17'], 'agg_method': 'mean', 'agg_method_params': None, 'masks': None}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer100x17_RSSETS_rss_ets'}, '63e548d329e313abeebd28da25c92151': {'datagrabber': {'class': 'ADHDTestingDataGrabber', 'types': ['BOLD'], 'datadir': '/tmp/tmpzjs_5hu3', 'resolution': 2.0, 'n_timepoints': 50}, 'dependencies': {'nilearn': '0.10.4'}, 'datareader': {'class': 'DefaultDataReader'}, 'type': 'BOLD', 'marker': {'class': 'RSSETSMarker', 'on': ['BOLD'], 'name': 'Schaefer200x17_RSSETS_rss_ets', 'parcellation': ['Schaefer200x17'], 'agg_method': 'mean', 'agg_method_params': None, 'masks': None}, '_element_keys': ['subject'], 'name': 'BOLD_Schaefer200x17_RSSETS_rss_ets'}}
+feature: 100%|██████████| 2/2 [00:00&lt;00:00, 75.84it/s]
+2026-10-07 19:10:32 [info     ] Collect done                   [junifer] pkg=api
+2026-10-07 19:10:32 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpbnr0r94h/test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+{&#39;ad1c857027924bdbf459032b05ba11d3&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;ADHDTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;], &#39;datadir&#39;: &#39;/tmp/tmpx32pclwx&#39;, &#39;resolution&#39;: 2.0, &#39;n_timepoints&#39;: 50}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.4&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;Schaefer100x17_RSSETS_rss_ets&#39;, &#39;parcellation&#39;: [&#39;Schaefer100x17&#39;], &#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;masks&#39;: None}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer100x17_RSSETS_rss_ets&#39;}, &#39;ac71ec08434996448f60a6e36b3e2b4b&#39;: {&#39;datagrabber&#39;: {&#39;class&#39;: &#39;ADHDTestingDataGrabber&#39;, &#39;types&#39;: [&#39;BOLD&#39;], &#39;datadir&#39;: &#39;/tmp/tmpx32pclwx&#39;, &#39;resolution&#39;: 2.0, &#39;n_timepoints&#39;: 50}, &#39;dependencies&#39;: {&#39;nilearn&#39;: &#39;0.10.4&#39;}, &#39;datareader&#39;: {&#39;class&#39;: &#39;DefaultDataReader&#39;}, &#39;type&#39;: &#39;BOLD&#39;, &#39;marker&#39;: {&#39;class&#39;: &#39;RSSETSMarker&#39;, &#39;on&#39;: [&#39;BOLD&#39;], &#39;name&#39;: &#39;Schaefer200x17_RSSETS_rss_ets&#39;, &#39;parcellation&#39;: [&#39;Schaefer200x17&#39;], &#39;agg_method&#39;: &#39;mean&#39;, &#39;agg_method_params&#39;: None, &#39;masks&#39;: None}, &#39;_element_keys&#39;: [&#39;subject&#39;], &#39;name&#39;: &#39;BOLD_Schaefer200x17_RSSETS_rss_ets&#39;}}
 </pre></div>
 </div>
 <p>Now we take a look at the dataframe</p>
@@ -540,7 +549,7 @@ feature: 100%|██████████| 2/2 [00:00&lt;00:00, 66.16it/s]
 </div>
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 40.421 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 48.072 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-ets-rss-marker-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/38a3ca477b4260f36bb72dbc46764f45/run_ets_rss_marker.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_ets_rss_marker.ipynb</span></code></a></p>
@@ -604,7 +613,7 @@ feature: 100%|██████████| 2/2 [00:00&lt;00:00, 66.16it/s]
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

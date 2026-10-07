@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -323,7 +332,7 @@
 <p>This is the <em>object</em> that traverses the steps of the pipeline. It is indeed a
 dictionary of dictionaries. The first level of keys are the <a class="reference internal" href="#data-types"><span class="std std-ref">data types</span></a>
 and the values are the corresponding information as dictionaries.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'BOLD'</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">'T1w'</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>The second level of keys are the actual data. A special second-level key named
@@ -332,35 +341,35 @@ data type including source and previous transformation steps.</p>
 <p>The <a class="reference internal" href="datagrabber.html#datagrabber"><span class="std std-ref">Data Grabber</span></a> step adds the <code class="docutils literal notranslate"><span class="pre">path</span></code> second-level key
 which gives the path to the file containing the data. The <code class="docutils literal notranslate"><span class="pre">meta</span></code> key in this
 step only contains information about the DataGrabber used.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'BOLD'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                   <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                   <span class="s1">'dependencies'</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
-                   <span class="s1">'element'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'subject'</span><span class="p">:</span> <span class="s1">'sub001'</span><span class="p">}},</span>
-          <span class="s1">'path'</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">'/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_bold.nii.gz'</span><span class="p">)},</span>
- <span class="s1">'T1w'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                  <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                  <span class="s1">'dependencies'</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
-                  <span class="s1">'element'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'subject'</span><span class="p">:</span> <span class="s1">'sub001'</span><span class="p">}},</span>
-         <span class="s1">'path'</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">'/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_T1w.nii.gz'</span><span class="p">)}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+          <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_bold.nii.gz&#39;</span><span class="p">)},</span>
+ <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                  <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                  <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+         <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpgxcyjfo1/sub001_T1w.nii.gz&#39;</span><span class="p">)}}</span>
 </pre></div>
 </div>
 <p>The <a class="reference internal" href="datareader.html#datareader"><span class="std std-ref">Data Reader</span></a> step adds the <code class="docutils literal notranslate"><span class="pre">data</span></code> second-level key
 which is the actual data loaded into memory. The <code class="docutils literal notranslate"><span class="pre">meta</span></code> key in this step
 adds information about the DataReader used to read the data.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'BOLD'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'data'</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d8910</span><span class="o">&gt;</span><span class="p">,</span>
-          <span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                   <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                   <span class="s1">'datareader'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'DefaultDataReader'</span><span class="p">},</span>
-                   <span class="s1">'dependencies'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nilearn'</span><span class="p">},</span>
-                   <span class="s1">'element'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'subject'</span><span class="p">:</span> <span class="s1">'sub001'</span><span class="p">}},</span>
-          <span class="s1">'path'</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">'/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_bold.nii.gz'</span><span class="p">)},</span>
- <span class="s1">'T1w'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'data'</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d78d0</span><span class="o">&gt;</span><span class="p">,</span>
-         <span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                  <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                  <span class="s1">'datareader'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'DefaultDataReader'</span><span class="p">},</span>
-                  <span class="s1">'dependencies'</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
-                  <span class="s1">'element'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'subject'</span><span class="p">:</span> <span class="s1">'sub001'</span><span class="p">}},</span>
-         <span class="s1">'path'</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">'/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_T1w.nii.gz'</span><span class="p">)}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d8910</span><span class="o">&gt;</span><span class="p">,</span>
+          <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nilearn&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+          <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_bold.nii.gz&#39;</span><span class="p">)},</span>
+ <span class="s1">&#39;T1w&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">nibabel</span><span class="o">.</span><span class="n">nifti1</span><span class="o">.</span><span class="n">Nifti1Image</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x16b5d78d0</span><span class="o">&gt;</span><span class="p">,</span>
+         <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                  <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                  <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="nb">set</span><span class="p">(),</span>
+                  <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">}},</span>
+         <span class="s1">&#39;path&#39;</span><span class="p">:</span> <span class="n">PosixPath</span><span class="p">(</span><span class="s1">&#39;/var/folders/dv/2lbr8f8j0q12zrx3mz3ll5m40000gp/T/tmpe49321ce/sub001_T1w.nii.gz&#39;</span><span class="p">)}}</span>
 </pre></div>
 </div>
 <p>The <a class="reference internal" href="preprocess.html#preprocess"><span class="std std-ref">Preprocess</span></a> step, if used, modifies the <code class="docutils literal notranslate"><span class="pre">data</span></code>
@@ -369,20 +378,20 @@ the preprocessor.</p>
 <p>The <a class="reference internal" href="marker.html#marker"><span class="std std-ref">Marker</span></a> step removes the <code class="docutils literal notranslate"><span class="pre">path</span></code> second-level key,
 replaces the <code class="docutils literal notranslate"><span class="pre">data</span></code> second-level key’s value with the marker’s computed value
 and adds further keys needed for the storage, for example, <code class="docutils literal notranslate"><span class="pre">col_names</span></code>.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'BOLD'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'col_names'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'root_sum_of_squares_ets'</span><span class="p">],</span>
-          <span class="s1">'data'</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
-          <span class="s1">'meta'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                   <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                   <span class="s1">'datareader'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'DefaultDataReader'</span><span class="p">},</span>
-                   <span class="s1">'dependencies'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'nilearn'</span><span class="p">},</span>
-                   <span class="s1">'element'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'subject'</span><span class="p">:</span> <span class="s1">'sub001'</span><span class="p">},</span>
-                   <span class="s1">'marker'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'agg_method'</span><span class="p">:</span> <span class="s1">'mean'</span><span class="p">,</span>
-                              <span class="s1">'agg_method_params'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                              <span class="s1">'class'</span><span class="p">:</span> <span class="s1">'RSSETSMarker'</span><span class="p">,</span>
-                              <span class="s1">'masks'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                              <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'RSSETSMarker'</span><span class="p">,</span>
-                              <span class="s1">'parcellation'</span><span class="p">:</span> <span class="s1">'Schaefer100x17'</span><span class="p">},</span>
-                   <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'BOLD'</span><span class="p">}}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;BOLD&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;col_names&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;root_sum_of_squares_ets&#39;</span><span class="p">],</span>
+          <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+          <span class="s1">&#39;meta&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                   <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                   <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;nilearn&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;element&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;subject&#39;</span><span class="p">:</span> <span class="s1">&#39;sub001&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;agg_method&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;agg_method_params&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;RSSETSMarker&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                              <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;RSSETSMarker&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;parcellation&#39;</span><span class="p">:</span> <span class="s1">&#39;Schaefer100x17&#39;</span><span class="p">},</span>
+                   <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">}}}</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -521,7 +530,7 @@ where and how the object is being manipulated to reason about your pipeline.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -149,20 +149,31 @@ Building the documentation requires some extra packages and can be installed by
 
 .. code-block:: bash
 
+    uv sync --extra docs
+
+or, with ``pip``:
+
+.. code-block:: bash
+
     pip install -e ".[docs]"
 
-To build the docs
+To build the docs of your working copy
 
 .. code-block:: bash
 
     cd docs
     make local
 
-To view the documentation, open ``docs/_build/html/index.html``.
+To view the documentation, open ``docs/_build/index.html``.
 
 In case you remove some files or change their filenames, you can run into
 errors when using ``make local``. In this situation you can use ``make clean``
 to clean up the already build files and then re-run ``make local``.
+
+The published documentation contains all the released versions and is built
+with `sphinx-polyversion`_ using ``make html``. It builds each version in its
+own environment (defined in ``docs/poly.py``) and only builds the versions
+that are not already present in ``docs/_build``.
 
 Also, we follow British English for the documentation.
 

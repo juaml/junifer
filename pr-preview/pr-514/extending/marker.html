@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -344,13 +353,13 @@ inputs, it will be <code class="docutils literal notranslate"><span class="pre">
 <span class="c1"># each feature having same or different storage type</span>
 <span class="n">_MARKER_INOUT_MAPPINGS</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Timeseries</span><span class="p">,</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Timeseries</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">VBM_WM</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="n">DataType</span><span class="o">.</span><span class="n">VBM_GM</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
@@ -425,11 +434,11 @@ be <code class="docutils literal notranslate"><span class="pre">data</span></cod
     <span class="n">extra_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="c1"># Get the data</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
 
     <span class="c1"># Get the parcellation tailored for the target</span>
     <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
-        <span class="n">kind</span><span class="o">=</span><span class="s2">"parcellation"</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;parcellation&quot;</span><span class="p">,</span>
         <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">parcellation</span><span class="p">],</span>
         <span class="n">target_data</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
         <span class="n">extra_input</span><span class="o">=</span><span class="n">extra_input</span><span class="p">,</span>
@@ -439,7 +448,7 @@ be <code class="docutils literal notranslate"><span class="pre">data</span></cod
     <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
         <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
         <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">memory</span><span class="o">=</span><span class="s2">"nilearn_cache"</span><span class="p">,</span>
+        <span class="n">memory</span><span class="o">=</span><span class="s2">&quot;nilearn_cache&quot;</span><span class="p">,</span>
         <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="p">)</span>
 
@@ -448,9 +457,9 @@ be <code class="docutils literal notranslate"><span class="pre">data</span></cod
 
     <span class="c1"># Create and return the output dictionary</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"data"</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
-            <span class="s2">"col_names"</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
+        <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
+            <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
 </pre></div>
@@ -468,7 +477,7 @@ about the dependencies of a Marker, we need to define a <code class="docutils li
 attribute in the class. This attribute must be a set, with the names of the
 packages as strings. For example, the <code class="docutils literal notranslate"><span class="pre">ParcelMean</span></code> marker has the
 following dependencies:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"nilearn"</span><span class="p">,</span> <span class="s2">"numpy"</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Finally, we need to register the Marker using the <code class="docutils literal notranslate"><span class="pre">&#64;register_marker</span></code> decorator.</p>
@@ -486,17 +495,17 @@ following dependencies:</p>
 <span class="nd">@register_marker</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ParcelMean</span><span class="p">(</span><span class="n">BaseMarker</span><span class="p">):</span>
 
-    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"nilearn"</span><span class="p">,</span> <span class="s2">"numpy"</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">,</span> <span class="s2">&quot;numpy&quot;</span><span class="p">}</span>
 
     <span class="n">_MARKER_INOUT_MAPPINGS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">MarkerInOutMappings</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Timeseries</span><span class="p">,</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Timeseries</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">DataType</span><span class="o">.</span><span class="n">VBM_WM</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">DataType</span><span class="o">.</span><span class="n">VBM_GM</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="n">StorageType</span><span class="o">.</span><span class="n">Vector</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">}</span>
 
@@ -508,11 +517,11 @@ following dependencies:</p>
         <span class="n">extra_input</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
         <span class="c1"># Get the data</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">"data"</span><span class="p">]</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="nb">input</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
 
         <span class="c1"># Get the parcellation tailored for the target</span>
         <span class="n">t_parcellation</span><span class="p">,</span> <span class="n">t_labels</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
-            <span class="n">kind</span><span class="o">=</span><span class="s2">"parcellation"</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;parcellation&quot;</span><span class="p">,</span>
             <span class="n">name</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">parcellation</span><span class="p">],</span>
             <span class="n">target_data</span><span class="o">=</span><span class="nb">input</span><span class="p">,</span>
             <span class="n">extra_input</span><span class="o">=</span><span class="n">extra_input</span><span class="p">,</span>
@@ -522,7 +531,7 @@ following dependencies:</p>
         <span class="n">masker</span> <span class="o">=</span> <span class="n">NiftiLabelsMasker</span><span class="p">(</span>
             <span class="n">labels_img</span><span class="o">=</span><span class="n">t_parcellation</span><span class="p">,</span>
             <span class="n">standardize</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">memory</span><span class="o">=</span><span class="s2">"nilearn_cache"</span><span class="p">,</span>
+            <span class="n">memory</span><span class="o">=</span><span class="s2">&quot;nilearn_cache&quot;</span><span class="p">,</span>
             <span class="n">verbose</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -531,9 +540,9 @@ following dependencies:</p>
 
         <span class="c1"># Create and return the output dictionary</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">"parcel_mean"</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">"data"</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
-                <span class="s2">"col_names"</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
+            <span class="s2">&quot;parcel_mean&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">out_values</span><span class="p">,</span>
+                <span class="s2">&quot;col_names&quot;</span><span class="p">:</span> <span class="n">t_labels</span><span class="p">,</span>
             <span class="p">},</span>
         <span class="p">}</span>
 </pre></div>
@@ -641,7 +650,7 @@ following dependencies:</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -382,20 +391,20 @@ look like this:</p>
 
 <span class="c1"># these are of course just example paths, replace it with your own:</span>
 <span class="n">path_to_maps</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"my_custom_maps.nii.gz"</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;my_custom_maps.nii.gz&quot;</span>
 <span class="p">)</span>
 <span class="n">path_to_labels</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"my_custom_maps_labels.txt"</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;my_custom_maps_labels.txt&quot;</span>
 <span class="p">)</span>
 
 <span class="n">my_labels</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">path_to_labels</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">str</span><span class="p">))</span>
 
 <span class="n">register_data</span><span class="p">(</span>
-    <span class="n">kind</span><span class="o">=</span><span class="s2">"maps"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"my_custom_maps"</span><span class="p">,</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;maps&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_custom_maps&quot;</span><span class="p">,</span>
     <span class="n">maps_path</span><span class="o">=</span><span class="n">path_to_maps</span><span class="p">,</span>
     <span class="n">maps_labels</span><span class="o">=</span><span class="n">my_labels</span><span class="p">,</span>
-    <span class="n">space</span><span class="o">=</span><span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+    <span class="n">space</span><span class="o">=</span><span class="s2">&quot;MNI152NLin6Asym&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -507,7 +516,7 @@ these paths are interpreted by <code class="docutils literal notranslate"><span 
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

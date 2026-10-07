@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -342,53 +351,53 @@ other data.</p>
 </pre></div>
 </div>
 <p>Set the logging level to info to see extra information:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:15:40 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] click: 8.1.8                   [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] numpy: 2.3.5                   [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] pandas: 2.3.3                  [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] nibabel: 5.3.3                 [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] sqlalchemy: 2.1.0              [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] ruamel.yaml: 0.18.17           [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] h5py: 3.16.0                   [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] tqdm: 4.67.3                   [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] lapy: 1.6.0                    [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] junifer: 0.0.8.dev252          [junifer] pkg=utils
-2026-10-07 18:15:40 [info     ] ========================       [junifer] pkg=utils
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:10:47 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] click: 8.1.8                   [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] numpy: 1.26.4                  [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] pandas: 2.1.4                  [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] nibabel: 5.3.2                 [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] sqlalchemy: 2.0.44             [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] ruamel.yaml: 0.18.16           [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] h5py: 3.15.1                   [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] tqdm: 4.67.1                   [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] lapy: 1.3.0                    [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] junifer_data: 1.4.0            [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] junifer: 0.0.8.dev257          [junifer] pkg=utils
+2026-10-07 19:10:47 [info     ] ========================       [junifer] pkg=utils
 </pre></div>
 </div>
 <p>Define the markers you want:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"extDMN_TrimMean80"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"SphereAggregation"</span><span class="p">,</span>
-        <span class="s2">"coords"</span><span class="p">:</span> <span class="s2">"extDMN"</span><span class="p">,</span>
-        <span class="s2">"radius"</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-        <span class="s2">"masks"</span><span class="p">:</span> <span class="s2">"compute_brain_mask"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"trim_mean"</span><span class="p">,</span>
-        <span class="s2">"method_params"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"proportiontocut"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;extDMN_TrimMean80&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SphereAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coords&quot;</span><span class="p">:</span> <span class="s2">&quot;extDMN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+        <span class="s2">&quot;masks&quot;</span><span class="p">:</span> <span class="s2">&quot;compute_brain_mask&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;trim_mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;proportiontocut&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"extDMN_Mean"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"SphereAggregation"</span><span class="p">,</span>
-        <span class="s2">"coords"</span><span class="p">:</span> <span class="s2">"extDMN"</span><span class="p">,</span>
-        <span class="s2">"radius"</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
-        <span class="s2">"masks"</span><span class="p">:</span> <span class="s2">"compute_brain_mask"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"mean"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;extDMN_Mean&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SphereAggregation&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;coords&quot;</span><span class="p">:</span> <span class="s2">&quot;extDMN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="mf">5.0</span><span class="p">,</span>
+        <span class="s2">&quot;masks&quot;</span><span class="p">:</span> <span class="s2">&quot;compute_brain_mask&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 </pre></div>
 </div>
 <p>Define target and confounds for julearn machine learning:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="s2">"age"</span>
-<a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a> <span class="o">=</span> <span class="s2">"sex"</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="s2">&quot;age&quot;</span>
+<a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span>
 </pre></div>
 </div>
 <p>Load the VBM phenotype data for machine learning data:
@@ -396,19 +405,19 @@ other data.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">()</span>
 <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
 <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a> <span class="o">=</span> <span class="p">(</span>
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><span class="s2">"mf"</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">"F"</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><span class="s2">&quot;mf&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
     <span class="o">.</span><span class="n">values</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Create a temporary directory for junifer feature extraction:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
-    <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"HDF5FeatureStorage"</span><span class="p">,</span> <span class="s2">"uri"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.hdf5"</span><span class="p">}</span>
+    <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;HDF5FeatureStorage&quot;</span><span class="p">,</span> <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.hdf5&quot;</span><span class="p">}</span>
     <span class="c1"># run the defined junifer feature extraction pipeline</span>
     <span class="n">run</span><span class="p">(</span>
-        <span class="n">workdir</span><span class="o">=</span><span class="s2">"/tmp"</span><span class="p">,</span>
-        <span class="n">datagrabber</span><span class="o">=</span><span class="p">{</span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"OasisVBMTestingDataGrabber"</span><span class="p">},</span>
+        <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
+        <span class="n">datagrabber</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;OasisVBMTestingDataGrabber&quot;</span><span class="p">},</span>
         <span class="n">markers</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a><span class="p">,</span>
         <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
     <span class="p">)</span>
@@ -416,282 +425,278 @@ other data.</p>
     <span class="c1"># read in extracted features and add confounds and targets</span>
     <span class="c1"># for julearn run cross validation</span>
     <span class="n">collect</span><span class="p">(</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">)</span>
-    <span class="n">db</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">HDF5FeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">"uri"</span><span class="p">])</span>
+    <span class="n">db</span> <span class="o">=</span> <a href="https://pydantic.dev/docs/validation/latest/api/pydantic/base_model/#pydantic.BaseModel" title="pydantic.BaseModel" class="sphx-glr-backref-module-pydantic sphx-glr-backref-type-py-class"><span class="n">HDF5FeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">])</span>
 
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">"VBM_GM_extDMN_Mean_aggregation"</span><span class="p">)</span>
+    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;VBM_GM_extDMN_Mean_aggregation&quot;</span><span class="p">)</span>
     <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a><span class="p">]</span>
     <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:15:40 [info     ] Parameters: {'types': ['VBM_GM'], 'datadir': '/tmp/tmp_qwbv4qc'} [junifer] component=OasisVBMTestingDataGrabber pkg=datagrabber step=datagrabber
-2026-10-07 18:15:40 [info     ] Parameters: {'on': ['T1w', 'T2w', 'BOLD', 'VBM_GM', 'VBM_WM', 'VBM_CSF', 'fALFF', 'GCOR', 'LCOR'], 'name': 'extDMN_TrimMean80', 'coords': 'extDMN', 'radius': 5.0, 'allow_overlap': False, 'method': 'trim_mean', 'method_params': {'proportiontocut': 0.2}, 'time_method': None, 'time_method_params': None, 'masks': ['compute_brain_mask']} [junifer] component=extDMN_TrimMean80 pkg=markers step=marker
-2026-10-07 18:15:40 [info     ] Parameters: {'on': ['T1w', 'T2w', 'BOLD', 'VBM_GM', 'VBM_WM', 'VBM_CSF', 'fALFF', 'GCOR', 'LCOR'], 'name': 'extDMN_Mean', 'coords': 'extDMN', 'radius': 5.0, 'allow_overlap': False, 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': ['compute_brain_mask']} [junifer] component=extDMN_Mean pkg=markers step=marker
-2026-10-07 18:15:40 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/test.hdf5', 'single_output': False, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:15:40 [info     ] Validating Marker Collection   [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] DataGrabber output type: ['VBM_GM'] [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Validating Data Reader:        [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Data Reader output type: ['VBM_GM'] [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Validating Marker: extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Marker output type: [&lt;StorageType.Vector: 'vector'&gt;] [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Validating storage for extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Validating Marker: extDMN_Mean [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Marker output type: [&lt;StorageType.Vector: 'vector'&gt;] [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Validating storage for extDMN_Mean [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:40 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:40 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:40 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:15:40 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:41 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:44 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:44 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:44 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:44 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:44 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:44 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:15:44 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:44 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:47 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:47 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:47 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:47 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:47 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:47 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:15:47 [info     ] Getting element ('sub-02',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:47 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:15:47 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:47 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:47 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:15:47 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:47 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:51 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:51 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:51 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:51 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:51 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:51 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:15:51 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:51 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:54 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:54 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:54 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:54 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:54 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:54 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:15:54 [info     ] Getting element ('sub-03',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:15:54 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:15:54 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:54 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:15:54 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:15:54 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:55 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:15:58 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:15:58 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:58 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:58 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:58 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:15:58 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:15:58 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:15:58 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:02 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:02 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:02 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:02 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:02 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:02 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:02 [info     ] Getting element ('sub-04',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:02 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:02 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:02 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:02 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:02 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:02 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:05 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:05 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:05 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:05 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:05 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:05 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:05 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:06 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:09 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:09 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:09 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:09 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:09 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:09 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:09 [info     ] Getting element ('sub-05',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:09 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:09 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:09 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:09 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:09 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:09 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:13 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:13 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:13 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:13 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:13 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:13 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:13 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:14 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:17 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:17 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:17 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:17 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:17 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:17 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:17 [info     ] Getting element ('sub-06',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:17 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:17 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:17 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:17 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:17 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:18 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:22 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:22 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:22 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:22 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:22 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:22 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:22 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:22 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:26 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:26 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:26 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:26 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:26 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:26 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:26 [info     ] Getting element ('sub-07',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:26 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:26 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:26 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:26 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:26 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:26 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:29 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:29 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:29 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:29 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:29 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:29 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:29 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:30 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:33 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:33 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:33 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:33 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:33 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:33 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:33 [info     ] Getting element ('sub-08',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:33 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:33 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:33 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:33 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:33 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:33 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:37 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:37 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:37 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:37 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:37 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:37 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:37 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:37 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:40 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:40 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:40 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:40 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:40 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:40 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:40 [info     ] Getting element ('sub-09',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:40 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:40 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:40 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:40 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:40 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:40 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:44 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:44 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:44 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:44 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:44 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:44 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:44 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:44 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:47 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:47 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:47 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:47 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:47 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:47 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:47 [info     ] Getting element ('sub-10',)    [junifer] pkg=datagrabber step=datagrabber
-2026-10-07 18:16:47 [info     ] Fitting pipeline               [junifer] pkg=pipeline
-2026-10-07 18:16:47 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:47 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-2026-10-07 18:16:47 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
-2026-10-07 18:16:47 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:48 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:51 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:51 [info     ] Writing HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:51 [info     ] Wrote HDF5 metadata for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:51 [info     ] Writing HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:51 [info     ] Wrote HDF5 data for 51ca0eeb5f6ff55c79adb0e94be246c3 to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:51 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
-2026-10-07 18:16:51 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-2026-10-07 18:16:51 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-2026-10-07 18:16:55 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmp93fe590q/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
-2026-10-07 18:16:55 [info     ] Writing HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Wrote HDF5 metadata for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Writing HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Wrote HDF5 data for 7c1bfcd610e27482498a6b39f4ab93ad to: /tmp/tmp93fe590q/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Marker collection fitting done [junifer] pkg=pipeline
-2026-10-07 18:16:55 [info     ] Collecting data using HDF5FeatureStorage [junifer] pkg=api
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/test.hdf5', 'single_output': False, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Collecting metadata from /tmp/tmp93fe590q/*_test.hdf5 [junifer] pkg=storage step=storage
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:10:47 [info     ] Parameters: {&#39;types&#39;: [&#39;VBM_GM&#39;], &#39;datadir&#39;: &#39;/tmp/tmp0knontyh&#39;} [junifer] component=OasisVBMTestingDataGrabber pkg=datagrabber step=datagrabber
+2026-10-07 19:10:47 [info     ] Parameters: {&#39;on&#39;: [&#39;T1w&#39;, &#39;T2w&#39;, &#39;BOLD&#39;, &#39;VBM_GM&#39;, &#39;VBM_WM&#39;, &#39;VBM_CSF&#39;, &#39;fALFF&#39;, &#39;GCOR&#39;, &#39;LCOR&#39;], &#39;name&#39;: &#39;extDMN_TrimMean80&#39;, &#39;coords&#39;: &#39;extDMN&#39;, &#39;radius&#39;: 5.0, &#39;allow_overlap&#39;: False, &#39;method&#39;: &#39;trim_mean&#39;, &#39;method_params&#39;: {&#39;proportiontocut&#39;: 0.2}, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: [&#39;compute_brain_mask&#39;]} [junifer] component=extDMN_TrimMean80 pkg=markers step=marker
+2026-10-07 19:10:47 [info     ] Parameters: {&#39;on&#39;: [&#39;T1w&#39;, &#39;T2w&#39;, &#39;BOLD&#39;, &#39;VBM_GM&#39;, &#39;VBM_WM&#39;, &#39;VBM_CSF&#39;, &#39;fALFF&#39;, &#39;GCOR&#39;, &#39;LCOR&#39;], &#39;name&#39;: &#39;extDMN_Mean&#39;, &#39;coords&#39;: &#39;extDMN&#39;, &#39;radius&#39;: 5.0, &#39;allow_overlap&#39;: False, &#39;method&#39;: &#39;mean&#39;, &#39;method_params&#39;: None, &#39;time_method&#39;: None, &#39;time_method_params&#39;: None, &#39;masks&#39;: [&#39;compute_brain_mask&#39;]} [junifer] component=extDMN_Mean pkg=markers step=marker
+2026-10-07 19:10:47 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/test.hdf5&#39;, &#39;single_output&#39;: False, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:10:47 [info     ] Validating Marker Collection   [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] DataGrabber output type: [&#39;VBM_GM&#39;] [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Validating Data Reader:        [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Data Reader output type: [&#39;VBM_GM&#39;] [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Validating Marker: extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Marker output type: [&lt;StorageType.Vector: &#39;vector&#39;&gt;] [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Validating storage for extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Validating Marker: extDMN_Mean [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Marker output type: [&lt;StorageType.Vector: &#39;vector&#39;&gt;] [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Validating storage for extDMN_Mean [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Getting element (&#39;sub-01&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:10:47 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:47 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:47 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:10:47 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:10:47 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:10:50 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:10:50 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:50 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:50 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:50 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:50 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:10:50 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:10:51 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:10:54 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:10:54 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:54 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:54 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:54 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-01_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:54 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:10:54 [info     ] Getting element (&#39;sub-02&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:10:54 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:10:54 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0002_MR1/mwrc1OAS1_0002_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:54 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:10:54 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:10:54 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:10:54 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:10:57 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:10:57 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:57 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:57 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:57 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:10:57 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:10:57 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:10:58 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:01 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:01 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:01 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:01 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:01 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-02_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:01 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:01 [info     ] Getting element (&#39;sub-03&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:01 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:01 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0003_MR1/mwrc1OAS1_0003_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:01 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:01 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:01 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:01 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:05 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:05 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:05 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:05 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:05 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:05 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:05 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:05 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:08 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:08 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:08 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:08 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:08 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-03_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:08 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:08 [info     ] Getting element (&#39;sub-04&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:08 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:08 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0004_MR1/mwrc1OAS1_0004_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:08 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:08 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:08 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:08 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:12 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:12 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:12 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:12 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:12 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:12 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:12 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:12 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:15 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:15 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:15 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:15 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:15 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-04_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:15 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:15 [info     ] Getting element (&#39;sub-05&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:15 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:15 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0005_MR1/mwrc1OAS1_0005_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:15 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:15 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:15 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:16 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:19 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:19 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:19 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:19 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:19 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:19 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:19 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:19 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:22 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:22 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:22 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:22 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:22 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-05_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:22 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:22 [info     ] Getting element (&#39;sub-06&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:22 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:22 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0006_MR1/mwrc1OAS1_0006_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:22 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:22 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:22 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:22 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:25 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:25 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:25 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:25 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:25 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:25 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:25 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:25 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:28 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:28 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:28 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:28 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:28 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-06_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:28 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:28 [info     ] Getting element (&#39;sub-07&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:28 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:28 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0007_MR1/mwrc1OAS1_0007_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:28 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:28 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:28 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:28 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:31 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:32 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:32 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:32 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:32 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:32 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:32 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:32 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:35 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:35 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:35 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:35 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:35 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-07_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:35 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:35 [info     ] Getting element (&#39;sub-08&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:35 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:35 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0009_MR1/mwrc1OAS1_0009_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:35 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:35 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:35 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:35 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:38 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:38 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:38 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:38 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:38 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:38 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:38 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:38 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:41 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:41 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:41 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:41 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:41 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-08_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:41 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:41 [info     ] Getting element (&#39;sub-09&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:41 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:41 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0010_MR1/mwrc1OAS1_0010_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:41 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:41 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:41 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:41 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:44 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:44 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:44 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:44 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:44 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:44 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:44 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:44 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:47 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:47 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:47 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:47 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:47 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-09_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:47 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:47 [info     ] Getting element (&#39;sub-10&#39;,)    [junifer] pkg=datagrabber step=datagrabber
+2026-10-07 19:11:47 [info     ] Fitting pipeline               [junifer] pkg=pipeline
+2026-10-07 19:11:47 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0011_MR1/mwrc1OAS1_0011_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:47 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+2026-10-07 19:11:47 [info     ] Fitting marker extDMN_TrimMean80 [junifer] pkg=pipeline
+2026-10-07 19:11:47 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:47 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:50 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:50 [info     ] Writing HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:50 [info     ] Wrote HDF5 metadata for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:50 [info     ] Writing HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:50 [info     ] Wrote HDF5 data for 5f450eb4c3d9e87861b8ef8221fd77b2 to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:50 [info     ] Fitting marker extDMN_Mean     [junifer] pkg=pipeline
+2026-10-07 19:11:50 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+2026-10-07 19:11:51 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
+2026-10-07 19:11:54 [info     ] Storing in &lt;HDF5FeatureStorage @ /tmp/tmpw_2y3c9k/test.hdf5 (multiple output)&gt; [junifer] pkg=markers step=marker
+2026-10-07 19:11:54 [info     ] Writing HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Wrote HDF5 metadata for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Writing HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Wrote HDF5 data for 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee to: /tmp/tmpw_2y3c9k/element_sub-10_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Marker collection fitting done [junifer] pkg=pipeline
+2026-10-07 19:11:54 [info     ] Collecting data using HDF5FeatureStorage [junifer] pkg=api
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/test.hdf5&#39;, &#39;single_output&#39;: False, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Collecting metadata from /tmp/tmpw_2y3c9k/*_test.hdf5 [junifer] pkg=storage step=storage
 
-file-metadata: 0it [00:00, ?it/s]2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-07_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-03_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-01_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-06_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-05_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-04_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-08_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-10_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-09_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/element_sub-02_test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+file-metadata: 0it [00:00, ?it/s]2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-07_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-03_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-01_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-06_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-05_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-04_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-08_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-10_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-09_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/element_sub-02_test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
 
-file-metadata: 10it [00:00, 159.29it/s]
-2026-10-07 18:16:55 [info     ] Writing metadata to HDF5 file ... [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Collecting data from /tmp/tmp93fe590q/*_test.hdf5 [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Will collect 2 features.       [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Collecting 10 files for feature MD5: 51ca0eeb5f6ff55c79adb0e94be246c3. [junifer] pkg=storage step=storage
-2026-10-07 18:16:55 [info     ] Collecting 10 files for feature MD5: 7c1bfcd610e27482498a6b39f4ab93ad. [junifer] pkg=storage step=storage
+file-metadata: 10it [00:00, 217.65it/s]
+2026-10-07 19:11:54 [info     ] Writing metadata to HDF5 file ... [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Collecting data from /tmp/tmpw_2y3c9k/*_test.hdf5 [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Will collect 2 features.       [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Collecting 10 files for feature MD5: 5f450eb4c3d9e87861b8ef8221fd77b2. [junifer] pkg=storage step=storage
+2026-10-07 19:11:54 [info     ] Collecting 10 files for feature MD5: 4ec2fc64bb12a47fa9dfc6b0c2a7f3ee. [junifer] pkg=storage step=storage
 
 feature:   0%|          | 0/2 [00:00&lt;?, ?it/s]
 
 file-data:   0%|          | 0/10 [00:00&lt;?, ?it/s]
 
-file-data:  50%|█████     | 5/10 [00:00&lt;00:00, 44.76it/s]/home/docker/actions-runner/_work/junifer/junifer/junifer/external/h5io/h5io/_h5io.py:67: H5pyDeprecationWarning: Creating a dataset without passing data or dtype is deprecated. Pass an explicit dtype. Using dtype='f4' will keep the current default behaviour.
-  dset = root.create_dataset(key, value.shape, chunks=value.chunk_size)
+file-data:  60%|██████    | 6/10 [00:00&lt;00:00, 57.80it/s]
+file-data: 100%|██████████| 10/10 [00:00&lt;00:00, 54.15it/s]
 
-
-file-data: 100%|██████████| 10/10 [00:00&lt;00:00, 34.42it/s]
-file-data: 100%|██████████| 10/10 [00:00&lt;00:00, 35.58it/s]
-
-feature:  50%|█████     | 1/2 [00:00&lt;00:00,  3.54it/s]
+feature:  50%|█████     | 1/2 [00:00&lt;00:00,  5.39it/s]
 
 file-data:   0%|          | 0/10 [00:00&lt;?, ?it/s]
 
-file-data:  70%|███████   | 7/10 [00:00&lt;00:00, 69.25it/s]
-file-data: 100%|██████████| 10/10 [00:00&lt;00:00, 55.75it/s]
+file-data:  90%|█████████ | 9/10 [00:00&lt;00:00, 78.86it/s]
+file-data: 100%|██████████| 10/10 [00:00&lt;00:00, 63.90it/s]
 
-feature: 100%|██████████| 2/2 [00:00&lt;00:00,  4.50it/s]
-feature: 100%|██████████| 2/2 [00:00&lt;00:00,  4.32it/s]
-2026-10-07 18:16:56 [info     ] Collect done                   [junifer] pkg=api
-2026-10-07 18:16:56 [info     ] Parameters: {'uri': '/tmp/tmp93fe590q/test.hdf5', 'single_output': True, 'overwrite': 'update', 'compression': 7, 'force_float32': True, 'chunk_size': 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  5.89it/s]
+feature: 100%|██████████| 2/2 [00:00&lt;00:00,  5.81it/s]
+2026-10-07 19:11:54 [info     ] Collect done                   [junifer] pkg=api
+2026-10-07 19:11:54 [info     ] Parameters: {&#39;uri&#39;: &#39;/tmp/tmpw_2y3c9k/test.hdf5&#39;, &#39;single_output&#39;: True, &#39;overwrite&#39;: &#39;update&#39;, &#39;compression&#39;: 7, &#39;force_float32&#39;: True, &#39;chunk_size&#39;: 100} [junifer] component=HDF5FeatureStorage pkg=storage step=storage
 </pre></div>
 </div>
 <p>Using julearn for machine learning:
@@ -701,14 +706,14 @@ We predict the age given our vbm features and sex as a confound.</p>
 <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">[</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a>
 
 <a href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"features"</span><span class="p">:</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span>
-    <span class="s2">"confound"</span><span class="p">:</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">,</span>
+    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span>
+    <span class="s2">&quot;confound&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">,</span>
 <span class="p">}</span>
 
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="s2">"regression"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">"features"</span><span class="p">)</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"zscore"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="p">[</span><span class="s2">"features"</span><span class="p">,</span> <span class="s2">"confound"</span><span class="p">])</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"confound_removal"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">"features"</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="s2">"confound"</span><span class="p">)</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"ridge"</span><span class="p">)</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;zscore&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;confound&quot;</span><span class="p">])</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;confound_removal&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="s2">&quot;confound&quot;</span><span class="p">)</span>
+<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;ridge&quot;</span><span class="p">)</span>
 
 <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function"><span class="n">run_cross_validation</span></a><span class="p">(</span>
     <a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">=</span><a href="https://docs.python.org/3/builtins/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">+</span> <span class="p">[</span><a href="https://docs.python.org/3/builtins/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">],</span>
@@ -721,90 +726,90 @@ We predict the age given our vbm features and sex as a confound.</p>
 <span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a><span class="p">)</span>
 </pre></div>
 </div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 18:16:56 [info     ] Adding step zscore that applies to ColumnTypes&lt;types={'features', 'confound'}; pattern=(?:__:type:__features|__:type:__confound)&gt; [julearn]
-2026-10-07 18:16:56 [info     ] Step added                     [julearn]
-2026-10-07 18:16:56 [info     ] Adding step confound_removal that applies to ColumnTypes&lt;types={'features'}; pattern=(?:__:type:__features)&gt; [julearn]
-2026-10-07 18:16:56 [info     ] Setting hyperparameter confounds = confound [julearn]
-2026-10-07 18:16:56 [info     ] Step added                     [julearn]
-2026-10-07 18:16:56 [info     ] Adding step ridge that applies to ColumnTypes&lt;types={'features'}; pattern=(?:__:type:__features)&gt; [julearn]
-2026-10-07 18:16:56 [info     ] Step added                     [julearn]
-2026-10-07 18:16:56 [info     ] ==== Input Data ====           [julearn]
-2026-10-07 18:16:56 [info     ] Using dataframe as input       [julearn]
-2026-10-07 18:16:56 [info     ]         Features: ['PCC', 'MPFC', 'lAG', 'rAG', 'lHF', 'rHF', 'Middlecingulate', 'lIPG', 'cerebellum', 'rCerebellum', 'rdlPFC', 'lateraloccipital', 'rdrPFC', 'RSFG', 'lTempP', 'leftmiddlefrontalgyrus(BA6)', 'sex'] [julearn]
-2026-10-07 18:16:56 [info     ]         Target: age                   [julearn]
-2026-10-07 18:16:56 [info     ]         Expanded features: ['PCC', 'MPFC', 'lAG', 'rAG', 'lHF', 'rHF', 'Middlecingulate', 'lIPG', 'cerebellum', 'rCerebellum', 'rdlPFC', 'lateraloccipital', 'rdrPFC', 'RSFG', 'lTempP', 'leftmiddlefrontalgyrus(BA6)', 'sex'] [julearn]
-2026-10-07 18:16:56 [info     ]         X_types:{'features': ['PCC', 'MPFC', 'lAG', 'rAG', 'lHF', 'rHF', 'Middlecingulate', 'lIPG', 'cerebellum', 'rCerebellum', 'rdlPFC', 'lateraloccipital', 'rdrPFC', 'RSFG', 'lTempP', 'leftmiddlefrontalgyrus(BA6)'], 'confound': ['sex']} [julearn]
-2026-10-07 18:16:56 [info     ] ====================           [julearn]
-2026-10-07 18:16:56 [info     ]                                [julearn]
-2026-10-07 18:16:56 [info     ] = Model Parameters =           [julearn]
-2026-10-07 18:16:56 [info     ] ====================           [julearn]
-2026-10-07 18:16:56 [info     ]                                [julearn]
-2026-10-07 18:16:56 [info     ] = Data Information =           [julearn]
-2026-10-07 18:16:56 [info     ]         Problem type: regression      [julearn]
-2026-10-07 18:16:56 [info     ]         Number of samples: 10         [julearn]
-2026-10-07 18:16:56 [info     ]         Number of features: 17        [julearn]
-2026-10-07 18:16:56 [info     ] ====================           [julearn]
-2026-10-07 18:16:56 [info     ]                                [julearn]
-2026-10-07 18:16:56 [info     ]         Target type: int64            [julearn]
-2026-10-07 18:16:56 [info     ] Using outer CV scheme KFold(n_splits=3, random_state=None, shuffle=False) [julearn]
-/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2026-10-07 19:11:54 [info     ] Adding step zscore that applies to ColumnTypes&lt;types={&#39;confound&#39;, &#39;features&#39;}; pattern=(?:__:type:__confound|__:type:__features)&gt; [julearn]
+2026-10-07 19:11:54 [info     ] Step added                     [julearn]
+2026-10-07 19:11:54 [info     ] Adding step confound_removal that applies to ColumnTypes&lt;types={&#39;features&#39;}; pattern=(?:__:type:__features)&gt; [julearn]
+2026-10-07 19:11:54 [info     ] Setting hyperparameter confounds = confound [julearn]
+2026-10-07 19:11:54 [info     ] Step added                     [julearn]
+2026-10-07 19:11:54 [info     ] Adding step ridge that applies to ColumnTypes&lt;types={&#39;features&#39;}; pattern=(?:__:type:__features)&gt; [julearn]
+2026-10-07 19:11:54 [info     ] Step added                     [julearn]
+2026-10-07 19:11:54 [info     ] ==== Input Data ====           [julearn]
+2026-10-07 19:11:54 [info     ] Using dataframe as input       [julearn]
+2026-10-07 19:11:54 [info     ]         Features: [&#39;PCC&#39;, &#39;MPFC&#39;, &#39;lAG&#39;, &#39;rAG&#39;, &#39;lHF&#39;, &#39;rHF&#39;, &#39;Middlecingulate&#39;, &#39;lIPG&#39;, &#39;cerebellum&#39;, &#39;rCerebellum&#39;, &#39;rdlPFC&#39;, &#39;lateraloccipital&#39;, &#39;rdrPFC&#39;, &#39;RSFG&#39;, &#39;lTempP&#39;, &#39;leftmiddlefrontalgyrus(BA6)&#39;, &#39;sex&#39;] [julearn]
+2026-10-07 19:11:54 [info     ]         Target: age                   [julearn]
+2026-10-07 19:11:54 [info     ]         Expanded features: [&#39;PCC&#39;, &#39;MPFC&#39;, &#39;lAG&#39;, &#39;rAG&#39;, &#39;lHF&#39;, &#39;rHF&#39;, &#39;Middlecingulate&#39;, &#39;lIPG&#39;, &#39;cerebellum&#39;, &#39;rCerebellum&#39;, &#39;rdlPFC&#39;, &#39;lateraloccipital&#39;, &#39;rdrPFC&#39;, &#39;RSFG&#39;, &#39;lTempP&#39;, &#39;leftmiddlefrontalgyrus(BA6)&#39;, &#39;sex&#39;] [julearn]
+2026-10-07 19:11:54 [info     ]         X_types:{&#39;features&#39;: [&#39;PCC&#39;, &#39;MPFC&#39;, &#39;lAG&#39;, &#39;rAG&#39;, &#39;lHF&#39;, &#39;rHF&#39;, &#39;Middlecingulate&#39;, &#39;lIPG&#39;, &#39;cerebellum&#39;, &#39;rCerebellum&#39;, &#39;rdlPFC&#39;, &#39;lateraloccipital&#39;, &#39;rdrPFC&#39;, &#39;RSFG&#39;, &#39;lTempP&#39;, &#39;leftmiddlefrontalgyrus(BA6)&#39;], &#39;confound&#39;: [&#39;sex&#39;]} [julearn]
+2026-10-07 19:11:54 [info     ] ====================           [julearn]
+2026-10-07 19:11:54 [info     ]                                [julearn]
+2026-10-07 19:11:54 [info     ] = Model Parameters =           [julearn]
+2026-10-07 19:11:54 [info     ] ====================           [julearn]
+2026-10-07 19:11:54 [info     ]                                [julearn]
+2026-10-07 19:11:54 [info     ] = Data Information =           [julearn]
+2026-10-07 19:11:54 [info     ]         Problem type: regression      [julearn]
+2026-10-07 19:11:54 [info     ]         Number of samples: 10         [julearn]
+2026-10-07 19:11:54 [info     ]         Number of features: 17        [julearn]
+2026-10-07 19:11:54 [info     ] ====================           [julearn]
+2026-10-07 19:11:54 [info     ]                                [julearn]
+2026-10-07 19:11:54 [info     ]         Target type: int64            [julearn]
+2026-10-07 19:11:54 [info     ] Using outer CV scheme KFold(n_splits=3, random_state=None, shuffle=False) [julearn]
+/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
 Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 916, in _score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py&quot;, line 916, in _score
     scores = scorer(estimator, X_test, y_test, **score_params)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/metrics/_scorer.py", line 485, in __call__
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/metrics/_scorer.py&quot;, line 485, in __call__
     return estimator.score(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/pipeline.py", line 1138, in score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/pipeline.py&quot;, line 1138, in score
     routed_params = process_routing(
                     ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1643, in process_routing
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1643, in process_routing
     request_routing.validate_metadata(params=kwargs, method=_method)
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1139, in validate_metadata
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1139, in validate_metadata
     raise TypeError(
-TypeError: Pipeline.score got unexpected argument(s) {'sample_weight'}, which are not routed to any object.
+TypeError: Pipeline.score got unexpected argument(s) {&#39;sample_weight&#39;}, which are not routed to any object.
 
   warnings.warn(
-/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
+/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
 Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 916, in _score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py&quot;, line 916, in _score
     scores = scorer(estimator, X_test, y_test, **score_params)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/metrics/_scorer.py", line 485, in __call__
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/metrics/_scorer.py&quot;, line 485, in __call__
     return estimator.score(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/pipeline.py", line 1138, in score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/pipeline.py&quot;, line 1138, in score
     routed_params = process_routing(
                     ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1643, in process_routing
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1643, in process_routing
     request_routing.validate_metadata(params=kwargs, method=_method)
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1139, in validate_metadata
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1139, in validate_metadata
     raise TypeError(
-TypeError: Pipeline.score got unexpected argument(s) {'sample_weight'}, which are not routed to any object.
+TypeError: Pipeline.score got unexpected argument(s) {&#39;sample_weight&#39;}, which are not routed to any object.
 
   warnings.warn(
-/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
+/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py:927: UserWarning: Scoring failed. The score on this train-test partition for these parameters will be set to nan. Details:
 Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/model_selection/_validation.py", line 916, in _score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/model_selection/_validation.py&quot;, line 916, in _score
     scores = scorer(estimator, X_test, y_test, **score_params)
              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/metrics/_scorer.py", line 485, in __call__
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/metrics/_scorer.py&quot;, line 485, in __call__
     return estimator.score(*args, **kwargs)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/pipeline.py", line 1138, in score
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/pipeline.py&quot;, line 1138, in score
     routed_params = process_routing(
                     ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1643, in process_routing
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1643, in process_routing
     request_routing.validate_metadata(params=kwargs, method=_method)
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py", line 1139, in validate_metadata
+  File &quot;/home/docker/actions-runner/_work/junifer/junifer/.venv/lib/python3.12/site-packages/sklearn/utils/_metadata_requests.py&quot;, line 1139, in validate_metadata
     raise TypeError(
-TypeError: Pipeline.score got unexpected argument(s) {'sample_weight'}, which are not routed to any object.
+TypeError: Pipeline.score got unexpected argument(s) {&#39;sample_weight&#39;}, which are not routed to any object.
 
   warnings.warn(
    fit_time  score_time  ...  fold                          cv_mdsum
-0  0.061183    0.015884  ...     0  509497eb21da473048117e0c6704d3ea
-1  0.059757    0.012519  ...     1  509497eb21da473048117e0c6704d3ea
-2  0.053606    0.011129  ...     2  509497eb21da473048117e0c6704d3ea
+0  0.095811    0.018203  ...     0  509497eb21da473048117e0c6704d3ea
+1  0.050573    0.009593  ...     1  509497eb21da473048117e0c6704d3ea
+2  0.060566    0.008132  ...     2  509497eb21da473048117e0c6704d3ea
 
 [3 rows x 8 columns]
 </pre></div>
@@ -813,7 +818,7 @@ TypeError: Pipeline.score got unexpected argument(s) {'sample_weight'}, which ar
 Doing machine learning with only 10 datapoints is not meaningful.
 This explains the big variation in scores
 for different cross-validation folds.</p>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 17.555 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (1 minutes 9.669 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-run-junifer-julearn-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
 <p><a class="reference download internal" download="" href="../_downloads/35c7ed013e0aac743386dbe5f567501f/run_junifer_julearn.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">run_junifer_julearn.ipynb</span></code></a></p>
@@ -877,7 +882,7 @@ for different cross-validation folds.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -412,7 +421,7 @@ Python interpreter of choice or use it via a Python script.</p>
 
 <span class="c1"># You need to import and use SQLiteFeatureStorage if you chose that</span>
 <span class="c1"># for storage while extracting features</span>
-<span class="n">storage</span> <span class="o">=</span> <span class="n">HDF5FeatureStorage</span><span class="p">(</span><span class="s2">"&lt;path/to/your/collected/file&gt;"</span><span class="p">)</span>
+<span class="n">storage</span> <span class="o">=</span> <span class="n">HDF5FeatureStorage</span><span class="p">(</span><span class="s2">&quot;&lt;path/to/your/collected/file&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The best way to start analysing would be to list all the extracted features
@@ -422,35 +431,35 @@ like so:</p>
 <span class="n">storage</span><span class="o">.</span><span class="n">list_features</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">'eb85b61eefba61f13d712d425264697b'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'datagrabber'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'SPMAuditoryTestingDataGrabber'</span><span class="p">,</span>
-                                                      <span class="s1">'types'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'BOLD'</span><span class="p">,</span> <span class="s1">'T1w'</span><span class="p">]},</span>
-                                       <span class="s1">'dependencies'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'scikit-learn'</span><span class="p">:</span> <span class="s1">'1.3.0'</span><span class="p">,</span> <span class="s1">'nilearn'</span><span class="p">:</span> <span class="s1">'0.9.2'</span><span class="p">},</span>
-                                       <span class="s1">'datareader'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'DefaultDataReader'</span><span class="p">},</span>
-                                       <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'BOLD'</span><span class="p">,</span>
-                                       <span class="s1">'marker'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'class'</span><span class="p">:</span> <span class="s1">'FunctionalConnectivityParcels'</span><span class="p">,</span>
-                                                  <span class="s1">'parcellation'</span><span class="p">:</span> <span class="s1">'Schaefer100x7'</span><span class="p">,</span>
-                                                  <span class="s1">'agg_method'</span><span class="p">:</span> <span class="s1">'mean'</span><span class="p">,</span>
-                                                  <span class="s1">'agg_method_params'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                                                  <span class="s1">'cor_method'</span><span class="p">:</span> <span class="s1">'covariance'</span><span class="p">,</span>
-                                                  <span class="s1">'cor_method_params'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'empirical'</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
-                                                  <span class="s1">'masks'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                                                  <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'schaefer_100x7_fc_parcels'</span><span class="p">},</span>
-                                       <span class="s1">'_element_keys'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'subject'</span><span class="p">],</span>
-                                       <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'BOLD_schaefer_100x7_fc_parcels'</span><span class="p">}}</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;eb85b61eefba61f13d712d425264697b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;datagrabber&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;SPMAuditoryTestingDataGrabber&#39;</span><span class="p">,</span>
+                                                      <span class="s1">&#39;types&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;BOLD&#39;</span><span class="p">,</span> <span class="s1">&#39;T1w&#39;</span><span class="p">]},</span>
+                                       <span class="s1">&#39;dependencies&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;scikit-learn&#39;</span><span class="p">:</span> <span class="s1">&#39;1.3.0&#39;</span><span class="p">,</span> <span class="s1">&#39;nilearn&#39;</span><span class="p">:</span> <span class="s1">&#39;0.9.2&#39;</span><span class="p">},</span>
+                                       <span class="s1">&#39;datareader&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;DefaultDataReader&#39;</span><span class="p">},</span>
+                                       <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;BOLD&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;marker&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;FunctionalConnectivityParcels&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;parcellation&#39;</span><span class="p">:</span> <span class="s1">&#39;Schaefer100x7&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;agg_method&#39;</span><span class="p">:</span> <span class="s1">&#39;mean&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;agg_method_params&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                                  <span class="s1">&#39;cor_method&#39;</span><span class="p">:</span> <span class="s1">&#39;covariance&#39;</span><span class="p">,</span>
+                                                  <span class="s1">&#39;cor_method_params&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;empirical&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+                                                  <span class="s1">&#39;masks&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                                                  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;schaefer_100x7_fc_parcels&#39;</span><span class="p">},</span>
+                                       <span class="s1">&#39;_element_keys&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">],</span>
+                                       <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;BOLD_schaefer_100x7_fc_parcels&#39;</span><span class="p">}}</span>
 </pre></div>
 </div>
 <p>Once we have this, we can retrieve a single feature like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_dict</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"&lt;name-key-from-feature-metadata&gt;"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_dict</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;&lt;name-key-from-feature-metadata&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>to get the stored dictionary or,</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="s2">"&lt;name-key-from-feature-metadata&gt;"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="s2">&quot;&lt;name-key-from-feature-metadata&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>to get it as a <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a>.</p>
 <p>If there are features with duplicate <code class="docutils literal notranslate"><span class="pre">name</span></code> s, then we would need to use
 the MD5 checksum and pass it like so:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_md5</span><span class="o">=</span><span class="s2">"&lt;md5-hash-of-feature&gt;"</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">feature_df</span> <span class="o">=</span> <span class="n">storage</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_md5</span><span class="o">=</span><span class="s2">&quot;&lt;md5-hash-of-feature&gt;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can now manipulate the dictionary or the <a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.2)"><code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a> as we
@@ -475,9 +484,9 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <span class="n">transformed_df</span> <span class="o">=</span> <span class="n">read_transform</span><span class="p">(</span>
     <span class="n">storage</span><span class="p">,</span>
     <span class="c1"># md5 hash can also be passed via `feature_md5`</span>
-    <span class="n">feature_name</span><span class="o">=</span><span class="s2">"&lt;name-key-from-feature-metadata&gt;"</span><span class="p">,</span>
+    <span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;&lt;name-key-from-feature-metadata&gt;&quot;</span><span class="p">,</span>
     <span class="c1"># format is `package_function`</span>
-    <span class="n">transform</span><span class="o">=</span><span class="s2">"bctpy_degrees_und"</span><span class="p">,</span>
+    <span class="n">transform</span><span class="o">=</span><span class="s2">&quot;bctpy_degrees_und&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -494,17 +503,17 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surface_normalised_df</span> <span class="o">=</span> <span class="n">brainprint</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span>
     <span class="n">storage</span><span class="p">,</span>
     <span class="p">{</span>
-        <span class="s2">"areas"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"feature_name"</span><span class="p">:</span> <span class="s2">"&lt;name-key-from-areas-feature&gt;"</span><span class="p">,</span>
+        <span class="s2">&quot;areas&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;feature_name&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;name-key-from-areas-feature&gt;&quot;</span><span class="p">,</span>
             <span class="c1"># if md5 hash is passed, the above should be None</span>
-            <span class="s2">"feature_md5"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;feature_md5&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"eigenvalues"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"feature_name"</span><span class="p">:</span> <span class="s2">"&lt;name-key-from-eigenvalues-feature&gt;"</span><span class="p">,</span>
-            <span class="s2">"feature_md5"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;feature_name&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;name-key-from-eigenvalues-feature&gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;feature_md5&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">},</span>
-    <span class="n">kind</span><span class="o">=</span><span class="s2">"surface"</span><span class="p">,</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;surface&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -512,16 +521,16 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">volume_normalised_df</span> <span class="o">=</span> <span class="n">brainprint</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span>
     <span class="n">storage</span><span class="p">,</span>
     <span class="p">{</span>
-        <span class="s2">"volumes"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"feature_name"</span><span class="p">:</span> <span class="s2">"&lt;name-key-from-volumes-feature&gt;"</span><span class="p">,</span>
-            <span class="s2">"feature_md5"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;volumes&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;feature_name&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;name-key-from-volumes-feature&gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;feature_md5&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">},</span>
-        <span class="s2">"eigenvalues"</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">"feature_name"</span><span class="p">:</span> <span class="s2">"&lt;name-key-from-eigenvalues-feature&gt;"</span><span class="p">,</span>
-            <span class="s2">"feature_md5"</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;eigenvalues&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;feature_name&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;name-key-from-eigenvalues-feature&gt;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;feature_md5&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
         <span class="p">},</span>
     <span class="p">},</span>
-    <span class="n">kind</span><span class="o">=</span><span class="s2">"volume"</span><span class="p">,</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;volume&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -532,7 +541,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">reweighted_df</span> <span class="o">=</span> <span class="n">brainprint</span><span class="o">.</span><span class="n">reweight</span><span class="p">(</span>
     <span class="n">storage</span><span class="p">,</span>
     <span class="c1"># md5 hash can also be passed via `feature_md5`</span>
-    <span class="n">feature_name</span><span class="o">=</span><span class="s2">"&lt;name-key-from-eigenvalues-feature&gt;"</span><span class="p">,</span>
+    <span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;&lt;name-key-from-eigenvalues-feature&gt;&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -623,7 +632,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -329,71 +338,71 @@ License: BSD 3 clause</p>
 
 
 <span class="n">datagrabber</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"HCPOpenAccess"</span><span class="p">,</span>
-    <span class="s2">"modality"</span><span class="p">:</span> <span class="s2">"fMRI"</span><span class="p">,</span>
-    <span class="s2">"preprocessed"</span><span class="p">:</span> <span class="s2">"ICA+FIX"</span><span class="p">,</span>
-    <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"volumetric"</span><span class="p">,</span>
+    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;HCPOpenAccess&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;modality&quot;</span><span class="p">:</span> <span class="s2">&quot;fMRI&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;preprocessed&quot;</span><span class="p">:</span> <span class="s2">&quot;ICA+FIX&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;space&quot;</span><span class="p">:</span> <span class="s2">&quot;volumetric&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">custom_confound_strategy</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"filter"</span><span class="p">:</span> <span class="s2">"butterworth"</span><span class="p">,</span>
-    <span class="s2">"detrend"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">"high_pass"</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
-    <span class="s2">"low_pass"</span><span class="p">:</span> <span class="mf">0.08</span><span class="p">,</span>
-    <span class="s2">"standardize"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">"confounds"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"csf"</span><span class="p">,</span> <span class="s2">"wm"</span><span class="p">,</span> <span class="s2">"gsr"</span><span class="p">],</span>
-    <span class="s2">"derivatives"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">"squares"</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="s2">"other"</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="s2">&quot;butterworth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;detrend&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;high_pass&quot;</span><span class="p">:</span> <span class="mf">0.01</span><span class="p">,</span>
+    <span class="s2">&quot;low_pass&quot;</span><span class="p">:</span> <span class="mf">0.08</span><span class="p">,</span>
+    <span class="s2">&quot;standardize&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;confounds&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;csf&quot;</span><span class="p">,</span> <span class="s2">&quot;wm&quot;</span><span class="p">,</span> <span class="s2">&quot;gsr&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;derivatives&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;squares&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="s2">&quot;other&quot;</span><span class="p">:</span> <span class="p">[],</span>
 <span class="p">}</span>
 
 <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Power264_FCPearson"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"FunctionalConnectivity"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Power264"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"Pearson"</span><span class="p">,</span>
-        <span class="s2">"confound_strategy"</span><span class="p">:</span> <span class="s2">"Params36"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Power264_FCPearson&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;FunctionalConnectivity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Power264&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;Pearson&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;confound_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;Params36&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer400x17_FCPearson"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"FunctionalConnectivity"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer400x17"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"Pearson"</span><span class="p">,</span>
-        <span class="s2">"confound_strategy"</span><span class="p">:</span> <span class="s2">"Params24"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17_FCPearson&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;FunctionalConnectivity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;Pearson&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;confound_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;Params24&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Power264_FCSpearman"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"FunctionalConnectivity"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Power264"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"Spearman"</span><span class="p">,</span>
-        <span class="s2">"confound_strategy"</span><span class="p">:</span> <span class="s2">"ICAAROMA"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Power264_FCSpearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;FunctionalConnectivity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Power264&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;Spearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;confound_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;ICAAROMA&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer400x17_FCSpearman"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"FunctionalConnectivity"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer400x17"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"Spearman"</span><span class="p">,</span>
-        <span class="s2">"confound_strategy"</span><span class="p">:</span> <span class="s2">"path/to/predefined/confound_file.tsv"</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17_FCSpearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;FunctionalConnectivity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;Spearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;confound_strategy&quot;</span><span class="p">:</span> <span class="s2">&quot;path/to/predefined/confound_file.tsv&quot;</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer400x17_FCSpearman"</span><span class="p">,</span>
-        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"FunctionalConnectivity"</span><span class="p">,</span>
-        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer400x17"</span><span class="p">,</span>
-        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"Spearman"</span><span class="p">,</span>
-        <span class="s2">"confound_strategy"</span><span class="p">:</span> <span class="n">custom_confound_strategy</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17_FCSpearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;FunctionalConnectivity&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer400x17&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;Spearman&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;confound_strategy&quot;</span><span class="p">:</span> <span class="n">custom_confound_strategy</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 
 <span class="n">storage</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"HDF5FeatureStorage"</span><span class="p">,</span>
-    <span class="s2">"uri"</span><span class="p">:</span> <span class="s2">"/data/project/juniferexample/features.hdf5"</span><span class="p">,</span>
+    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;HDF5FeatureStorage&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;/data/project/juniferexample/features.hdf5&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">run</span><span class="p">(</span>
-    <span class="n">workdir</span><span class="o">=</span><span class="s2">"/tmp"</span><span class="p">,</span>
+    <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
     <span class="n">datagrabber</span><span class="o">=</span><span class="n">datagrabber</span><span class="p">,</span>
-    <span class="n">elements</span><span class="o">=</span><span class="p">[(</span><span class="s2">"100408"</span><span class="p">,</span> <span class="s2">"REST1"</span><span class="p">,</span> <span class="s2">"LR"</span><span class="p">)],</span>
+    <span class="n">elements</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;100408&quot;</span><span class="p">,</span> <span class="s2">&quot;REST1&quot;</span><span class="p">,</span> <span class="s2">&quot;LR&quot;</span><span class="p">)],</span>
     <span class="n">markers</span><span class="o">=</span><span class="n">markers</span><span class="p">,</span>
     <span class="n">storage</span><span class="o">=</span><span class="n">storage</span><span class="p">,</span>
 <span class="p">)</span>
@@ -462,7 +471,7 @@ License: BSD 3 clause</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

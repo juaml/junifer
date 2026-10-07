@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -333,7 +342,7 @@ clone command:</p>
 <li><p>Install your local copy into a Python virtual environment. You can <a class="reference external" href="https://realpython.com/python-virtual-environments-a-primer/">read
 this guide to learn more</a> about them
 and how to create one.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[dev]"</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
 </li>
@@ -355,13 +364,13 @@ regularly. On one hand to save your work and on the other hand, the smaller
 the steps, the easier it is to review your work later. Please use <a class="reference external" href="http://karma-runner.github.io/2.0/dev/git-commit-msg.html">semantic
 commit messages</a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>.
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"&lt;prefix&gt;: &lt;summary of changes&gt;"</span>
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;&lt;prefix&gt;: &lt;summary of changes&gt;&quot;</span>
 </pre></div>
 </div>
 <p>In case, you want to commit some WIP (work-in-progress) code, please indicate
 that in the commit message and use the flag <code class="docutils literal notranslate"><span class="pre">--no-verify</span></code> with
 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">commit</span></code> like so:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">"WIP: &lt;summary of changes&gt;"</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>--no-verify<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;WIP: &lt;summary of changes&gt;&quot;</span>
 </pre></div>
 </div>
 </li>
@@ -413,7 +422,7 @@ being as per the following convention:</p>
 </ul>
 <p>For example, a basic documentation improvement can be recorded in a file
 <code class="docutils literal notranslate"><span class="pre">101.doc</span></code> with the content:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Fixed a typo in intro by `junifer's biggest fan`_
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Fixed a typo in intro by `junifer&#39;s biggest fan`_
 </pre></div>
 </div>
 </li>
@@ -437,18 +446,26 @@ tests that make sure that the code runs as intended.</p>
 <section id="adding-and-building-documentation">
 <h2><span class="section-number">11.4. </span>Adding and building documentation<a class="headerlink" href="#adding-and-building-documentation" title="Link to this heading">¶</a></h2>
 <p>Building the documentation requires some extra packages and can be installed by</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">".[docs]"</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>docs
 </pre></div>
 </div>
-<p>To build the docs</p>
+<p>or, with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[docs]&quot;</span>
+</pre></div>
+</div>
+<p>To build the docs of your working copy</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
 make<span class="w"> </span><span class="nb">local</span>
 </pre></div>
 </div>
-<p>To view the documentation, open <code class="docutils literal notranslate"><span class="pre">docs/_build/html/index.html</span></code>.</p>
+<p>To view the documentation, open <code class="docutils literal notranslate"><span class="pre">docs/_build/index.html</span></code>.</p>
 <p>In case you remove some files or change their filenames, you can run into
 errors when using <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">local</span></code>. In this situation you can use <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">clean</span></code>
 to clean up the already build files and then re-run <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">local</span></code>.</p>
+<p>The published documentation contains all the released versions and is built
+with <a class="reference external" href="https://real-yfprojects.github.io/sphinx-polyversion">sphinx-polyversion</a> using <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">html</span></code>. It builds each version in its
+own environment (defined in <code class="docutils literal notranslate"><span class="pre">docs/poly.py</span></code>) and only builds the versions
+that are not already present in <code class="docutils literal notranslate"><span class="pre">docs/_build</span></code>.</p>
 <p>Also, we follow British English for the documentation.</p>
 </section>
 <section id="writing-examples">
@@ -461,7 +478,7 @@ a figure or not.</p>
 <p>The first lines of the example should be a Python block comment with a title,
 a description of the example, authors and license name.</p>
 <p>The following is an example of how to start an example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Generic BIDS datagrabber for datalad.</span>
 <span class="sd">=====================================</span>
 
@@ -471,7 +488,7 @@ a description of the example, authors and license name.</p>
 <span class="sd">Authors: Federico Raimondo</span>
 
 <span class="sd">License: BSD 3 clause</span>
-<span class="sd">"""</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 </div>
 <p>The rest of the script will be executed as normal Python code. In order to
@@ -487,24 +504,24 @@ texts.</p>
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Set the logging level to info to see extra information</span>
-<span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">)</span>
+<span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
 
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># The BIDS datagrabber requires three parameters: the types of data we want,</span>
 <span class="c1"># the specific pattern that matches each type, and the variables that will be</span>
 <span class="c1"># replaced in the patterns.</span>
-<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"T1w"</span><span class="p">,</span> <span class="s2">"BOLD"</span><span class="p">]</span>
+<span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;T1w&quot;</span><span class="p">,</span> <span class="s2">&quot;BOLD&quot;</span><span class="p">]</span>
 <span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"T1w"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
-    <span class="s2">"BOLD"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
+    <span class="s2">&quot;T1w&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_T1w.nii.gz&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;BOLD&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{subject}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_task-rest_bold.nii.gz&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">replacements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">]</span>
+<span class="n">replacements</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span>
 <span class="c1">###############################################################################</span>
 <span class="c1"># Additionally, a datalad datagrabber requires the URI of the remote sibling</span>
 <span class="c1"># and the location of the dataset within the remote sibling.</span>
-<span class="n">repo_uri</span> <span class="o">=</span> <span class="s2">"https://cerebra.fz-juelich.de/junifer/datalad-example-bids.git"</span>
-<span class="n">rootdir</span> <span class="o">=</span> <span class="s2">"example_bids"</span>
+<span class="n">repo_uri</span> <span class="o">=</span> <span class="s2">&quot;https://cerebra.fz-juelich.de/junifer/datalad-example-bids.git&quot;</span>
+<span class="n">rootdir</span> <span class="o">=</span> <span class="s2">&quot;example_bids&quot;</span>
 
 <span class="c1">###############################################################################</span>
 <span class="c1"># Now we can use the datagrabber within a `with` context</span>
@@ -531,7 +548,7 @@ texts.</p>
     <span class="n">uri</span><span class="o">=</span><span class="n">repo_uri</span><span class="p">,</span>
     <span class="n">replacements</span><span class="o">=</span><span class="n">replacements</span><span class="p">,</span>
 <span class="p">)</span> <span class="k">as</span> <span class="n">dg</span><span class="p">:</span>
-    <span class="n">sub01</span> <span class="o">=</span> <span class="n">dg</span><span class="p">[</span><span class="s2">"sub-01"</span><span class="p">]</span>
+    <span class="n">sub01</span> <span class="o">=</span> <span class="n">dg</span><span class="p">[</span><span class="s2">&quot;sub-01&quot;</span><span class="p">]</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">sub01</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -612,7 +629,7 @@ To generate the HTML, just build the docs.</p>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="_static/documentation_options.js?v=b0846d1d"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>

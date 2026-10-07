@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -383,10 +392,10 @@ with the DMN. Here, we use the DMN coordinates used in a
     <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">52</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">46</span><span class="p">,</span> <span class="o">-</span><span class="mi">68</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">46</span><span class="p">,</span> <span class="o">-</span><span class="mi">68</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">]]</span>
 <span class="p">)</span>
 <span class="n">voi_names</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">"Posterior Cingulate Cortex"</span><span class="p">,</span>
-    <span class="s2">"Left Temporoparietal junction"</span><span class="p">,</span>
-    <span class="s2">"Right Temporoparietal junction"</span><span class="p">,</span>
-    <span class="s2">"Medial prefrontal cortex"</span><span class="p">,</span>
+    <span class="s2">&quot;Posterior Cingulate Cortex&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Left Temporoparietal junction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Right Temporoparietal junction&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Medial prefrontal cortex&quot;</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 </div>
@@ -395,11 +404,11 @@ associated with this set of coordinates. The variable <code class="docutils lite
 as it contains four strings indicating the name of each location. We can now
 simply use this to register our coordinates:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">register_data</span><span class="p">(</span>
-    <span class="n">kind</span><span class="o">=</span><span class="s2">"coordinates"</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">"DMNCustom"</span><span class="p">,</span>
+    <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;coordinates&quot;</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;DMNCustom&quot;</span><span class="p">,</span>
     <span class="n">coordinates</span><span class="o">=</span><span class="n">dmn_coords</span><span class="p">,</span>
     <span class="n">voi_names</span><span class="o">=</span><span class="n">voi_names</span><span class="p">,</span>
-    <span class="n">space</span><span class="o">=</span><span class="s2">"MNI"</span><span class="p">,</span>
+    <span class="n">space</span><span class="o">=</span><span class="s2">&quot;MNI&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -502,7 +511,7 @@ radius of 5mm.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

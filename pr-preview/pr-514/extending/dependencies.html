@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/version_selector.css?v=e2de63ed" />
     
     
 
@@ -282,6 +283,14 @@
 </ul>
 
 </div>
+<div id="version-selector" class="sidebar-tree version-selector">
+  <details class="version-details" open>
+    <summary class="version-summary">
+      <span class="version-status-dot version-status-dot--latest"></span>
+      <span class="caption-text">Version</span>
+    </summary>
+  </details>
+</div>
 </div>
       </div>
       
@@ -333,7 +342,7 @@ best use of them.</p>
 <p>You have already seen this case handled by having a class attribute
 <code class="docutils literal notranslate"><span class="pre">_DEPENDENCIES</span></code> whose value is a set of all the package names that the
 component depends on. For example, for <a class="reference internal" href="../api/markers.html#junifer.markers.RSSETSMarker" title="junifer.markers.RSSETSMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">RSSETSMarker</span></code></a>, we have:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"nilearn"</span><span class="p">}</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nilearn&quot;</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>The type annotation is for documentation and static type checking purposes.
@@ -346,8 +355,8 @@ and others who use it will thank you.</p>
 by having a class attribute like so:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">"name"</span><span class="p">:</span> <span class="n">ExtDep</span><span class="o">.</span><span class="n">AFNI</span><span class="p">,</span>
-        <span class="s2">"commands"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"3dReHo"</span><span class="p">,</span> <span class="s2">"3dAFNItoNIFTI"</span><span class="p">],</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ExtDep</span><span class="o">.</span><span class="n">AFNI</span><span class="p">,</span>
+        <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;3dReHo&quot;</span><span class="p">,</span> <span class="s2">&quot;3dAFNItoNIFTI&quot;</span><span class="p">],</span>
     <span class="p">},</span>
 <span class="p">]</span>
 </pre></div>
@@ -374,16 +383,16 @@ that it shows the problem a bit better and how we solve it:</p>
     <span class="c1"># docstring</span>
     <span class="n">_CONDITIONAL_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ConditionalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">"using"</span><span class="p">:</span> <span class="s2">"fsl"</span><span class="p">,</span>
-            <span class="s2">"depends_on"</span><span class="p">:</span> <span class="p">[</span><span class="n">FSLWarper</span><span class="p">],</span>
+            <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;fsl&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">FSLWarper</span><span class="p">],</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">"using"</span><span class="p">:</span> <span class="s2">"ants"</span><span class="p">,</span>
-            <span class="s2">"depends_on"</span><span class="p">:</span> <span class="p">[</span><span class="n">ANTSWarper</span><span class="p">],</span>
+            <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;ants&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">ANTSWarper</span><span class="p">],</span>
         <span class="p">},</span>
         <span class="p">{</span>
-            <span class="s2">"using"</span><span class="p">:</span> <span class="s2">"auto"</span><span class="p">,</span>
-            <span class="s2">"depends_on"</span><span class="p">:</span> <span class="p">[</span><span class="n">FSLWarper</span><span class="p">,</span> <span class="n">ANTsWarper</span><span class="p">],</span>
+            <span class="s2">&quot;using&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;depends_on&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">FSLWarper</span><span class="p">,</span> <span class="n">ANTsWarper</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
@@ -414,12 +423,12 @@ similar. <code class="docutils literal notranslate"><span class="pre">FSLWarper<
 
     <span class="n">_EXT_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">ExternalDependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
         <span class="p">{</span>
-            <span class="s2">"name"</span><span class="p">:</span> <span class="n">ExtDep</span><span class="o">.</span><span class="n">FSL</span><span class="p">,</span>
-            <span class="s2">"commands"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"flirt"</span><span class="p">,</span> <span class="s2">"applywarp"</span><span class="p">],</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">ExtDep</span><span class="o">.</span><span class="n">FSL</span><span class="p">,</span>
+            <span class="s2">&quot;commands&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;flirt&quot;</span><span class="p">,</span> <span class="s2">&quot;applywarp&quot;</span><span class="p">],</span>
         <span class="p">},</span>
     <span class="p">]</span>
 
-    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"numpy"</span><span class="p">,</span> <span class="s2">"nibabel"</span><span class="p">}</span>
+    <span class="n">_DEPENDENCIES</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="n">Dependencies</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;numpy&quot;</span><span class="p">,</span> <span class="s2">&quot;nibabel&quot;</span><span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -511,7 +520,7 @@ having this pattern.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88df3a3"></script>
+</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
