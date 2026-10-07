@@ -9,6 +9,11 @@ import pytest
 from junifer.utils.singleton import Singleton
 
 
+# Do not collect the tests of vendored packages. Paths are relative to this
+# file, so it also works when testing the installed package.
+collect_ignore = ["external/h5io", "external/BrainPrint"]
+
+
 @pytest.fixture(autouse=True)
 def reset_singletons() -> None:
     """Reset all singletons."""
