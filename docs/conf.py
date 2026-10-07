@@ -149,6 +149,34 @@ autoclass_content = "both"
 autodoc_typehints = "description"
 autodoc_typehints_description_target = "documented"
 
+
+def _load_junifer() -> None:
+    """Load all public junifer objects before autodoc runs.
+
+    autodoc copies the source annotations of the parent classes (including
+    pydantic's ``BaseModel``, e.g. ``__pydantic_extra__: Dict[...]``) into the
+    documented classes as strings. pydantic >= 2.13 then fails to build the
+    models that are (lazily) imported afterwards, as ``Dict`` is not defined
+    in junifer. Loading everything up front builds all the models before.
+
+    """
+    import importlib
+    import pkgutil
+
+    import junifer
+
+    for info in pkgutil.walk_packages(junifer.__path__, "junifer."):
+        if not info.ispkg or ".tests" in info.name or ".external" in info.name:
+            continue
+        package = importlib.import_module(info.name)
+        # Go through the lazy loader as autodoc would, instead of importing
+        # submodules, which could shadow objects with the same name
+        for name in getattr(package, "__all__", []):
+            getattr(package, name)
+
+
+_load_junifer()
+
 # -- sphinx.ext.autosummary configuration ------------------------------------
 
 autosummary_generate = True
