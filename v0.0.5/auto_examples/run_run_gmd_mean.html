@@ -1,25 +1,21 @@
-<!doctype html>
-<html class="no-js" lang="en" data-content_root="../">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="8.4. Computer Parcel Aggregation." href="run_compute_parcel_mean.html" /><link rel="prev" title="8.2. Generic BIDS DataGrabber for datalad." href="run_datagrabber_bids_datalad.html" />
+<!DOCTYPE html>
 
-    <!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
-        <title>8.3. UKB VBM GMD Extraction - junifer documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=387cc868" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=61a4c737" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=36a5483c" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
-    
-    
-
-
+<html class="no-js" data-content_root="../" lang="en">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="light dark" name="color-scheme"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../genindex.html" rel="index" title="Index"/><link href="../search.html" rel="search" title="Search"/><link href="run_compute_parcel_mean.html" rel="next" title="8.4. Computer Parcel Aggregation."/><link href="run_datagrabber_bids_datalad.html" rel="prev" title="8.2. Generic BIDS DataGrabber for datalad."/>
+<!-- Generated with Sphinx 7.3.7 and Furo 2024.05.06 -->
+<title>8.3. UKB VBM GMD Extraction - junifer documentation</title>
+<link href="../_static/pygments.css?v=a746c00c" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/furo.css?v=387cc868" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery.css?v=61a4c737" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/furo-extensions.css?v=36a5483c" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/custom.css?v=f7ba4aed" rel="stylesheet" type="text/css"/>
 <style>
   body {
     --color-code-background: #f8f8f8;
@@ -40,187 +36,162 @@
       }
     }
   }
-</style></head>
-  <body>
-    
-    <script>
+</style><link href="../_static/css/version_selector.css" rel="stylesheet"/></head>
+<body>
+<script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
-    
-
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="svg-toc" viewBox="0 0 24 24">
-    <title>Contents</title>
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
-      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-menu" viewBox="0 0 24 24">
-    <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-    <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-  </symbol>
-  <symbol id="svg-sun" viewBox="0 0 24 24">
-    <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-moon" viewBox="0 0 24 24">
-    <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
-    </svg>
-  </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
-  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
-    <title>Auto light/dark, in light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
-      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
-      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
-      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
-      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
-      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
-      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
-      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
-      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
-      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
-      <circle cx="14.5" cy="9.55" r="3.6"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
-    <title>Auto light/dark, in dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
-      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
-      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
-      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
-      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
-      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
-      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
-      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
-      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
-      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
-      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-pencil" viewBox="0 0 24 24">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
-      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-      <path d="M13.5 6.5l4 4" />
-      <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" /
-    </svg>
-  </symbol>
-  <symbol id="svg-eye" viewBox="0 0 24 24">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-      <path
-        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
-      <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" />
-    </svg>
-  </symbol>
+<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+<symbol id="svg-toc" viewbox="0 0 24 24">
+<title>Contents</title>
+<svg fill="currentColor" stroke="currentColor" stroke-width="0" viewbox="0 0 1024 1024">
+<path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"></path>
 </svg>
-
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+</symbol>
+<symbol id="svg-menu" viewbox="0 0 24 24">
+<title>Menu</title>
+<svg class="feather-menu" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</symbol>
+<symbol id="svg-arrow-right" viewbox="0 0 24 24">
+<title>Expand</title>
+<svg class="feather-chevron-right" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</symbol>
+<symbol id="svg-sun" viewbox="0 0 24 24">
+<title>Light mode</title>
+<svg class="feather-sun" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+</symbol>
+<symbol id="svg-moon" viewbox="0 0 24 24">
+<title>Dark mode</title>
+<svg class="icon-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+</svg>
+</symbol>
+<symbol id="svg-sun-half" viewbox="0 0 24 24">
+<title>Auto light/dark mode</title>
+<svg class="icon-tabler-shadow" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M13 12h5"></path>
+<path d="M13 15h4"></path>
+<path d="M13 18h1"></path>
+<path d="M13 9h4"></path>
+<path d="M13 6h1"></path>
+</svg>
+</symbol>
+<symbol id="svg-sun-with-moon" viewbox="0 0 24 24">
+<title>Auto light/dark, in light mode</title>
+<svg class="icon-custom-derived-from-feather-sun-and-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z" style="opacity: 50%"></path>
+<line x1="14.5" x2="14.5" y1="3.25" y2="1.25"></line>
+<line x1="14.5" x2="14.5" y1="15.85" y2="17.85"></line>
+<line x1="10.044" x2="8.63" y1="5.094" y2="3.68"></line>
+<line x1="19" x2="20.414" y1="14.05" y2="15.464"></line>
+<line x1="8.2" x2="6.2" y1="9.55" y2="9.55"></line>
+<line x1="20.8" x2="22.8" y1="9.55" y2="9.55"></line>
+<line x1="10.044" x2="8.63" y1="14.006" y2="15.42"></line>
+<line x1="19" x2="20.414" y1="5.05" y2="3.636"></line>
+<circle cx="14.5" cy="9.55" r="3.6"></circle>
+</svg>
+</symbol>
+<symbol id="svg-moon-with-sun" viewbox="0 0 24 24">
+<title>Auto light/dark, in dark mode</title>
+<svg class="icon-custom-derived-from-feather-sun-and-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"></path>
+<line style="opacity: 50%" x1="18" x2="18" y1="3.705" y2="2.5"></line>
+<line style="opacity: 50%" x1="18" x2="18" y1="11.295" y2="12.5"></line>
+<line style="opacity: 50%" x1="15.316" x2="14.464" y1="4.816" y2="3.964"></line>
+<line style="opacity: 50%" x1="20.711" x2="21.563" y1="10.212" y2="11.063"></line>
+<line style="opacity: 50%" x1="14.205" x2="13.001" y1="7.5" y2="7.5"></line>
+<line style="opacity: 50%" x1="21.795" x2="23" y1="7.5" y2="7.5"></line>
+<line style="opacity: 50%" x1="15.316" x2="14.464" y1="10.184" y2="11.036"></line>
+<line style="opacity: 50%" x1="20.711" x2="21.563" y1="4.789" y2="3.937"></line>
+<circle cx="18" cy="7.5" r="2.169" style="opacity: 50%"></circle>
+</svg>
+</symbol>
+<symbol id="svg-pencil" viewbox="0 0 24 24">
+<svg class="icon-tabler-pencil-code" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+<path d="M13.5 6.5l4 4"></path>
+<path d="M20 21l2 -2l-2 -2"></path>
+<path <="" d="M17 17l-2 2l2 2" svg="">
+</path></svg></symbol>
+<symbol id="svg-eye" viewbox="0 0 24 24">
+<svg class="icon-tabler-eye-code" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+<path d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008"></path>
+<path d="M20 21l2 -2l-2 -2"></path>
+<path d="M17 17l-2 2l2 2"></path>
+</svg>
+</symbol>
+</svg>
+<input class="sidebar-toggle" id="__navigation" name="__navigation" type="checkbox"/>
+<input class="sidebar-toggle" id="__toc" name="__toc" type="checkbox"/>
 <label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
+<div class="visually-hidden">Hide navigation sidebar</div>
 </label>
 <label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
+<div class="visually-hidden">Hide table of contents sidebar</div>
 </label>
-
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
-
-
-
 <div class="page">
-  <header class="mobile-header">
-    <div class="header-left">
-      <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
-      </label>
-    </div>
-    <div class="header-center">
-      <a href="../index.html"><div class="brand">junifer  documentation</div></a>
-    </div>
-    <div class="header-right">
-      <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
-          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
-          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-        </button>
-      </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-      </label>
-    </div>
-  </header>
-  <aside class="sidebar-drawer">
-    <div class="sidebar-container">
-      
-      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
-  
-  <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
-  </div>
-  
-  <span class="sidebar-brand-text">junifer  documentation</span>
-  
-</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
-  <input type="hidden" name="check_keywords" value="yes">
-  <input type="hidden" name="area" value="default">
+<header class="mobile-header">
+<div class="header-left">
+<label class="nav-overlay-icon" for="__navigation">
+<div class="visually-hidden">Toggle site navigation sidebar</div>
+<i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+</label>
+</div>
+<div class="header-center">
+<a href="../index.html"><div class="brand">junifer  documentation</div></a>
+</div>
+<div class="header-right">
+<div class="theme-toggle-container theme-toggle-header">
+<button class="theme-toggle">
+<div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+<svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+<svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+<svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+<svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+</button>
+</div>
+<label class="toc-overlay-icon toc-header-icon" for="__toc">
+<div class="visually-hidden">Toggle table of contents sidebar</div>
+<i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+</label>
+</div>
+</header>
+<aside class="sidebar-drawer">
+<div class="sidebar-container">
+<div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
+<div class="sidebar-logo-container">
+<img alt="Logo" class="sidebar-logo" src="../_static/junifer_logo.png"/>
+</div>
+<span class="sidebar-brand-text">junifer  documentation</span>
+</a><form action="../search.html" class="sidebar-search-container" method="get" role="search">
+<input aria-label="Search" class="sidebar-search" name="q" placeholder="Search"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
 </form>
 <div id="searchbox"></div><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
@@ -292,64 +263,106 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
 </ul>
-
+</div>
+<div class="sidebar-tree version-selector" id="version-selector">
+<details class="version-details" open="">
+<summary class="version-summary">
+<span class="version-status-dot version-status-dot--old"></span>
+<span class="caption-text">v0.0.5</span>
+</summary>
+<ul>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.7/index.html">
+          v0.0.7 <em>(latest)</em>
+</a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.6/index.html">
+          v0.0.6
+        </a>
+</li>
+<li class="toctree-l1 current">
+<a class="reference external" href="../../v0.0.5/index.html">
+          v0.0.5
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.4/index.html">
+          v0.0.4
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.3/index.html">
+          v0.0.3
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.2/index.html">
+          v0.0.2
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.1/index.html">
+          v0.0.1
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../main/index.html">main (dev)</a>
+</li>
+</ul>
+</details>
 </div>
 <div class="sidebar-tree">
-  <p class="version-select">
-    <span class="caption-text">Other Versions</span>
-  </p>
-  <div id="versions">
-    
-    
-    <span class="caption-text">Tags</span>
-    <ul>
-      <li><a class="reference internal" href="../../v0.0.1/index.html">v0.0.1</a></li>
-      <li><a class="reference internal" href="../../v0.0.2/index.html">v0.0.2</a></li>
-      <li><a class="reference internal" href="../../v0.0.3/index.html">v0.0.3</a></li>
-      <li><a class="reference internal" href="../../v0.0.4/index.html">v0.0.4</a></li>
-      <li><a class="reference internal" href="run_run_gmd_mean.html">v0.0.5</a></li>
-    </ul>
-    
-  </div>
+<p class="version-select">
+<span class="caption-text">Other Versions</span>
+</p>
+<div id="versions">
+<span class="caption-text">Tags</span>
+<ul>
+<li><a class="reference internal" href="../../v0.0.1/index.html">v0.0.1</a></li>
+<li><a class="reference internal" href="../../v0.0.2/index.html">v0.0.2</a></li>
+<li><a class="reference internal" href="../../v0.0.3/index.html">v0.0.3</a></li>
+<li><a class="reference internal" href="../../v0.0.4/index.html">v0.0.4</a></li>
+<li><a class="reference internal" href="run_run_gmd_mean.html">v0.0.5</a></li>
+</ul>
 </div>
-
 </div>
-      </div>
-      
-    </div>
-  </aside>
-  <div class="main">
-    <div class="content">
-      <div class="article-container">
-        <a href="#" class="back-to-top muted-link">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
-          </svg>
-          <span>Back to top</span>
-        </a>
-        <div class="content-icon-container">
-          <div class="view-this-page">
-  <a class="muted-link" href="../_sources/auto_examples/run_run_gmd_mean.rst.txt" title="View this page">
-    <svg><use href="#svg-eye"></use></svg>
-    <span class="visually-hidden">View this page</span>
-  </a>
+</div>
+</div>
+</div>
+</aside>
+<div class="main">
+<div class="content">
+<div class="article-container">
+<a class="back-to-top muted-link" href="#">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+</svg>
+<span>Back to top</span>
+</a>
+<div class="content-icon-container">
+<div class="view-this-page">
+<a class="muted-link" href="../_sources/auto_examples/run_run_gmd_mean.rst.txt" title="View this page">
+<svg><use href="#svg-eye"></use></svg>
+<span class="visually-hidden">View this page</span>
+</a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
-              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
-              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-            </button>
-          </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-          </label>
-        </div>
-        <article role="main" id="furo-main-content">
-          <div class="sphx-glr-download-link-note admonition note">
+<button class="theme-toggle">
+<div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+<svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+<svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+<svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+<svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+</button>
+</div>
+<label class="toc-overlay-icon toc-content-icon" for="__toc">
+<div class="visually-hidden">Toggle table of contents sidebar</div>
+<i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+</label>
+</div>
+<article id="furo-main-content" role="main">
+<div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-examples-run-run-gmd-mean-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code.</p>
@@ -362,17 +375,17 @@ to download the full example code.</p>
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Registering SPMAuditoryTestingDataGrabber in datagrabber
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Registering PartlyCloudyTestingDataGrabber in datagrabber
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Validating Marker Collection
-2024-07-22 09:22:18,841 - JUNIFER - INFO - DataGrabber output type: [&#39;VBM_GM&#39;]
+2024-07-22 09:22:18,841 - JUNIFER - INFO - DataGrabber output type: ['VBM_GM']
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Validating Data Reader:
-2024-07-22 09:22:18,841 - JUNIFER - INFO - Data Reader output type: [&#39;VBM_GM&#39;]
+2024-07-22 09:22:18,841 - JUNIFER - INFO - Data Reader output type: ['VBM_GM']
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Validating Marker: Schaefer1000x7_TrimMean80
-2024-07-22 09:22:18,841 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2024-07-22 09:22:18,841 - JUNIFER - INFO - Marker output type: ['vector']
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Validating storage for Schaefer1000x7_TrimMean80
 2024-07-22 09:22:18,841 - JUNIFER - INFO - Validating Marker: Schaefer1000x7_Mean
-2024-07-22 09:22:18,842 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2024-07-22 09:22:18,842 - JUNIFER - INFO - Marker output type: ['vector']
 2024-07-22 09:22:18,842 - JUNIFER - INFO - Validating storage for Schaefer1000x7_Mean
 2024-07-22 09:22:18,842 - JUNIFER - INFO - Validating Marker: Schaefer1000x7_Std
-2024-07-22 09:22:18,842 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2024-07-22 09:22:18,842 - JUNIFER - INFO - Marker output type: ['vector']
 2024-07-22 09:22:18,842 - JUNIFER - INFO - Validating storage for Schaefer1000x7_Std
 
 Added README.md to /home/runner/nilearn_data
@@ -417,9 +430,9 @@ Downloading https://templateflow.s3.amazonaws.com/tpl-MNI152Lin/tpl-MNI152Lin_re
   0%|          | 0.00/1.45M [00:00&lt;?, ?B/s]
 100%|██████████| 1.45M/1.45M [00:00&lt;00:00, 68.1MB/s]
 2024-07-22 09:28:45,414 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsrjumnxhz/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsrjumnxhz/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellationsa4a2spts/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsrjumnxhz/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsrjumnxhz/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellationsa4a2spts/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:28:53,183 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:28:54,514 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:28:54,675 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:28:54,676 - JUNIFER - INFO - Computing VBM_GM
@@ -432,9 +445,9 @@ b&#39;&#39;
 2024-07-22 09:28:54,712 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:28:56,006 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:28:56,107 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations_9tjoheo/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations_9tjoheo/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellations0cgf9rag/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations_9tjoheo/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations_9tjoheo/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellations0cgf9rag/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:03,511 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:04,737 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:04,901 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:29:04,901 - JUNIFER - INFO - Computing VBM_GM
@@ -447,9 +460,9 @@ b&#39;&#39;
 2024-07-22 09:29:04,937 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:06,197 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:06,297 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsr2blkvcs/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsr2blkvcs/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellationsrmdvg_n3/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsr2blkvcs/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsr2blkvcs/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpa2lsypn2/parcellationsrmdvg_n3/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:13,582 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:14,944 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:15,114 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:29:15,116 - JUNIFER - INFO - Getting element sub-02
@@ -467,9 +480,9 @@ b&#39;&#39;
 2024-07-22 09:29:15,157 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:16,451 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:16,552 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsihd9xph2/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsihd9xph2/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellationsy_psu36n/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsihd9xph2/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsihd9xph2/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellationsy_psu36n/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:24,023 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:25,209 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:25,363 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:29:25,363 - JUNIFER - INFO - Computing VBM_GM
@@ -482,9 +495,9 @@ b&#39;&#39;
 2024-07-22 09:29:25,398 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:26,638 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:26,738 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations2xt7abij/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations2xt7abij/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellationsm3_fm3t7/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations2xt7abij/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations2xt7abij/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellationsm3_fm3t7/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:34,129 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:35,307 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:35,467 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:29:35,467 - JUNIFER - INFO - Computing VBM_GM
@@ -497,9 +510,9 @@ b&#39;&#39;
 2024-07-22 09:29:35,502 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:36,737 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:36,836 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsiu7ajwvm/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsiu7ajwvm/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellations9ytr0vo8/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsiu7ajwvm/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsiu7ajwvm/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpcgptvhhb/parcellations9ytr0vo8/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:44,217 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:45,428 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:45,590 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:29:45,591 - JUNIFER - INFO - Getting element sub-03
@@ -517,9 +530,9 @@ b&#39;&#39;
 2024-07-22 09:29:45,627 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:46,853 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:46,953 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations1vjshipo/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations1vjshipo/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationsu6ltvms6/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations1vjshipo/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations1vjshipo/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationsu6ltvms6/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:29:54,221 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:29:55,420 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:29:55,576 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:29:55,576 - JUNIFER - INFO - Computing VBM_GM
@@ -532,9 +545,9 @@ b&#39;&#39;
 2024-07-22 09:29:55,611 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:29:56,848 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:29:56,947 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsz5umvghx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsz5umvghx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationsvtfpj__q/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsz5umvghx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsz5umvghx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationsvtfpj__q/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:04,387 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:05,608 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:05,767 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:30:05,767 - JUNIFER - INFO - Computing VBM_GM
@@ -547,9 +560,9 @@ b&#39;&#39;
 2024-07-22 09:30:05,803 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:07,049 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:07,149 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationss91rlhe9/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationss91rlhe9/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationske9cv33z/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationss91rlhe9/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationss91rlhe9/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpaizt67hr/parcellationske9cv33z/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:14,471 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:15,671 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:15,838 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:30:15,838 - JUNIFER - INFO - Getting element sub-04
@@ -567,9 +580,9 @@ b&#39;&#39;
 2024-07-22 09:30:15,875 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:17,088 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:17,187 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsjys7li3g/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsjys7li3g/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellations9ox6x6__/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsjys7li3g/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsjys7li3g/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellations9ox6x6__/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:24,539 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:25,745 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:25,900 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:30:25,900 - JUNIFER - INFO - Computing VBM_GM
@@ -582,9 +595,9 @@ b&#39;&#39;
 2024-07-22 09:30:25,935 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:27,172 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:27,273 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsigee491u/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsigee491u/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellations6fygf8kw/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsigee491u/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsigee491u/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellations6fygf8kw/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:34,708 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:35,881 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:36,043 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:30:36,043 - JUNIFER - INFO - Computing VBM_GM
@@ -597,9 +610,9 @@ b&#39;&#39;
 2024-07-22 09:30:36,078 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:37,311 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:37,411 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations6l6npxdg/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations6l6npxdg/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellationsq4ktt7e0/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations6l6npxdg/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations6l6npxdg/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpvrxjmw3_/parcellationsq4ktt7e0/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:44,834 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:46,019 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:46,183 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:30:46,184 - JUNIFER - INFO - Getting element sub-05
@@ -617,9 +630,9 @@ b&#39;&#39;
 2024-07-22 09:30:46,225 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:47,456 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:47,555 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationswrpmuj_h/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationswrpmuj_h/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationsbobfx_2f/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationswrpmuj_h/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationswrpmuj_h/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationsbobfx_2f/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:30:54,952 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:30:56,161 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:30:56,318 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:30:56,318 - JUNIFER - INFO - Computing VBM_GM
@@ -632,9 +645,9 @@ b&#39;&#39;
 2024-07-22 09:30:56,354 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:30:57,585 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:30:57,684 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsoxbb6bqr/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsoxbb6bqr/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationshjoi03bt/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsoxbb6bqr/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsoxbb6bqr/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationshjoi03bt/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:05,091 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:06,278 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:06,437 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:31:06,437 - JUNIFER - INFO - Computing VBM_GM
@@ -647,9 +660,9 @@ b&#39;&#39;
 2024-07-22 09:31:06,472 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:07,717 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:07,816 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsu8jwhg5o/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsu8jwhg5o/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationsp9wcf05b/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsu8jwhg5o/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsu8jwhg5o/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmptsz1q3qq/parcellationsp9wcf05b/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:15,290 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:16,480 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:16,643 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:31:16,645 - JUNIFER - INFO - Getting element sub-06
@@ -667,9 +680,9 @@ b&#39;&#39;
 2024-07-22 09:31:16,685 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:17,926 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:18,026 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsbn1tav50/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsbn1tav50/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellations98tz0p69/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsbn1tav50/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsbn1tav50/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellations98tz0p69/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:25,482 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:26,677 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:26,832 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:31:26,832 - JUNIFER - INFO - Computing VBM_GM
@@ -682,9 +695,9 @@ b&#39;&#39;
 2024-07-22 09:31:26,868 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:28,104 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:28,206 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsqdaxtkcx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsqdaxtkcx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellationsskh1k0i3/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsqdaxtkcx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsqdaxtkcx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellationsskh1k0i3/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:35,622 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:36,794 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:36,955 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:31:36,955 - JUNIFER - INFO - Computing VBM_GM
@@ -697,9 +710,9 @@ b&#39;&#39;
 2024-07-22 09:31:36,990 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:38,236 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:38,336 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationshpbvxkgx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationshpbvxkgx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellationsxt2cjve4/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationshpbvxkgx/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationshpbvxkgx/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpq75ns403/parcellationsxt2cjve4/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:45,809 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:46,984 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:47,144 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:31:47,146 - JUNIFER - INFO - Getting element sub-07
@@ -717,9 +730,9 @@ b&#39;&#39;
 2024-07-22 09:31:47,186 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:48,417 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:48,516 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationshj3l55v5/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationshj3l55v5/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellationsg0mujxq5/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationshj3l55v5/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationshj3l55v5/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellationsg0mujxq5/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:31:55,997 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:31:57,222 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:31:57,375 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:31:57,375 - JUNIFER - INFO - Computing VBM_GM
@@ -732,9 +745,9 @@ b&#39;&#39;
 2024-07-22 09:31:57,410 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:31:58,673 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:31:58,773 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationstm7mzu17/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationstm7mzu17/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellationstr0i_ang/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationstm7mzu17/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationstm7mzu17/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellationstr0i_ang/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:06,173 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:07,363 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:07,521 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:32:07,521 - JUNIFER - INFO - Computing VBM_GM
@@ -747,9 +760,9 @@ b&#39;&#39;
 2024-07-22 09:32:07,556 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:08,785 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:08,884 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations664ckd3_/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations664ckd3_/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellations5spxotz_/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations664ckd3_/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations664ckd3_/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmp2ds5nexa/parcellations5spxotz_/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:16,265 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:17,461 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:17,623 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:32:17,625 - JUNIFER - INFO - Getting element sub-08
@@ -767,9 +780,9 @@ b&#39;&#39;
 2024-07-22 09:32:17,665 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:18,903 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:19,002 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationskdu_051s/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationskdu_051s/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellations8plk0nz9/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationskdu_051s/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationskdu_051s/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellations8plk0nz9/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:26,441 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:27,633 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:27,788 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:32:27,788 - JUNIFER - INFO - Computing VBM_GM
@@ -782,9 +795,9 @@ b&#39;&#39;
 2024-07-22 09:32:27,824 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:29,051 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:29,150 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsz6_3t56q/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsz6_3t56q/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellationsduna0qia/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsz6_3t56q/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsz6_3t56q/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellationsduna0qia/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:36,554 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:37,729 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:37,890 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:32:37,890 - JUNIFER - INFO - Computing VBM_GM
@@ -797,9 +810,9 @@ b&#39;&#39;
 2024-07-22 09:32:37,925 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:39,159 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:39,259 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsj_v2s3_g/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsj_v2s3_g/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellationsjw986nzs/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsj_v2s3_g/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsj_v2s3_g/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpssbazhyd/parcellationsjw986nzs/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:46,642 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:47,825 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:47,986 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:32:47,988 - JUNIFER - INFO - Getting element sub-09
@@ -817,9 +830,9 @@ b&#39;&#39;
 2024-07-22 09:32:48,030 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:49,258 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:49,357 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsdbfpn95b/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsdbfpn95b/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellations2cmnvine/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsdbfpn95b/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsdbfpn95b/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellations2cmnvine/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:32:56,805 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:32:58,011 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:32:58,166 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:32:58,166 - JUNIFER - INFO - Computing VBM_GM
@@ -832,9 +845,9 @@ b&#39;&#39;
 2024-07-22 09:32:58,200 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:32:59,410 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:32:59,510 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsipaxrb0y/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsipaxrb0y/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellationsomacyegd/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsipaxrb0y/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsipaxrb0y/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellationsomacyegd/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:33:07,025 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:33:08,201 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:33:08,360 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:33:08,360 - JUNIFER - INFO - Computing VBM_GM
@@ -847,9 +860,9 @@ b&#39;&#39;
 2024-07-22 09:33:08,395 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:33:09,607 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:33:09,706 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsfwzp0vjd/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsfwzp0vjd/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellationsrgulig7h/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsfwzp0vjd/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsfwzp0vjd/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpfplu5o17/parcellationsrgulig7h/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:33:17,271 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:33:18,448 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:33:18,609 - JUNIFER - INFO - Marker collection fitting done
 2024-07-22 09:33:18,610 - JUNIFER - INFO - Getting element sub-10
@@ -867,9 +880,9 @@ b&#39;&#39;
 2024-07-22 09:33:18,646 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:33:19,843 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:33:19,943 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsgdpdctoc/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsgdpdctoc/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellationsa8t298wk/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsgdpdctoc/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsgdpdctoc/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellationsa8t298wk/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:33:27,368 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:33:28,552 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:33:28,706 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Mean
 2024-07-22 09:33:28,706 - JUNIFER - INFO - Computing VBM_GM
@@ -882,9 +895,9 @@ b&#39;&#39;
 2024-07-22 09:33:28,740 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:33:29,948 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:33:30,046 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellations5da6l8sc/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations5da6l8sc/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellationscz1_400k/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellations5da6l8sc/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellations5da6l8sc/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellationscz1_400k/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:33:37,510 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:33:38,665 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:33:38,824 - JUNIFER - INFO - Fitting marker Schaefer1000x7_Std
 2024-07-22 09:33:38,824 - JUNIFER - INFO - Computing VBM_GM
@@ -897,15 +910,15 @@ b&#39;&#39;
 2024-07-22 09:33:38,858 - JUNIFER - INFO - Found existing xfm file for MNI152NLin6Asym to MNI152Lin at /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5
 2024-07-22 09:33:40,063 - JUNIFER - INFO - Downloading template MNI152Lin in resolution 2
 2024-07-22 09:33:40,162 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/tmpcysmnw4q/parcellationsxsce4rez/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsxsce4rez/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellations7o0o9wou/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/tmpcysmnw4q/parcellationsxsce4rez/Schaefer1000x7.nii.gz -r /tmp/tmpcysmnw4q/parcellationsxsce4rez/MNI152Lin_T1w_2.0.nii.gz -t /home/runner/junifer/data/xfms/MNI152NLin6Asym_to_MNI152Lin/MNI152NLin6Asym_to_MNI152Lin_Composite.h5 -o /tmp/tmpnhk8q2d8/parcellations7o0o9wou/Schaefer1000x7_warped_from_MNI152NLin6Asym_to_MNI152Lin.nii.gz
 2024-07-22 09:33:47,643 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
-b&#39;&#39;
+b''
 2024-07-22 09:33:48,798 - JUNIFER - INFO - Storing in &lt;SQLiteFeatureStorage @ /tmp/tmpjkm0wiac/test.sqlite (multiple output)&gt;
 2024-07-22 09:33:48,961 - JUNIFER - INFO - Marker collection fitting done
 </pre></div>
 </div>
 <div class="line-block">
-<div class="line"><br /></div>
+<div class="line"><br/></div>
 </div>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tempfile</span>
 
@@ -913,44 +926,44 @@ b&#39;&#39;
 <span class="kn">from</span> <span class="nn">junifer.api</span> <span class="kn">import</span> <span class="n">run</span>
 
 
-<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;OasisVBMTestingDataGrabber&quot;</span><span class="p">,</span>
+<a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">datagrabber</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"OasisVBMTestingDataGrabber"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a> <span class="o">=</span> <span class="p">[</span>
+<a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">markers</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_TrimMean80&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;trim_mean&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;proportiontocut&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7_TrimMean80"</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ParcelAggregation"</span><span class="p">,</span>
+        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7"</span><span class="p">,</span>
+        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"trim_mean"</span><span class="p">,</span>
+        <span class="s2">"method_params"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"proportiontocut"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_Mean&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7_Mean"</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ParcelAggregation"</span><span class="p">,</span>
+        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7"</span><span class="p">,</span>
+        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"mean"</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7_Std&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer1000x7&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;std&quot;</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7_Std"</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ParcelAggregation"</span><span class="p">,</span>
+        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer1000x7"</span><span class="p">,</span>
+        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"std"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 
-<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SQLiteFeatureStorage&quot;</span><span class="p">,</span>
+<a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"SQLiteFeatureStorage"</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">uri</span></a> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite&quot;</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">uri</span></a>
+<span class="k">with</span> <a class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class" href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">tmpdir</span></a><span class="p">:</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">uri</span></a> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite"</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="p">[</span><span class="s2">"uri"</span><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">uri</span></a>
     <span class="n">run</span><span class="p">(</span>
-        <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
-        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">datagrabber</span></a><span class="p">,</span>
-        <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">markers</span></a><span class="p">,</span>
-        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
+        <span class="n">workdir</span><span class="o">=</span><span class="s2">"/tmp"</span><span class="p">,</span>
+        <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">datagrabber</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">datagrabber</span></a><span class="p">,</span>
+        <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">markers</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">markers</span></a><span class="p">,</span>
+        <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="p">,</span>
     <span class="p">)</span>
 </pre></div>
 </div>
@@ -965,62 +978,57 @@ b&#39;&#39;
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
-
-        </article>
-      </div>
-      <footer>
-        
-        <div class="related-pages">
-          <a class="next-page" href="run_compute_parcel_mean.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title"><span class="section-number">8.4. </span>Computer Parcel Aggregation.</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="run_datagrabber_bids_datalad.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title"><span class="section-number">8.2. </span>Generic BIDS DataGrabber for datalad.</div>
-                
-              </div>
-            </a>
-        </div>
-        <div class="bottom-of-page">
-          <div class="left-details">
-            <div class="copyright">
-                Copyright &#169; 2023, Authors of junifer
+</article>
+</div>
+<footer>
+<div class="related-pages">
+<a class="next-page" href="run_compute_parcel_mean.html">
+<div class="page-info">
+<div class="context">
+<span>Next</span>
+</div>
+<div class="title"><span class="section-number">8.4. </span>Computer Parcel Aggregation.</div>
+</div>
+<svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+</a>
+<a class="prev-page" href="run_datagrabber_bids_datalad.html">
+<svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+<div class="page-info">
+<div class="context">
+<span>Previous</span>
+</div>
+<div class="title"><span class="section-number">8.2. </span>Generic BIDS DataGrabber for datalad.</div>
+</div>
+</a>
+</div>
+<div class="bottom-of-page">
+<div class="left-details">
+<div class="copyright">
+                Copyright © 2023, Authors of junifer
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
-            
-          </div>
-          <div class="right-details">
-            
-          </div>
-        </div>
-        
-      </footer>
-    </div>
-    <aside class="toc-drawer no-toc">
-      
-      
-      
-    </aside>
-  </div>
+</div>
+<div class="right-details">
+</div>
+</div>
+</footer>
+</div>
+<aside class="toc-drawer">
+<div class="version-banner version-banner--old" role="note">
+<strong>⚠ Old version</strong> — You are viewing an old version of junifer
+  (v0.0.5). Switch to the
+  <a href="../../v0.0.7/index.html">latest stable release (v0.0.7)</a>.
+</div>
+</aside>
+</div>
 </div><script src="../_static/documentation_options.js?v=5929fcd5"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=4e2eecee"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/js/custom.js?v=9868c0c7"></script>
-    </body>
+<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/scripts/furo.js?v=4e2eecee"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/js/custom.js?v=9868c0c7"></script>
+</body>
 </html>

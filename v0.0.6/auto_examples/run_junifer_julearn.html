@@ -1,25 +1,21 @@
-<!doctype html>
-<html class="no-js" lang="en" data-content_root="../">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="9. API Reference" href="../api/index.html" /><link rel="prev" title="8.6. HCP FC Extraction" href="norun_hcpfc_pearson.html" />
+<!DOCTYPE html>
 
-    <!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
-        <title>8.7. Run junifer and julearn. - junifer documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-dataframe.css?v=2082cf3c" />
-    <link rel="stylesheet" type="text/css" href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=f7ba4aed" />
-    
-    
-
-
+<html class="no-js" data-content_root="../" lang="en">
+<head><meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="light dark" name="color-scheme"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="../genindex.html" rel="index" title="Index"/><link href="../search.html" rel="search" title="Search"/><link href="../api/index.html" rel="next" title="9. API Reference"/><link href="norun_hcpfc_pearson.html" rel="prev" title="8.6. HCP FC Extraction"/>
+<!-- Generated with Sphinx 8.0.2 and Furo 2024.08.06 -->
+<title>8.7. Run junifer and julearn. - junifer documentation</title>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/furo.css?v=354aac6f" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery.css?v=d2d258e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/furo-extensions.css?v=302659d7" rel="stylesheet" type="text/css"/>
+<link href="../_static/css/custom.css?v=f7ba4aed" rel="stylesheet" type="text/css"/>
 <style>
   body {
     --color-code-background: #f8f8f8;
@@ -40,174 +36,151 @@
       }
     }
   }
-</style></head>
-  <body>
-    
-    <script>
+</style><link href="../_static/css/version_selector.css" rel="stylesheet"/></head>
+<body>
+<script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
     </script>
-    
-
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="svg-toc" viewBox="0 0 24 24">
-    <title>Contents</title>
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
-      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-menu" viewBox="0 0 24 24">
-    <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-    <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-  </symbol>
-  <symbol id="svg-sun" viewBox="0 0 24 24">
-    <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-moon" viewBox="0 0 24 24">
-    <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
-    </svg>
-  </symbol>
-  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
-    <title>Auto light/dark, in light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
-      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
-      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
-      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
-      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
-      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
-      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
-      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
-      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
-      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
-      <circle cx="14.5" cy="9.55" r="3.6"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
-    <title>Auto light/dark, in dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
-      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
-      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
-      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
-      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
-      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
-      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
-      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
-      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
-      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
-      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
-      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
-    </svg>
-  </symbol>
-  <symbol id="svg-pencil" viewBox="0 0 24 24">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
-      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
-      <path d="M13.5 6.5l4 4" />
-      <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" />
-    </svg>
-  </symbol>
-  <symbol id="svg-eye" viewBox="0 0 24 24">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
-      <path
-        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
-      <path d="M20 21l2 -2l-2 -2" />
-      <path d="M17 17l-2 2l2 2" />
-    </svg>
-  </symbol>
+<svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+<symbol id="svg-toc" viewbox="0 0 24 24">
+<title>Contents</title>
+<svg fill="currentColor" stroke="currentColor" stroke-width="0" viewbox="0 0 1024 1024">
+<path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"></path>
 </svg>
-
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+</symbol>
+<symbol id="svg-menu" viewbox="0 0 24 24">
+<title>Menu</title>
+<svg class="feather-menu" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</symbol>
+<symbol id="svg-arrow-right" viewbox="0 0 24 24">
+<title>Expand</title>
+<svg class="feather-chevron-right" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</symbol>
+<symbol id="svg-sun" viewbox="0 0 24 24">
+<title>Light mode</title>
+<svg class="feather-sun" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="5"></circle>
+<line x1="12" x2="12" y1="1" y2="3"></line>
+<line x1="12" x2="12" y1="21" y2="23"></line>
+<line x1="4.22" x2="5.64" y1="4.22" y2="5.64"></line>
+<line x1="18.36" x2="19.78" y1="18.36" y2="19.78"></line>
+<line x1="1" x2="3" y1="12" y2="12"></line>
+<line x1="21" x2="23" y1="12" y2="12"></line>
+<line x1="4.22" x2="5.64" y1="19.78" y2="18.36"></line>
+<line x1="18.36" x2="19.78" y1="5.64" y2="4.22"></line>
+</svg>
+</symbol>
+<symbol id="svg-moon" viewbox="0 0 24 24">
+<title>Dark mode</title>
+<svg class="icon-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"></path>
+</svg>
+</symbol>
+<symbol id="svg-sun-with-moon" viewbox="0 0 24 24">
+<title>Auto light/dark, in light mode</title>
+<svg class="icon-custom-derived-from-feather-sun-and-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z" style="opacity: 50%"></path>
+<line x1="14.5" x2="14.5" y1="3.25" y2="1.25"></line>
+<line x1="14.5" x2="14.5" y1="15.85" y2="17.85"></line>
+<line x1="10.044" x2="8.63" y1="5.094" y2="3.68"></line>
+<line x1="19" x2="20.414" y1="14.05" y2="15.464"></line>
+<line x1="8.2" x2="6.2" y1="9.55" y2="9.55"></line>
+<line x1="20.8" x2="22.8" y1="9.55" y2="9.55"></line>
+<line x1="10.044" x2="8.63" y1="14.006" y2="15.42"></line>
+<line x1="19" x2="20.414" y1="5.05" y2="3.636"></line>
+<circle cx="14.5" cy="9.55" r="3.6"></circle>
+</svg>
+</symbol>
+<symbol id="svg-moon-with-sun" viewbox="0 0 24 24">
+<title>Auto light/dark, in dark mode</title>
+<svg class="icon-custom-derived-from-feather-sun-and-tabler-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"></path>
+<line style="opacity: 50%" x1="18" x2="18" y1="3.705" y2="2.5"></line>
+<line style="opacity: 50%" x1="18" x2="18" y1="11.295" y2="12.5"></line>
+<line style="opacity: 50%" x1="15.316" x2="14.464" y1="4.816" y2="3.964"></line>
+<line style="opacity: 50%" x1="20.711" x2="21.563" y1="10.212" y2="11.063"></line>
+<line style="opacity: 50%" x1="14.205" x2="13.001" y1="7.5" y2="7.5"></line>
+<line style="opacity: 50%" x1="21.795" x2="23" y1="7.5" y2="7.5"></line>
+<line style="opacity: 50%" x1="15.316" x2="14.464" y1="10.184" y2="11.036"></line>
+<line style="opacity: 50%" x1="20.711" x2="21.563" y1="4.789" y2="3.937"></line>
+<circle cx="18" cy="7.5" r="2.169" style="opacity: 50%"></circle>
+</svg>
+</symbol>
+<symbol id="svg-pencil" viewbox="0 0 24 24">
+<svg class="icon-tabler-pencil-code" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
+<path d="M13.5 6.5l4 4"></path>
+<path d="M20 21l2 -2l-2 -2"></path>
+<path d="M17 17l-2 2l2 2"></path>
+</svg>
+</symbol>
+<symbol id="svg-eye" viewbox="0 0 24 24">
+<svg class="icon-tabler-eye-code" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 0h24v24H0z" fill="none" stroke="none"></path>
+<path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"></path>
+<path d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008"></path>
+<path d="M20 21l2 -2l-2 -2"></path>
+<path d="M17 17l-2 2l2 2"></path>
+</svg>
+</symbol>
+</svg>
+<input class="sidebar-toggle" id="__navigation" name="__navigation" type="checkbox"/>
+<input class="sidebar-toggle" id="__toc" name="__toc" type="checkbox"/>
 <label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
+<div class="visually-hidden">Hide navigation sidebar</div>
 </label>
 <label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
+<div class="visually-hidden">Hide table of contents sidebar</div>
 </label>
-
 <a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
-
-
-
 <div class="page">
-  <header class="mobile-header">
-    <div class="header-left">
-      <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
-      </label>
-    </div>
-    <div class="header-center">
-      <a href="../index.html"><div class="brand">junifer documentation</div></a>
-    </div>
-    <div class="header-right">
-      <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
-          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
-          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-        </button>
-      </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-      </label>
-    </div>
-  </header>
-  <aside class="sidebar-drawer">
-    <div class="sidebar-container">
-      
-      <div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
-  
-  <div class="sidebar-logo-container">
-    <img class="sidebar-logo" src="../_static/junifer_logo.png" alt="Logo"/>
-  </div>
-  
-  <span class="sidebar-brand-text">junifer documentation</span>
-  
-</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
-  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
-  <input type="hidden" name="check_keywords" value="yes">
-  <input type="hidden" name="area" value="default">
+<header class="mobile-header">
+<div class="header-left">
+<label class="nav-overlay-icon" for="__navigation">
+<div class="visually-hidden">Toggle site navigation sidebar</div>
+<i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+</label>
+</div>
+<div class="header-center">
+<a href="../index.html"><div class="brand">junifer documentation</div></a>
+</div>
+<div class="header-right">
+<div class="theme-toggle-container theme-toggle-header">
+<button class="theme-toggle">
+<div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+<svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+<svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+<svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+<svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+</button>
+</div>
+<label class="toc-overlay-icon toc-header-icon" for="__toc">
+<div class="visually-hidden">Toggle table of contents sidebar</div>
+<i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+</label>
+</div>
+</header>
+<aside class="sidebar-drawer">
+<div class="sidebar-container">
+<div class="sidebar-sticky"><div class="sidebar-scroll"><a class="sidebar-brand" href="../index.html">
+<div class="sidebar-logo-container">
+<img alt="Logo" class="sidebar-logo" src="../_static/junifer_logo.png"/>
+</div>
+<span class="sidebar-brand-text">junifer documentation</span>
+</a><form action="../search.html" class="sidebar-search-container" method="get" role="search">
+<input aria-label="Search" class="sidebar-search" name="q" placeholder="Search"/>
+<input name="check_keywords" type="hidden" value="yes"/>
+<input name="area" type="hidden" value="default"/>
 </form>
 <div id="searchbox"></div><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">1. Installing <code class="docutils literal notranslate"><span class="pre">junifer</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html#installing-external-dependencies">2. Installing external dependencies</a></li>
@@ -278,45 +251,91 @@
 <li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
 </ul>
-
 </div>
-</div>
-      </div>
-      
-    </div>
-  </aside>
-  <div class="main">
-    <div class="content">
-      <div class="article-container">
-        <a href="#" class="back-to-top muted-link">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
-          </svg>
-          <span>Back to top</span>
+<div class="sidebar-tree version-selector" id="version-selector">
+<details class="version-details" open="">
+<summary class="version-summary">
+<span class="version-status-dot version-status-dot--old"></span>
+<span class="caption-text">v0.0.6</span>
+</summary>
+<ul>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.7/index.html">
+          v0.0.7 <em>(latest)</em>
+</a>
+</li>
+<li class="toctree-l1 current">
+<a class="reference external" href="../../v0.0.6/index.html">
+          v0.0.6
         </a>
-        <div class="content-icon-container">
-          <div class="view-this-page">
-  <a class="muted-link" href="../_sources/auto_examples/run_junifer_julearn.rst.txt" title="View this page">
-    <svg><use href="#svg-eye"></use></svg>
-    <span class="visually-hidden">View this page</span>
-  </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.5/index.html">
+          v0.0.5
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.4/index.html">
+          v0.0.4
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.3/index.html">
+          v0.0.3
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.2/index.html">
+          v0.0.2
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../v0.0.1/index.html">
+          v0.0.1
+        </a>
+</li>
+<li class="toctree-l1">
+<a class="reference external" href="../../main/index.html">main (dev)</a>
+</li>
+</ul>
+</details>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<div class="main">
+<div class="content">
+<div class="article-container">
+<a class="back-to-top muted-link" href="#">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+</svg>
+<span>Back to top</span>
+</a>
+<div class="content-icon-container">
+<div class="view-this-page">
+<a class="muted-link" href="../_sources/auto_examples/run_junifer_julearn.rst.txt" title="View this page">
+<svg><use href="#svg-eye"></use></svg>
+<span class="visually-hidden">View this page</span>
+</a>
 </div>
 <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
-              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
-              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-            </button>
-          </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-          </label>
-        </div>
-        <article role="main" id="furo-main-content">
-          <div class="sphx-glr-download-link-note admonition note">
+<button class="theme-toggle">
+<div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+<svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+<svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+<svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+<svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+</button>
+</div>
+<label class="toc-overlay-icon toc-content-icon" for="__toc">
+<div class="visually-hidden">Toggle table of contents sidebar</div>
+<i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+</label>
+</div>
+<article id="furo-main-content" role="main">
+<div class="sphx-glr-download-link-note admonition note">
 <p class="admonition-title">Note</p>
 <p><a class="reference internal" href="#sphx-glr-download-auto-examples-run-junifer-julearn-py"><span class="std std-ref">Go to the end</span></a>
 to download the full example code.</p>
@@ -333,16 +352,16 @@ data.</p>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">nilearn</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">julearn</span><span class="w"> </span><span class="kn">import</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function"><span class="n">run_cross_validation</span></a><span class="p">,</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">julearn</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function" href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation"><span class="n">run_cross_validation</span></a><span class="p">,</span> <a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator"><span class="n">PipelineCreator</span></a>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">junifer.testing.registry</span>  <span class="c1"># noqa: F401</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">junifer.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">collect</span><span class="p">,</span> <span class="n">run</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.storage.sqlite</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">SQLiteFeatureStorage</span></a>
+<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.storage.sqlite</span><span class="w"> </span><span class="kn">import</span> <a class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC"><span class="n">SQLiteFeatureStorage</span></a>
 <span class="kn">from</span><span class="w"> </span><span class="nn">junifer.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_logging</span>
 </pre></div>
 </div>
 <p>Set the logging level to info to see extra information:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">"INFO"</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-11-26 08:42:13,183 - JUNIFER - INFO - ===== Lib Versions =====
@@ -356,69 +375,69 @@ data.</p>
 </pre></div>
 </div>
 <p>Define the markers you want:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">marker_dicts</span></a> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17_TrimMean80&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer100x17&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;trim_mean&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method_params&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;proportiontocut&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer100x17_TrimMean80"</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ParcelAggregation"</span><span class="p">,</span>
+        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer100x17"</span><span class="p">,</span>
+        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"trim_mean"</span><span class="p">,</span>
+        <span class="s2">"method_params"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"proportiontocut"</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">},</span>
     <span class="p">},</span>
     <span class="p">{</span>
-        <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17_Mean&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;ParcelAggregation&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;parcellation&quot;</span><span class="p">:</span> <span class="s2">&quot;Schaefer200x17&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;mean&quot;</span><span class="p">,</span>
+        <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Schaefer200x17_Mean"</span><span class="p">,</span>
+        <span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"ParcelAggregation"</span><span class="p">,</span>
+        <span class="s2">"parcellation"</span><span class="p">:</span> <span class="s2">"Schaefer200x17"</span><span class="p">,</span>
+        <span class="s2">"method"</span><span class="p">:</span> <span class="s2">"mean"</span><span class="p">,</span>
     <span class="p">},</span>
 <span class="p">]</span>
 </pre></div>
 </div>
 <p>Define target and confounds for julearn machine learning:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a> <span class="o">=</span> <span class="s2">&quot;age&quot;</span>
-<a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a> <span class="o">=</span> <span class="s2">&quot;sex&quot;</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">y</span></a> <span class="o">=</span> <span class="s2">"age"</span>
+<a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">confound</span></a> <span class="o">=</span> <span class="s2">"sex"</span>
 </pre></div>
 </div>
 <p>Load the VBM phenotype data for machine learning data:
 - Fetch the Oasis dataset</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch" class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm" class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">()</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a> <span class="o">=</span> <span class="p">(</span>
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><span class="s2">&quot;mf&quot;</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
-    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-sklearn-utils sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://scikit-learn.org/stable/modules/generated/sklearn.utils.Bunch.html#sklearn.utils.Bunch" title="sklearn.utils.Bunch"><span class="n">oasis_dataset</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-nilearn-datasets sphx-glr-backref-type-py-function" href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_oasis_vbm.html#nilearn.datasets.fetch_oasis_vbm" title="nilearn.datasets.fetch_oasis_vbm"><span class="n">nilearn</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">fetch_oasis_vbm</span></a><span class="p">()</span>
+<a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray"><span class="n">age</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">y</span></a><span class="p">][:</span><span class="mi">10</span><span class="p">]</span>
+<a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray"><span class="n">sex</span></a> <span class="o">=</span> <span class="p">(</span>
+    <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Series.html#pandas.Series" title="pandas.Series"><span class="n">pd</span><span class="o">.</span><span class="n">Series</span></a><span class="p">(</span><a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="numpy.recarray"><span class="n">oasis_dataset</span><span class="o">.</span><span class="n">ext_vars</span></a><span class="p">[</span><span class="s2">"mf"</span><span class="p">][:</span><span class="mi">10</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s2">"F"</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
     <span class="o">.</span><span class="n">values</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <p>Create a temporary directory for junifer feature extraction:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory" class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="p">:</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;SQLiteFeatureStorage&quot;</span><span class="p">,</span> <span class="s2">&quot;uri&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite&quot;</span><span class="p">}</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <a class="sphx-glr-backref-module-tempfile sphx-glr-backref-type-py-class" href="https://docs.python.org/3/library/tempfile.html#tempfile.TemporaryDirectory" title="tempfile.TemporaryDirectory"><span class="n">tempfile</span><span class="o">.</span><span class="n">TemporaryDirectory</span></a><span class="p">()</span> <span class="k">as</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">tmpdir</span></a><span class="p">:</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a> <span class="o">=</span> <span class="p">{</span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"SQLiteFeatureStorage"</span><span class="p">,</span> <span class="s2">"uri"</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">tmpdir</span></a><span class="si">}</span><span class="s2">/test.sqlite"</span><span class="p">}</span>
     <span class="c1"># run the defined junifer feature extraction pipeline</span>
     <span class="n">run</span><span class="p">(</span>
-        <span class="n">workdir</span><span class="o">=</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span>
-        <span class="n">datagrabber</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;kind&quot;</span><span class="p">:</span> <span class="s2">&quot;OasisVBMTestingDataGrabber&quot;</span><span class="p">},</span>
-        <span class="n">markers</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">marker_dicts</span></a><span class="p">,</span>
-        <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">,</span>
+        <span class="n">workdir</span><span class="o">=</span><span class="s2">"/tmp"</span><span class="p">,</span>
+        <span class="n">datagrabber</span><span class="o">=</span><span class="p">{</span><span class="s2">"kind"</span><span class="p">:</span> <span class="s2">"OasisVBMTestingDataGrabber"</span><span class="p">},</span>
+        <span class="n">markers</span><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">marker_dicts</span></a><span class="p">,</span>
+        <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="p">,</span>
     <span class="p">)</span>
 
     <span class="c1"># read in extracted features and add confounds and targets</span>
     <span class="c1"># for julearn run cross validation</span>
-    <span class="n">collect</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">)</span>
-    <span class="n">db</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC" class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class"><span class="n">SQLiteFeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">storage</span></a><span class="p">[</span><span class="s2">&quot;uri&quot;</span><span class="p">])</span>
+    <span class="n">collect</span><span class="p">(</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <a class="sphx-glr-backref-module-abc sphx-glr-backref-type-py-class" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="abc.ABC"><span class="n">SQLiteFeatureStorage</span></a><span class="p">(</span><span class="n">uri</span><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">storage</span></a><span class="p">[</span><span class="s2">"uri"</span><span class="p">])</span>
 
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">&quot;VBM_GM_Schaefer200x17_Mean_aggregation&quot;</span><span class="p">)</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a><span class="p">]</span>
-    <a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a> <span class="o">=</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">oasis_subjects</span></a>
+    <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">df_vbm</span></a> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">read_df</span><span class="p">(</span><span class="n">feature_name</span><span class="o">=</span><span class="s2">"VBM_GM_Schaefer200x17_Mean_aggregation"</span><span class="p">)</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">oasis_subjects</span></a> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a><span class="p">]</span>
+    <a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index"><span class="n">df_vbm</span><span class="o">.</span><span class="n">index</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">oasis_subjects</span></a>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2025-11-26 08:42:13,427 - JUNIFER - INFO - Validating Marker Collection
-2025-11-26 08:42:13,427 - JUNIFER - INFO - DataGrabber output type: [&#39;VBM_GM&#39;]
+2025-11-26 08:42:13,427 - JUNIFER - INFO - DataGrabber output type: ['VBM_GM']
 2025-11-26 08:42:13,427 - JUNIFER - INFO - Validating Data Reader:
-2025-11-26 08:42:13,428 - JUNIFER - INFO - Data Reader output type: [&#39;VBM_GM&#39;]
+2025-11-26 08:42:13,428 - JUNIFER - INFO - Data Reader output type: ['VBM_GM']
 2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating Marker: Schaefer100x17_TrimMean80
-2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: ['vector']
 2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating storage for Schaefer100x17_TrimMean80
 2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating Marker: Schaefer200x17_Mean
-2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: [&#39;vector&#39;]
+2025-11-26 08:42:13,428 - JUNIFER - INFO - Marker output type: ['vector']
 2025-11-26 08:42:13,428 - JUNIFER - INFO - Validating storage for Schaefer200x17_Mean
 2025-11-26 08:42:13,436 - JUNIFER - INFO - Getting element sub-01
 2025-11-26 08:42:13,436 - JUNIFER - INFO - Fitting pipeline
@@ -435,7 +454,7 @@ data.</p>
 2025-11-26 08:42:13,578 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:42:15,358 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:42:16,456 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/parcellation_warped.nii.gz
 2025-11-26 08:42:21,762 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_6c89f5d4-ca9b-11f0-a076-ebd5e38fbbd3aapiwm5o/MNI152Lin_T1w.nii.gz is a file
@@ -457,7 +476,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:42:23,240 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:42:25,033 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:42:26,122 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/parcellation_warped.nii.gz
 2025-11-26 08:42:35,310 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpq8coqsnb/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_724cf3e0-ca9b-11f0-a076-ebd5e38fbbd36e00jlyg/MNI152Lin_T1w.nii.gz is a file
@@ -484,7 +503,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:42:36,726 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:42:38,514 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:42:39,607 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/parcellation_warped.nii.gz
 2025-11-26 08:42:44,907 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_7a5644f6-ca9b-11f0-a076-ebd5e38fbbd30zo13ddf/MNI152Lin_T1w.nii.gz is a file
@@ -506,7 +525,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:42:46,478 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:42:48,280 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:42:49,369 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/parcellation_warped.nii.gz
 2025-11-26 08:42:58,605 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp3cnb_vy1/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8026ddaa-ca9b-11f0-a076-ebd5e38fbbd361c1492q/MNI152Lin_T1w.nii.gz is a file
@@ -533,7 +552,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:00,019 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:01,821 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:02,908 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/parcellation_warped.nii.gz
 2025-11-26 08:43:08,172 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_8838b93c-ca9b-11f0-a076-ebd5e38fbbd3ahv5axuu/MNI152Lin_T1w.nii.gz is a file
@@ -555,7 +574,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:09,587 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:11,388 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:12,476 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/parcellation_warped.nii.gz
 2025-11-26 08:43:21,657 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpmthrowi7/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_8dec8ca0-ca9b-11f0-a076-ebd5e38fbbd39cxjruh7/MNI152Lin_T1w.nii.gz is a file
@@ -582,7 +601,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:23,088 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:24,951 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:26,038 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/parcellation_warped.nii.gz
 2025-11-26 08:43:31,379 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_95f883e0-ca9b-11f0-a076-ebd5e38fbbd368jimr0x/MNI152Lin_T1w.nii.gz is a file
@@ -604,7 +623,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:32,820 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:34,612 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:35,702 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/prewarp_parcellation.nii.gz -r /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/parcellation_warped.nii.gz
 2025-11-26 08:43:44,979 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmplf2ptgjx/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_9bc6694a-ca9b-11f0-a076-ebd5e38fbbd36p5pb1th/MNI152Lin_T1w.nii.gz is a file
@@ -631,7 +650,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:46,398 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:48,193 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:49,280 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/parcellation_warped.nii.gz
 2025-11-26 08:43:54,597 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_a3ddb08e-ca9b-11f0-a076-ebd5e38fbbd37v_7eez6/MNI152Lin_T1w.nii.gz is a file
@@ -653,7 +672,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:43:56,056 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:43:57,858 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:43:58,947 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/parcellation_warped.nii.gz
 2025-11-26 08:44:08,158 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp_jwlu4uz/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_a99f9dde-ca9b-11f0-a076-ebd5e38fbbd3sa0vei9j/MNI152Lin_T1w.nii.gz is a file
@@ -680,7 +699,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:44:09,570 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:44:11,348 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:44:12,433 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/parcellation_warped.nii.gz
 2025-11-26 08:44:17,711 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_b1ad2794-ca9b-11f0-a076-ebd5e38fbbd3yfycfh3f/MNI152Lin_T1w.nii.gz is a file
@@ -702,7 +721,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:44:19,172 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:44:20,973 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:44:22,062 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/parcellation_warped.nii.gz
 2025-11-26 08:44:31,222 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpmsjsv39d/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_b766b984-ca9b-11f0-a076-ebd5e38fbbd3a5vp6hwi/MNI152Lin_T1w.nii.gz is a file
@@ -729,7 +748,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:44:32,722 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:44:34,505 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:44:35,592 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/parcellation_warped.nii.gz
 2025-11-26 08:44:40,860 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_bf799920-ca9b-11f0-a076-ebd5e38fbbd3bnfu4nod/MNI152Lin_T1w.nii.gz is a file
@@ -751,7 +770,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:44:42,343 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:44:44,137 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:44:45,227 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/prewarp_parcellation.nii.gz -r /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/parcellation_warped.nii.gz
 2025-11-26 08:44:54,406 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmp065k1hdw/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_c5365164-ca9b-11f0-a076-ebd5e38fbbd3700vrqwi/MNI152Lin_T1w.nii.gz is a file
@@ -778,7 +797,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:44:55,849 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:44:57,649 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:44:58,736 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/parcellation_warped.nii.gz
 2025-11-26 08:45:03,990 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_cd42eb60-ca9b-11f0-a076-ebd5e38fbbd3p96fgp0u/MNI152Lin_T1w.nii.gz is a file
@@ -800,7 +819,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:45:05,418 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:45:07,213 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:45:08,304 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/parcellation_warped.nii.gz
 2025-11-26 08:45:17,620 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpn4npt0ek/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_d2f76a9a-ca9b-11f0-a076-ebd5e38fbbd3zqr630ig/MNI152Lin_T1w.nii.gz is a file
@@ -827,7 +846,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:45:19,039 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:45:20,836 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:45:21,923 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/parcellation_warped.nii.gz
 2025-11-26 08:45:27,191 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_db174e0c-ca9b-11f0-a076-ebd5e38fbbd37remx3fv/MNI152Lin_T1w.nii.gz is a file
@@ -849,7 +868,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:45:28,638 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:45:30,439 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:45:31,536 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/parcellation_warped.nii.gz
 2025-11-26 08:45:40,749 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpieg1cqes/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_e0cdee00-ca9b-11f0-a076-ebd5e38fbbd3m5rsyl0f/MNI152Lin_T1w.nii.gz is a file
@@ -876,7 +895,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:45:42,300 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:45:44,092 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:45:45,182 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/parcellation_warped.nii.gz
 2025-11-26 08:45:50,427 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer100x17_from_MNI152NLin6Asym_to_MNI152Lin_e8f274ac-ca9b-11f0-a076-ebd5e38fbbd36e8dmb0y/MNI152Lin_T1w.nii.gz is a file
@@ -898,7 +917,7 @@ Running command: /data/group/appliedml/tools/ants_2.5.0/singularity_cmd exec --c
 2025-11-26 08:45:51,842 - JUNIFER - INFO - Loading parcellation: /home/synchon/junifer_data/v2/parcellations/Schaefer2018/Yeo2011/Schaefer2018_200Parcels_17Networks_order_FSLMNI152_1mm.nii.gz
 2025-11-26 08:45:53,636 - JUNIFER - INFO - Downloading template MNI152Lin (T1w in resolution 1)
 2025-11-26 08:45:54,725 - JUNIFER - INFO - antsApplyTransforms command to be executed:
-antsApplyTransforms -d 3 -e 3 -n &#39;GenericLabel[NearestNeighbor]&#39; -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/parcellation_warped.nii.gz
+antsApplyTransforms -d 3 -e 3 -n 'GenericLabel[NearestNeighbor]' -i /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/prewarp_parcellation.nii.gz -r /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/MNI152Lin_T1w.nii.gz -t /home/synchon/junifer_data/v2/.git/annex/objects/JQ/Pp/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5/SHA256E-s145422752--5091350b36f951d455dabd429ebe86c493c75a0217dca311ae355f1d62e080b0.h5 -o /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/parcellation_warped.nii.gz
 2025-11-26 08:46:03,899 - JUNIFER - INFO - antsApplyTransforms command succeeded with the following output:
 /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/prewarp_parcellation.nii.gz is a file
 /tmp/junifer/tmpjnj7mb3v/ants_parcellation_warper_Schaefer200x17_from_MNI152NLin6Asym_to_MNI152Lin_eea2f1f6-ca9b-11f0-a076-ebd5e38fbbd34oha51wm/MNI152Lin_T1w.nii.gz is a file
@@ -969,29 +988,29 @@ file: 10it [00:01,  8.82it/s]
 </div>
 <p>Using julearn for machine learning:
 We predict the age given our vbm features and sex as a confound.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)</span>
-<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">age</span></a>
-<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">]</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sex</span></a>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">X</span></a> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.Index.html#pandas.Index" title="pandas.Index"><span class="n">df_vbm</span><span class="o">.</span><span class="n">columns</span></a><span class="p">)</span>
+<a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">df_vbm</span></a><span class="p">[</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">y</span></a><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray"><span class="n">age</span></a>
+<a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">df_vbm</span></a><span class="p">[</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">confound</span></a><span class="p">]</span> <span class="o">=</span> <a class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray"><span class="n">sex</span></a>
 
-<a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;features&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="p">,</span>
-    <span class="s2">&quot;confound&quot;</span><span class="p">:</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">,</span>
+<a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">X_types</span></a> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"features"</span><span class="p">:</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">X</span></a><span class="p">,</span>
+    <span class="s2">"confound"</span><span class="p">:</span> <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">confound</span></a><span class="p">,</span>
 <span class="p">}</span>
 
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class"><span class="n">PipelineCreator</span></a><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="s2">&quot;regression&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">)</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;zscore&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="s2">&quot;confound&quot;</span><span class="p">])</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;confound_removal&quot;</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="s2">&quot;confound&quot;</span><span class="p">)</span>
-<a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">&quot;ridge&quot;</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator"><span class="n">creator</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator"><span class="n">PipelineCreator</span></a><span class="p">(</span><span class="n">problem_type</span><span class="o">=</span><span class="s2">"regression"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">"features"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"zscore"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="p">[</span><span class="s2">"features"</span><span class="p">,</span> <span class="s2">"confound"</span><span class="p">])</span>
+<a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"confound_removal"</span><span class="p">,</span> <span class="n">apply_to</span><span class="o">=</span><span class="s2">"features"</span><span class="p">,</span> <span class="n">confounds</span><span class="o">=</span><span class="s2">"confound"</span><span class="p">)</span>
+<a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-method" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator.add" title="julearn.PipelineCreator.add"><span class="n">creator</span><span class="o">.</span><span class="n">add</span></a><span class="p">(</span><span class="s2">"ridge"</span><span class="p">)</span>
 
-<a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a> <span class="o">=</span> <a href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function"><span class="n">run_cross_validation</span></a><span class="p">(</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X</span></a> <span class="o">+</span> <span class="p">[</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">confound</span></a><span class="p">],</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span>
-    <a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a><span class="o">=</span><a href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">X_types</span></a><span class="p">,</span>
-    <span class="n">data</span><span class="o">=</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">df_vbm</span></a><span class="p">,</span>
-    <span class="n">model</span><span class="o">=</span><a href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator" class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">creator</span></a><span class="p">,</span>
+<a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">scores</span></a> <span class="o">=</span> <a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-function" href="https://juaml.github.io/julearn/main/api/generated/julearn.run_cross_validation.html#julearn.run_cross_validation" title="julearn.run_cross_validation"><span class="n">run_cross_validation</span></a><span class="p">(</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">X</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#list" title="builtins.list"><span class="n">X</span></a> <span class="o">+</span> <span class="p">[</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">confound</span></a><span class="p">],</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">y</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str"><span class="n">y</span></a><span class="p">,</span>
+    <a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">X_types</span></a><span class="o">=</span><a class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://docs.python.org/3/library/stdtypes.html#dict" title="builtins.dict"><span class="n">X_types</span></a><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">df_vbm</span></a><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><a class="sphx-glr-backref-module-julearn sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://juaml.github.io/julearn/main/api/generated/julearn.PipelineCreator.html#julearn.PipelineCreator" title="julearn.PipelineCreator"><span class="n">creator</span></a><span class="p">,</span>
     <span class="n">cv</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><a href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">scores</span></a><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><a class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-class sphx-glr-backref-instance" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="pandas.DataFrame"><span class="n">scores</span></a><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>   fit_time  score_time  test_score  n_train  n_test  repeat  fold                          cv_mdsum
@@ -1018,62 +1037,57 @@ for different cross-validation folds.</p>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
 </section>
-
-        </article>
-      </div>
-      <footer>
-        
-        <div class="related-pages">
-          <a class="next-page" href="../api/index.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title"><span class="section-number">9. </span>API Reference</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="norun_hcpfc_pearson.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title"><span class="section-number">8.6. </span>HCP FC Extraction</div>
-                
-              </div>
-            </a>
-        </div>
-        <div class="bottom-of-page">
-          <div class="left-details">
-            <div class="copyright">
-                Copyright &#169; 2025, junifer Contributors
+</article>
+</div>
+<footer>
+<div class="related-pages">
+<a class="next-page" href="../api/index.html">
+<div class="page-info">
+<div class="context">
+<span>Next</span>
+</div>
+<div class="title"><span class="section-number">9. </span>API Reference</div>
+</div>
+<svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+</a>
+<a class="prev-page" href="norun_hcpfc_pearson.html">
+<svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+<div class="page-info">
+<div class="context">
+<span>Previous</span>
+</div>
+<div class="title"><span class="section-number">8.6. </span>HCP FC Extraction</div>
+</div>
+</a>
+</div>
+<div class="bottom-of-page">
+<div class="left-details">
+<div class="copyright">
+                Copyright © 2025, junifer Contributors
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
             <a href="https://github.com/pradyunsg/furo">Furo</a>
-            
-          </div>
-          <div class="right-details">
-            
-          </div>
-        </div>
-        
-      </footer>
-    </div>
-    <aside class="toc-drawer no-toc">
-      
-      
-      
-    </aside>
-  </div>
+</div>
+<div class="right-details">
+</div>
+</div>
+</footer>
+</div>
+<aside class="toc-drawer">
+<div class="version-banner version-banner--old" role="note">
+<strong>⚠ Old version</strong> — You are viewing an old version of junifer
+  (v0.0.6). Switch to the
+  <a href="../../v0.0.7/index.html">latest stable release (v0.0.7)</a>.
+</div>
+</aside>
+</div>
 </div><script src="../_static/documentation_options.js?v=80bce5fb"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/js/custom.js?v=9868c0c7"></script>
-    </body>
+<script src="../_static/doctools.js?v=9a2dae69"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/js/custom.js?v=9868c0c7"></script>
+</body>
 </html>
