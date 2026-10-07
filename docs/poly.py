@@ -35,7 +35,9 @@ OUTPUT_DIR = "docs/_build"
 SOURCE_DIR = "./"
 
 #: Arguments to pass to `pip install`
-PIP_ARGS = "-e .[docs]"
+# The docs extra of older releases does not include neurokit2, which their
+# API docs need (unknown extras are only a warning for releases without it)
+PIP_ARGS = "-e .[docs,neurokit2]"
 
 #: Arguments to pass to `sphinx-build`
 SPHINX_ARGS = "-W -E -v"

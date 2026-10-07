@@ -55,7 +55,6 @@ jobs:
         git config --global --add safe.directory $(pwd)
         uv run make -C docs/ html
         touch docs/_build/.nojekyll
-        cp docs/redirect.html docs/_build/index.html
     - name: Publish docs to gh-pages
       uses: peaceiris/actions-gh-pages@v4
       with:

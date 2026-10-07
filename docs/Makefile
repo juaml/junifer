@@ -16,15 +16,12 @@ POLYOUTDIR    ?= docs/_build
 help:
 	@$(SPHINXBUILD) --help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile clean cleanall local news _build_local html _html
+.PHONY: help Makefile clean local news _build_local html _html
 
 clean:
-	rm -rf $(BUILDDIR)/main
+	rm -rf $(BUILDDIR)/*
 	rm -rf auto_examples/
 	rm -rf api/generated/
-
-cleanall: clean
-	rm -rf $(BUILDDIR)/*
 
 # Build the docs of the working tree only
 local:
