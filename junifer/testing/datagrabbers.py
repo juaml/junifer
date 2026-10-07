@@ -167,18 +167,24 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
 
         """
         out = {}
-        nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
-        # Each BOLD volume is a separate file, so keep only the ones needed
-        fmri_img = image.concat_imgs(nilearn_data.func[: self.n_timepoints])
-        anat_img = image.concat_imgs(nilearn_data.anat)
-
         tp_suffix = (
             f"_tp-{self.n_timepoints}" if self.n_timepoints is not None else ""
         )
         fmri_fname = self.datadir / f"{subject}{tp_suffix}_bold.nii.gz"
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
-        nib.save(fmri_img, fmri_fname)
-        nib.save(anat_img, anat_fname)
+        # Files only depend on the parameters, so reuse them if already there
+        if not fmri_fname.exists() or not anat_fname.exists():
+            nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
+        if not fmri_fname.exists():
+            # Each BOLD volume is a separate file, so keep only the ones
+            # needed
+            fmri_img = image.concat_imgs(
+                nilearn_data.func[: self.n_timepoints]
+            )
+            _save_atomic(fmri_fname, lambda x: nib.save(fmri_img, x))
+        if not anat_fname.exists():
+            anat_img = image.concat_imgs(nilearn_data.anat)
+            _save_atomic(anat_fname, lambda x: nib.save(anat_img, x))
         out["BOLD"] = {"path": fmri_fname, "space": "MNI152Lin"}
         out["T1w"] = {"path": anat_fname, "space": "native"}
         return out

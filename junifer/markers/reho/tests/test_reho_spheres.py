@@ -33,7 +33,7 @@ def test_ReHoSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
     """
     with caplog.at_level(logging.DEBUG):
-        with SPMAuditoryTestingDataGrabber() as dg:
+        with SPMAuditoryTestingDataGrabber(n_timepoints=50) as dg:
             element_data = DefaultDataReader().fit_transform(dg["sub001"])
             # Update workdir to current test's tmp_path
             WorkDirManager().workdir = tmp_path
@@ -93,7 +93,7 @@ def test_ReHoSpheres_comparison(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
+    with SPMAuditoryTestingDataGrabber(n_timepoints=50) as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Update workdir to current test's tmp_path
         WorkDirManager().workdir = tmp_path

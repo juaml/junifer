@@ -157,8 +157,6 @@ def test_data_object_dumper(
                 },
                 detrend=True,
                 standardize=True,
-                low_pass=0.08,
-                high_pass=0.01,
             ),
         ],
         markers=[
