@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +25,37 @@ __all__ = ["CoordinatesRegistry"]
 
 _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="data")
+
+
+def _sanitize_names(names: list) -> list:
+    """Make the VOI names safe to use as feature names.
+
+    Spaces in the names are replaced with ``_`` and duplicated names get a
+    ``-{i}`` suffix, where ``i`` is the (1-based) occurrence of the name.
+    Non-string names are left untouched.
+
+    Parameters
+    ----------
+    names : list
+        The names of the VOIs.
+
+    Returns
+    -------
+    list
+        The sanitized names of the VOIs.
+
+    """
+    names = [x.replace(" ", "_") if isinstance(x, str) else x for x in names]
+    counts = Counter(names)
+    seen: Counter = Counter()
+    out = []
+    for name in names:
+        if counts[name] > 1:
+            seen[name] += 1
+            out.append(f"{name}-{seen[name]}")
+        else:
+            out.append(name)
+    return out
 
 
 class CoordinatesRegistry(BasePipelineDataRegistry):
@@ -293,8 +325,8 @@ class CoordinatesRegistry(BasePipelineDataRegistry):
             )
             # Convert dataframe to numpy ndarray
             coords = df_coords.iloc[:, [0, 1, 2]].to_numpy()
-            # Get label names
-            names = list(df_coords.iloc[:, [3]].values[:, 0])
+            # Get label names, made unique and without spaces
+            names = _sanitize_names(list(df_coords.iloc[:, [3]].values[:, 0]))
         # Load data for external ones
         else:
             coords = t_coord["coords"]

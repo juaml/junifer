@@ -124,6 +124,15 @@ def test_load() -> None:
     assert space == "MNI"
 
 
+def test_load_unique_names() -> None:
+    """Test loading coordinates with duplicated names and spaces."""
+    _, names, _ = load_data(kind="coordinates", name="Dosenbach")
+    assert len(names) == 160  # type: ignore
+    assert len(set(names)) == 160  # type: ignore
+    assert not any(" " in x for x in names)  # type: ignore
+    assert names[:5] == ["vmPFC-1", "aPFC-1", "aPFC-2", "mPFC", "aPFC-3"]
+
+
 def test_load_nonexisting() -> None:
     """Test loading coordinates that not exist."""
     with pytest.raises(ValueError, match=r"not found"):

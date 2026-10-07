@@ -182,6 +182,7 @@ numpydoc_xref_aliases = {
     "Path": "pathlib.Path",
     "Nifti1Image": "nibabel.nifti1.Nifti1Image",
     "Nifti2Image": "nibabel.nifti2.Nifti2Image",
+    "Enum": "enum.Enum",
     # "Engine": "sqlalchemy.engine.Engine",
 }
 numpydoc_xref_ignore = {
