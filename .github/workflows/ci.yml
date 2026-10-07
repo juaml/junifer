@@ -22,7 +22,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        # Only the version used for coverage; all versions run on the rest
+        python-version: ['3.13']
         # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
     steps:
       - name: Check ANTs

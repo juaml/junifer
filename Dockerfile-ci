@@ -1,8 +1,5 @@
 # syntax=docker/dockerfile:1
 
-ARG DATA_VERSION
-FROM ghcr.io/juaml/junifer-data:${DATA_VERSION} AS junifer_data_image
-
 FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -19,9 +16,11 @@ LABEL org.opencontainers.image.source=https://github.com/juaml/junifer \
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     # Base / runner tooling
-    ca-certificates curl wget git jq sudo unzip vim file \
+    ca-certificates curl wget git jq sudo unzip vim file make \
     xz-utils bzip2 zstd \
     python3 python3-venv python-is-python3 \
+    # Data
+    git-annex \
     # ANTs runtime
     bc \
     # AFNI runtime (non-GUI subset of AFNI's Ubuntu 24 list)
@@ -32,11 +31,15 @@ RUN apt-get update && \
     dc libquadmath0 \
     && rm -rf /var/lib/apt/lists/*
 
+# DataLad (not packaged for Ubuntu 24.04) in its own venv
+RUN python3 -m venv /opt/datalad \
+    && /opt/datalad/bin/pip install --no-cache-dir datalad \
+    && ln -s /opt/datalad/bin/datalad /usr/local/bin/datalad \
+    && datalad --version
+
 # Ubuntu 24.04 ships a default 'ubuntu' user (uid 1000); give that uid to our user
 RUN userdel -r ubuntu 2>/dev/null || true; \
-    useradd -m -u 1000 -s /bin/bash docker \
-    && usermod -aG sudo docker \
-    && echo '%sudo ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/nopasswd
+    useradd -m -u 1000 -s /bin/bash docker
 
 # --- Heavy, rarely-changing neuroimaging tools ---
 
@@ -51,18 +54,17 @@ RUN mkdir -p /opt/afni \
        | tar -xz -C /opt/afni --strip-components=1
 ENV PATH="/opt/afni:$PATH"
 
-# FSL — clean conda package cache in the same layer
+# FSL
 RUN curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py -o /tmp/fslinstaller.py \
     && (python3 /tmp/fslinstaller.py -d /opt/fsl/ --skip_registration \
         || { cat /root/fsl_installation_*.log; exit 1; }) \
     && rm -rf /opt/fsl/pkgs /tmp/fslinstaller.py /root/fsl_installation_*.log \
-    && find /opt/fsl -name '__pycache__' -prune -exec rm -rf {} + \
-    && ls /opt/fsl/bin | head -50
+    && find /opt/fsl -name '__pycache__' -prune -exec rm -rf {} +
 ENV FSLDIR=/opt/fsl \
     FSLOUTPUTTYPE=NIFTI_GZ \
     PATH="/opt/fsl/share/fsl/bin:$PATH"
 
-# --- Hosted tool cache for setup-python ---
+# --- Hosted tool cache, pre-populated (no downloads at job time) ---
 ARG PYTHON_VERSIONS="3.10 3.11 3.12 3.13 3.14"
 ARG UBUNTU_TAG=24.04
 ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
@@ -72,14 +74,16 @@ RUN set -eux; \
     filter='[ .[] | select(.stable and (.version | startswith($v + "."))) | .files[] | select(.platform=="linux" and .platform_version==$os and .arch=="x64") ][0].download_url'; \
     for v in $PYTHON_VERSIONS; do \
       url=$(jq -r --arg v "$v" --arg os "$UBUNTU_TAG" "$filter" /tmp/manifest.json); \
-      test "$url" != "null"; \
+      [ "$url" != "null" ] || { echo "No $v build for Ubuntu $UBUNTU_TAG"; exit 1; }; \
       tmp=$(mktemp -d); \
       curl -fsSL "$url" | tar -xz -C "$tmp"; \
-      (cd "$tmp" && chmod +x ./setup.sh && ./setup.sh); \
+      (cd "$tmp" && bash ./setup.sh); \
       rm -rf "$tmp"; \
     done; \
     rm /tmp/manifest.json; \
-    chown -R docker:docker "$AGENT_TOOLSDIRECTORY"
+    find "$AGENT_TOOLSDIRECTORY" -name '__pycache__' -prune -exec rm -rf {} +; \
+    chown -R docker:docker "$AGENT_TOOLSDIRECTORY"; \
+    ls "$AGENT_TOOLSDIRECTORY/Python"
 
 # --- GitHub Actions runner ---
 ARG RUNNER_VERSION
@@ -94,12 +98,37 @@ RUN mkdir -p /home/docker/actions-runner && cd /home/docker/actions-runner \
 
 COPY --chmod=755 scripts/start.sh /start.sh
 
-# --- Test data (changes most often → last) ---
-ARG DATA_VERSION
-COPY --from=junifer_data_image --chown=docker:docker \
-     /opt/junifer-data /home/docker/junifer_data/${DATA_VERSION}
-RUN echo ${DATA_VERSION} > /home/docker/junifer-data-version
-
 USER docker
 WORKDIR /home/docker
+
+# --- Test data (changes most often → last), cloned as the runner user ---
+ARG DATA_VERSION
+RUN set -eux; \
+    git config --global user.name "junifer-ci"; \
+    git config --global user.email "junifer-ci@localhost"; \
+    datalad clone https://cerebra.fz-juelich.de/junifer/junifer-data.git "$HOME/junifer_data/${DATA_VERSION}"; \
+    cd "$HOME/junifer_data/${DATA_VERSION}"; \
+    git checkout -q "${DATA_VERSION}"; \
+    datalad get -r -J 4 .; \
+    test -z "$(git status --porcelain)"; \
+    git log -1 --format='junifer-data %D @ %H'; \
+    echo "${DATA_VERSION}" > "$HOME/junifer-data-version"
+
+# --- nilearn datasets used by junifer.testing (no downloads at test time) ---
+ARG NILEARN_VERSION=0.10.4
+RUN <<'EOF'
+set -eux
+python3 -m venv /tmp/nilearn-venv
+/tmp/nilearn-venv/bin/pip install --no-cache-dir -q "nilearn==${NILEARN_VERSION}" "numpy<2.4"
+/tmp/nilearn-venv/bin/python - <<'PY'
+from nilearn import datasets
+datasets.fetch_oasis_vbm(n_subjects=10)
+datasets.fetch_development_fmri(n_subjects=10, reduce_confounds=True, age_group="both")
+datasets.fetch_spm_auditory()
+datasets.fetch_adhd(n_subjects=10)
+PY
+rm -rf /tmp/nilearn-venv
+du -sh "$HOME/nilearn_data"
+EOF
+
 ENTRYPOINT ["/start.sh"]
