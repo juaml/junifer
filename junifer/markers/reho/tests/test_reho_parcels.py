@@ -16,6 +16,7 @@ from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import (
+    ADHDTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
 )
 
@@ -97,14 +98,16 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with PartlyCloudyTestingDataGrabber(n_timepoints=50) as dg:
+    # Use float data with few ties: ReHo is rank-based and the
+    # implementations handle tied values differently
+    with ADHDTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Update workdir to current test's tmp_path
         WorkDirManager().workdir = tmp_path
 
         # Initialize marker
         junifer_marker = ReHoParcels(
-            parcellation="Shen_2013_50", using=ReHoImpl.junifer
+            parcellation="Schaefer100x7", using=ReHoImpl.junifer
         )
         # Fit transform marker on data
         junifer_output = junifer_marker.fit_transform(element_data)
@@ -113,7 +116,7 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
 
         # Initialize marker
         afni_marker = ReHoParcels(
-            parcellation="Shen_2013_50", using=ReHoImpl.afni
+            parcellation="Schaefer100x7", using=ReHoImpl.afni
         )
         # Fit transform marker on data
         afni_output = afni_marker.fit_transform(element_data)
