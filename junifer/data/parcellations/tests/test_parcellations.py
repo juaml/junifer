@@ -38,6 +38,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 def test_register_built_in_check() -> None:
     """Test parcellation registration check for built-in parcellations."""
     with pytest.raises(ValueError, match=r"built-in parcellation"):

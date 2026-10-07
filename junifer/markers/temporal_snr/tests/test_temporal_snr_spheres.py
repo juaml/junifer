@@ -6,11 +6,16 @@
 
 from pathlib import Path
 
+import pytest
+
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.temporal_snr import TemporalSNRSpheres
 from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 def test_TemporalSNRSpheres_computation() -> None:

@@ -26,6 +26,9 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.typing import DataGrabberLike
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "using, reference, error_type, error_msg",
     [

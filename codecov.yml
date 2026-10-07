@@ -1,5 +1,7 @@
 codecov:
-  notify: {}
+  notify:
+    # Wait for the coverage of both test jobs (external and the rest)
+    after_n_builds: 2
   require_ci_to_pass: false
 
 comment:                  # this is a top-level key
@@ -7,6 +9,7 @@ comment:                  # this is a top-level key
   behavior: default
   require_changes: false  # if true: only post the comment if coverage changes
   require_base: no        # [yes :: must have a base report to post]
+  after_n_builds: 2       # wait for both test jobs before commenting
 
 coverage:
   status:
@@ -23,16 +26,6 @@ flag_management:
       statuses:
         - type: project
           target: 90%
-          threshold: 1%
-        - type: patch
-          target: 95%
-          threshold: 1%
-    - name: docs
-      paths:
-        - docs/
-      statuses:
-        - type: project
-          target: 100%
           threshold: 1%
         - type: patch
           target: 95%

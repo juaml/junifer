@@ -18,32 +18,38 @@ datagrabber = {
 
 markers = [
     {
-        "name": "Schaefer1000x7_TrimMean80",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer1000x7",
+        "name": "extDMN_TrimMean80",
+        "kind": "SphereAggregation",
+        "coords": "extDMN",
+        "radius": 5.0,
+        "masks": "compute_brain_mask",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
-        "name": "Schaefer1000x7_Mean",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer1000x7",
+        "name": "extDMN_Mean",
+        "kind": "SphereAggregation",
+        "coords": "extDMN",
+        "radius": 5.0,
+        "masks": "compute_brain_mask",
         "method": "mean",
     },
     {
-        "name": "Schaefer1000x7_Std",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer1000x7",
+        "name": "extDMN_Std",
+        "kind": "SphereAggregation",
+        "coords": "extDMN",
+        "radius": 5.0,
+        "masks": "compute_brain_mask",
         "method": "std",
     },
 ]
 
 storage = {
-    "kind": "SQLiteFeatureStorage",
+    "kind": "HDF5FeatureStorage",
 }
 
 with tempfile.TemporaryDirectory() as tmpdir:
-    uri = f"{tmpdir}/test.sqlite"
+    uri = f"{tmpdir}/test.hdf5"
     storage["uri"] = uri
     run(
         workdir="/tmp",

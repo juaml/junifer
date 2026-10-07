@@ -293,3 +293,86 @@ def test_PatternDataGrabber_unix_path_expansion(tmp_path: Path) -> None:
     # Check paths are found
     assert set(out["FreeSurfer"].keys()) == {"path", "aseg", "meta"}
     assert list(out["FreeSurfer"]["aseg"].keys()) == ["path"]
+
+
+def test_PatternDataGrabber_get_elements_order(tmp_path: Path) -> None:
+    """Test PatternDataGrabber elements with types of different specificity.
+
+    The type with the most replacements must be used first, regardless of
+    the order of the types.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    (tmp_path / "anat").mkdir()
+    (tmp_path / "func").mkdir()
+    (tmp_path / "func" / "sub-01.nii").touch()
+    for ses in ("ses-1", "ses-2"):
+        (tmp_path / "anat" / f"sub-01_{ses}.nii").touch()
+
+    dg = PatternDataGrabber(
+        datadir=tmp_path,
+        # Most specific type first
+        types=["T1w", "BOLD"],
+        patterns={
+            "T1w": {
+                "pattern": "anat/{subject}_{session}.nii",
+                "space": "native",
+            },
+            "BOLD": {
+                "pattern": "func/{subject}.nii",
+                "space": "MNI152NLin6Asym",
+            },
+        },
+        replacements=["subject", "session"],
+    )
+    assert dg._count_replacements_in_pattern("T1w") == 2
+    assert dg._count_replacements_in_pattern("BOLD") == 1
+    assert set(dg.get_elements()) == {
+        ("sub-01", "ses-1"),
+        ("sub-01", "ses-2"),
+    }
+
+
+@pytest.mark.parametrize("missing", ["func", "anat"])
+def test_PatternDataGrabber_get_elements_intersection(
+    tmp_path: Path, missing: str
+) -> None:
+    """Test PatternDataGrabber elements are available for all the types.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    missing : str
+        The parametrized directory missing the file for one element.
+
+    """
+    (tmp_path / "anat").mkdir()
+    (tmp_path / "func").mkdir()
+    for subject in ("sub-01", "sub-02"):
+        for folder in ("func", "anat"):
+            # One element is missing one of the types
+            if subject == "sub-02" and folder == missing:
+                continue
+            (tmp_path / folder / f"{subject}_ses-1.nii").touch()
+
+    dg = PatternDataGrabber(
+        datadir=tmp_path,
+        types=["BOLD", "T1w"],
+        patterns={
+            "BOLD": {
+                "pattern": "func/{subject}_{session}.nii",
+                "space": "MNI152NLin6Asym",
+            },
+            "T1w": {
+                "pattern": "anat/{subject}_{session}.nii",
+                "space": "native",
+            },
+        },
+        replacements=["subject", "session"],
+    )
+    assert dg.get_elements() == [("sub-01", "ses-1")]

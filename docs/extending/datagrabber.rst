@@ -216,8 +216,8 @@ temporary directory. To set the location of the dataset, you can use the
 be used to specify the path to the root directory of the dataset after doing
 ``datalad clone``.
 
-In the example, the dataset is hosted in Gin
-(``https://gin.g-node.org/juaml/datalad-example-bids``).
+In the example, the dataset is hosted in cerebra.fz-juelich.de
+(``https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git``).
 
 When we clone this dataset, we will see the following structure:
 
@@ -242,7 +242,7 @@ Now we have our 2 additional variables:
 
 .. code-block:: python
 
-    uri = "https://gin.g-node.org/juaml/datalad-example-bids"
+    uri = "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
     rootdir = "example_bids_ses"
 
 And we can create our DataGrabber:
@@ -259,7 +259,7 @@ And we can create our DataGrabber:
     @register_datagrabber
     class ExampleBIDSDataGrabber(PatternDataladDataGrabber):
 
-        uri: AnyUrl = "https://gin.g-node.org/juaml/datalad-example-bids"
+        uri: AnyUrl = "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
         types: list[DataType] = ["T1w", "BOLD"]
         patterns: DataGrabberPatterns = {
             "T1w": {
@@ -293,7 +293,7 @@ This approach can be used directly from the YAML, like so:
      replacements:
        - subject
        - session
-     uri: "https://gin.g-node.org/juaml/datalad-example-bids"
+     uri: "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
      rootdir: example_bids_ses
 
 Advanced: Using Unix-like path expansion directives

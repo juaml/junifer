@@ -17,6 +17,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.skipif(
     socket.gethostname() != "juseless",
     reason="only for juseless",

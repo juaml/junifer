@@ -25,6 +25,9 @@ from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 if TYPE_CHECKING:
     from sklearn.base import BaseEstimator
 

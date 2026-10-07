@@ -2,14 +2,41 @@
 
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import DataType, DMCC13Benchmark
+from junifer.testing import config_override
 
 
-URI = AnyUrl("https://gin.g-node.org/synchon/datalad-example-dmcc13-benchmark")
+URI = AnyUrl(
+    "https://cerebra.fz-juelich.de/junifer/datalad-example-dmcc13-benchmark.git"
+)
+
+
+@pytest.fixture(scope="module")
+def dmcc13_datadir(tmp_path_factory) -> Iterator[Path]:
+    """Return the path to the DMCC13 benchmark data directory.
+
+    Parameters
+    ----------
+    tmp_path_factory : pathlib.Path
+        The path to the test directory.
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the DMCC13 benchmark data directory.
+
+    """
+    datadir = tmp_path_factory.mktemp("dmcc13_datadir")
+    datadir.mkdir(parents=True, exist_ok=True)
+    dg = DMCC13Benchmark(uri=URI, types=["T1w"], datadir=datadir)
+    with config_override("datagrabber.skipidcheck", True), dg:
+        yield datadir
 
 
 @pytest.mark.parametrize(
@@ -51,6 +78,7 @@ def test_DMCC13Benchmark(
     phase_encodings: list[str],
     runs: list[str],
     native_t1w: bool,
+    dmcc13_datadir: Path,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber.
 
@@ -66,6 +94,8 @@ def test_DMCC13Benchmark(
         The parametrized run values.
     native_t1w : bool
         The parametrized values for fetching native T1w.
+    dmcc13_datadir : pathlib.Path
+        The path to the DMCC13 benchmark data directory.
 
     """
     dg = DMCC13Benchmark(
@@ -75,6 +105,7 @@ def test_DMCC13Benchmark(
         phase_encodings=phase_encodings,
         runs=runs,
         native_t1w=native_t1w,
+        datadir=dmcc13_datadir,
     )
     with dg:
         all_elements = dg.get_elements()
@@ -215,6 +246,7 @@ def test_DMCC13Benchmark(
 def test_DMCC13Benchmark_partial_data_access(
     types: str | list[str],
     native_t1w: bool,
+    dmcc13_datadir: Path,
 ) -> None:
     """Test DMCC13Benchmark DataGrabber partial data access.
 
@@ -224,12 +256,15 @@ def test_DMCC13Benchmark_partial_data_access(
         The parametrized types.
     native_t1w : bool
         The parametrized values for fetching native T1w.
+    dmcc13_datadir : pathlib.Path
+        The path to the DMCC13 benchmark data directory.
 
     """
     dg = DMCC13Benchmark(
         uri=URI,
         types=types,
         native_t1w=native_t1w,
+        datadir=dmcc13_datadir,
     )
     with dg:
         all_elements = dg.get_elements()

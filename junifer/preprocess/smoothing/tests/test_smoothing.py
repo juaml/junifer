@@ -11,6 +11,9 @@ from junifer.preprocess import Smoothing, SmoothingImpl
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "data_type",
     ["T1w", "BOLD"],
@@ -24,7 +27,7 @@ def test_Smoothing_nilearn(data_type: str) -> None:
         The parametrized data type.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
+    with SPMAuditoryTestingDataGrabber(n_timepoints=10) as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
@@ -53,7 +56,7 @@ def test_Smoothing_afni(data_type: str) -> None:
         The parametrized data type.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
+    with SPMAuditoryTestingDataGrabber(n_timepoints=10) as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data
@@ -80,7 +83,7 @@ def test_Smoothing_fsl(data_type: str) -> None:
         The parametrized data type.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
+    with SPMAuditoryTestingDataGrabber(n_timepoints=10) as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
         # Preprocess data

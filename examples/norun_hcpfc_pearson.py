@@ -68,8 +68,8 @@ markers = [
 ]
 
 storage = {
-    "kind": "SQLiteFeatureStorage",
-    "uri": "/data/project/juniferexample",
+    "kind": "HDF5FeatureStorage",
+    "uri": "/data/project/juniferexample/features.hdf5",
 }
 
 run(

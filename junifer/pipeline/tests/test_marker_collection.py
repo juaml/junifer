@@ -22,6 +22,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 def test_marker_collection_incorrect_markers() -> None:
     """Test incorrect markers for MarkerCollection."""
     wrong_markers = [

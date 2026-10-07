@@ -78,47 +78,52 @@ class JuniferALFF(metaclass=Singleton):
         """
         logger.debug("Creating cache for ALFF computation via junifer")
 
-        # Get scan data
+        # Get scan data (no extra copy, don't keep nibabel's cached copy)
         niimg = nib.load(input_path)
-        niimg_data = niimg.get_fdata().copy()
+        niimg_data = niimg.get_fdata(caching="unchanged")
         if tr is None:
             tr = float(niimg.header["pixdim"][4])  # type: ignore
             logger.info(f"`tr` not provided, using `tr` from header: {tr}")
 
-        # Bandpass the data within the lowpass and highpass cutoff freqs
-        fft_data = sp.fft.fft(niimg_data, axis=-1)
-        fft_freqs = np.abs(sp.fft.fftfreq(niimg_data.shape[-1], tr))
-        # Frequency difference
-        fft_freqs_diff = fft_freqs[1] - fft_freqs[0]
-        # Nyquist frequency
-        nyquist = np.max(fft_freqs)
-        # FFT sample frequency count
-        n_fft = len(fft_freqs)
+        n_timepoints = niimg_data.shape[-1]
+        # One-sided spectrum of a real signal; weights reproduce the
+        # two-sided sums (each non-zero bin appears twice, Nyquist once)
+        fft_freqs = sp.fft.rfftfreq(n_timepoints, tr)
+        weights = np.full(fft_freqs.shape, 2.0)
+        weights[0] = 0.0  # exclude DC
+        if n_timepoints % 2 == 0:
+            weights[-1] = 1.0  # Nyquist bin appears only once
+        band_weights = np.where(
+            (fft_freqs > highpass) & (fft_freqs < lowpass), weights, 0.0
+        )
         logger.info(
-            f"FFT: nfft = {n_fft}, dFreq = {fft_freqs_diff}, "
-            f"nyquist = {nyquist}"
+            f"FFT: nfft = {n_timepoints}, "
+            f"dFreq = {fft_freqs[1] - fft_freqs[0]}, "
+            f"nyquist = {fft_freqs[-1]}"
         )
 
-        # Compute the denominator on the broadband signal
-        all_freq_mask = fft_freqs > 0
-        denominator = np.sum(np.abs(fft_data[..., all_freq_mask]), axis=-1)
-
-        # Compute the numerator on the bandpassed signal
-        freq_mask = np.logical_and(fft_freqs > highpass, fft_freqs < lowpass)
-
-        # Compute ALFF
-        numerator = np.sum(np.abs(fft_data[..., freq_mask]), axis=-1)
+        # Process voxels in chunks to bound FFT memory
+        flat = niimg_data.reshape(-1, n_timepoints)
+        numerator = np.empty(flat.shape[0])
+        denominator = np.empty(flat.shape[0])
+        chunk = 20_000
+        for start in range(0, flat.shape[0], chunk):
+            amp = np.abs(sp.fft.rfft(flat[start : start + chunk], axis=-1))
+            denominator[start : start + chunk] = amp @ weights
+            numerator[start : start + chunk] = amp @ band_weights
+        spatial_shape = niimg_data.shape[:-1]
+        numerator = numerator.reshape(spatial_shape)
+        denominator = denominator.reshape(spatial_shape)
+        del niimg_data, flat
 
         # Compute fALFF, but avoid division by zero
         denom_mask = denominator <= 0.000001
-        denominator[denom_mask] = 1  # set to 1 to avoid division by zero
-        # Calculate fALFF
+        denominator[denom_mask] = 1
         falff = np.divide(numerator, denominator)
-        # Set the values where denominator is zero to zero
         falff[denom_mask] = 0
 
         # Calculate ALFF
-        alff = numerator / np.sqrt(niimg_data.shape[-1])
+        alff = numerator / np.sqrt(n_timepoints)
         alff_data = nimg.new_img_like(
             ref_niimg=niimg,
             data=alff,

@@ -1,72 +1,134 @@
 # syntax=docker/dockerfile:1
 
-FROM python:3.12-slim-bookworm
+FROM ubuntu:24.04
 
-LABEL org.opencontainers.image.source=https://github.com/juaml/junifer
-LABEL org.opencontainers.image.description="Junifer CI container image"
-LABEL org.opencontainers.image.licenses=AGPL-3.0-only
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=C.UTF-8 LC_ALL=C.UTF-8
+
+LABEL org.opencontainers.image.source=https://github.com/juaml/junifer \
+      org.opencontainers.image.description="Junifer CI container image" \
+      org.opencontainers.image.licenses=AGPL-3.0-only \
+      Author="Fede Raimondo" \
+      Email="f.raimondo@fz-juelich.de" \
+      GitHub="https://github.com/fraimondo" \
+      BaseImage="ubuntu:24.04"
 
 RUN apt-get update && \
-    apt-get install -y \
-    pkg-config \
-    gcc \
-    git \
-    make \
-    curl \
-    # ANTs runtime stuff
-    libhdf5-dev \
+    apt-get install -y --no-install-recommends \
+    # Base / runner tooling
+    ca-certificates curl wget git jq sudo unzip vim file make gnupg \
+    xz-utils bzip2 zstd \
+    python3 python3-venv python-is-python3 \
+    # Data
+    git-annex \
+    # ANTs runtime
     bc \
-    # AFNI runtime stuff
-    libf2c2-dev \
-    libglew-dev \
-    libglib2.0-dev \
-    libglu1-mesa-dev \
-    libglw1-mesa-dev \
-    libgsl-dev \
-    libgts-dev \
-    libjpeg62-turbo-dev \
-    libmotif-dev \
-    libxi-dev \
-    libxmhtml-dev \
-    libxmu-dev \
-    libxpm-dev \
-    libxt-dev \
-    netpbm \
-    libjpeg-progs \
-    qhull-bin \
-    r-base \
-    tcsh \
-    xvfb \
-    # FSL runtime stuff
-    file \
-    dc \
-    libquadmath0 \
-    libgomp1 \
+    # AFNI runtime (non-GUI subset of AFNI's Ubuntu 24 list)
+    tcsh gsl-bin libgsl27 libglu1-mesa libglw1-mesa libxm4 libjpeg62 \
+    libxmu6 libxpm4 libxi6 libxext6 libglib2.0-0t64 libgomp1 \
+    netpbm xvfb xfonts-base python3-numpy python3-matplotlib r-base \
+    # FSL runtime
+    dc libquadmath0 \
     && rm -rf /var/lib/apt/lists/*
 
-# Add junifer-data
-COPY --from=ghcr.io/juaml/junifer-data:v7 /opt/junifer-data /root/junifer_data/v7
+# DataLad (not packaged for Ubuntu 24.04) in its own venv
+RUN python3 -m venv /opt/datalad \
+    && /opt/datalad/bin/pip install --no-cache-dir datalad \
+    && ln -s /opt/datalad/bin/datalad /usr/local/bin/datalad \
+    && datalad --version
 
-# Add ANTs
+# Ubuntu 24.04 ships a default 'ubuntu' user (uid 1000); give that uid to our user
+RUN userdel -r ubuntu 2>/dev/null || true; \
+    useradd -m -u 1000 -s /bin/bash docker
+
+# --- Heavy, rarely-changing neuroimaging tools ---
+
+# ANTs
 COPY --from=antsx/ants:latest /opt/ants /opt/ants
-# Set env vars for ANTs
 ENV PATH="/opt/ants/bin:$PATH" \
     LD_LIBRARY_PATH="/opt/ants/lib"
 
-# Add AFNI
-COPY --from=afni/afni_make_build:latest /opt/afni/install /opt/afni/bin
-# Set env vars for AFNI
-ENV PATH="/opt/afni/bin:$PATH"
-# Patch gsl
-RUN ln -s /usr/lib/x86_64-linux-gnu/libgsl.so.27 /usr/lib/x86_64-linux-gnu/libgsl.so.23
+# AFNI — native Ubuntu 24.04 build
+RUN mkdir -p /opt/afni \
+    && curl -fsSL https://afni.nimh.nih.gov/pub/dist/tgz/linux_ubuntu_24_64.tgz \
+       | tar -xz -C /opt/afni --strip-components=1
+ENV PATH="/opt/afni:$PATH"
 
-# Add FSL
-RUN curl https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py | \
-    python - -d /opt/fsl/ --skip_registration
-# Set env vars for FSL
+# FSL
+RUN curl -fsSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/releases/fslinstaller.py -o /tmp/fslinstaller.py \
+    && (python3 /tmp/fslinstaller.py -d /opt/fsl/ --skip_registration \
+        || { cat /root/fsl_installation_*.log; exit 1; }) \
+    && rm -rf /opt/fsl/pkgs /tmp/fslinstaller.py /root/fsl_installation_*.log \
+    && find /opt/fsl -name '__pycache__' -prune -exec rm -rf {} +
 ENV FSLDIR=/opt/fsl \
     FSLOUTPUTTYPE=NIFTI_GZ \
     PATH="/opt/fsl/share/fsl/bin:$PATH"
 
-# Clean apt cache
-RUN apt-get autoremove --purge && apt-get clean
+# --- Hosted tool cache, pre-populated (no downloads at job time) ---
+ARG PYTHON_VERSIONS="3.10 3.11 3.12 3.13 3.14"
+ARG UBUNTU_TAG=24.04
+ENV AGENT_TOOLSDIRECTORY=/opt/hostedtoolcache
+RUN set -eux; \
+    mkdir -p "$AGENT_TOOLSDIRECTORY"; \
+    curl -fsSL https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json -o /tmp/manifest.json; \
+    filter='[ .[] | select(.stable and (.version | startswith($v + "."))) | .files[] | select(.platform=="linux" and .platform_version==$os and .arch=="x64") ][0].download_url'; \
+    for v in $PYTHON_VERSIONS; do \
+      url=$(jq -r --arg v "$v" --arg os "$UBUNTU_TAG" "$filter" /tmp/manifest.json); \
+      [ "$url" != "null" ] || { echo "No $v build for Ubuntu $UBUNTU_TAG"; exit 1; }; \
+      tmp=$(mktemp -d); \
+      curl -fsSL "$url" | tar -xz -C "$tmp"; \
+      (cd "$tmp" && bash ./setup.sh); \
+      rm -rf "$tmp"; \
+    done; \
+    rm /tmp/manifest.json; \
+    find "$AGENT_TOOLSDIRECTORY" -name '__pycache__' -prune -exec rm -rf {} +; \
+    chown -R docker:docker "$AGENT_TOOLSDIRECTORY"; \
+    ls "$AGENT_TOOLSDIRECTORY/Python"
+
+# --- GitHub Actions runner ---
+ARG RUNNER_VERSION
+LABEL RunnerVersion=${RUNNER_VERSION}
+RUN mkdir -p /home/docker/actions-runner && cd /home/docker/actions-runner \
+    && curl -fsSL -o runner.tar.gz \
+       https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+    && tar xzf runner.tar.gz && rm runner.tar.gz \
+    && ./bin/installdependencies.sh \
+    && rm -rf /var/lib/apt/lists/* \
+    && chown -R docker:docker /home/docker
+
+COPY --chmod=755 scripts/start.sh /start.sh
+
+USER docker
+WORKDIR /home/docker
+
+# --- Test data (changes most often → last), cloned as the runner user ---
+ARG DATA_VERSION
+RUN set -eux; \
+    git config --global user.name "junifer-ci"; \
+    git config --global user.email "junifer-ci@localhost"; \
+    datalad clone https://cerebra.fz-juelich.de/junifer/junifer-data.git "$HOME/junifer_data/${DATA_VERSION}"; \
+    cd "$HOME/junifer_data/${DATA_VERSION}"; \
+    git checkout -q "${DATA_VERSION}"; \
+    datalad get -r -J 4 .; \
+    test -z "$(git status --porcelain)"; \
+    git log -1 --format='junifer-data %D @ %H'; \
+    echo "${DATA_VERSION}" > "$HOME/junifer-data-version"
+
+# --- nilearn datasets used by junifer.testing (no downloads at test time) ---
+ARG NILEARN_VERSION=0.10.4
+RUN <<'EOF'
+set -eux
+python3 -m venv /tmp/nilearn-venv
+/tmp/nilearn-venv/bin/pip install --no-cache-dir -q "nilearn==${NILEARN_VERSION}" "numpy<2.4"
+/tmp/nilearn-venv/bin/python - <<'PY'
+from nilearn import datasets
+datasets.fetch_oasis_vbm(n_subjects=10)
+datasets.fetch_development_fmri(n_subjects=10, reduce_confounds=True, age_group="both")
+datasets.fetch_spm_auditory()
+datasets.fetch_adhd(n_subjects=10)
+PY
+rm -rf /tmp/nilearn-venv
+du -sh "$HOME/nilearn_data"
+EOF
+
+ENTRYPOINT ["/start.sh"]

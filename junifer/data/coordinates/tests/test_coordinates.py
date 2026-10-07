@@ -19,6 +19,9 @@ from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 def test_register_built_in_check() -> None:
     """Test coordinates registration check for built-in coordinates."""
     with pytest.raises(ValueError, match=r"built-in"):
@@ -119,6 +122,15 @@ def test_load() -> None:
     assert coord.shape == (6, 3)  # type: ignore
     assert names == ["PCC", "MPFC", "lAG", "rAG", "lHF", "rHF"]
     assert space == "MNI"
+
+
+def test_load_unique_names() -> None:
+    """Test loading coordinates with duplicated names and spaces."""
+    _, names, _ = load_data(kind="coordinates", name="Dosenbach")
+    assert len(names) == 160  # type: ignore
+    assert len(set(names)) == 160  # type: ignore
+    assert not any(" " in x for x in names)  # type: ignore
+    assert names[:5] == ["vmPFC-1", "aPFC-1", "aPFC-2", "mPFC", "aPFC-3"]
 
 
 def test_load_nonexisting() -> None:

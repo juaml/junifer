@@ -16,7 +16,7 @@ import tempfile
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 from junifer.utils import configure_logging
 
 
@@ -27,7 +27,7 @@ configure_logging(level="INFO")
 ##############################################################################
 # Define the DataGrabber interface
 datagrabber = {
-    "kind": "SPMAuditoryTestingDataGrabber",
+    "kind": "ADHDTestingDataGrabber",
 }
 
 ###############################################################################
@@ -51,8 +51,8 @@ markers = [
 with tempfile.TemporaryDirectory() as tmpdir:
     # Define the storage interface
     storage = {
-        "kind": "SQLiteFeatureStorage",
-        "uri": f"{tmpdir}/test.sqlite",
+        "kind": "HDF5FeatureStorage",
+        "uri": f"{tmpdir}/test.hdf5",
     }
     # Run the defined junifer feature extraction pipeline
     run(
@@ -60,12 +60,12 @@ with tempfile.TemporaryDirectory() as tmpdir:
         datagrabber=datagrabber,
         markers=markers,
         storage=storage,
-        elements=["sub001"],  # we calculate for one subject only
+        elements=["sub-01"],  # we calculate for one subject only
     )
     # Collect extracted features data
     collect(storage=storage)
     # Create storage object to read in extracted features
-    db = SQLiteFeatureStorage(uri=storage["uri"])
+    db = HDF5FeatureStorage(uri=storage["uri"])
 
     # List all the features
     print(db.list_features())

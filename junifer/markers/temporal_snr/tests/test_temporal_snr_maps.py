@@ -5,25 +5,22 @@
 
 from pathlib import Path
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
+import pytest
+
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import TemporalSNRMaps
 from junifer.storage import HDF5FeatureStorage
+from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
-def test_TemporalSNRMaps_computation(
-    maps_datagrabber: PatternDataladDataGrabber,
-) -> None:
-    """Test TemporalSNRMaps fit-transform.
+pytestmark = pytest.mark.external
 
-    Parameters
-    ----------
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
 
-    """
-    with maps_datagrabber as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+def test_TemporalSNRMaps_computation() -> None:
+    """Test TemporalSNRMaps fit-transform."""
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         marker = TemporalSNRMaps(maps="Smith_rsn_10")
         # Check correct output
@@ -40,21 +37,17 @@ def test_TemporalSNRMaps_computation(
         assert len(set(tsnr_parcels_bold["col_names"])) == 10
 
 
-def test_TemporalSNRMaps_storage(
-    tmp_path: Path, maps_datagrabber: PatternDataladDataGrabber
-) -> None:
+def test_TemporalSNRMaps_storage(tmp_path: Path) -> None:
     """Test TemporalSNRMaps store.
 
     Parameters
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
 
     """
-    with maps_datagrabber as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         marker = TemporalSNRMaps(maps="Smith_rsn_10")
         # Store

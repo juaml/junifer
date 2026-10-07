@@ -8,6 +8,7 @@
 
 from pathlib import Path
 
+import pytest
 from nilearn.maskers import NiftiLabelsMasker
 
 from junifer.data import ParcellationRegistry
@@ -15,6 +16,9 @@ from junifer.datareader import DefaultDataReader
 from junifer.markers.ets_rss import RSSETSMarker
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 # Set parcellation

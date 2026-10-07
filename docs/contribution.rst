@@ -228,7 +228,7 @@ texts.
     ###############################################################################
     # Additionally, a datalad datagrabber requires the URI of the remote sibling
     # and the location of the dataset within the remote sibling.
-    repo_uri = "https://gin.g-node.org/juaml/datalad-example-bids"
+    repo_uri = "https://cerebra.fz-juelich.de/junifer/datalad-example-bids.git"
     rootdir = "example_bids"
 
     ###############################################################################

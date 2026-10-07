@@ -3,7 +3,13 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import nibabel as nib
+import pytest
+
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 def test_SPMAuditoryTestingDataGrabber() -> None:
@@ -31,3 +37,10 @@ def test_SPMAuditoryTestingDataGrabber() -> None:
         assert "T1w" in out
         assert out["T1w"]["path"].exists()
         assert out["T1w"]["path"].is_file()
+
+
+def test_SPMAuditoryTestingDataGrabber_n_timepoints() -> None:
+    """Test SPMAuditoryTestingDataGrabber with fewer timepoints."""
+    with SPMAuditoryTestingDataGrabber(n_timepoints=10) as dg:
+        out = dg["sub001"]
+        assert nib.load(out["BOLD"]["path"]).shape == (64, 64, 64, 10)

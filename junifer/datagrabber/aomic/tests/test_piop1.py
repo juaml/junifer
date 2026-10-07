@@ -6,14 +6,41 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import DataladAOMICPIOP1
+from junifer.testing import config_override
 
 
-URI = AnyUrl("https://gin.g-node.org/juaml/datalad-example-aomicpiop1")
+URI = AnyUrl(
+    "https://cerebra.fz-juelich.de/junifer/datalad-example-aomicpiop1"
+)
+
+
+@pytest.fixture(scope="module")
+def aomic_datadir(tmp_path_factory) -> Iterator[Path]:
+    """Return the path to the AOMIC data directory.
+
+    Parameters
+    ----------
+    tmp_path_factory : pathlib.Path
+        The path to the test directory.
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the AOMIC data directory.
+
+    """
+    datadir = tmp_path_factory.mktemp("aomic_data")
+    datadir.mkdir(parents=True, exist_ok=True)
+    dg = DataladAOMICPIOP1(uri=URI, types=["T1w"], datadir=datadir)
+    with config_override("datagrabber.skipidcheck", True), dg:
+        yield datadir
 
 
 @pytest.mark.parametrize(
@@ -66,6 +93,7 @@ def test_DataladAOMICPIOP1(
     nested_types: list[str] | None,
     tasks: str | list[str],
     space: str,
+    aomic_datadir: Path,
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber.
 
@@ -79,9 +107,13 @@ def test_DataladAOMICPIOP1(
         The parametrized task values.
     space: str
         The parametrized space.
+    aomic_datadir: pathlib.Path
+        The path to the AOMIC data directory.
 
     """
-    dg = DataladAOMICPIOP1(uri=URI, types=type_, tasks=tasks, space=space)
+    dg = DataladAOMICPIOP1(
+        uri=URI, types=type_, tasks=tasks, space=space, datadir=aomic_datadir
+    )
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
@@ -135,6 +167,7 @@ def test_DataladAOMICPIOP1(
 )
 def test_DataladAOMICPIOP1_partial_data_access(
     types: str | list[str],
+    aomic_datadir: Path,
 ) -> None:
     """Test DataladAOMICPIOP1 DataGrabber partial data access.
 
@@ -142,9 +175,11 @@ def test_DataladAOMICPIOP1_partial_data_access(
     ----------
     types : str or list of str
         The parametrized types.
+    aomic_datadir : pathlib.Path
+        The path to the AOMIC data directory.
 
     """
-    dg = DataladAOMICPIOP1(uri=URI, types=types)
+    dg = DataladAOMICPIOP1(uri=URI, types=types, datadir=aomic_datadir)
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]

@@ -13,13 +13,15 @@ from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import CrossParcellationFC
 from junifer.pipeline import WorkDirManager
-from junifer.pipeline.utils import _check_ants
 from junifer.storage import SQLiteFeatureStorage, Upsert
-from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
-parcellation_one = "Schaefer100x17"
-parcellation_two = "Schaefer200x17"
+pytestmark = pytest.mark.external
+
+
+parcellation_one = "Shen_2013_50"
+parcellation_two = "Shen_2013_100"
 
 
 def test_init() -> None:
@@ -41,9 +43,6 @@ def test_storage_type() -> None:
     )
 
 
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
 def test_compute(tmp_path: Path) -> None:
     """Test CrossParcellationFC compute().
 
@@ -53,8 +52,8 @@ def test_compute(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         WorkDirManager().workdir = tmp_path
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_one,
@@ -64,14 +63,11 @@ def test_compute(tmp_path: Path) -> None:
         out = crossparcellation.compute(element_data["BOLD"])[
             "functional_connectivity"
         ]
-        assert out["data"].shape == (200, 100)
-        assert len(out["col_names"]) == 100
-        assert len(out["row_names"]) == 200
+        assert out["data"].shape == (184, 93)
+        assert len(out["col_names"]) == 93
+        assert len(out["row_names"]) == 184
 
 
-@pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
 def test_store(tmp_path: Path) -> None:
     """Test CrossParcellationFC store().
 
@@ -81,8 +77,8 @@ def test_store(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+    with PartlyCloudyTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         WorkDirManager().workdir = tmp_path
         crossparcellation = CrossParcellationFC(
             parcellation_one=parcellation_one,

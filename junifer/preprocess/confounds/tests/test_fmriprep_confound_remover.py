@@ -23,6 +23,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "input_",
     [

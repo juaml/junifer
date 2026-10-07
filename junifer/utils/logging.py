@@ -14,12 +14,25 @@ else:
 
 import logging
 import logging.config
+import sys
 import warnings
+from importlib.metadata import (
+    PackageNotFoundError,
+    version,
+)
 from typing import NoReturn
 from warnings import warn
 
 import datalad
 import structlog
+
+
+# Before Python 3.11, packages_distributions() only uses top_level.txt and
+# misses packages that do not ship it
+if sys.version_info < (3, 11):
+    from importlib_metadata import packages_distributions  # pragma: no cover
+else:
+    from importlib.metadata import packages_distributions
 
 
 __all__ = [
@@ -151,6 +164,8 @@ def get_versions() -> dict:
         The module names and corresponding versions.
 
     """
+    # Map top-level modules to their distributions
+    module_distributions = packages_distributions()
     # Setup dictionary to track versions of modules
     module_versions = {}
     for name, module in sys.modules.copy().items():
@@ -158,8 +173,18 @@ def get_versions() -> dict:
         # allowing ruamel.yaml
         if "." in name and name != "ruamel.yaml":
             continue
+        # Get version from module attribute
+        vstring = getattr(module, "__version__", None)
+        # Fallback to distribution metadata
+        if vstring is None:
+            for dist_name in module_distributions.get(name, []):
+                try:
+                    vstring = version(dist_name)
+                    break
+                except PackageNotFoundError:
+                    continue
         # Get version or None as string
-        vstring = str(getattr(module, "__version__", None))
+        vstring = str(vstring)
         # Get module version
         module_version = getattr(LooseVersion(vstring), "vstring", None)
         module_versions[name] = module_version

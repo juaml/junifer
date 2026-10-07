@@ -70,18 +70,23 @@ def _get_dependency_information(long_: bool) -> dict[str, str]:
         # Get dependencies for junifer
         dist = distribution("junifer")
         # Compile regex pattern
-        re_pattern = re.compile("[a-z-_.]+")
+        re_pattern = re.compile(r"^\s*([A-Za-z0-9][A-Za-z0-9._-]*)")
 
-        for pkg_with_version in dist.requires:  # type: ignore
-            # Perform regex search
-            matches = re.findall(pattern=re_pattern, string=pkg_with_version)
+        for requirement in dist.requires:  # type: ignore
+            # Split requirement and environment marker
+            pkg_with_version, _, marker = requirement.partition(";")
+            # Skip optional dependencies
+            if "extra" in marker:
+                continue
             # Extract package name
-            key = matches[0]
+            match = re_pattern.match(pkg_with_version)
+            if match is None:
+                continue
+            # Convert distribution name to module name
+            key = match.group(1).replace("-", "_")
 
             if key in dependency_versions.keys():
-                # Check if pkg part of optional dependencies
-                if "extra" not in matches:
-                    pruned_dependency_versions[key] = dependency_versions[key]
+                pruned_dependency_versions[key] = dependency_versions[key]
 
     return pruned_dependency_versions
 

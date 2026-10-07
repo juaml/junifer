@@ -22,6 +22,9 @@ from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 from junifer.utils import config
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "dispatcher, inbuilt_key, ext_key, val",
     [
@@ -157,8 +160,6 @@ def test_data_object_dumper(
                 },
                 detrend=True,
                 standardize=True,
-                low_pass=0.08,
-                high_pass=0.01,
             ),
         ],
         markers=[

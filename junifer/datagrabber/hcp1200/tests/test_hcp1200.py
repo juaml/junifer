@@ -12,24 +12,25 @@ import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import HCP1200, DataladHCP1200
-from junifer.utils import config, configure_logging
+from junifer.testing import config_override
+from junifer.utils import configure_logging
 
 
 @pytest.fixture(scope="module")
 def hcpdg() -> Iterable[DataladHCP1200]:
     """Return a HCP1200 DataGrabber."""
     tmpdir = Path(tempfile.gettempdir())
-    config.set(key="datagrabber.skipidcheck", val=True)
     dg = DataladHCP1200(
-        uri=AnyUrl("https://gin.g-node.org/juaml/datalad-example-hcp1200"),
+        uri=AnyUrl(
+            "https://cerebra.fz-juelich.de/junifer/datalad-example-hcp1200.git"
+        ),
         datadir=tmpdir / "hcp1200_test",
         rootdir=Path("."),
     )
-    with dg:
+    with config_override("datagrabber.skipidcheck", True), dg:
         for t_elem in dg.get_elements():
             dg[t_elem]
         yield dg
-    config.set(key="datagrabber.skipidcheck", val=False)
     shutil.rmtree(tmpdir / "hcp1200_test", ignore_errors=True)
 
 

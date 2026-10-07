@@ -24,6 +24,9 @@ from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "input_type, storage_type",
     [

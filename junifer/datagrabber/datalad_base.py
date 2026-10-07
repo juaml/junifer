@@ -351,11 +351,18 @@ class DataladDataGrabber(BaseDataGrabber):
         if self._was_cloned:
             logger.debug("Removing dataset with reckless='kill'")
             self._dataset.remove(reckless="kill", result_renderer="disabled")
-        else:
+        elif len(self._got_files) > 0:
             logger.debug("Dropping files that were downloaded")
             for f in self._got_files:
-                logger.debug(f"Dropping {f}")
-                self._dataset.drop(f, result_renderer="disabled")
+                logger.debug(f"\t: {f}")
+            # Drop all files in a single call. The files were just obtained
+            # from a remote, so skip checking that they are still available
+            # there, which would contact the remote for each file.
+            self._dataset.drop(
+                self._got_files,
+                reckless="availability",
+                result_renderer="disabled",
+            )
 
     def __getitem__(self, element: Element) -> dict:
         """Implement single element indexing in the Datalad database.

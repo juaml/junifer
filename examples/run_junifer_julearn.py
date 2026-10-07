@@ -2,10 +2,10 @@
 Run junifer and julearn.
 ========================
 
-This example uses a ParcelAggregation marker to compute the mean of each parcel
-using the Schaefer parcellation (100 rois, 7 Yeo networks) for a 3D nifti to
-extract some features for machine learning using julearn to predict some other
-data.
+This example uses a SphereAggregation marker to compute the mean of spheres
+around the extended default mode network coordinates (16 ROIs) for a 3D nifti
+to extract some features for machine learning using julearn to predict some
+other data.
 
 Authors: Leonard Sasse, Sami Hamdan, Nicolas Nieto, Synchon Mandal
 
@@ -20,7 +20,7 @@ from julearn import run_cross_validation, PipelineCreator
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 from junifer.utils import configure_logging
 
 
@@ -34,16 +34,20 @@ configure_logging(level="INFO")
 
 marker_dicts = [
     {
-        "name": "Schaefer100x17_TrimMean80",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer100x17",
+        "name": "extDMN_TrimMean80",
+        "kind": "SphereAggregation",
+        "coords": "extDMN",
+        "radius": 5.0,
+        "masks": "compute_brain_mask",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
-        "name": "Schaefer200x17_Mean",
-        "kind": "ParcelAggregation",
-        "parcellation": "Schaefer200x17",
+        "name": "extDMN_Mean",
+        "kind": "SphereAggregation",
+        "coords": "extDMN",
+        "radius": 5.0,
+        "masks": "compute_brain_mask",
         "method": "mean",
     },
 ]
@@ -70,7 +74,7 @@ sex = (
 ###############################################################################
 # Create a temporary directory for junifer feature extraction:
 with tempfile.TemporaryDirectory() as tmpdir:
-    storage = {"kind": "SQLiteFeatureStorage", "uri": f"{tmpdir}/test.sqlite"}
+    storage = {"kind": "HDF5FeatureStorage", "uri": f"{tmpdir}/test.hdf5"}
     # run the defined junifer feature extraction pipeline
     run(
         workdir="/tmp",
@@ -82,9 +86,9 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # read in extracted features and add confounds and targets
     # for julearn run cross validation
     collect(storage)
-    db = SQLiteFeatureStorage(uri=storage["uri"])
+    db = HDF5FeatureStorage(uri=storage["uri"])
 
-    df_vbm = db.read_df(feature_name="VBM_GM_Schaefer200x17_Mean_aggregation")
+    df_vbm = db.read_df(feature_name="VBM_GM_extDMN_Mean_aggregation")
     oasis_subjects = [x[0] for x in df_vbm.index]
     df_vbm.index = oasis_subjects
 

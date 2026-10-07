@@ -13,12 +13,15 @@ from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import ReHoImpl, ReHoParcels
 from junifer.pipeline import WorkDirManager
-from junifer.pipeline.utils import _check_afni, _check_ants
+from junifer.pipeline.utils import _check_afni
 from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import (
+    ADHDTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
-    SPMAuditoryTestingDataGrabber,
 )
+
+
+pytestmark = pytest.mark.external
 
 
 def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
@@ -33,7 +36,7 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
     """
     with caplog.at_level(logging.DEBUG):
-        with PartlyCloudyTestingDataGrabber() as dg:
+        with PartlyCloudyTestingDataGrabber(n_timepoints=50) as dg:
             element_data = DefaultDataReader().fit_transform(dg["sub-01"])
             # Update workdir to current test's tmp_path
             WorkDirManager().workdir = tmp_path
@@ -84,9 +87,6 @@ def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
-    _check_ants() is False, reason="requires ANTs to be in PATH"
-)
-@pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
 def test_ReHoParcels_comparison(tmp_path: Path) -> None:
@@ -98,8 +98,10 @@ def test_ReHoParcels_comparison(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    with SPMAuditoryTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub001"])
+    # Use float data with few ties: ReHo is rank-based and the
+    # implementations handle tied values differently
+    with ADHDTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Update workdir to current test's tmp_path
         WorkDirManager().workdir = tmp_path
 

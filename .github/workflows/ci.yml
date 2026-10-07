@@ -2,26 +2,54 @@ name: Run Tests
 
 on:
   push:
-    paths:
-      - 'junifer/**'
-      - '.github/workflows/**'
-      - 'tox.ini'
-      - 'pyproject.toml'
+    # Branches are tested through their pull requests
+    branches:
+      - main
   pull_request:
-    paths:
-      - 'junifer/**'
-      - '.github/workflows/**'
-      - 'tox.ini'
-      - 'pyproject.toml'
   workflow_dispatch: {}
 
+# Cancel superseded runs of the same branch / PR, except on main
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
-  run-tests:
+  # Check whether the library changed, to skip the tests otherwise
+  # (e.g. on docs-only changes)
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        if: github.event_name != 'pull_request'
+      - name: Check for library changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'junifer/**'
+              - '.github/workflows/ci.yml'
+              - 'tox.ini'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'codecov.yml'
+
+  # Tests that need testing datasets, junifer-data or AFNI / ANTs / FSL
+  run-tests-external:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: [self-hosted, linux, x64, data-v7]
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.9', '3.10', '3.11', '3.12']
+        # Only the version used for coverage; all versions run on the rest
+        python-version: ['3.13']
         # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
     steps:
       - name: Check ANTs
@@ -33,15 +61,11 @@ jobs:
       - name: Check FSL
         run: |
           echo "Using FSL : $(flirt -version)"
-      - name: Install system dependencies
-        # actions/checkout fails to identify Git as it's not in the CI image
+      - name: Check tooling
         run: |
-          sudo apt-get -qq update
-          sudo apt-get -qq install -y \
-          git \
-          git-annex \
-          make \
-          jq
+          echo "HOME=$HOME"
+          which git-annex && git annex version | head -1
+          ls -d "$HOME"/junifer_data/* && cat "$HOME/junifer-data-version"
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
@@ -50,10 +74,12 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Python dependencies
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Install tox
+        # tox-uv makes tox create the test environments with uv
         run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install tox tox-gh-actions
+          uv tool install tox --with tox-uv --with tox-gh-actions
       - name: Configure Git for DataLad
         run: |
           git config --global user.email "junifer-runner@github.com"
@@ -62,11 +88,70 @@ jobs:
         # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         run: |
           git config --global --add safe.directory $(pwd)
-          tox
+          tox -- -m external
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
           flags: junifer
-        if: success() && matrix.python-version == 3.12
+        if: success() && matrix.python-version == '3.13'
+
+  # All the other tests
+  run-tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Install git-annex
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-annex
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.2.0
+      - name: Install tox
+        # tox-uv makes tox create the test environments with uv
+        run: |
+          uv tool install tox --with tox-uv --with tox-gh-actions
+      - name: Configure Git for DataLad
+        run: |
+          git config --global user.email "junifer-runner@github.com"
+          git config --global user.name "GitHub Runner"
+      - name: Test with tox
+        run: |
+          tox -- -m "not external"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: junifer
+        if: success() && matrix.python-version == '3.13'
+
+  # Single status to require in branch protection: passes when the tests
+  # passed or were skipped because the library did not change
+  tests:
+    needs: [changes, run-tests-external, run-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check test results
+        if: >-
+          contains(needs.*.result, 'failure') ||
+          contains(needs.*.result, 'cancelled')
+        run: |
+          echo "Some test jobs failed or were cancelled"
+          exit 1
+      - run: echo "Tests passed or were not needed"

@@ -4,13 +4,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from pathlib import Path
-
 import pytest
-from pydantic import AnyUrl
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
 from junifer.utils.singleton import Singleton
+
+
+# Do not collect the tests of vendored packages. Paths are relative to this
+# file, so it also works when testing the installed package.
+collect_ignore = ["external/h5io", "external/BrainPrint"]
 
 
 @pytest.fixture(autouse=True)
@@ -30,29 +31,18 @@ def reset_singletons() -> None:
         del elem
 
 
-@pytest.fixture
-def maps_datagrabber(tmp_path: Path) -> PatternDataladDataGrabber:
-    """Return a PatternDataladDataGrabber for maps testing.
+@pytest.fixture(autouse=True)
+def clear_computation_caches() -> None:
+    """Clear the cached computations of ReHo and ALFF estimators.
 
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
+    The estimators are singletons whose ``compute`` is cached per input
+    path, so results from earlier tests would otherwise be reused.
 
     """
-    dg = PatternDataladDataGrabber(
-        uri=AnyUrl("https://github.com/OpenNeuroDatasets/ds005226.git"),
-        types=DataType.BOLD,
-        patterns={
-            "BOLD": {
-                "pattern": (
-                    "derivatives/pre-processed_data/space-MNI/{subject}/"
-                    "{subject-padded}_task-{task}_run-{run}_space-MNI152NLin6Asym"
-                    "_res-2_desc-preproc_bold.nii.gz"
-                ),
-                "space": "MNI152NLin6Asym",
-            },
-        },
-        replacements=["subject", "subject-padded", "task", "run"],
-    )
-    return dg
+    from junifer.markers.falff._afni_falff import AFNIALFF
+    from junifer.markers.falff._junifer_falff import JuniferALFF
+    from junifer.markers.reho._afni_reho import AFNIReHo
+    from junifer.markers.reho._junifer_reho import JuniferReHo
+
+    for klass in (AFNIALFF, JuniferALFF, AFNIReHo, JuniferReHo):
+        klass.compute.cache_clear()

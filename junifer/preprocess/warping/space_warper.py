@@ -8,9 +8,9 @@ from enum import Enum
 from typing import Annotated, Any, ClassVar, Literal
 
 from pydantic import BeforeValidator
-from templateflow import api as tflow
 
 from ...api.decorators import register_preprocessor
+from ...data.template_spaces import _get_templateflow_templates
 from ...datagrabber import DataType
 from ...typing import ConditionalDependencies
 from ...utils import ensure_list_or_none, raise_error
@@ -109,7 +109,7 @@ class SpaceWarper(BasePreprocessor):
             # Update required data types
             self.required_data_types = [DataType.T1w, DataType.Warp]
             self.required_data_types.extend(self.on)
-        elif self.reference not in tflow.templates():
+        elif self.reference not in _get_templateflow_templates():
             raise_error(f"Unknown reference: {self.reference}")
 
     def preprocess(  # noqa: C901

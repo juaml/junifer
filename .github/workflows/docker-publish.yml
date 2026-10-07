@@ -1,12 +1,14 @@
 name: Docker
 
 on:
+  # Publish an image for every release
   push:
-    branches: [ "main" ]
-    paths: [ "Dockerfile" ]
+    tags:
+      - v*
+  # Only test that the image builds
   pull_request:
     branches: [ "main" ]
-    paths: [ "Dockerfile" ]
+    paths: [ "Dockerfile", ".github/workflows/docker-publish.yml" ]
   workflow_dispatch: {}
 
 env:
@@ -33,6 +35,10 @@ jobs:
       - run: df -h
       - name: Checkout repository
         uses: actions/checkout@v7
+        with:
+          # Tags are needed for the junifer version (setuptools-scm)
+          fetch-depth: 0
+          submodules: true
       - name: Install cosign
         if: github.event_name != 'pull_request'
         uses: sigstore/cosign-installer@v4.1.2
@@ -50,6 +56,12 @@ jobs:
         uses: docker/metadata-action@v6.2.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # vX.Y.Z -> X.Y.Z, X.Y and latest; branch name for manual runs
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=ref,event=branch
+            type=ref,event=pr
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v7.3.0

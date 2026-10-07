@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from functools import cache
 from pathlib import Path
 from typing import Any, Union
 
@@ -21,6 +22,21 @@ __all__ = ["get_template", "get_xfm"]
 
 _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="data")
+
+
+@cache
+def _get_templateflow_templates() -> frozenset[str]:
+    """Get the available templateflow template spaces.
+
+    Querying templateflow scans its whole layout, so the result is cached.
+
+    Returns
+    -------
+    frozenset of str
+        The available template spaces.
+
+    """
+    return frozenset(tflow.templates())
 
 
 def get_xfm(src: SpaceLike, dst: SpaceLike) -> Path:  # pragma: no cover
@@ -95,7 +111,7 @@ def get_template(
     # Normalise enum-based spaces (e.g. `AOMICSpace`) to their values
     space = getattr(space, "value", space)
     # Check for invalid space; early check to raise proper error
-    if space not in tflow.templates():
+    if space not in _get_templateflow_templates():
         raise_error(f"Unknown template space: {space}")
 
     # Check for template type

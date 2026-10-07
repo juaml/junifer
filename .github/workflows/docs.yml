@@ -12,27 +12,15 @@ on:
 
 jobs:
   build-docs:
-    # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
-    runs-on: ubuntu-22.04
-    # Use custom docs CI image
-    container: ghcr.io/juaml/junifer-docs:main
+    runs-on: [self-hosted, linux, x64, data-v7]
     steps:
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
-    - name: Install system dependencies
-      # actions/checkout fails to identify Git as it's not in the CI image
+    - name: Check tooling
       run: |
-        apt-get -qq update
-        apt-get -qq install -y \
-        git \
-        git-annex \
-        make \
-        jq
-    - name: Copy junifer-data directory
-      run: |
-        mkdir -p $HOME/junifer_data/v7
-        cp -ar /root/junifer_data/v7/. $HOME/junifer_data/v7/
+        which make git-annex jq
+        ls -d "$HOME"/junifer_data/v7
     - name: Checkout repository
       uses: actions/checkout@v7
       with:
@@ -43,11 +31,12 @@ jobs:
       uses: actions/setup-python@v7
       with:
         python-version: "3.12"
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v10.2.0
     - name: Install Python dependencies
       run: |
-        python -m pip install --upgrade pip setuptools wheel
-        python -m pip install -e ".[docs,neurokit2]"
-        python -m pip install git+https://github.com/dls-controls/sphinx-multiversion@only-arg
+        uv pip install --system -e ".[docs,neurokit2]"
+        uv pip install --system git+https://github.com/dls-controls/sphinx-multiversion@only-arg
     - name: Configure Git for DataLad
       run: |
         git config --global user.email "junifer-runner@github.com"
@@ -63,7 +52,7 @@ jobs:
       # Use the args we normally pass to sphinx-build, but run sphinx-multiversion
       # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
       run: |
-        git config --system --add safe.directory $(pwd)
+        git config --global --add safe.directory $(pwd)
         make -C docs/ html
         touch docs/_build/.nojekyll
         cp docs/redirect.html docs/_build/index.html

@@ -50,9 +50,9 @@ dependencies = [
     "templateflow>=23.0.0,<25.0.0",
     "lapy>=1.0.0,<2.0.0",
     "lazy_loader==0.4",
-    "importlib_metadata; python_version<'3.9'",
+    "importlib_metadata; python_version<'3.11'",
     "looseversion==1.3.0; python_version>='3.12'",
-    "junifer_data==1.3.0",
+    "junifer-data>=1.4.0",
     "structlog>=25.0.0,<26.0.0",
     "pydantic>=2.11.4",
     "aenum>=3.1.0,<3.2.0",
@@ -91,7 +91,7 @@ docs = [
     "sphinx-gallery>=0.17.0,<0.20.0",
     "furo>=2024.4.27,<2025.10.0",
     "numpydoc>=1.6.0,<=1.9.0",
-    "julearn==0.3.3",
+    "julearn==0.3.5",
     "sphinx-copybutton>=0.5.1,<0.5.3",
     "towncrier>=24.7.0,<=25.8.0",
     "sphinxcontrib-mermaid>=0.8.1,<=1.0.0",
@@ -230,9 +230,12 @@ addopts = [
     "-ra",
     "--strict-config",
     "--strict-markers",
-    "--ignore=junifer/external/h5io",
-    "--ignore=junifer/external/BrainPrint",
+    "--durations=0",
+    "--durations-min=0.1",
     "-vv",
+]
+markers = [
+    "external: requires resources outside the Python environment: testing datasets, junifer-data or AFNI / ANTs / FSL",
 ]
 
 [tool.towncrier]
@@ -305,3 +308,34 @@ exclude_lines = [
     "if __name__ == .__main__.:",
 ]
 precision = 2
+
+
+[dependency-groups]
+bct = ["bctpy==0.6.0"]
+onthefly = [
+    "bctpy==0.6.0"
+]
+neurokit2 = ["neurokit2>=0.1.7"]
+dev = [
+    "ipython>=8.39.0",
+    "pre-commit>=4.3.0",
+    "pytest>=9.0.3",
+    "ruff>=0.15.14",
+    "towncrier>=25.8.0",
+    "tox>=4.30.3",
+]
+docs = [
+    "seaborn>=0.13.0,<0.14.0",
+    "sphinx>=7.3.0,<8.4.0",
+    "sphinx-gallery>=0.17.0,<0.20.0",
+    "furo>=2024.4.27,<2025.10.0",
+    "numpydoc>=1.6.0,<=1.9.0",
+    "julearn==0.3.5",
+    "sphinx-copybutton>=0.5.1,<0.5.3",
+    "towncrier>=24.7.0,<=25.8.0",
+    "sphinxcontrib-mermaid>=0.8.1,<=1.0.0",
+    "sphinxcontrib-towncrier==0.5.0a0",
+    "setuptools-scm>=8",
+    "autodoc_pydantic>=2.0.0",
+    "enum-tools[sphinx]>=0.13.0,<0.14.0",
+]

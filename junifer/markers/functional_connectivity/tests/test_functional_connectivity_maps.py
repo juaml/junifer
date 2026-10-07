@@ -13,10 +13,14 @@ from numpy.testing import assert_array_almost_equal
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
 from junifer.data import MapsRegistry
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
+from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import FunctionalConnectivityMaps
 from junifer.storage import HDF5FeatureStorage
+from junifer.testing.datagrabbers import ADHDTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 if TYPE_CHECKING:
@@ -32,7 +36,6 @@ if TYPE_CHECKING:
 )
 def test_FunctionalConnectivityMaps(
     tmp_path: Path,
-    maps_datagrabber: PatternDataladDataGrabber,
     conn_method_params: dict[str, bool],
     cov_estimator: type["BaseEstimator"],
 ) -> None:
@@ -42,16 +45,14 @@ def test_FunctionalConnectivityMaps(
     ----------
     tmp_path : pathlib.Path
         The path to the test directory.
-    maps_datagrabber : PatternDataladDataGrabber
-        The testing PatternDataladDataGrabber, as fixture.
     conn_method_params : dict
         The parametrized parameters to connectivity measure method.
     cov_estimator : estimator object
         The parametrized covariance estimator.
 
     """
-    with maps_datagrabber as dg:
-        element = dg[("sub-01", "sub-001", "rest", "1")]
+    with ADHDTestingDataGrabber() as dg:
+        element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         # Setup marker
         marker = FunctionalConnectivityMaps(
