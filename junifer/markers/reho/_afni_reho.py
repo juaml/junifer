@@ -12,6 +12,7 @@ from typing import (
 )
 
 import nibabel as nib
+from nilearn import masking as nmask
 
 from ...pipeline import ExtDep, WorkDirManager
 from ...typing import ExternalDependencies
@@ -136,12 +137,26 @@ class AFNIReHo(metaclass=Singleton):
             prefix="afni_reho"
         )
 
+        niimg = nib.load(input_path)
+        # Calculate whole brain mask, same as JuniferReHo, so that
+        # neighbours outside the brain are excluded
+        brain_mask_path = element_tempdir / "brain_mask.nii.gz"
+        nib.save(
+            nmask.compute_brain_mask(
+                target_img=niimg,
+                threshold=0.5,
+                mask_type="whole-brain",
+            ),
+            brain_mask_path,
+        )
+
         # Set 3dReHo command
         reho_out_path_prefix = element_tempdir / "output"
         reho_cmd = [
             "3dReHo",
             f"-prefix {reho_out_path_prefix.resolve()}",
             f"-inset {input_path.resolve()}",
+            f"-mask {brain_mask_path.resolve()}",
         ]
         # Check ellipsoidal / cuboidal volume arguments
         if neigh_rad:
@@ -166,7 +181,6 @@ class AFNIReHo(metaclass=Singleton):
         run_ext_cmd(name="3dReHo", cmd=reho_cmd)
 
         # Read header to get output suffix
-        niimg = nib.load(input_path)
         header = niimg.header
         sform_code = header.get_sform(coded=True)[1]
         if sform_code == 4:

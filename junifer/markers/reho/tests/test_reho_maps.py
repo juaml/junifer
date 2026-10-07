@@ -129,4 +129,4 @@ def test_ReHoMaps_comparison(tmp_path: Path) -> None:
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )
-        assert r >= 0.2  # this is very bad, but they differ...
+        assert r >= 0.99

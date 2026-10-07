@@ -4,7 +4,6 @@
 # License: AGPL
 
 from functools import lru_cache
-from itertools import product
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -91,30 +90,14 @@ class JuniferReHo(metaclass=Singleton):
 
         # Get scan data
         niimg = nib.load(input_path)
-        niimg_data = niimg.get_fdata().copy()
+        niimg_data = niimg.get_fdata(caching="unchanged")
         # Get scan dimensions
-        n_x, n_y, n_z, _ = niimg_data.shape
+        n_x, n_y, n_z, n_t = niimg_data.shape
 
-        # Get rank of every voxel across time series
-        ranks_niimg_data = sp.stats.rankdata(niimg_data, axis=-1)
-
-        # Initialize 3D array to store tied rank correction for every voxel
-        tied_rank_corrections = np.zeros((n_x, n_y, n_z), dtype=np.float64)
-        # Calculate tied rank correction for every voxel
-        for i_x, i_y, i_z in product(range(n_x), range(n_y), range(n_z)):
-            # Calculate tied rank count for every voxel across time series
-            _, tie_count = np.unique(
-                ranks_niimg_data[i_x, i_y, i_z, :],
-                return_counts=True,
-            )
-            # Calculate and store tied rank correction for every voxel across
-            # timeseries
-            tied_rank_corrections[i_x, i_y, i_z] = np.sum(
-                tie_count**3 - tie_count
-            )
-
-        # Initialize 3D array to store reho map
-        reho_map = np.ones((n_x, n_y, n_z), dtype=np.float32)
+        # Get rank of every voxel across time series and tied rank correction
+        # for every voxel
+        ranks_niimg_data, tied_rank_corrections = _rank_with_ties(niimg_data)
+        del niimg_data
 
         # TODO(synchon): this will give incorrect results if
         # template doesn't match, hence needs to be changed
@@ -174,58 +157,53 @@ class JuniferReHo(metaclass=Singleton):
             start_idx = 2
             end_idx = 3
 
-        # Convert 0 / 1 array to bool
-        logical_mask_cluster = mask_cluster.astype(bool)
+        # Exclude voxels outside the brain from every neighbourhood
+        ranks_niimg_data[~logical_mni152_whole_brain_mask] = 0
+        tied_rank_corrections[~logical_mni152_whole_brain_mask] = 0
+        # Sum over the neighbourhood of every voxel: number of voxels in the
+        # brain, ranks per timepoint and tied rank corrections
+        n_neighbours = sp.ndimage.correlate(
+            logical_mni152_whole_brain_mask.astype(np.float64),
+            mask_cluster,
+            mode="constant",
+        )
+        neighbourhood_rank_sums = sp.ndimage.correlate(
+            ranks_niimg_data,
+            mask_cluster[..., np.newaxis],
+            mode="constant",
+        )
+        del ranks_niimg_data
+        neighbourhood_tied_rank_corrections = sp.ndimage.correlate(
+            tied_rank_corrections,
+            mask_cluster,
+            mode="constant",
+        )
+        # Calculate Kendall's coefficient of concordance (KCC)
+        np.square(neighbourhood_rank_sums, out=neighbourhood_rank_sums)
+        numerator = (12 * np.sum(neighbourhood_rank_sums, axis=-1)) - (
+            3 * n_neighbours**2 * n_t * (n_t + 1) ** 2
+        )
+        del neighbourhood_rank_sums
+        denominator = (n_neighbours**2 * n_t * (n_t**2 - 1)) - (
+            n_neighbours * neighbourhood_tied_rank_corrections
+        )
+        with np.errstate(divide="ignore", invalid="ignore"):
+            kcc = np.where(denominator == 0, 1.0, numerator / denominator)
 
-        for i, j, k in product(
-            range(start_idx, n_x - (end_idx - 1)),
-            range(start_idx, n_y - (end_idx - 1)),
-            range(start_idx, n_z - (end_idx - 1)),
-        ):
-            # Get mask only for neighbourhood
-            logical_neighbourhood_mni152_whole_brain_mask = (
-                logical_mni152_whole_brain_mask[
-                    i - start_idx : i + end_idx,
-                    j - start_idx : j + end_idx,
-                    k - start_idx : k + end_idx,
-                ]
-            )
-            # Perform logical AND to get neighbourhood mask;
-            # done to take care of brain boundaries
-            neighbourhood_mask = (
-                logical_mask_cluster
-                & logical_neighbourhood_mni152_whole_brain_mask
-            )
-            # Continue if voxel is restricted by mask
-            if neighbourhood_mask[1, 1, 1] == 0:
-                continue
+        # Only calculate for voxels in the brain that have a full
+        # neighbourhood within the volume
+        valid_voxels = np.zeros((n_x, n_y, n_z), dtype=bool)
+        valid_voxels[
+            start_idx : n_x - (end_idx - 1),
+            start_idx : n_y - (end_idx - 1),
+            start_idx : n_z - (end_idx - 1),
+        ] = True
+        valid_voxels &= logical_mni152_whole_brain_mask
 
-            # Get ranks for the neighbourhood
-            neighbourhood_ranks = ranks_niimg_data[
-                i - start_idx : i + end_idx,
-                j - start_idx : j + end_idx,
-                k - start_idx : k + end_idx,
-                :,
-            ]
-            # Get tied ranks corrections for the neighbourhood
-            neighbourhood_tied_ranks_corrections = tied_rank_corrections[
-                i - start_idx : i + end_idx,
-                j - start_idx : j + end_idx,
-                k - start_idx : k + end_idx,
-            ]
-            # Mask neighbourhood ranks
-            masked_neighbourhood_ranks = neighbourhood_ranks[
-                logical_mask_cluster, :
-            ]
-            # Mask tied ranks corrections for the neighbourhood
-            masked_tied_rank_corrections = (
-                neighbourhood_tied_ranks_corrections[logical_mask_cluster]
-            )
-            # Calculate KCC
-            reho_map[i, j, k] = _kendall_w_reho(
-                timeseries_ranks=masked_neighbourhood_ranks,
-                tied_rank_corrections=masked_tied_rank_corrections,
-            )
+        # Initialize 3D array to store reho map; voxels outside the brain mask
+        # stay at 0, same as AFNI's 3dReHo with -mask
+        reho_map = np.zeros((n_x, n_y, n_z), dtype=np.float32)
+        reho_map[valid_voxels] = kcc[valid_voxels]
 
         # Create new image like target image
         output_data = nimg.new_img_like(
@@ -247,38 +225,57 @@ class JuniferReHo(metaclass=Singleton):
         return output_data, output_path  # type: ignore
 
 
-def _kendall_w_reho(
-    timeseries_ranks: np.ndarray, tied_rank_corrections: np.ndarray
-) -> float:
-    """Calculate Kendall's coefficient of concordance (KCC) for ReHo map.
+def _rank_with_ties(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Rank data along the last axis and compute tied rank corrections.
 
-    ..note:: This function should only be used to calculate KCC for a ReHo map.
-             For general use, check out ``junifer.stats.kendall_w``.
+    Equivalent to ``scipy.stats.rankdata(data, axis=-1)`` (tied values get
+    their average rank), but sorting only once.
 
     Parameters
     ----------
-    timeseries_ranks : 2D numpy.ndarray
-        A matrix of ranks of a subset subject's brain voxels.
-    tied_rank_corrections : 3D numpy.ndarray
-        A 3D array consisting of the tied rank corrections for the ranks
-        of a subset subject's brain voxels.
+    data : numpy.ndarray
+        The data to rank along the last axis.
 
     Returns
     -------
-    float
-        Kendall's W (KCC) of the given timeseries matrix.
+    numpy.ndarray
+        The ranks of ``data`` along the last axis.
+    numpy.ndarray
+        The tied rank correction, the sum of ``t^3 - t`` over the groups of
+        ``t`` tied values, for every element along the last axis.
 
     """
-    m, n = timeseries_ranks.shape  # annotators X items
-
-    numerator = (12 * np.sum(np.square(np.sum(timeseries_ranks, axis=0)))) - (
-        3 * m**2 * n * (n + 1) ** 2
+    n = data.shape[-1]
+    sort_idx = np.argsort(data, axis=-1, kind="stable")
+    sorted_data = np.take_along_axis(data, sort_idx, axis=-1)
+    positions = np.arange(1, n + 1)
+    # Mark the first and last sample of every tie group in sorted order
+    is_first = np.ones(data.shape, dtype=bool)
+    is_first[..., 1:] = sorted_data[..., 1:] != sorted_data[..., :-1]
+    del sorted_data
+    is_last = np.ones(data.shape, dtype=bool)
+    is_last[..., :-1] = is_first[..., 1:]
+    # Min and max rank of the tie group of every sample in sorted order
+    min_ranks = np.maximum.accumulate(
+        np.where(is_first, positions, 0), axis=-1
     )
-    denominator = (m**2 * n * (n**2 - 1)) - (m * np.sum(tied_rank_corrections))
-
-    if denominator == 0:
-        kcc = 1.0
-    else:
-        kcc = numerator / denominator
-
-    return kcc
+    del is_first
+    max_ranks = np.flip(
+        np.minimum.accumulate(
+            np.flip(np.where(is_last, positions, n + 1), axis=-1), axis=-1
+        ),
+        axis=-1,
+    )
+    del is_last
+    # Every sample belongs to a tie group of size t = max - min + 1, and
+    # summing t^2 - 1 over the samples is the same as summing t^3 - t over
+    # the tie groups
+    tie_sizes = max_ranks - min_ranks + 1
+    tied_rank_corrections = np.sum(tie_sizes**2 - 1, axis=-1).astype(
+        np.float64
+    )
+    del tie_sizes
+    # Tied values get their average rank; put back in the original order
+    ranks = np.empty(data.shape, dtype=np.float64)
+    np.put_along_axis(ranks, sort_idx, (min_ranks + max_ranks) / 2, axis=-1)
+    return ranks, tied_rank_corrections

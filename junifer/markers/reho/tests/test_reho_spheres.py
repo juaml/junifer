@@ -128,4 +128,4 @@ def test_ReHoSpheres_comparison(tmp_path: Path) -> None:
             junifer_output_bold["data"].flatten(),
             afni_output_bold["data"].flatten(),
         )
-        assert r >= 0.8  # 0.8 is a loose threshold
+        assert r >= 0.99
