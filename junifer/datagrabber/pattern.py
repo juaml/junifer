@@ -358,8 +358,14 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
             ]
             if "pattern" in val:
                 t_dtype_patterns.append(val["pattern"])
+            # Count the replacements present in any of the patterns
             counts.append(
-                np.sum([x in t_dtype_patterns for x in self.replacements])
+                np.sum(
+                    [
+                        any(x in t_pattern for t_pattern in t_dtype_patterns)
+                        for x in self.replacements
+                    ]
+                )
             )
         return np.max(counts).astype(int)
 
@@ -434,7 +440,7 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                     # Do the intersection by filtering out elements in which
                     # the replacements are not None
                     if t_replacements == self.replacements:
-                        elements.intersection(types_element)
+                        elements = elements.intersection(types_element)
                     else:
                         t_repl_idx = [
                             i

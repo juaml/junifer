@@ -31,8 +31,9 @@ def _sanitize_names(names: list) -> list:
     """Make the VOI names safe to use as feature names.
 
     Spaces in the names are replaced with ``_`` and duplicated names get a
-    ``-{i}`` suffix, where ``i`` is the (1-based) occurrence of the name.
-    Non-string names are left untouched.
+    ``-{i}`` suffix, where ``i`` is the (1-based) occurrence of the name,
+    skipping suffixes that would clash with another name. Non-string names
+    are left untouched.
 
     Parameters
     ----------
@@ -42,17 +43,25 @@ def _sanitize_names(names: list) -> list:
     Returns
     -------
     list
-        The sanitized names of the VOIs.
+        The sanitized, unique names of the VOIs.
 
     """
     names = [x.replace(" ", "_") if isinstance(x, str) else x for x in names]
     counts = Counter(names)
-    seen: Counter = Counter()
+    # Unique names are kept, so suffixed names must not clash with them
+    used = {name for name in names if counts[name] == 1}
+    next_idx: Counter = Counter()
     out = []
     for name in names:
         if counts[name] > 1:
-            seen[name] += 1
-            out.append(f"{name}-{seen[name]}")
+            # Find the next suffix not in use
+            while True:
+                next_idx[name] += 1
+                new_name = f"{name}-{next_idx[name]}"
+                if new_name not in used:
+                    break
+            used.add(new_name)
+            out.append(new_name)
         else:
             out.append(name)
     return out

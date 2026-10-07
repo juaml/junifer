@@ -19,6 +19,8 @@ from junifer.data.coordinates._coordinates import _sanitize_names
             ["mid_insula-1", "mid_insula-2", "x"],
         ),
         ([1, 2, 3], [1, 2, 3]),
+        (["a", "a", "a-1"], ["a-2", "a-3", "a-1"]),
+        (["a-1", "a", "a"], ["a-1", "a-2", "a-3"]),
     ],
 )
 def test_sanitize_names(names: list, expected: list) -> None:

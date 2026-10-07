@@ -242,7 +242,7 @@ Now we have our 2 additional variables:
 
 .. code-block:: python
 
-    uri = " https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
+    uri = "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
     rootdir = "example_bids_ses"
 
 And we can create our DataGrabber:
