@@ -16,7 +16,7 @@ from junifer.data import (
     register_data,
 )
 from junifer.datareader import DefaultDataReader
-from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
+from junifer.testing.datagrabbers import UCLACNPVBMTestingDataGrabber
 
 
 pytestmark = pytest.mark.external
@@ -142,8 +142,8 @@ def test_load_nonexisting() -> None:
 def test_get() -> None:
     """Test tailored coordinates fetch."""
     reader = DefaultDataReader()
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element = dg["sub-10206"]
         element_data = reader.fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
         # Get tailored coordinates

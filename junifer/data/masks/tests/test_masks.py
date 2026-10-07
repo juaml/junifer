@@ -36,9 +36,9 @@ from junifer.data.masks._masks import (
 from junifer.datagrabber import DMCC13Benchmark
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -322,8 +322,8 @@ def test_ukb_error() -> None:
 
 def test_get() -> None:
     """Test tailored mask fetch."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
         mask = get_data(
@@ -357,8 +357,8 @@ def test_mask_callable() -> None:
         "func": ident,
         "space": "MNI152Lin",
     }
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         vbm_gm = element_data["VBM_GM"]
         vbm_gm_img = vbm_gm["data"]
         mask = MaskRegistry().get(masks="identity", target_data=vbm_gm)
@@ -370,8 +370,8 @@ def test_mask_callable() -> None:
 
 def test_get_errors() -> None:
     """Test passing wrong parameters to fetch mask."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         vbm_gm = element_data["VBM_GM"]
         # Test wrong masks definitions (more than one key per dict)
         with pytest.raises(ValueError, match=r"only one key"):

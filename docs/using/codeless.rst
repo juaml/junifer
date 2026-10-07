@@ -31,7 +31,7 @@ as well as some general parameters.
 
 As an example, we will generate the configuration file for a pipeline that will
 extract the mean ``VBM_GM`` values using two different parcellations and one set
-of coordinates, from the ``Oasis VBM Testing dataset`` included in ``junifer``.
+of coordinates, from the ``UCLA CNP VBM Testing dataset`` included in ``junifer``.
 
 
 General Parameters
@@ -96,12 +96,12 @@ task.
     kind: DataladAOMICPIOP1
     tasks: restingstate
 
-In the ``Oasis VBM Testing dataset`` example, the section will look like this:
+In the ``UCLA CNP VBM Testing dataset`` example, the section will look like this:
 
 .. code-block:: yaml
 
   datagrabber:
-    kind: OasisVBMTestingDataGrabber
+    kind: UCLACNPVBMTestingDataGrabber
 
 
 Data Reader
@@ -121,7 +121,7 @@ keys to pass parameters to the DataReader constructor:
       kind: DefaultDataReader
 
 
-For the ``Oasis VBM Testing dataset`` example, we will not specify a
+For the ``UCLA CNP VBM Testing dataset`` example, we will not specify a
 ``datareader`` step.
 
 Preprocess
@@ -149,7 +149,7 @@ need to specify its name as the ``kind`` key, as well as its parameters.
       standardize: true
 
 
-For the ``Oasis VBM Testing dataset`` example, we will not specify a
+For the ``UCLA CNP VBM Testing dataset`` example, we will not specify a
 preprocessing step.
 
 
@@ -160,7 +160,7 @@ The ``markers`` section like the ``preprocess`` section expects a list of
 markers. Each Marker has a name that we can use to refer to it later,
 and a set of parameters that will be passed to the Marker.
 
-For the ``Oasis VBM Testing dataset`` example, we want to compute the mean
+For the ``UCLA CNP VBM Testing dataset`` example, we want to compute the mean
 ``VBM_GM`` value for each parcel using the ``Schaefer parcellation (100 parcels,
 7 networks)``, ``Schaefer parcellation (200 parcels, 7 networks)``, and the
 ``DMNBuckner`` network, using ``5mm`` spheres. Thus, we will configure the
@@ -198,13 +198,13 @@ specify where we want to store the results:
 
     storage:
       kind: HDF5FeatureStorage
-      uri: /data/junifer/example/oasis_vbm_testing.hdf5
+      uri: /data/junifer/example/uclacnp_vbm_testing.hdf5
 
 
 Complete Example
 ----------------
 
-This is how the full ``Oasis VBM Testing dataset`` example configuration file
+This is how the full ``UCLA CNP VBM Testing dataset`` example configuration file
 looks like:
 
 .. code-block:: yaml
@@ -214,7 +214,7 @@ looks like:
   workdir: /tmp
 
   datagrabber:
-    kind: OasisVBMTestingDataGrabber
+    kind: UCLACNPVBMTestingDataGrabber
 
   markers:
     - name: Schaefer100x7_mean
@@ -233,4 +233,4 @@ looks like:
 
   storage:
     kind: HDF5FeatureStorage
-    uri: /data/junifer/example/oasis_vbm_testing.hdf5
+    uri: /data/junifer/example/uclacnp_vbm_testing.hdf5

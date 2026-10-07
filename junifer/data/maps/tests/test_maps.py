@@ -4,7 +4,7 @@
 # License: AGPL
 
 import pytest
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_array_almost_equal, assert_array_equal
 
 from junifer.data import (
     deregister_data,
@@ -138,8 +138,9 @@ def test_get() -> None:
         raw_maps, raw_labels, _, _ = load_data(
             kind="maps", name="Smith_rsn_10", target_space="MNI152NLin6Asym"
         )
-        # Tailored and raw shape should be same
-        assert tailored_maps.shape[:3] == raw_maps.shape[:3]
+        # Tailored maps are on the BOLD grid and keep all the raw maps
+        assert_array_almost_equal(tailored_maps.affine, bold_img.affine)
+        assert tailored_maps.shape[3] == raw_maps.shape[3]
         assert tailored_labels == raw_labels
 
 

@@ -21,7 +21,10 @@ from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.parcel_aggregation import ParcelAggregation
 from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
-from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
+from junifer.testing.datagrabbers import (
+    PartlyCloudyTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
+)
 
 
 pytestmark = pytest.mark.external
@@ -194,6 +197,39 @@ def test_ParcelAggregation_3D() -> None:
         assert parcel_agg_trim_mean_bold_data.ndim == 2
         assert parcel_agg_trim_mean_bold_data.shape[0] == 1
         assert_array_equal(parcel_agg_trim_mean_bold_data, manual)
+
+
+def test_ParcelAggregation_VBM() -> None:
+    """Test ParcelAggregation on VBM data in the parcellation space."""
+    parcellation = "TianxS1x3TxMNInonlinear2009cAsym"
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
+        vbm = element_data["VBM_GM"]
+        marker = ParcelAggregation(
+            parcellation=parcellation, method="mean", on=DataType.VBM_GM
+        )
+        parcel_agg_vbm_data = marker.fit_transform(element_data)["VBM_GM"][
+            "aggregation"
+        ]["data"]
+
+        # Same space and grid, so the parcellation is used as is
+        tailored, _ = ParcellationRegistry().get(
+            parcellations=[parcellation], target_data=vbm
+        )
+        raw, _, _, _ = ParcellationRegistry().load(
+            name=parcellation,
+            target_space=vbm["space"],
+            resolution=2,
+        )
+        assert_array_equal(tailored.affine, raw.affine)
+        assert_array_equal(tailored.get_fdata(), raw.get_fdata())
+
+        # Compare with nilearn
+        nifti_labels_masked_vbm = NiftiLabelsMasker(
+            labels_img=raw
+        ).fit_transform(vbm["data"])
+        assert parcel_agg_vbm_data.shape == (1, 16)
+        assert_array_almost_equal(nifti_labels_masked_vbm, parcel_agg_vbm_data)
 
 
 def test_ParcelAggregation_4D():

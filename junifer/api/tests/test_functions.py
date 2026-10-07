@@ -35,6 +35,8 @@ yaml.indent(mapping=2, sequence=4, offset=2)
 # Kept for parametrizing
 _datagrabber = {
     "kind": "PartlyCloudyTestingDataGrabber",
+    # Fewer subjects for faster tests
+    "n_subjects": 4,
 }
 _bids_ses_datagrabber = {
     "kind": "PatternDataladDataGrabber",
@@ -334,10 +336,13 @@ def test_run_and_collect(
     )
     # Get datagrabber
     dg = PipelineComponentRegistry().build_component_instance(
-        step="datagrabber", name=datagrabber["kind"], baseclass=BaseDataGrabber
+        step="datagrabber",
+        name=datagrabber["kind"],
+        baseclass=BaseDataGrabber,
+        init_params={k: v for k, v in datagrabber.items() if k != "kind"},
     )
     elements = dg.get_elements()  # type: ignore
-    # This should create 10 files
+    # This should create one file per element
     files = list(tmp_path.glob("*.sqlite"))
     assert len(files) == len(elements)
     # But the test.sqlite file should not exist

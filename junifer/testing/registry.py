@@ -10,6 +10,7 @@ from .datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -32,4 +33,9 @@ PipelineComponentRegistry().register(
 PipelineComponentRegistry().register(
     step="datagrabber",
     klass=ADHDTestingDataGrabber,
+)
+
+PipelineComponentRegistry().register(
+    step="datagrabber",
+    klass=UCLACNPVBMTestingDataGrabber,
 )

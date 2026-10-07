@@ -17,9 +17,9 @@ from junifer.datareader import DefaultDataReader
 from junifer.preprocess import Confounds, fMRIPrepConfoundRemover
 from junifer.testing import get_testing_data
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -341,8 +341,8 @@ def test_fMRIPrepConfoundRemover__validate_data() -> None:
         strategy={"wm_csf": Confounds.Full}
     )
     # Check correct data type
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         vbm = element_data["VBM_GM"]
         with pytest.raises(
             DimensionError, match=r"incompatible dimensionality"

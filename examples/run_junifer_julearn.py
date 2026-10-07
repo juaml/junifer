@@ -2,10 +2,10 @@
 Run junifer and julearn.
 ========================
 
-This example uses a SphereAggregation marker to compute the mean of spheres
-around the extended default mode network coordinates (16 ROIs) for a 3D nifti
-to extract some features for machine learning using julearn to predict some
-other data.
+This example uses a ParcelAggregation marker to compute the mean of each parcel
+of the Tian subcortical parcellation (scale II, 32 ROIs) for a 3D nifti to
+extract some features for machine learning using julearn to predict some other
+data.
 
 Authors: Leonard Sasse, Sami Hamdan, Nicolas Nieto, Synchon Mandal
 
@@ -14,13 +14,12 @@ License: BSD 3 clause
 
 import tempfile
 
-import nilearn
-import pandas as pd
 from julearn import run_cross_validation, PipelineCreator
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, run
 from junifer.storage import HDF5FeatureStorage
+from junifer.testing.datagrabbers import UCLACNPVBMTestingDataGrabber
 from junifer.utils import configure_logging
 
 
@@ -34,20 +33,16 @@ configure_logging(level="INFO")
 
 marker_dicts = [
     {
-        "name": "extDMN_TrimMean80",
-        "kind": "SphereAggregation",
-        "coords": "extDMN",
-        "radius": 5.0,
-        "masks": "compute_brain_mask",
+        "name": "TianxS2_TrimMean80",
+        "kind": "ParcelAggregation",
+        "parcellation": "TianxS2x3TxMNInonlinear2009cAsym",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
-        "name": "extDMN_Mean",
-        "kind": "SphereAggregation",
-        "coords": "extDMN",
-        "radius": 5.0,
-        "masks": "compute_brain_mask",
+        "name": "TianxS2_Mean",
+        "kind": "ParcelAggregation",
+        "parcellation": "TianxS2x3TxMNInonlinear2009cAsym",
         "method": "mean",
     },
 ]
@@ -60,15 +55,10 @@ confound = "sex"
 
 
 ###############################################################################
-# Load the VBM phenotype data for machine learning data:
-# - Fetch the Oasis dataset
-oasis_dataset = nilearn.datasets.fetch_oasis_vbm()
-age = oasis_dataset.ext_vars[y][:10]
-sex = (
-    pd.Series(oasis_dataset.ext_vars["mf"][:10])
-    .map(lambda x: 1 if x == "F" else 0)
-    .values
-)
+# Load the phenotype data of the UCLA CNP subjects (OpenNeuro ds000030) for
+# machine learning:
+with UCLACNPVBMTestingDataGrabber() as dg:
+    participants = dg.get_participants()
 
 
 ###############################################################################
@@ -78,7 +68,7 @@ with tempfile.TemporaryDirectory() as tmpdir:
     # run the defined junifer feature extraction pipeline
     run(
         workdir="/tmp",
-        datagrabber={"kind": "OasisVBMTestingDataGrabber"},
+        datagrabber={"kind": "UCLACNPVBMTestingDataGrabber"},
         markers=marker_dicts,
         storage=storage,
     )
@@ -88,17 +78,19 @@ with tempfile.TemporaryDirectory() as tmpdir:
     collect(storage)
     db = HDF5FeatureStorage(uri=storage["uri"])
 
-    df_vbm = db.read_df(feature_name="VBM_GM_extDMN_Mean_aggregation")
-    oasis_subjects = [x[0] for x in df_vbm.index]
-    df_vbm.index = oasis_subjects
+    df_vbm = db.read_df(feature_name="VBM_GM_TianxS2_Mean_aggregation")
+    df_vbm.index = [x[0] for x in df_vbm.index]
 
 
 ###############################################################################
 # Using julearn for machine learning:
 # We predict the age given our vbm features and sex as a confound.
 X = list(df_vbm.columns)
-df_vbm[y] = age
-df_vbm[confound] = sex
+# Match the phenotypes to the subjects by their identifier
+df_vbm[y] = participants.loc[df_vbm.index, "age"].to_numpy()
+df_vbm[confound] = (
+    participants.loc[df_vbm.index, "gender"] == "F"
+).to_numpy(dtype=int)
 
 X_types = {
     "features": X,

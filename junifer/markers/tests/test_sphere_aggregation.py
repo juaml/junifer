@@ -16,8 +16,8 @@ from junifer.datareader import DefaultDataReader
 from junifer.markers.sphere_aggregation import SphereAggregation
 from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -92,8 +92,8 @@ def test_SphereAggregation_input_output(
 
 def test_SphereAggregation_3D() -> None:
     """Test SphereAggregation object on 3D images."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         # Create SphereAggregation object
         marker = SphereAggregation(
             coords=COORDS, method="mean", radius=RADIUS, on=[DataType.VBM_GM]
@@ -164,8 +164,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
     """
     # Store 3D
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         storage = SQLiteFeatureStorage(
             uri=tmp_path / "test_sphere_storage_3D.sqlite",
             upsert=Upsert.Ignore,
@@ -200,8 +200,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
 
 def test_SphereAggregation_3D_mask() -> None:
     """Test SphereAggregation object on 3D images using mask."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element_data = DefaultDataReader().fit_transform(dg["sub-01"])
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
         # Create SphereAggregation object
         marker = SphereAggregation(
             coords=COORDS,

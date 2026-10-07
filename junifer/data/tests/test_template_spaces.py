@@ -12,8 +12,8 @@ import pytest
 from junifer.data import get_template, get_xfm
 from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import (
-    OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -73,8 +73,8 @@ def test_get_template(template_type: str) -> None:
 
 def test_get_template_invalid_space() -> None:
     """Test invalid space check for template fetch."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element = dg["sub-10206"]
         element_data = DefaultDataReader().fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
         # Get tailored parcellation
@@ -84,8 +84,8 @@ def test_get_template_invalid_space() -> None:
 
 def test_get_template_invalid_template_type() -> None:
     """Test invalid template type check for template fetch."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element = dg["sub-10206"]
         element_data = DefaultDataReader().fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
         # Get tailored parcellation
@@ -99,8 +99,8 @@ def test_get_template_invalid_template_type() -> None:
 
 def test_get_template_closest_resolution() -> None:
     """Test closest resolution check for template fetch."""
-    with OasisVBMTestingDataGrabber() as dg:
-        element = dg["sub-01"]
+    with UCLACNPVBMTestingDataGrabber() as dg:
+        element = dg["sub-10206"]
         element_data = DefaultDataReader().fit_transform(element)
         vbm_gm = element_data["VBM_GM"]
         # Change header resolution to fetch closest resolution
