@@ -5,17 +5,7 @@ on:
     # Branches are tested through their pull requests
     branches:
       - main
-    paths:
-      - 'junifer/**'
-      - '.github/workflows/**'
-      - 'tox.ini'
-      - 'pyproject.toml'
   pull_request:
-    paths:
-      - 'junifer/**'
-      - '.github/workflows/**'
-      - 'tox.ini'
-      - 'pyproject.toml'
   workflow_dispatch: {}
 
 # Cancel superseded runs of the same branch / PR, except on main
@@ -24,8 +14,36 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
+  # Check whether the library changed, to skip the tests otherwise
+  # (e.g. on docs-only changes)
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        if: github.event_name != 'pull_request'
+      - name: Check for library changes
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            code:
+              - 'junifer/**'
+              - '.github/workflows/ci.yml'
+              - 'tox.ini'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'codecov.yml'
+
   # Tests that need testing datasets, junifer-data or AFNI / ANTs / FSL
   run-tests-external:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: [self-hosted, linux, x64, data-v7]
     strategy:
       fail-fast: false
@@ -79,6 +97,8 @@ jobs:
 
   # All the other tests
   run-tests:
+    needs: changes
+    if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -115,3 +135,19 @@ jobs:
           fail_ci_if_error: true
           flags: junifer
         if: success() && matrix.python-version == '3.13'
+
+  # Single status to require in branch protection: passes when the tests
+  # passed or were skipped because the library did not change
+  tests:
+    needs: [changes, run-tests-external, run-tests]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check test results
+        if: >-
+          contains(needs.*.result, 'failure') ||
+          contains(needs.*.result, 'cancelled')
+        run: |
+          echo "Some test jobs failed or were cancelled"
+          exit 1
+      - run: echo "Tests passed or were not needed"
