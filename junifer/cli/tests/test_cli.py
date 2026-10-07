@@ -23,6 +23,9 @@ from junifer.cli.cli import (
 from junifer.cli.parser import _parse_elements_file
 
 
+pytestmark = pytest.mark.external
+
+
 # Configure YAML class
 yaml = YAML()
 yaml.default_flow_style = False

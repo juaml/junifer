@@ -12,6 +12,9 @@ from junifer.preprocess import TemporalSlicer
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "start, stop, duration, t_r, expected_dim, expect",
     (

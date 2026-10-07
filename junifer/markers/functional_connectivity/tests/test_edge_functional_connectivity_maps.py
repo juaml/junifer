@@ -14,6 +14,9 @@ from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "conn_method_params",
     [

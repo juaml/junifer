@@ -10,6 +10,9 @@ from junifer.preprocess import TemporalFilter
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "detrend, standardize, low_pass, high_pass, t_r, masks",
     (

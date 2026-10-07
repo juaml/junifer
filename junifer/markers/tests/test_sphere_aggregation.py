@@ -21,6 +21,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 # Define common variables
 COORDS = "DMNBuckner"
 RADIUS = 8

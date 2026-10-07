@@ -22,6 +22,9 @@ from junifer.pipeline import PipelineComponentRegistry
 from junifer.typing import Elements
 
 
+pytestmark = pytest.mark.external
+
+
 # Configure YAML class
 yaml = YAML()
 yaml.default_flow_style = False

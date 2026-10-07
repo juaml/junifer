@@ -5,11 +5,16 @@
 
 from pathlib import Path
 
+import pytest
+
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import TemporalSNRMaps
 from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 def test_TemporalSNRMaps_computation() -> None:

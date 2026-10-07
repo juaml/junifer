@@ -42,6 +42,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "mask_type, threshold",
     [

@@ -20,6 +20,9 @@ from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 if TYPE_CHECKING:
     from sklearn.base import BaseEstimator
 

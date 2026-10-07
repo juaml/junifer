@@ -22,6 +22,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 def test_register_built_in_check() -> None:
     """Test maps registration check for built-in maps."""
     with pytest.raises(ValueError, match=r"built-in"):

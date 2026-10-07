@@ -16,7 +16,8 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  run-tests:
+  # Tests that need testing datasets, junifer-data or AFNI / ANTs / FSL
+  run-tests-external:
     runs-on: [self-hosted, linux, x64, data-v7]
     strategy:
       fail-fast: false
@@ -58,7 +59,46 @@ jobs:
         # https://github.com/actions/checkout/issues/1169#issuecomment-2291682583
         run: |
           git config --global --add safe.directory $(pwd)
-          tox
+          tox -- -m external
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          flags: junifer
+        if: success() && matrix.python-version == '3.13'
+
+  # All the other tests
+  run-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: true
+      - name: Install git-annex
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-annex
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install tox tox-gh-actions
+      - name: Configure Git for DataLad
+        run: |
+          git config --global user.email "junifer-runner@github.com"
+          git config --global user.name "GitHub Runner"
+      - name: Test with tox
+        run: |
+          tox -- -m "not external"
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
         with:

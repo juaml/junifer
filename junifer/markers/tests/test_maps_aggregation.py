@@ -19,6 +19,9 @@ from junifer.storage import HDF5FeatureStorage, StorageType
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "input_type, storage_type",
     [

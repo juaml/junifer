@@ -3,7 +3,12 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import pytest
+
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 def test_ADHDTestingDataGrabber() -> None:

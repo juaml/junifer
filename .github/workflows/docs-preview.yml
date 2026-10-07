@@ -17,31 +17,19 @@ concurrency: preview-${{ github.ref }}
 
 jobs:
   build-docs:
-    # https://github.com/actions/setup-python/issues/1013#issuecomment-2642078401
-    runs-on: ubuntu-22.04
+    runs-on: [self-hosted, linux, x64, data-v7]
     permissions:
       # Needed for preview deploy
       pull-requests: write
       contents: write
-    # Use custom docs CI image
-    container: ghcr.io/juaml/junifer-docs:main
     steps:
     - name: Check ANTs
       run: |
         echo "Using ANTs : $(antsRegistration --version)"
-    - name: Install system dependencies
-      # actions/checkout fails to identify Git as it's not in the CI image
+    - name: Check tooling
       run: |
-        apt-get -qq update
-        apt-get -qq install -y \
-        git \
-        git-annex \
-        make \
-        jq
-    - name: Copy junifer-data directory
-      run: |
-        mkdir -p $HOME/junifer_data/v7
-        cp -ar /root/junifer_data/v7/. $HOME/junifer_data/v7/
+        which make git-annex jq
+        ls -d "$HOME"/junifer_data/v7
     - name: Checkout repository
       uses: actions/checkout@v7
       with:

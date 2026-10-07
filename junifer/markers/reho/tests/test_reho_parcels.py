@@ -20,6 +20,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 def test_ReHoParcels(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
     """Test ReHoParcels.
 

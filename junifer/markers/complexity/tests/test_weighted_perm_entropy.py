@@ -21,6 +21,9 @@ from junifer.testing.datagrabbers import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 # Set parcellation
 PARCELLATION = "TianxS1x3TxMNInonlinear2009cAsym"
 

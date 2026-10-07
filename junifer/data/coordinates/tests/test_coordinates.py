@@ -19,6 +19,9 @@ from junifer.datareader import DefaultDataReader
 from junifer.testing.datagrabbers import OasisVBMTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 def test_register_built_in_check() -> None:
     """Test coordinates registration check for built-in coordinates."""
     with pytest.raises(ValueError, match=r"built-in"):

@@ -13,6 +13,9 @@ from pandas.testing import assert_frame_equal
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 def test_PartlyCloudyTestingDataGrabber() -> None:
     """Test PartlyCloudyTestingDataGrabber."""
     expected_elements = [

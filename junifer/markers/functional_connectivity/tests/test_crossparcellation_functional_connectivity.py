@@ -17,6 +17,9 @@ from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 parcellation_one = "Shen_2013_50"
 parcellation_two = "Shen_2013_100"
 

@@ -18,6 +18,9 @@ from junifer.typing import (
 )
 
 
+pytestmark = pytest.mark.external
+
+
 def test_PipelineStepMixin_correct_dependencies() -> None:
     """Test fit-transform with correct dependencies."""
 

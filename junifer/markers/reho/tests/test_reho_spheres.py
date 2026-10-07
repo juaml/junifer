@@ -18,6 +18,9 @@ from junifer.storage import SQLiteFeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 COORDINATES = "DMNBuckner"
 
 

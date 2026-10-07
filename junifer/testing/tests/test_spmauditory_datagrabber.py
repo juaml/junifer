@@ -4,8 +4,12 @@
 # License: AGPL
 
 import nibabel as nib
+import pytest
 
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
+
+
+pytestmark = pytest.mark.external
 
 
 def test_SPMAuditoryTestingDataGrabber() -> None:

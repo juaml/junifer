@@ -15,6 +15,9 @@ from junifer.storage import SQLiteFeatureStorage, Upsert
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "conn_method_params",
     [

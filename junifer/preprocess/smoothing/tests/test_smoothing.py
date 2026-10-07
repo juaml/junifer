@@ -11,6 +11,9 @@ from junifer.preprocess import Smoothing, SmoothingImpl
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 @pytest.mark.parametrize(
     "data_type",
     ["T1w", "BOLD"],

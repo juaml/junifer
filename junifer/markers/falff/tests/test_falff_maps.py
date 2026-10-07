@@ -18,6 +18,9 @@ from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import ADHDTestingDataGrabber
 
 
+pytestmark = pytest.mark.external
+
+
 MAPS = "Smith_rsn_10"
 
 
