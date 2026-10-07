@@ -4,6 +4,11 @@ on:
   - push
   - pull_request
 
+# Cancel superseded runs of the same branch / PR, except on main
+concurrency:
+  group: lint-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest

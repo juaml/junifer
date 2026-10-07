@@ -15,6 +15,11 @@ on:
       - 'pyproject.toml'
   workflow_dispatch: {}
 
+# Cancel superseded runs of the same branch / PR, except on main
+concurrency:
+  group: tests-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   # Tests that need testing datasets, junifer-data or AFNI / ANTs / FSL
   run-tests-external:
