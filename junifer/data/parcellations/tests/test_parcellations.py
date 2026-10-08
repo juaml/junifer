@@ -7,6 +7,7 @@
 
 from pathlib import Path
 
+import nibabel as nib
 import numpy as np
 import pytest
 from nilearn.image import new_img_like, resample_to_img
@@ -19,7 +20,10 @@ from junifer.data import (
     load_data,
     register_data,
 )
-from junifer.data.parcellations import merge_parcellations
+from junifer.data.parcellations import (
+    ParcellationRegistry,
+    merge_parcellations,
+)
 from junifer.data.parcellations._parcellations import (
     _retrieve_aicha,
     _retrieve_brainnetome,
@@ -1033,6 +1037,120 @@ def test_retrieve_julich_brain_incorrect_version() -> None:
         _retrieve_julich_brain(
             version="v0",
         )
+
+
+# Parcellations whose labels are only numbers
+NUMBERED_PARCELLATIONS = ("Shen_2015_268", "Shen_2019_368")
+
+
+@pytest.mark.parametrize("name", ParcellationRegistry().list)
+def test_built_in_labels(name: str) -> None:
+    """Test built-in parcellations have one unique label per region.
+
+    Parameters
+    ----------
+    name : str
+        The parametrized parcellation name.
+
+    """
+    space = ParcellationRegistry()._registry[name]["space"]
+    img, labels, _, _ = load_data(
+        kind="parcellation",
+        name=name,
+        target_space=space,
+        # Lower resolution to make it faster; Shen 2019 is only in 1mm
+        resolution=1 if name == "Shen_2019_368" else 2,
+    )
+    values = np.unique(np.asarray(img.dataobj))
+    assert len(labels) == np.count_nonzero(values)
+    assert len(set(labels)) == len(labels)
+    if name not in NUMBERED_PARCELLATIONS:
+        assert all(isinstance(x, str) and x for x in labels)
+
+
+@pytest.mark.parametrize(
+    "name, value, label",
+    [
+        # Labels are read from look-up tables
+        ("Yan100xYeo7", 1, "7networks_LH_Default_FPole"),
+        ("Yan1000xKong17", 1000, "17networks_RH_VisualA_TempOcc_8"),
+        # The label file is sorted by name, not by value
+        ("Shen_2013_100", 1, "R.BA40.3"),
+        ("Shen_2013_150", 1, "R.BA6.9"),
+        # Repeated names are numbered
+        ("Shen_2013_50", 1, "No_BA_region-1"),
+        # Odd values are in the left hemisphere, even in the right one
+        ("Brainnetome_thr0", 1, "SFG_L_7_1"),
+        ("Brainnetome_thr0", 2, "SFG_R_7_1"),
+        ("Brainnetome_thr0", 246, "Tha_R_8_8"),
+        # Labels are the region names, ordered by value
+        ("Julich-Brain_V1_18", 1, "Area 45 (IFG) right"),
+        ("Julich-Brain_V3_0_3", 1, "Area 45 (IFG) left"),
+    ],
+)
+def test_labels_by_value(name: str, value: int, label: str) -> None:
+    """Test built-in parcellation labels match their values.
+
+    Parameters
+    ----------
+    name : str
+        The parametrized parcellation name.
+    value : int
+        The parametrized value of the region in the parcellation.
+    label : str
+        The parametrized expected label of the region.
+
+    """
+    space = ParcellationRegistry()._registry[name]["space"]
+    img, labels, _, _ = load_data(
+        kind="parcellation",
+        name=name,
+        target_space=space,
+    )
+    # Labels are in the order of the (sorted) values in the image
+    values = np.unique(np.asarray(img.dataobj).astype(int))
+    values = values[values != 0].tolist()
+    assert labels[values.index(value)] == label
+
+
+def test_get_lost_regions(tmp_path: Path) -> None:
+    """Test regions lost in resampling keep their labels.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    data = np.zeros((12, 12, 12), dtype=np.int16)
+    data[:6] = 1
+    # A single voxel, not sampled by the 3mm grid (voxels 0, 3, 6 and 9)
+    data[7, 7, 7] = 2
+    data[8:] = 3
+    parcellation_path = tmp_path / "lost.nii.gz"
+    nib.save(nib.Nifti1Image(data, np.eye(4)), parcellation_path)
+    register_data(
+        kind="parcellation",
+        name="LostRegion",
+        parcellation_path=parcellation_path,
+        parcels_labels=["a", "b", "c"],
+        space="MNI152NLin6Asym",
+    )
+    target = {
+        "data": nib.Nifti1Image(
+            np.zeros((4, 4, 4)), np.diag([3.0, 3.0, 3.0, 1.0])
+        ),
+        "space": "MNI152NLin6Asym",
+    }
+    with pytest.warns(RuntimeWarning, match=r"1 region\(s\) .* \['b'\]"):
+        img, labels = get_data(
+            kind="parcellation", names="LostRegion", target_data=target
+        )
+    deregister_data(kind="parcellation", name="LostRegion")
+    # The lost region is not in the image but keeps its label, and the
+    # following region keeps its own label
+    assert 2 not in np.unique(img.get_fdata())
+    assert labels == {1: "a", 2: "b", 3: "c"}
 
 
 def test_merge_parcellations() -> None:

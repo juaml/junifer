@@ -26,10 +26,10 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="data")
 
 # junifer-data version constant
-JUNIFER_DATA_VERSION = "7"
+JUNIFER_DATA_VERSION = "8"
 
 # junifer-data hexsha constant
-JUNIFER_DATA_HEXSHA = "f5144e6fef7d6f4f26508c3653d94a622f10207c"
+JUNIFER_DATA_HEXSHA = "c03636438bb1345299c7b79bd6428e25035102c5"
 
 JUNIFER_DATA_PARAMS = {
     "tag": JUNIFER_DATA_VERSION,
