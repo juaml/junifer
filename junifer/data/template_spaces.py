@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import re
 from functools import cache
 from pathlib import Path
 from typing import Any, Union
@@ -68,6 +69,45 @@ def get_xfm(src: SpaceLike, dst: SpaceLike) -> Path:  # pragma: no cover
     )
 
 
+def _get_template_resolutions(
+    space: str, entities: dict[str, str | None]
+) -> dict[int, float]:
+    """Get the resolutions of a template that have the given files.
+
+    Not every resolution of a template has every file (e.g., in
+    templateflow 25, MNI152NLin2009cAsym lists resolutions 3 and 4, but has
+    no brain mask for them), and the resolution index is not the voxel size
+    (e.g., resolution 3 of MNI152NLin6Asym is 0.5mm).
+
+    Parameters
+    ----------
+    space : str
+        The name of the template space.
+    entities : dict
+        The templateflow entities of the files (e.g., ``suffix``).
+
+    Returns
+    -------
+    dict
+        The voxel size (in mm) of each resolution index with files.
+
+    """
+    # The voxel size of each resolution index. Indices are compared as
+    # integers, as file names can use "1" while metadata uses "01"
+    voxel_sizes = {
+        int(index): float(min(info["zooms"]))
+        for index, info in tflow.get_metadata(space)["res"].items()
+    }
+    # List the files without downloading them and keep their resolutions
+    resolutions = {}
+    for path in tflow.ls(space, extension="nii.gz", **entities):
+        match = re.search(r"_res-(\d+)_", Path(path).name)
+        if match is not None and int(match.group(1)) in voxel_sizes:
+            index = int(match.group(1))
+            resolutions[index] = voxel_sizes[index]
+    return resolutions
+
+
 def get_template(
     space: SpaceLike,
     target_img: nib.Nifti1Image,
@@ -90,9 +130,9 @@ def get_template(
     template_type : {"T1w", "brain", "gm", "wm", "csf"}, optional
         The template type to retrieve (default "T1w").
     resolution : int or "highest", optional
-        The resolution of the template to fetch. If None, the closest
-        resolution to the target image is used (default None). If "highest",
-        the highest resolution is used.
+        The resolution (voxel size in mm) of the template to fetch. If None,
+        the closest resolution to the target image is used (default None).
+        If "highest", the highest resolution is used.
 
     Returns
     -------
@@ -123,60 +163,61 @@ def get_template(
             "Invalid resolution value. Must be an integer or 'highest'"
         )
 
-    # Fetch available resolutions for the template
-    available_resolutions = [
-        int(min(val["zooms"]))
-        for val in tflow.get_metadata(space)["res"].values()
+    # Get the templateflow entities of the template type
+    if template_type == "T1w":
+        entities = {"suffix": "T1w", "desc": None, "label": None}
+    elif template_type == "brain":
+        entities = {"suffix": "mask", "desc": "brain", "label": None}
+    else:
+        entities = {
+            "suffix": "probseg",
+            "desc": None,
+            "label": template_type.upper(),
+        }
+
+    # Get the resolutions that have the template type
+    resolutions = _get_template_resolutions(space, entities)
+    if not resolutions:
+        raise_error(
+            msg=f"Template {space} ({template_type}) not found",
+            klass=RuntimeError,
+        )
+
+    # Get the desired voxel size; None means the highest resolution
+    if resolution == "highest":
+        desired_voxel_size = None
+    elif resolution is None:
+        desired_voxel_size = float(np.min(target_img.header.get_zooms()[:3]))
+    else:
+        desired_voxel_size = resolution
+
+    # Use the closest voxel size if the desired one is not available
+    voxel_size = closest_resolution(
+        desired_voxel_size, list(resolutions.values())
+    )
+    # Get the resolution index of that voxel size
+    res_index = {size: index for index, size in resolutions.items()}[
+        voxel_size
     ]
-
-    # Get the min of the voxels sizes and use it as the resolution
-    if resolution is None:
-        resolution = np.min(target_img.header.get_zooms()[:3]).astype(int)
-    elif resolution == "highest":
-        resolution = 0
-
-    # Use the closest resolution if desired resolution is not found
-    resolution = closest_resolution(resolution, available_resolutions)
 
     logger.info(
         f"Downloading template {space} ({template_type} in "
-        f"resolution {resolution})"
+        f"resolution {voxel_size}mm)"
     )
     # Retrieve template
     try:
-        suffix = None
-        desc = None
-        label = None
-        if template_type == "T1w":
-            suffix = template_type
-            desc = None
-            label = None
-        elif template_type == "brain":
-            suffix = "mask"
-            desc = "brain"
-            label = None
-        elif template_type in ["gm", "wm", "csf"]:
-            suffix = "probseg"
-            desc = None
-            label = template_type.upper()
-        # Set kwargs for fetching
-        kwargs = {
-            "suffix": suffix,
-            "desc": desc,
-            "label": label,
-        }
         template_path = tflow.get(
             space,
             raise_empty=True,
-            resolution=resolution,
+            resolution=res_index,
             extension="nii.gz",
-            **kwargs,
+            **entities,
         )
     except Exception:  # noqa: BLE001
         raise_error(
             msg=(
                 f"Template {space} ({template_type}) with resolution "
-                f"{resolution}) not found"
+                f"{voxel_size}mm not found"
             ),
             klass=RuntimeError,
         )
