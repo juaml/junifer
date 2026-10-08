@@ -116,7 +116,10 @@ class RSSETSMarker(BaseMarker):
         # Compute the RSS of edgewise timeseries, only using the edges with
         # data (e.g. regions lost in resampling have none)
         edge_ts = edge_ts[:, _has_data(edge_ts)]
-        rss = np.sum(edge_ts**2, 1) ** 0.5
+        if edge_ts.shape[1] > 0:
+            rss = np.sum(edge_ts**2, 1) ** 0.5
+        else:
+            rss = np.full(edge_ts.shape[0], np.nan)
 
         return {
             "rss_ets": {

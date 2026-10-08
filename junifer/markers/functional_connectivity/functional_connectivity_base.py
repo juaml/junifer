@@ -147,9 +147,10 @@ class FunctionalConnectivityBase(BaseMarker):
         data = aggregation["aggregation"]["data"]
         has_data = _has_data(data)
         conn = np.full((data.shape[1], data.shape[1]), np.nan)
-        conn[np.ix_(has_data, has_data)] = connectivity.fit_transform(
-            [data[:, has_data]]
-        )[0]
+        if has_data.any():
+            conn[np.ix_(has_data, has_data)] = connectivity.fit_transform(
+                [data[:, has_data]]
+            )[0]
         # Create dictionary for output
         labels = aggregation["aggregation"]["col_names"]
         return {

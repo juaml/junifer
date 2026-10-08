@@ -120,7 +120,10 @@ class ComplexityBase(BaseMarker):
         data = parcel_aggregation["aggregation"]["data"]
         has_data = _has_data(data)
         complexity = np.full((1, data.shape[1]), np.nan)
-        complexity[:, has_data] = self.compute_complexity(data[:, has_data])
+        if has_data.any():
+            complexity[:, has_data] = self.compute_complexity(
+                data[:, has_data]
+            )
         return {
             "complexity": {
                 "data": complexity,
