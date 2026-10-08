@@ -183,7 +183,7 @@ def test_MapsAggregation_storage(tmp_path: Path) -> None:
         element = dg["sub-01"]
         element_data = DefaultDataReader().fit_transform(element)
         storage = HDF5FeatureStorage(
-            uri=tmp_path / "test_maps_storage_4D.sqlite"
+            uri=tmp_path / "test_maps_storage_4D.hdf5"
         )
         marker = MapsAggregation(
             maps="Smith_rsn_10",

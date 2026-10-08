@@ -20,7 +20,7 @@ from junifer.datareader import DefaultDataReader
 from junifer.markers import (
     FunctionalConnectivityParcels,
 )
-from junifer.storage import SQLiteFeatureStorage, Upsert
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -105,8 +105,8 @@ def test_FunctionalConnectivityParcels(
         )
 
         # Store
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_fc_parcels.sqlite", upsert=Upsert.Ignore
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_fc_parcels.hdf5",
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()

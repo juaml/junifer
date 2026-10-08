@@ -14,7 +14,7 @@ from junifer.datagrabber.pattern import PatternDataGrabber
 from junifer.pipeline.pipeline_component_registry import (
     PipelineComponentRegistry,
 )
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 
 
 def test_pipeline_component_registry_singleton() -> None:
@@ -56,7 +56,7 @@ def test_pipeline_component_registry_components():
     "step, klass",
     [
         ("datagrabber", PatternDataGrabber),
-        ("storage", SQLiteFeatureStorage),
+        ("storage", HDF5FeatureStorage),
     ],
 )
 def test_pipeline_component_registry_register(
@@ -85,7 +85,7 @@ def test_pipeline_component_registry_register(
     "step, klass",
     [
         ("datagrabber", PatternDataGrabber),
-        ("storage", SQLiteFeatureStorage),
+        ("storage", HDF5FeatureStorage),
     ],
 )
 def test_pipeline_component_registry_deregister(
@@ -103,11 +103,16 @@ def test_pipeline_component_registry_deregister(
         The parametrized name of the class.
 
     """
-    with caplog.at_level(logging.INFO):
-        # Register
-        PipelineComponentRegistry().deregister(step=step, klass=klass)
-        # Check logging message
-        assert "De-registering" in caplog.text
+    registry = PipelineComponentRegistry()
+    try:
+        with caplog.at_level(logging.INFO):
+            registry.deregister(step=step, klass=klass)
+            # Check logging message
+            assert "De-registering" in caplog.text
+        assert klass.__name__ not in registry.step_components(step)
+    finally:
+        # Register again, as the registry is shared by all the tests
+        registry.register(step=step, klass=klass)
 
 
 def test_pipeline_component_registry_step_components() -> None:

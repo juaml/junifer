@@ -11,7 +11,7 @@ import pytest
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import EdgeCentricFCSpheres
-from junifer.storage import SQLiteFeatureStorage, Upsert
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
@@ -69,8 +69,8 @@ def test_EdgeCentricFCSpheres(
         assert len(set(edge_fc_bold["col_names"])) == n_edges
 
         # Store
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_edge_fc_spheres.sqlite", upsert=Upsert.Ignore
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_edge_fc_spheres.hdf5",
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()

@@ -15,7 +15,7 @@ pytest.importorskip("neurokit2")
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.complexity import SampleEntropy
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import (
     PartlyCloudyTestingDataGrabber,
 )
@@ -83,6 +83,6 @@ def test_store(element_data: dict, tmp_path: Path) -> None:
     # Initialize the marker
     marker = SampleEntropy(parcellation=PARCELLATION)
     # Create storage
-    storage = SQLiteFeatureStorage(uri=tmp_path / "test_sample_entropy.sqlite")
+    storage = HDF5FeatureStorage(uri=tmp_path / "test_sample_entropy.hdf5")
     # Compute the marker and store
     marker.fit_transform(input=element_data, storage=storage)

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import pytest
-from numpy.testing import assert_array_equal
+from numpy.testing import assert_allclose, assert_array_equal
 
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
@@ -16,7 +16,7 @@ from junifer.markers import FunctionalConnectivityParcels, ParcelAggregation
 from junifer.markers.base import BaseMarker
 from junifer.pipeline import MarkerCollection, PipelineStepMixin
 from junifer.preprocess import fMRIPrepConfoundRemover
-from junifer.storage import SQLiteFeatureStorage, StorageType
+from junifer.storage import HDF5FeatureStorage, StorageType
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -152,7 +152,7 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    storage = SQLiteFeatureStorage(uri=tmp_path / "features.sqlite")
+    storage = HDF5FeatureStorage(uri=tmp_path / "features.hdf5")
     mc = MarkerCollection(markers=_markers(), storage=storage)  # type: ignore
     assert mc._storage is storage
     # Nothing is returned when storing
@@ -169,8 +169,11 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         name = name.removesuffix("_aggregation")
         aggregation = out[name]["BOLD"]["aggregation"]
         stored = storage.read_df(feature_md5=md5)
-        assert_array_equal(
-            stored[aggregation["col_names"]].to_numpy(), aggregation["data"]
+        # The storage casts to float32
+        assert_allclose(
+            stored[aggregation["col_names"]].to_numpy(),
+            aggregation["data"],
+            rtol=1e-6,
         )
 
 

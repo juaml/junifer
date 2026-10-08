@@ -21,7 +21,7 @@ The :ref:`Markers <marker>` are responsible for mapping the input
 :ref:`data type <data_types>` to its output :ref:`storage type <storage_types>`
 as shown :ref:`here <extending_markers_input_output>`.
 The storage object in turn declares and provides implementation for
-specific *storage type*. For example, :class:`.SQLiteFeatureStorage` supports
+specific *storage type*. For example, :class:`.HDF5FeatureStorage` supports
 saving ``matrix``, ``vector`` and ``timeseries`` via ``store_matrix``,
 ``store_vector`` and ``store_timeseries`` methods respectively.
 
@@ -88,3 +88,10 @@ Storage Interfaces
      - ``.hdf5``
      - HDF5
      - ``matrix``, ``vector``, ``timeseries``, ``timeseries_2d``, ``scalar_table``
+
+.. note::
+
+   :class:`.HDF5FeatureStorage` is the recommended storage.
+   :class:`.SQLiteFeatureStorage` is only kept for compatibility with features
+   stored in previous versions of ``junifer`` and should not be used for new
+   analyses.

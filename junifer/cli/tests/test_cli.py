@@ -222,7 +222,7 @@ def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         # Working directory
         contents["workdir"] = str(tmp_path.resolve())
         # Storage
-        contents["storage"]["uri"] = str((tmp_path / "out.sqlite").resolve())
+        contents["storage"]["uri"] = str((tmp_path / "out.hdf5").resolve())
         # Write new test config
         outfile = tmp_path / "in.yaml"
         yaml.dump(contents, stream=outfile)
@@ -274,7 +274,7 @@ def test_reset(
         # Working directory
         contents["workdir"] = str(tmp_path.resolve())
         # Storage
-        contents["storage"]["uri"] = str((tmp_path / "out.sqlite").resolve())
+        contents["storage"]["uri"] = str((tmp_path / "out.hdf5").resolve())
         # Write new test config
         outfile = tmp_path / "in.yaml"
         yaml.dump(contents, stream=outfile)

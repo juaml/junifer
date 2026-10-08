@@ -21,7 +21,7 @@ from junifer.datareader import DefaultDataReader
 from junifer.markers.functional_connectivity import (
     FunctionalConnectivitySpheres,
 )
-from junifer.storage import SQLiteFeatureStorage, Upsert
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import SPMAuditoryTestingDataGrabber
 
 
@@ -106,8 +106,8 @@ def test_FunctionalConnectivitySpheres(
         )
 
         # Store
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_fc_spheres.sqlite", upsert=Upsert.Ignore
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_fc_spheres.hdf5",
         )
         marker.fit_transform(input=element_data, storage=storage)
         features = storage.list_features()
