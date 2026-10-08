@@ -1,6 +1,6 @@
 """
-UKB VBM GMD Extraction
-======================
+UCLA CNP VBM GMD Extraction
+===========================
 
 Authors: Federico Raimondo
 
