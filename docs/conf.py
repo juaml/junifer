@@ -85,6 +85,7 @@ nitpick_ignore_regex = [
     ("py:obj", "them"),  # ignore them
     ("py:class", "junifer.utils.helpers.ensure_list"),  # ignore ensure_list
     ("py:class", "junifer.utils.helpers.ensure_list_or_none"),  # ignore ensure_list_or_none
+    ("py:class", "junifer.utils.helpers.check_standardize"),  # ignore check_standardize
     # Unresolved names in source annotations, e.g. ``types`` of
     # PatternDataladDataGrabber when building with sphinx-polyversion
     ("py:class", "BeforeValidator"),
