@@ -3,7 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import Callable, Iterator
+from collections.abc import Iterator
 from importlib.util import find_spec
 from pathlib import Path
 
@@ -11,29 +11,11 @@ import nibabel as nib
 import numpy as np
 import pytest
 
+from junifer import markers
 from junifer.data import deregister_data, register_data
 from junifer.datareader import DefaultDataReader
-from junifer.markers import (
-    ALFFParcels,
-    CrossParcellationFC,
-    EdgeCentricFCParcels,
-    FunctionalConnectivityParcels,
-    ParcelAggregation,
-    ReHoParcels,
-    RSSETSMarker,
-    TemporalSNRParcels,
-)
-from junifer.markers.base import BaseMarker
 from junifer.pipeline import WorkDirManager
 
-
-# Index of the lost region in the parcellation labels
-LOST = 2
-LABELS = ["a", "b", "lost", "c", "d"]
-
-skip_no_neurokit2 = pytest.mark.skipif(
-    find_spec("neurokit2") is None, reason="requires neurokit2"
-)
 
 COMPLEXITY_MARKERS = (
     "HurstExponent",
@@ -45,14 +27,21 @@ COMPLEXITY_MARKERS = (
     "SampleEntropy",
 )
 
+skip_no_neurokit2 = pytest.mark.skipif(
+    find_spec("neurokit2") is None, reason="requires neurokit2"
+)
+
 
 @pytest.fixture(scope="module")
 def element(tmp_path_factory: pytest.TempPathFactory) -> Iterator[dict]:
-    """Provide BOLD data where a region of the parcellations is lost.
+    """Provide BOLD data where regions of the parcellations are lost.
 
-    The parcellations are on a 1mm grid and the BOLD data on a 3mm grid that
-    does not sample their single-voxel regions: ``lost`` in ``LostRegion``
-    and ``LostRegion2``, and ``lost`` and ``lost_too`` in ``OneRegionLeft``.
+    The parcellations are on a 1mm grid and the BOLD data on a 3mm grid,
+    which does not sample their single-voxel regions:
+
+    * ``LostRegion`` (and ``LostRegion2``, the same): regions ``a``, ``b``,
+      ``lost``, ``c`` and ``d``.
+    * ``OneRegionLeft``: regions ``kept``, ``lost`` and ``lost_too``.
 
     Parameters
     ----------
@@ -66,37 +55,31 @@ def element(tmp_path_factory: pytest.TempPathFactory) -> Iterator[dict]:
 
     """
     tmp_path = tmp_path_factory.mktemp("lost_regions")
-    parcellation = np.zeros((24, 24, 24), dtype=np.int16)
-    parcellation[0:12, 0:12] = 1
-    parcellation[12:24, 0:12] = 2
-    # A single voxel, not sampled by the 3mm grid (voxels 0, 3, 6, ...)
-    parcellation[7, 13, 7] = 3
-    parcellation[0:12, 15:24] = 4
-    parcellation[12:24, 15:24] = 5
-    parcellation_path = tmp_path / "parcellation.nii.gz"
-    nib.save(nib.Nifti1Image(parcellation, np.eye(4)), parcellation_path)
-    for name in ("LostRegion", "LostRegion2"):
+    # Voxels 0, 3, 6, ... are sampled by the 3mm grid, 7 and 13 are not
+    lost_region = np.zeros((24, 24, 24), dtype=np.int16)
+    lost_region[0:12, 0:12] = 1
+    lost_region[12:24, 0:12] = 2
+    lost_region[7, 13, 7] = 3
+    lost_region[0:12, 15:24] = 4
+    lost_region[12:24, 15:24] = 5
+    one_region_left = np.zeros((24, 24, 24), dtype=np.int16)
+    one_region_left[0:12, 0:12] = 1
+    one_region_left[7, 13, 7] = 2
+    one_region_left[13, 7, 7] = 3
+    for name, data, labels in (
+        ("LostRegion", lost_region, ["a", "b", "lost", "c", "d"]),
+        ("LostRegion2", lost_region, ["a", "b", "lost", "c", "d"]),
+        ("OneRegionLeft", one_region_left, ["kept", "lost", "lost_too"]),
+    ):
+        path = tmp_path / f"{name}.nii.gz"
+        nib.save(nib.Nifti1Image(data, np.eye(4)), path)
         register_data(
             kind="parcellation",
             name=name,
-            parcellation_path=parcellation_path,
-            parcels_labels=LABELS,
+            parcellation_path=path,
+            parcels_labels=labels,
             space="MNI152NLin6Asym",
         )
-    # Only one region with data
-    one_region = np.zeros((24, 24, 24), dtype=np.int16)
-    one_region[0:12, 0:12] = 1
-    one_region[7, 13, 7] = 2
-    one_region[13, 7, 7] = 3
-    one_region_path = tmp_path / "one_region.nii.gz"
-    nib.save(nib.Nifti1Image(one_region, np.eye(4)), one_region_path)
-    register_data(
-        kind="parcellation",
-        name="OneRegionLeft",
-        parcellation_path=one_region_path,
-        parcels_labels=["kept", "lost", "lost_too"],
-        space="MNI152NLin6Asym",
-    )
     # Random walks, so all the measures are defined
     rng = np.random.default_rng(0)
     bold = rng.normal(size=(8, 8, 8, 120)).cumsum(axis=-1) + 1000
@@ -113,116 +96,157 @@ def element(tmp_path_factory: pytest.TempPathFactory) -> Iterator[dict]:
         deregister_data(kind="parcellation", name=name)
 
 
-def _complexity(
-    name: str, parcellation: str = "LostRegion"
-) -> Callable[[], BaseMarker]:
-    """Get a complexity marker, importing it only when needed.
+def _case(name: str, params: dict, feature: str, nan: list) -> object:
+    """Get a test case.
 
     Parameters
     ----------
     name : str
-        The name of the complexity marker.
-    parcellation : str, optional
-        The name of the parcellation (default "LostRegion").
+        The name of the marker class.
+    params : dict
+        The parameters of the marker.
+    feature : str
+        The name of the feature to check.
+    nan : list
+        The values that are NaN.
 
     Returns
     -------
-    callable
-        The function to create the marker.
+    object
+        The test case, named after the parcellation, marker and feature.
+        Complexity markers are skipped if neurokit2 is not installed.
 
     """
+    parcellation = params.get("parcellation", params.get("parcellation_one"))
+    return pytest.param(
+        name,
+        params,
+        feature,
+        nan,
+        marks=skip_no_neurokit2 if name in COMPLEXITY_MARKERS else (),
+        id=f"{parcellation}-{name}-{feature}",
+    )
 
-    def make() -> BaseMarker:
-        from junifer.markers import complexity
 
-        return getattr(complexity, name)(parcellation=parcellation)
-
-    return make
+# Whether the values are NaN for LostRegion, whose 3rd region is lost
+REGIONS = [False, False, True, False, False]
+# For connectivity, a region pair is NaN if one of the regions is lost
+PAIRS = [[r or c for c in REGIONS] for r in REGIONS]
+# For edge-centric FC, the edges are the region pairs (lower triangle)
+EDGES = [r or c for i, r in enumerate(REGIONS) for c in REGIONS[:i]]
+EDGE_PAIRS = [[r or c for c in EDGES] for r in EDGES]
 
 
 @pytest.mark.parametrize(
-    "make_marker, feature, output",
+    "name, params, feature, nan",
     [
-        pytest.param(
-            lambda: ParcelAggregation(
-                parcellation="LostRegion", method="mean", on="BOLD"
-            ),
+        _case(
+            "ParcelAggregation",
+            {"parcellation": "LostRegion", "method": "mean", "on": "BOLD"},
             "aggregation",
-            "regions",
-            id="ParcelAggregation",
+            [REGIONS] * 120,
         ),
-        pytest.param(
-            lambda: FunctionalConnectivityParcels(parcellation="LostRegion"),
+        _case(
+            "FunctionalConnectivityParcels",
+            {"parcellation": "LostRegion"},
             "functional_connectivity",
-            "matrix",
-            id="FunctionalConnectivityParcels",
+            PAIRS,
         ),
-        pytest.param(
-            lambda: EdgeCentricFCParcels(parcellation="LostRegion"),
+        _case(
+            "EdgeCentricFCParcels",
+            {"parcellation": "LostRegion"},
             "functional_connectivity",
-            "edges",
-            id="EdgeCentricFCParcels",
+            EDGE_PAIRS,
         ),
-        pytest.param(
-            lambda: CrossParcellationFC(
-                parcellation_one="LostRegion", parcellation_two="LostRegion2"
-            ),
+        _case(
+            "CrossParcellationFC",
+            {
+                "parcellation_one": "LostRegion",
+                "parcellation_two": "LostRegion2",
+            },
             "functional_connectivity",
-            "matrix",
-            id="CrossParcellationFC",
+            PAIRS,
         ),
-        pytest.param(
-            lambda: ReHoParcels(parcellation="LostRegion", using="junifer"),
+        _case(
+            "ReHoParcels",
+            {"parcellation": "LostRegion", "using": "junifer"},
             "reho",
-            "regions",
-            id="ReHoParcels",
+            [REGIONS],
         ),
-        pytest.param(
-            lambda: ALFFParcels(parcellation="LostRegion", using="junifer"),
+        _case(
+            "ALFFParcels",
+            {"parcellation": "LostRegion", "using": "junifer"},
             "alff",
-            "regions",
-            id="ALFFParcels-alff",
+            [REGIONS],
         ),
-        pytest.param(
-            lambda: ALFFParcels(parcellation="LostRegion", using="junifer"),
+        _case(
+            "ALFFParcels",
+            {"parcellation": "LostRegion", "using": "junifer"},
             "falff",
-            "regions",
-            id="ALFFParcels-falff",
+            [REGIONS],
         ),
-        pytest.param(
-            lambda: TemporalSNRParcels(parcellation="LostRegion"),
+        _case(
+            "TemporalSNRParcels",
+            {"parcellation": "LostRegion"},
             "tsnr",
-            "regions",
-            id="TemporalSNRParcels",
+            [REGIONS],
         ),
-        pytest.param(
-            lambda: RSSETSMarker(parcellation="LostRegion"),
+        # Computed with the edges with data
+        _case(
+            "RSSETSMarker",
+            {"parcellation": "LostRegion"},
             "rss_ets",
-            "no_nan",
-            id="RSSETSMarker",
+            [[False]] * 120,
         ),
         *[
-            pytest.param(
-                _complexity(name),
+            _case(
+                name, {"parcellation": "LostRegion"}, "complexity", [REGIONS]
+            )
+            for name in COMPLEXITY_MARKERS
+        ],
+        # Only the kept region with itself
+        _case(
+            "FunctionalConnectivityParcels",
+            {"parcellation": "OneRegionLeft"},
+            "functional_connectivity",
+            [[False, True, True], [True, True, True], [True, True, True]],
+        ),
+        # All the edges have a lost region
+        _case(
+            "EdgeCentricFCParcels",
+            {"parcellation": "OneRegionLeft"},
+            "functional_connectivity",
+            [[True] * 3] * 3,
+        ),
+        # No edges with data
+        _case(
+            "RSSETSMarker",
+            {"parcellation": "OneRegionLeft"},
+            "rss_ets",
+            [[True]] * 120,
+        ),
+        *[
+            _case(
+                name,
+                {"parcellation": "OneRegionLeft"},
                 "complexity",
-                "regions",
-                marks=skip_no_neurokit2,
-                id=name,
+                [[False, True, True]],
             )
             for name in COMPLEXITY_MARKERS
         ],
     ],
 )
-def test_lost_region(
+def test_lost_regions(
     tmp_path: Path,
     element: dict,
-    make_marker: Callable[[], BaseMarker],
+    name: str,
+    params: dict,
     feature: str,
-    output: str,
+    nan: list,
 ) -> None:
-    """Test markers on a region lost in resampling.
+    """Test markers on regions lost in resampling.
 
-    The lost region has no data (NaN), and the other regions are not
+    The lost regions have no data (NaN), and the other regions are not
     affected.
 
     Parameters
@@ -231,101 +255,25 @@ def test_lost_region(
         The path to the test directory.
     element : dict
         The element data.
-    make_marker : callable
-        The parametrized function to create the marker.
+    name : str
+        The parametrized name of the marker class.
+    params : dict
+        The parametrized parameters of the marker.
     feature : str
         The parametrized name of the feature to check.
-    output : {"regions", "matrix", "edges", "no_nan"}
-        The parametrized kind of output: one column per region, a region by
-        region matrix, an edge by edge matrix, or a summary over all regions.
+    nan : list
+        The parametrized values that are NaN.
 
     """
-    WorkDirManager().workdir = tmp_path
-    # Copy the data, as some markers change their input
-    with pytest.warns(RuntimeWarning, match=r"region\(s\) .* \['lost'\]"):
-        out = make_marker().fit_transform({"BOLD": dict(element["BOLD"])})
-    result = out["BOLD"][feature]
-    nan = np.isnan(np.asarray(result["data"], dtype=float))
-    if output == "regions":
-        expected = np.zeros(nan.shape, dtype=bool)
-        expected[:, LOST] = True
-    elif output == "matrix":
-        expected = np.zeros(nan.shape, dtype=bool)
-        expected[LOST, :] = True
-        expected[:, LOST] = True
-    elif output == "edges":
-        lost_edges = np.array(
-            ["lost" in name.split("~") for name in result["col_names"]]
-        )
-        expected = lost_edges[:, np.newaxis] | lost_edges[np.newaxis, :]
+    if name in COMPLEXITY_MARKERS:
+        from junifer.markers import complexity
+
+        marker = getattr(complexity, name)(**params)
     else:
-        expected = np.zeros(nan.shape, dtype=bool)
-    assert np.array_equal(nan, expected)
-
-
-@pytest.mark.parametrize(
-    "make_marker, feature, expected_values",
-    [
-        pytest.param(
-            lambda: FunctionalConnectivityParcels(
-                parcellation="OneRegionLeft"
-            ),
-            "functional_connectivity",
-            # Only the connectivity of the kept region with itself
-            np.array([[1, 0, 0], [0, 0, 0], [0, 0, 0]], dtype=bool),
-            id="FunctionalConnectivityParcels",
-        ),
-        pytest.param(
-            lambda: EdgeCentricFCParcels(parcellation="OneRegionLeft"),
-            "functional_connectivity",
-            # All the edges have a lost region
-            np.zeros((3, 3), dtype=bool),
-            id="EdgeCentricFCParcels",
-        ),
-        pytest.param(
-            lambda: RSSETSMarker(parcellation="OneRegionLeft"),
-            "rss_ets",
-            # No edges with data
-            np.zeros((120, 1), dtype=bool),
-            id="RSSETSMarker",
-        ),
-        *[
-            pytest.param(
-                _complexity(name, parcellation="OneRegionLeft"),
-                "complexity",
-                np.array([[1, 0, 0]], dtype=bool),
-                marks=skip_no_neurokit2,
-                id=name,
-            )
-            for name in COMPLEXITY_MARKERS
-        ],
-    ],
-)
-def test_one_region_left(
-    tmp_path: Path,
-    element: dict,
-    make_marker: Callable[[], BaseMarker],
-    feature: str,
-    expected_values: np.ndarray,
-) -> None:
-    """Test markers when a single region has data.
-
-    Parameters
-    ----------
-    tmp_path : pathlib.Path
-        The path to the test directory.
-    element : dict
-        The element data.
-    make_marker : callable
-        The parametrized function to create the marker.
-    feature : str
-        The parametrized name of the feature to check.
-    expected_values : np.ndarray
-        The parametrized mask of the values that are not NaN.
-
-    """
+        marker = getattr(markers, name)(**params)
     WorkDirManager().workdir = tmp_path
-    with pytest.warns(RuntimeWarning, match=r"2 region\(s\)"):
-        out = make_marker().fit_transform({"BOLD": dict(element["BOLD"])})
+    with pytest.warns(RuntimeWarning, match=r"region\(s\) .* have no voxels"):
+        # Copy the data, as some markers change their input
+        out = marker.fit_transform({"BOLD": dict(element["BOLD"])})
     data = np.asarray(out["BOLD"][feature]["data"], dtype=float)
-    assert np.array_equal(~np.isnan(data), expected_values)
+    assert np.array_equal(np.isnan(data), nan)
