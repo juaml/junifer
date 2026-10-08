@@ -6,6 +6,7 @@
 from abc import abstractmethod
 from typing import Annotated, Any, ClassVar
 
+import numpy as np
 from pydantic import BeforeValidator
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
 
@@ -15,6 +16,7 @@ from ...storage import MatrixKind, StorageType
 from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import ensure_list_or_none, raise_error
 from ..base import BaseMarker
+from ..utils import _has_data
 
 
 __all__ = ["FunctionalConnectivityBase"]
@@ -140,13 +142,20 @@ class FunctionalConnectivityBase(BaseMarker):
                 if k != "empirical"
             },
         )
+        # Compute on the columns with data (e.g. regions lost in
+        # resampling have none) and set the others to NaN
+        data = aggregation["aggregation"]["data"]
+        has_data = _has_data(data)
+        conn = np.full((data.shape[1], data.shape[1]), np.nan)
+        if has_data.any():
+            conn[np.ix_(has_data, has_data)] = connectivity.fit_transform(
+                [data[:, has_data]]
+            )[0]
         # Create dictionary for output
         labels = aggregation["aggregation"]["col_names"]
         return {
             "functional_connectivity": {
-                "data": connectivity.fit_transform(
-                    [aggregation["aggregation"]["data"]]
-                )[0],
+                "data": conn,
                 "row_names": labels,
                 "col_names": labels,
                 # xi correlation coefficient is not symmetric
