@@ -11,7 +11,13 @@ from typing import Any
 from .logging import logger, raise_error
 
 
-__all__ = ["deep_update", "ensure_list", "ensure_list_or_none", "run_ext_cmd"]
+__all__ = [
+    "check_standardize",
+    "deep_update",
+    "ensure_list",
+    "ensure_list_or_none",
+    "run_ext_cmd",
+]
 
 
 def run_ext_cmd(name: str, cmd: list[str]) -> None:
@@ -101,3 +107,38 @@ def ensure_list_or_none(value: Any) -> Any:
         return [value]
     else:
         return value
+
+
+def check_standardize(value: Any) -> Any:
+    """Check the value of a ``standardize`` parameter.
+
+    Booleans were replaced by the strategy names used by nilearn, so they
+    raise an error explaining the change instead of a generic validation
+    error.
+
+    Parameters
+    ----------
+    value : Any
+        The value of the parameter.
+
+    Returns
+    -------
+    Any
+        The value of the parameter.
+
+    Raises
+    ------
+    ValueError
+        If ``value`` is a boolean.
+
+    """
+    if isinstance(value, bool):
+        raise_error(
+            "`standardize` does not accept booleans anymore, following "
+            "nilearn, which is removing them: True used to z-score with the "
+            "population standard deviation, while nilearn now z-scores with "
+            "the sample standard deviation ('zscore_sample'). Use "
+            "'zscore_sample' instead of True and None instead of False "
+            f"(got {value})."
+        )
+    return value

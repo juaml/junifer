@@ -52,6 +52,20 @@ def test_fMRIPrepConfoundRemover_valid_inputs() -> None:
     assert confound_remover.valid_inputs == ["BOLD"]
 
 
+@pytest.mark.parametrize("standardize", [True, False])
+def test_fMRIPrepConfoundRemover_standardize_bool(standardize: bool) -> None:
+    """Test fMRIPrepConfoundRemover error for boolean standardize.
+
+    Parameters
+    ----------
+    standardize : bool
+        The parametrized standardization flag.
+
+    """
+    with pytest.raises(ValueError, match="does not accept booleans"):
+        fMRIPrepConfoundRemover(standardize=standardize)
+
+
 def test_fMRIPrepConfoundRemover__map_adhoc_to_fmriprep() -> None:
     """Test fMRIPrepConfoundRemover adhoc to fmriprep spec mapping."""
     confound_remover = fMRIPrepConfoundRemover()
@@ -511,7 +525,7 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         assert t_meta["strategy"] == confound_remover.strategy
         assert t_meta["spike"] is None
         assert t_meta["detrend"] is True
-        assert t_meta["standardize"] is True
+        assert t_meta["standardize"] == "zscore_sample"
         assert t_meta["low_pass"] is None
         assert t_meta["high_pass"] is None
         assert t_meta["t_r"] is None
@@ -567,7 +581,7 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
         assert t_meta["strategy"] == confound_remover.strategy
         assert t_meta["spike"] is None
         assert t_meta["detrend"] is True
-        assert t_meta["standardize"] is True
+        assert t_meta["standardize"] == "zscore_sample"
         assert t_meta["low_pass"] is None
         assert t_meta["high_pass"] is None
         assert t_meta["t_r"] is None

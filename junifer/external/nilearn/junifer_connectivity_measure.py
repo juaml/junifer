@@ -18,7 +18,7 @@ from scipy import linalg, stats
 from sklearn.base import clone
 from sklearn.covariance import EmpiricalCovariance
 
-from ...utils import logger, raise_error, warn_with_log
+from ...utils import check_standardize, logger, raise_error, warn_with_log
 
 
 __all__ = ["JuniferConnectivityMeasure"]
@@ -313,9 +313,19 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
     following ways:
 
     * default ``cov_estimator`` is
-      :class:`sklearn.covariance.EmpiricalCovariance`
-    * default ``kind`` is ``"correlation"``
+      :class:`sklearn.covariance.EmpiricalCovariance` instead of
+      :class:`sklearn.covariance.LedoitWolf`, and ``cov_estimator=None`` is
+      not supported
+    * default ``kind`` is ``"correlation"`` instead of ``"covariance"``
     * supports Spearman's correlation via ``kind="spearman correlation"``
+    * supports Chatterjee's xi correlation via ``kind="xi correlation"``
+    * ``kind`` is validated when computing the matrices instead of when
+      fitting
+    * no ``verbose`` parameter, so nothing is logged while fitting
+    * ``inverse_transform()`` only knows the diagonal of
+      ``"correlation"`` and ``"partial correlation"`` matrices, so with
+      ``discard_diagonal=True`` the other kinds (including
+      ``"spearman correlation"``) need the ``diagonal`` to be passed
 
     Parameters
     ----------
@@ -329,7 +339,10 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         If ``"spearman correlation"`` is used, the data will be ranked before
         estimating the covariance. For ``"xi correlation"``, the coefficient
         is not symmetric and should be interpreted as a measure of dependence
-        [2]_ . For the use of ``"tangent"`` see [1]_ (default "correlation").
+        [2]_ ; ``cov_estimator`` and ``standardize`` are not used, ``mean_``
+        is symmetrized and, if ``vectorize=True``, only the lower triangular
+        part is kept. For the use of ``"tangent"`` see [1]_
+        (default "correlation").
     vectorize : bool, optional
         If True, connectivity matrices are reshaped into 1D arrays and only
         their flattened lower triangular parts are returned (default False).
@@ -337,17 +350,13 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         If True, vectorized connectivity coefficients do not include the
         matrices diagonal elements. Used only when vectorize is set to True
         (default False).
-    standardize : bool, optional
-        If standardize is True, the data are centered and normed: their mean
-        is put to 0 and their variance is put to 1 in the time dimension
-        (default True).
-
-        .. note::
-
-            Added to control passing value to ``standardize`` of
-            ``signal.clean`` to call new behavior since passing ``"zscore"`` or
-            True (default) is deprecated. This parameter will be deprecated in
-            version 0.13 and removed in version 0.15.
+    standardize : {"zscore_sample", "psc"} or None, optional
+        The strategy to standardize the signals before estimating the
+        covariance. ``"zscore_sample"`` sets them to zero mean and unit
+        variance (using the sample standard deviation), ``"psc"`` converts
+        them to percent signal change and None does not standardize them.
+        Only used for ``"correlation"`` and ``"spearman correlation"``
+        (default "zscore_sample").
 
     Attributes
     ----------
@@ -389,7 +398,7 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         kind="correlation",
         vectorize=False,
         discard_diagonal=False,
-        standardize=True,
+        standardize="zscore_sample",
     ):
         super().__init__(
             cov_estimator=cov_estimator,
@@ -399,6 +408,59 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
             standardize=standardize,
         )
 
+    def _validate_input(
+        self,
+        X,  # noqa: N803
+        do_transform=False,
+        confounds=None,
+    ):
+        """Validate the input of ``_fit_transform``.
+
+        Parameters
+        ----------
+        X : iterable of numpy.ndarray
+            The time series of each subject.
+        do_transform : bool, optional
+            Whether the input will be transformed (default False).
+        confounds : numpy.ndarray, optional
+            The confounds (default None).
+
+        Returns
+        -------
+        list of numpy.ndarray
+            The time series of each subject.
+
+        Raises
+        ------
+        TypeError
+            If ``X`` is not iterable.
+        ValueError
+            If ``standardize`` is a boolean or
+            if ``X`` is a single subject and ``kind="tangent"``.
+
+        """
+        check_standardize(self.standardize)
+        if not hasattr(X, "__iter__"):
+            raise_error(
+                "Input must be an iterable of numpy arrays. "
+                f"Got {X.__class__.__name__}",
+                klass=TypeError,
+            )
+        # A single subject can be passed as a 2D array
+        if isinstance(X, np.ndarray) and X.ndim == 2:
+            X = [X]
+        self._check_input(X, confounds=confounds)
+        if do_transform and self.kind == "tangent" and len(X) <= 1:
+            # Check that people are applying transform to a group of subjects
+            # We can only impose this in transform,
+            # as it is legit to fit only on a single given reference point
+            raise_error(
+                "Tangent space parametrization can only be applied to a "
+                "group of subjects, as it returns deviations to the mean. "
+                f"You provided {X!r}"
+            )
+        return X
+
     def _fit_transform(
         self,
         X,  # noqa: N803
@@ -407,9 +469,19 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
         confounds=None,
     ):
         """Avoid duplication of computation."""
-        self._check_input(X, confounds=confounds)
+        X = self._validate_input(
+            X, do_transform=do_transform, confounds=confounds
+        )
         if do_fit:
+            if not hasattr(self.cov_estimator, "fit"):
+                raise_error(
+                    "'cov_estimator' must be an estimator with '.fit()' and "
+                    "'.covariance_' (e.g., from `sklearn.covariance` or a "
+                    "custom estimator constructed similarly). Got: "
+                    f"`{type(self.cov_estimator).__name__}`."
+                )
             self.cov_estimator_ = clone(self.cov_estimator)
+            self.n_features_in_ = next(iter(s.shape[1] for s in X))
 
         # Compute all the matrices, stored in "connectivities"
         if self.kind in ["correlation", "spearman correlation"]:
@@ -452,10 +524,12 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 ]
             else:
                 allowed_kinds = (
-                    "correlation",
-                    "partial correlation",
-                    "tangent",
                     "covariance",
+                    "correlation",
+                    "spearman correlation",
+                    "partial correlation",
+                    "xi correlation",
+                    "tangent",
                     "precision",
                 )
                 raise_error(
@@ -489,15 +563,6 @@ class JuniferConnectivityMeasure(ConnectivityMeasure):
                 ]
 
             connectivities = np.array(connectivities)
-
-            if confounds is not None and not self.vectorize:
-                error_message = (
-                    "'confounds' are provided but vectorize=False. "
-                    "Confounds are only cleaned on vectorized matrices "
-                    "as second level connectome regression "
-                    "but not on symmetric matrices."
-                )
-                raise_error(error_message)
 
             if self.vectorize:
                 connectivities = sym_matrix_to_vec(

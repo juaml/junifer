@@ -7,7 +7,7 @@ import logging
 
 import pytest
 
-from junifer.utils.helpers import run_ext_cmd
+from junifer.utils.helpers import check_standardize, run_ext_cmd
 
 
 def test_run_ext_cmd_success(caplog: pytest.LogCaptureFixture) -> None:
@@ -33,3 +33,38 @@ def test_run_ext_cmd_failure() -> None:
     with pytest.raises(RuntimeError, match="failed"):
         # Run external command
         run_ext_cmd(name="flymetothemoon", cmd=["flymetothemoon"])
+
+
+@pytest.mark.parametrize("value", ["zscore_sample", "psc", None])
+def test_check_standardize(value: str | None) -> None:
+    """Test check_standardize with valid values.
+
+    Parameters
+    ----------
+    value : str or None
+        The parametrized value.
+
+    """
+    assert check_standardize(value) == value
+
+
+@pytest.mark.parametrize(
+    "value, replacement",
+    [
+        (True, "'zscore_sample' instead of True"),
+        (False, "None instead of False"),
+    ],
+)
+def test_check_standardize_bool(value: bool, replacement: str) -> None:
+    """Test check_standardize error for booleans.
+
+    Parameters
+    ----------
+    value : bool
+        The parametrized value.
+    replacement : str
+        The parametrized replacement in the error message.
+
+    """
+    with pytest.raises(ValueError, match=replacement):
+        check_standardize(value)

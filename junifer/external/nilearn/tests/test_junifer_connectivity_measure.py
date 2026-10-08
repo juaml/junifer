@@ -25,6 +25,7 @@ from numpy.testing import (
 from pandas import DataFrame
 from scipy import linalg
 from sklearn.covariance import EmpiricalCovariance, LedoitWolf
+from sklearn.exceptions import NotFittedError
 
 from junifer.external.nilearn import JuniferConnectivityMeasure
 from junifer.external.nilearn.junifer_connectivity_measure import (
@@ -591,9 +592,7 @@ def test_connectivity_measure_errors():
     # Raising error for input subjects not iterable
     conn_measure = JuniferConnectivityMeasure()
 
-    with pytest.raises(
-        ValueError, match=r"'subjects' input argument must be an iterable"
-    ):
+    with pytest.raises(TypeError, match=r"Input must be an iterable"):
         conn_measure.fit(1.0)
 
     # input subjects not 2D numpy.ndarrays
@@ -608,6 +607,15 @@ def test_connectivity_measure_errors():
         match=r"All subjects must have the same number of features.",
     ):
         conn_measure.fit([np.ones((100, 40)), np.ones((100, 41))])
+
+    # invalid kind, listing all the allowed kinds
+    conn_measure = JuniferConnectivityMeasure(kind="foo")
+    with pytest.raises(
+        ValueError,
+        match=r"Allowed connectivity kinds .*'spearman correlation'.*"
+        r"'xi correlation'.* Got kind foo",
+    ):
+        conn_measure.fit([np.ones((100, 40))])
 
     # fit_transform with a single subject and kind=tangent
     conn_measure = JuniferConnectivityMeasure(kind="tangent")
@@ -878,7 +886,7 @@ def test_connectivity_measure_check_vectorization_option(
     )
 
     # Check not fitted error
-    with pytest.raises(ValueError, match=r"has not been fitted. "):
+    with pytest.raises(NotFittedError):
         JuniferConnectivityMeasure().inverse_transform(
             vectorized_connectivities
         )
@@ -1057,15 +1065,15 @@ def test_confounds_connectivity_measure_errors() -> None:
     conn_measure = JuniferConnectivityMeasure(vectorize=True)
     msg = r"'confounds' input argument must be an iterable"
 
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(TypeError, match=msg):
         conn_measure._check_input(X=signals, confounds=1.0)
 
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(TypeError, match=msg):
         conn_measure._fit_transform(
             X=signals, do_fit=True, do_transform=True, confounds=1.0
         )
 
-    with pytest.raises(ValueError, match=msg):
+    with pytest.raises(TypeError, match=msg):
         conn_measure.fit_transform(X=signals, y=None, confounds=1.0)
 
     # Raising error for input confounds are given but not vectorize=True
@@ -1079,7 +1087,7 @@ def test_confounds_connectivity_measure_errors() -> None:
 def test_connectivity_measure_standardize(
     signals: list[np.ndarray],
 ) -> None:
-    """Check warning is raised and then suppressed with setting standardize.
+    """Check standardize strategies and the error for booleans.
 
     Parameters
     ----------
@@ -1087,17 +1095,17 @@ def test_connectivity_measure_standardize(
         The input signals.
 
     """
-    match = r"default strategy for standardize"
-
-    with pytest.warns(DeprecationWarning, match=match):
-        JuniferConnectivityMeasure(kind="correlation").fit_transform(signals)
-
+    # No warnings about standardize with the default strategy
     with warnings.catch_warnings(record=True) as record:
-        JuniferConnectivityMeasure(
-            kind="correlation", standardize="zscore_sample"
-        ).fit_transform(signals)
-        for m in record:
-            assert match not in m.message
+        warnings.simplefilter("always")
+        JuniferConnectivityMeasure(kind="correlation").fit_transform(signals)
+    assert not [m for m in record if "standardize" in str(m.message)]
+
+    for standardize in (True, False):
+        with pytest.raises(ValueError, match="does not accept booleans"):
+            JuniferConnectivityMeasure(
+                kind="correlation", standardize=standardize
+            ).fit_transform(signals)
 
 
 @pytest.mark.skipif(

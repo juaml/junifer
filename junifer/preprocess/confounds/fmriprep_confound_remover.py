@@ -19,6 +19,7 @@ from enum import Enum
 from typing import (
     Any,
     ClassVar,
+    Literal,
 )
 
 import nibabel as nib
@@ -35,7 +36,7 @@ from ...data import get_data
 from ...datagrabber import DataType
 from ...pipeline import WorkDirManager
 from ...typing import Dependencies
-from ...utils import ensure_list_or_none, raise_error
+from ...utils import check_standardize, ensure_list_or_none, raise_error
 from ..base import BasePreprocessor, logger
 
 
@@ -178,8 +179,11 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     detrend : bool, optional
         If True, detrending will be applied on timeseries, before confound
         removal (default True).
-    standardize : bool, optional
-        If True, returned signals are set to unit variance (default True).
+    standardize : {"zscore_sample", "psc"} or None, optional
+        The strategy to standardize the signals. ``"zscore_sample"`` sets
+        them to zero mean and unit variance (using the sample standard
+        deviation), ``"psc"`` converts them to percent signal change and
+        None does not standardize them (default "zscore_sample").
     low_pass : float, optional
         Low cutoff frequencies, in Hertz. If None, no filtering is applied
         (default None).
@@ -205,7 +209,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
     fd_threshold: float | None = None
     std_dvars_threshold: float | None = None
     detrend: bool = True
-    standardize: bool = True
+    standardize: Annotated[
+        Literal["zscore_sample", "psc"] | None,
+        BeforeValidator(check_standardize),
+    ] = "zscore_sample"
     low_pass: float | None = None
     high_pass: float | None = None
     t_r: float | None = None
