@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from enum import Enum
+from enum import StrEnum
 from itertools import product
 from typing import Annotated, Literal
 
@@ -21,7 +21,7 @@ from ..pattern import PatternDataGrabber
 __all__ = ["HCP1200", "HCP1200PhaseEncoding", "HCP1200Task"]
 
 
-class HCP1200Task(str, Enum):
+class HCP1200Task(StrEnum):
     """Accepted HCP1200 tasks."""
 
     REST1 = "REST1"
@@ -35,7 +35,7 @@ class HCP1200Task(str, Enum):
     MOTOR = "MOTOR"
 
 
-class HCP1200PhaseEncoding(str, Enum):
+class HCP1200PhaseEncoding(StrEnum):
     """Accepted HCP1200 phase encoding directions."""
 
     LR = "LR"

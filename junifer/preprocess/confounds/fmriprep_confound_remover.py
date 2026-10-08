@@ -15,7 +15,7 @@ else:
     from typing import TypedDict
 
 from collections.abc import Sequence
-from enum import Enum
+from enum import StrEnum
 from typing import (
     Any,
     ClassVar,
@@ -111,7 +111,7 @@ FMRIPREP_VALID_NAMES = [
 FMRIPREP_VALID_NAMES.append("framewise_displacement")
 
 
-class Confounds(str, Enum):
+class Confounds(StrEnum):
     """Accepted confounds.
 
     * ``Basic`` : only the confounding time series

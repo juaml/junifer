@@ -4,7 +4,7 @@
 #          Leonard Sasse <l.sasse@fz-juelich.de>
 # License: AGPL
 
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Literal
 
@@ -19,7 +19,7 @@ from ....utils import ensure_list
 __all__ = ["JuselessUCLA", "UCLATask"]
 
 
-class UCLATask(str, Enum):
+class UCLATask(StrEnum):
     """Accepted UCLA tasks."""
 
     REST = "rest"

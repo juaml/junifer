@@ -4,7 +4,7 @@
 # License: AGPL
 
 import hashlib
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
 __all__ = ["ReHoBase", "ReHoImpl"]
 
 
-class ReHoImpl(str, Enum):
+class ReHoImpl(StrEnum):
     """Accepted ReHo implementations.
 
     * ``junifer`` : ``junifer``'s ReHo

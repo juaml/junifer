@@ -6,7 +6,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import (
     TYPE_CHECKING,
@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 __all__ = ["ALFFBase", "ALFFImpl"]
 
 
-class ALFFImpl(str, Enum):
+class ALFFImpl(StrEnum):
     """Accepted ALFF implementations.
 
     * ``junifer`` : ``junifer``'s ALFF

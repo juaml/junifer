@@ -6,7 +6,7 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Sequence
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any, ClassVar
 
@@ -21,7 +21,7 @@ from ..utils import raise_error
 __all__ = ["BaseFeatureStorage", "MatrixKind", "StorageType"]
 
 
-class MatrixKind(str, Enum):
+class MatrixKind(StrEnum):
     """Accepted matrix kind value."""
 
     UpperTriangle = "triu"
@@ -33,7 +33,7 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="storage", step="storage")
 
 
-class StorageType(str, Enum):
+class StorageType(StrEnum):
     """Accepted storage type."""
 
     Vector = "vector"

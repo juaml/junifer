@@ -11,13 +11,9 @@ if sys.version_info < (3, 12):  # pragma: no cover
 else:
     from typing import TypedDict
 
-if sys.version_info < (3, 11):  # pragma: no cover
-    from typing_extensions import Required
-else:
-    from typing import Required
-
 from abc import ABC, abstractmethod
-from enum import Enum
+from enum import StrEnum
+from typing import Required
 
 import structlog
 from pydantic import BaseModel, ConfigDict
@@ -31,7 +27,7 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="api")
 
 
-class EnvKind(str, Enum):
+class EnvKind(StrEnum):
     """Accepted Python environment kind."""
 
     Venv = "venv"
@@ -39,7 +35,7 @@ class EnvKind(str, Enum):
     Local = "local"
 
 
-class EnvShell(str, Enum):
+class EnvShell(StrEnum):
     """Accepted environment shell."""
 
     Bash = "bash"

@@ -4,7 +4,7 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from enum import Enum
+from enum import StrEnum
 from typing import (
     Annotated,
     Any,
@@ -27,7 +27,7 @@ from ._nilearn_smoothing import NilearnSmoothing
 __all__ = ["Smoothing", "SmoothingImpl"]
 
 
-class SmoothingImpl(str, Enum):
+class SmoothingImpl(StrEnum):
     """Accepted smoothing implementations.
 
     * ``nilearn`` : :func:`nilearn.image.smooth_img`

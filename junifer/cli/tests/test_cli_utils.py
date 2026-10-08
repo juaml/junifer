@@ -5,7 +5,6 @@
 
 import importlib
 import platform as pl
-import sys
 
 import pytest
 
@@ -55,9 +54,6 @@ def test_get_dependency_information_short() -> None:
         "pydantic",
         "typing_extensions",
     ]
-
-    if sys.version_info < (3, 11):
-        dependency_list.append("importlib_metadata")
 
     # Import dependencies as only loaded modules are reported
     for module in dependency_list:
