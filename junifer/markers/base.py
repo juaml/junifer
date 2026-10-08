@@ -16,9 +16,11 @@ from ..pipeline import PipelineStepMixin, UpdateMetaMixin
 from ..storage import StorageType
 from ..typing import MarkerInOutMappings, StorageLike
 from ..utils import ensure_list_or_none, raise_error
+from .utils import _changed_paths, _fingerprint
 
 
 __all__ = ["BaseMarker"]
+
 
 _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="markers", step="marker")
@@ -257,8 +259,17 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
                 # Copy metadata
                 t_meta = t_input["meta"].copy()
                 t_meta["type"] = t.value
-                # Compute marker
+                # Compute marker, checking it does not change the data, as
+                # it is shared with the markers computed afterwards
+                fingerprint = _fingerprint(input)
                 t_out = self.compute(input=t_input, extra_input=extra_input)
+                changed = _changed_paths(fingerprint, _fingerprint(input))
+                if changed:
+                    raise_error(
+                        f"Marker {self.name} changed its input data, which is "
+                        f"shared with the other markers: {', '.join(changed)}",
+                        klass=RuntimeError,
+                    )
                 # Initialize empty dictionary if no storage object is provided
                 if storage is None:
                     out[t] = {}

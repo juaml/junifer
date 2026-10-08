@@ -6,144 +6,145 @@
 
 from pathlib import Path
 
+import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-from junifer.datareader.default import DefaultDataReader
-from junifer.markers import (
-    FunctionalConnectivityParcels,
-    ParcelAggregation,
-)
+from junifer.datagrabber import DataType
+from junifer.datareader import DefaultDataReader
+from junifer.markers import FunctionalConnectivityParcels, ParcelAggregation
+from junifer.markers.base import BaseMarker
 from junifer.pipeline import MarkerCollection, PipelineStepMixin
 from junifer.preprocess import fMRIPrepConfoundRemover
-from junifer.storage import SQLiteFeatureStorage
-from junifer.testing.datagrabbers import (
-    PartlyCloudyTestingDataGrabber,
-)
+from junifer.storage import SQLiteFeatureStorage, StorageType
+from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
 pytestmark = pytest.mark.external
 
-
-def test_marker_collection_incorrect_markers() -> None:
-    """Test incorrect markers for MarkerCollection."""
-    wrong_markers = [
-        ParcelAggregation(
-            parcellation="Schaefer100x7",
-            method="mean",
-            name="gmd_schaefer100x7_mean",
-        ),
-        ParcelAggregation(
-            parcellation="Schaefer100x7",
-            method="mean",
-            name="gmd_schaefer100x7_mean",
-        ),
-    ]
-    with pytest.raises(ValueError, match=r"must have different names"):
-        MarkerCollection(wrong_markers)  # type: ignore
+PARCELLATION = "TianxS2x3TxMNInonlinear2009cAsym"
 
 
-def test_marker_collection() -> None:
-    """Test MarkerCollection."""
-    markers = [
+def _markers() -> list[ParcelAggregation]:
+    """Get markers aggregating the BOLD data in different ways.
+
+    Returns
+    -------
+    list of ParcelAggregation
+        The markers, named ``tian_mean``, ``tian_std`` and
+        ``tian_trim_mean90``.
+
+    """
+    return [
         ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
-            method="mean",
-            name="tian_mean",
+            parcellation=PARCELLATION, method="mean", name="tian_mean"
         ),
         ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
-            method="std",
-            name="tian_std",
+            parcellation=PARCELLATION, method="std", name="tian_std"
         ),
         ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
+            parcellation=PARCELLATION,
             method="trim_mean",
             method_params={"proportiontocut": 0.1},
             name="tian_trim_mean90",
         ),
     ]
+
+
+def _fit(mc: MarkerCollection) -> dict | None:
+    """Validate and fit a marker collection on one subject.
+
+    Parameters
+    ----------
+    mc : MarkerCollection
+        The marker collection.
+
+    Returns
+    -------
+    dict or None
+        The output of the marker collection.
+
+    """
+    dg = PartlyCloudyTestingDataGrabber(n_timepoints=50)
+    mc.validate(dg)
+    with dg:
+        return mc.fit(dg["sub-01"])
+
+
+def test_marker_collection_same_names() -> None:
+    """Test markers must have different names."""
+    markers = [
+        ParcelAggregation(parcellation=PARCELLATION, method="mean", name="a"),
+        ParcelAggregation(parcellation=PARCELLATION, method="std", name="a"),
+    ]
+    with pytest.raises(ValueError, match=r"must have different names"):
+        MarkerCollection(markers=markers)  # type: ignore
+
+
+def test_marker_collection_defaults() -> None:
+    """Test the defaults of MarkerCollection."""
+    markers = _markers()
     mc = MarkerCollection(markers=markers)  # type: ignore
     assert mc._markers == markers
     assert mc._preprocessors is None
     assert mc._storage is None
     assert isinstance(mc._datareader, DefaultDataReader)
 
-    # Create testing datagrabber
-    dg = PartlyCloudyTestingDataGrabber()
-    mc.validate(dg)
 
-    with dg:
-        input = dg["sub-01"]
-        out = mc.fit(input)
-        assert out is not None
-        assert isinstance(out, dict)
-        assert len(out) == 3
-        assert "tian_mean" in out
-        assert "tian_std" in out
-        assert "tian_trim_mean90" in out
+def test_marker_collection_fit() -> None:
+    """Test MarkerCollection returns the output of each marker."""
+    out = _fit(MarkerCollection(markers=_markers()))  # type: ignore
+    assert out is not None
+    assert set(out) == {"tian_mean", "tian_std", "tian_trim_mean90"}
+    for name in out:
+        aggregation = out[name]["BOLD"]["aggregation"]
+        assert {"data", "col_names", "meta"} <= set(aggregation)
 
-        for t_marker in markers:
-            t_name = t_marker.name
-            assert "BOLD" in out[t_name]
-            t_bold = out[t_name]["BOLD"]["aggregation"]
-            assert "data" in t_bold
-            assert "col_names" in t_bold
-            assert "meta" in t_bold
 
-    # Test preprocessing
-    class BypassPreprocessing(PipelineStepMixin):
+def test_marker_collection_preprocessing() -> None:
+    """Test MarkerCollection computes the markers on the preprocessed data."""
+
+    class Unchanged(PipelineStepMixin):
+        """Preprocessing that returns the data unchanged."""
+
+        def validate_input(self, input):
+            return input
+
         def fit_transform(self, input):
             return input
 
-    mc2 = MarkerCollection(
-        markers=markers,  # type: ignore
-        preprocessors=[BypassPreprocessing()],  # type: ignore
-        datareader=DefaultDataReader(),
+    out = _fit(MarkerCollection(markers=_markers()))  # type: ignore
+    out_preprocessed = _fit(
+        MarkerCollection(
+            markers=_markers(),  # type: ignore
+            preprocessors=[Unchanged()],  # type: ignore
+        )
     )
-    assert isinstance(mc2._datareader, DefaultDataReader)
-    with dg:
-        input = dg["sub-01"]
-        out2 = mc2.fit(input)
-        assert out2 is not None
-        for t_marker in markers:
-            t_name = t_marker.name
-            assert_array_equal(
-                out[t_name]["BOLD"]["aggregation"]["data"],
-                out2[t_name]["BOLD"]["aggregation"]["data"],
-            )
+    assert out is not None
+    assert out_preprocessed is not None
+    for name in out:
+        assert_array_equal(
+            out[name]["BOLD"]["aggregation"]["data"],
+            out_preprocessed[name]["BOLD"]["aggregation"]["data"],
+        )
 
 
-def test_marker_collection_with_preprocessing() -> None:
-    """Test MarkerCollection with preprocessing."""
-    markers = [
-        FunctionalConnectivityParcels(
-            parcellation=["Schaefer100x17"],
-            agg_method="mean",
-            name="Schaefer100x17_mean_FC",
-        ),
-        FunctionalConnectivityParcels(
-            parcellation=["TianxS2x3TxMNInonlinear2009cAsym"],
-            agg_method="mean",
-            name="TianxS2x3TxMNInonlinear2009cAsym_mean_FC",
-        ),
-    ]
+def test_marker_collection_validate_preprocessing() -> None:
+    """Test MarkerCollection validates with a confound removal step."""
     mc = MarkerCollection(
-        markers=markers,  # type: ignore
+        markers=[  # type: ignore
+            FunctionalConnectivityParcels(
+                parcellation=PARCELLATION, agg_method="mean", name="tian_fc"
+            ),
+        ],
         preprocessors=[fMRIPrepConfoundRemover()],
     )
-    assert mc._markers == markers
     assert mc._preprocessors is not None
-    assert mc._storage is None
-    assert isinstance(mc._datareader, DefaultDataReader)
-
-    # Create testing datagrabber
-    dg = PartlyCloudyTestingDataGrabber(reduce_confounds=False)
-    mc.validate(dg)
+    mc.validate(PartlyCloudyTestingDataGrabber(reduce_confounds=False))
 
 
 def test_marker_collection_storage(tmp_path: Path) -> None:
-    """Test marker collection with storage.
+    """Test MarkerCollection stores the output of each marker.
 
     Parameters
     ----------
@@ -151,74 +152,44 @@ def test_marker_collection_storage(tmp_path: Path) -> None:
         The path to the test directory.
 
     """
-    markers = [
-        ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
-            method="mean",
-            name="tian_mean",
-        ),
-        ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
-            method="std",
-            name="tian_std",
-        ),
-        ParcelAggregation(
-            parcellation="TianxS2x3TxMNInonlinear2009cAsym",
-            method="trim_mean",
-            method_params={"proportiontocut": 0.1},
-            name="tian_trim_mean90",
-        ),
-    ]
-    # Setup datagrabber
-    dg = PartlyCloudyTestingDataGrabber()
-    # Setup storage
-    storage = SQLiteFeatureStorage(
-        uri=tmp_path / "test_marker_collection_storage.sqlite"
-    )
-    mc = MarkerCollection(
-        markers=markers,  # type: ignore
-        storage=storage,
-        datareader=DefaultDataReader(),
-    )
-    mc.validate(dg)
-    assert mc._storage is not None
-    assert mc._storage.uri == storage.uri
-    with dg:
-        input = dg["sub-01"]
-        out = mc.fit(input)
-        assert out is None
+    storage = SQLiteFeatureStorage(uri=tmp_path / "features.sqlite")
+    mc = MarkerCollection(markers=_markers(), storage=storage)  # type: ignore
+    assert mc._storage is storage
+    # Nothing is returned when storing
+    assert _fit(mc) is None
 
-    mc2 = MarkerCollection(
-        markers=markers,
-        datareader=DefaultDataReader(),  # type: ignore
-    )
-    mc2.validate(dg)
-    assert mc2._storage is None
-
-    with dg:
-        input = dg["sub-01"]
-        out = mc2.fit(input)
-
+    # The stored features are the same as the ones returned without storage
+    out = _fit(MarkerCollection(markers=_markers()))  # type: ignore
+    assert out is not None
     features = storage.list_features()
-    assert len(features) == 3
+    assert len(features) == len(out)
+    for md5, feature in features.items():
+        # Features are named "<type>_<marker>_<feature>"
+        name = feature["name"].removeprefix("BOLD_")
+        name = name.removesuffix("_aggregation")
+        aggregation = out[name]["BOLD"]["aggregation"]
+        stored = storage.read_df(feature_md5=md5)
+        assert_array_equal(
+            stored[aggregation["col_names"]].to_numpy(), aggregation["data"]
+        )
 
-    feature_md5 = next(iter(features.keys()))
-    t_feature = storage.read_df(feature_md5=feature_md5)
-    fname = "tian_mean"
-    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
-    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
 
-    feature_md5 = list(features.keys())[1]
-    t_feature = storage.read_df(feature_md5=feature_md5)
-    fname = "tian_std"
-    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
-    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+def test_marker_collection_marker_changes_data() -> None:
+    """Test markers cannot change the data shared with the other markers."""
 
-    feature_md5 = list(features.keys())[2]
-    t_feature = storage.read_df(feature_md5=feature_md5)
-    fname = "tian_trim_mean90"
-    t_data = out[fname]["BOLD"]["aggregation"]["data"]  # type: ignore
-    cols = out[fname]["BOLD"]["aggregation"]["col_names"]  # type: ignore
-    assert_array_equal(t_feature[cols].values, t_data)  # type: ignore
+    class ChangingMarker(BaseMarker):
+        """Marker that replaces the BOLD data."""
+
+        _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
+            DataType.BOLD: {"feat": StorageType.Vector},
+        }
+
+        def compute(self, input, extra_input=None):
+            input["data"] = "changed"
+            return {"feat": {"data": np.zeros((1, 1)), "col_names": ["x"]}}
+
+    mc = MarkerCollection(
+        markers=[ChangingMarker(name="changing"), *_markers()]  # type: ignore
+    )
+    with pytest.raises(RuntimeError, match=r"changing changed .*BOLD.data"):
+        _fit(mc)

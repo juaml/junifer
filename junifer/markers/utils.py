@@ -8,10 +8,14 @@
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
+import zlib
 from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 import pandas as pd
+from nibabel.spatialimages import SpatialImage
+from nilearn.image import get_data
 from scipy.stats import zscore
 
 from ..utils import raise_error
@@ -139,3 +143,162 @@ def _correlate_dataframes(
         .corr(method=method)  # type: ignore
         .loc["df2", "df1"]
     )
+
+
+def _checksum(array: np.ndarray) -> tuple:
+    """Get the checksum of an array.
+
+    Parameters
+    ----------
+    array : numpy.ndarray
+        The array.
+
+    Returns
+    -------
+    tuple
+        The shape, the dtype and the CRC-32 of the bytes of the array (None
+        for arrays of objects).
+
+    """
+    crc = None
+    if not array.dtype.hasobject:
+        crc = zlib.crc32(memoryview(np.ascontiguousarray(array)).cast("B"))
+    return (array.shape, array.dtype.str, crc)
+
+
+def _checksums(value: Any) -> tuple:
+    """Get the checksums of an array, data frame, image or set.
+
+    Parameters
+    ----------
+    value : Any
+        The value.
+
+    Returns
+    -------
+    tuple
+        The checksums, empty for other values. For data frames and series:
+        the values and index, and the column labels or name. For images: the
+        affine, the data (loaded with nilearn, which caches it in the image,
+        as most markers access it this way) and the data cached by nibabel's
+        ``get_fdata`` (None if not cached). For sets: their contents.
+
+    """
+    if isinstance(value, np.ndarray):
+        return (_checksum(value),)
+    if isinstance(value, pd.DataFrame | pd.Series):
+        labels = (
+            tuple(value.columns)
+            if isinstance(value, pd.DataFrame)
+            else value.name
+        )
+        return (
+            _checksum(pd.util.hash_pandas_object(value).to_numpy()),
+            labels,
+        )
+    if isinstance(value, SpatialImage):
+        fdata = getattr(value, "_fdata_cache", None)
+        return (
+            _checksum(value.affine),
+            _checksum(get_data(value)),
+            None if fdata is None else _checksum(fdata),
+        )
+    if isinstance(value, set | frozenset):
+        return (frozenset(value),)
+    return ()
+
+
+def _fingerprint(data: Any, path: tuple = ()) -> dict[tuple, tuple]:
+    """Get a fingerprint of the data, to check whether it is changed.
+
+    Parameters
+    ----------
+    data : Any
+        The data.
+    path : tuple, optional
+        The keys (or indices) leading to ``data`` (default ()).
+
+    Returns
+    -------
+    dict
+        For each path, the value (to check it is not replaced) and its
+        checksums (to check it is not changed in place).
+
+    """
+    out = {path: (data, _checksums(data))}
+    if isinstance(data, dict):
+        items = data.items()
+    elif isinstance(data, list | tuple):
+        items = enumerate(data)
+    else:
+        items = ()
+    for key, value in items:
+        out.update(_fingerprint(value, (*path, key)))
+    return out
+
+
+def _is_changed(old: tuple, new: tuple) -> bool:
+    """Check whether a value is changed.
+
+    Parameters
+    ----------
+    old : tuple
+        The value and its checksums before.
+    new : tuple
+        The value and its checksums after.
+
+    Returns
+    -------
+    bool
+        Whether the value was replaced or changed in place.
+
+    """
+    (old_value, old_sums), (new_value, new_sums) = old, new
+    if new_value is not old_value:
+        return True
+    if isinstance(new_value, SpatialImage):
+        old_fdata, new_fdata = old_sums[2], new_sums[2]
+        old_sums, new_sums = old_sums[:2], new_sums[:2]
+        if new_fdata is not None:
+            if old_fdata is not None and old_fdata[1] == new_fdata[1]:
+                # Same dtype: the cached data must be the same
+                if old_fdata != new_fdata:
+                    return True
+            else:
+                # The data was cached by get_fdata during the computation,
+                # possibly with another dtype: compare it with the data read
+                # as get_fdata does
+                fdata = new_value._fdata_cache
+                expected = np.asanyarray(new_value.dataobj, dtype=fdata.dtype)
+                if not np.array_equal(fdata, expected, equal_nan=True):
+                    return True
+    return old_sums != new_sums
+
+
+def _changed_paths(
+    before: dict[tuple, tuple], after: dict[tuple, tuple]
+) -> list[str]:
+    """Get the paths of the data that are changed.
+
+    Parameters
+    ----------
+    before : dict
+        The fingerprint of the data before (see :func:`_fingerprint`).
+    after : dict
+        The fingerprint of the data after.
+
+    Returns
+    -------
+    list of str
+        The paths (keys joined by ".") that were added, removed, replaced or
+        changed in place.
+
+    """
+    changed = [
+        path
+        for path in sorted(before.keys() | after.keys(), key=str)
+        if path not in before
+        or path not in after
+        or _is_changed(before[path], after[path])
+    ]
+    return [".".join(str(key) for key in path) for path in changed]
