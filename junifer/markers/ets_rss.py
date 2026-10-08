@@ -18,7 +18,7 @@ from ..typing import Dependencies, MarkerInOutMappings
 from ..utils import ensure_list, ensure_list_or_none
 from .base import BaseMarker, logger
 from .parcel_aggregation import ParcelAggregation
-from .utils import _ets
+from .utils import _ets, _has_data
 
 
 __all__ = ["RSSETSMarker"]
@@ -113,7 +113,9 @@ class RSSETSMarker(BaseMarker):
         ).compute(input=input, extra_input=extra_input)
         # Compute edgewise timeseries
         edge_ts, _ = _ets(aggregation["aggregation"]["data"])
-        # Compute the RSS of edgewise timeseries
+        # Compute the RSS of edgewise timeseries, only using the edges with
+        # data (e.g. regions lost in resampling have none)
+        edge_ts = edge_ts[:, _has_data(edge_ts)]
         rss = np.sum(edge_ts**2, 1) ** 0.5
 
         return {

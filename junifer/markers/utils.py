@@ -17,6 +17,26 @@ from scipy.stats import zscore
 from ..utils import raise_error
 
 
+def _has_data(data: np.ndarray) -> np.ndarray:
+    """Get the columns with data.
+
+    Regions that are lost when resampling or warping the parcellation to the
+    target image have no voxels, so their time series are all NaN.
+
+    Parameters
+    ----------
+    data : np.ndarray
+        The data (time x columns).
+
+    Returns
+    -------
+    np.ndarray
+        Boolean mask of the columns that are not all NaN.
+
+    """
+    return ~np.all(np.isnan(data), axis=0)
+
+
 def _ets(
     bold_ts: np.ndarray,
     roi_names: list[str] | None = None,

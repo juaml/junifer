@@ -6,12 +6,12 @@
 
 from abc import abstractmethod
 from typing import (
-    TYPE_CHECKING,
     Annotated,
     Any,
     ClassVar,
 )
 
+import numpy as np
 from pydantic import BeforeValidator
 
 from ...datagrabber import DataType
@@ -20,10 +20,7 @@ from ...typing import Dependencies, MarkerInOutMappings
 from ...utils import ensure_list, ensure_list_or_none, raise_error
 from ..base import BaseMarker
 from ..parcel_aggregation import ParcelAggregation
-
-
-if TYPE_CHECKING:
-    import numpy as np
+from ..utils import _has_data
 
 
 __all__ = ["ComplexityBase"]
@@ -118,12 +115,15 @@ class ComplexityBase(BaseMarker):
             masks=self.masks,
             on=DataType.BOLD,
         ).compute(input=input, extra_input=extra_input)
-        # Compute complexity measure
+        # Compute complexity measure on the regions with data (e.g. regions
+        # lost in resampling have none) and set the others to NaN
+        data = parcel_aggregation["aggregation"]["data"]
+        has_data = _has_data(data)
+        complexity = np.full((1, data.shape[1]), np.nan)
+        complexity[:, has_data] = self.compute_complexity(data[:, has_data])
         return {
             "complexity": {
-                "data": self.compute_complexity(
-                    parcel_aggregation["aggregation"]["data"]
-                ),
+                "data": complexity,
                 "col_names": parcel_aggregation["aggregation"]["col_names"],
             }
         }
