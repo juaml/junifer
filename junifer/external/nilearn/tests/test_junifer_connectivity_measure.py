@@ -12,6 +12,10 @@ from typing import TYPE_CHECKING, Optional
 import numpy as np
 import pytest
 from nilearn.connectome.connectivity_matrices import sym_matrix_to_vec
+
+# Not part of nilearn's public API, so it might move in future versions.
+# Importing it evaluates the markers of nilearn's test module, which need to
+# be registered in the pytest markers (see pyproject.toml).
 from nilearn.tests.test_signal import generate_signals
 from numpy.testing import (
     assert_allclose,

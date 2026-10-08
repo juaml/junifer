@@ -14,7 +14,7 @@ from typing import (
 
 import nibabel as nib
 from nilearn import image as nimg
-from nilearn._utils.niimg_conversions import check_niimg_4d
+from nilearn.image import check_niimg_4d
 from pydantic import BeforeValidator
 
 from ..api.decorators import register_preprocessor

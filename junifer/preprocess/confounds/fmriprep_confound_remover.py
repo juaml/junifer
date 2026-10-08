@@ -25,7 +25,7 @@ import nibabel as nib
 import numpy as np
 import pandas as pd
 from nilearn import image as nimg
-from nilearn._utils.niimg_conversions import check_niimg_4d
+from nilearn.image import check_niimg_4d
 from nilearn.interfaces.fmriprep.load_confounds_components import _load_scrub
 from nilearn.interfaces.fmriprep.load_confounds_utils import prepare_output
 from pydantic import BeforeValidator
