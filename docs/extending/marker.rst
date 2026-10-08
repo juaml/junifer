@@ -142,7 +142,7 @@ and the values would be a dictionary of storage type specific key-value pairs.
         # Create a masker
         masker = NiftiLabelsMasker(
             labels_img=t_parcellation,
-            standardize=True,
+            standardize="zscore_sample",
             memory="nilearn_cache",
             verbose=5,
         )
@@ -232,7 +232,7 @@ Finally, we need to register the Marker using the ``@register_marker`` decorator
             # Create a masker
             masker = NiftiLabelsMasker(
                 labels_img=t_parcellation,
-                standardize=True,
+                standardize="zscore_sample",
                 memory="nilearn_cache",
                 verbose=5,
             )

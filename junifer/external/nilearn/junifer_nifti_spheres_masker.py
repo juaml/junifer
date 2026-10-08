@@ -8,16 +8,12 @@ from typing import TYPE_CHECKING, Union
 
 import numpy as np
 from nilearn import image, masking
-from nilearn._utils.class_inspect import get_params
-from nilearn._utils.niimg import img_data_dtype
-from nilearn._utils.niimg_conversions import (
-    check_niimg_3d,
-    check_niimg_4d,
-    safe_get_data,
-)
+from nilearn._utils.niimg import img_data_dtype, safe_get_data
+from nilearn.image import check_niimg_3d, check_niimg_4d, load_img
 from nilearn.maskers import NiftiSpheresMasker
-from nilearn.maskers.base_masker import _filter_and_extract
+from nilearn.maskers.base_masker import filter_and_extract
 from sklearn import neighbors
+from sklearn.utils.validation import check_is_fitted
 
 from ...utils import raise_error, warn_with_log
 
@@ -366,6 +362,7 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             radius=radius,
             mask_img=mask_img,
             allow_overlap=allow_overlap,
+            dtype=dtype,
             **kwargs,
         )
 
@@ -410,16 +407,19 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             inputs.
 
         """
-        self._check_fitted()
+        check_is_fitted(self)
 
-        params = get_params(NiftiSpheresMasker, self)
-
-        # New in nilearn 0.10.1
-        if hasattr(self, "clean_kwargs"):
-            params["clean_kwargs"] = self.clean_kwargs
+        # The parameters are taken from NiftiSpheresMasker, as the ones not
+        # in this class' signature are passed as keyword arguments
+        params = {
+            k: getattr(self, k)
+            for k in NiftiSpheresMasker._get_param_names()
+            if k not in {"memory", "memory_level", "verbose", "copy", "n_jobs"}
+        }
+        params["clean_kwargs"] = self.clean_args_
 
         signals, _ = self._cache(
-            _filter_and_extract, ignore=["verbose", "memory", "memory_level"]
+            filter_and_extract, ignore=["verbose", "memory", "memory_level"]
         )(
             imgs,
             _JuniferExtractionFunctor(
@@ -435,12 +435,18 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             confounds=confounds,
             sample_mask=sample_mask,
             dtype=self.dtype,
+            sklearn_output_config=getattr(
+                self, "_sklearn_output_config", None
+            ),
             # Caching
-            memory=self.memory,
+            memory=self.memory_,
             memory_level=self.memory_level,
             # kwargs
             verbose=self.verbose,
         )
+        target_dtype = self._get_target_dtype(load_img(imgs))
+        if target_dtype is not None:
+            signals = signals.astype(target_dtype)
         return signals
 
     def inverse_transform(self, region_signals: "ArrayLike") -> "Nifti1Image":

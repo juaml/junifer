@@ -115,11 +115,11 @@ RUN set -eux; \
     echo "${DATA_VERSION}" > "$HOME/junifer-data-version"
 
 # --- nilearn datasets used by junifer.testing (no downloads at test time) ---
-ARG NILEARN_VERSION=0.10.4
+ARG NILEARN_VERSION=0.14.1
 RUN <<'EOF'
 set -eux
 python3 -m venv /tmp/nilearn-venv
-/tmp/nilearn-venv/bin/pip install --no-cache-dir -q "nilearn==${NILEARN_VERSION}" "numpy<2.4"
+/tmp/nilearn-venv/bin/pip install --no-cache-dir -q "nilearn==${NILEARN_VERSION}"
 /tmp/nilearn-venv/bin/python - <<'PY'
 from nilearn import datasets
 datasets.fetch_oasis_vbm(n_subjects=10)

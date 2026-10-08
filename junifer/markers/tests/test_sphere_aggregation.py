@@ -6,6 +6,7 @@
 
 from pathlib import Path
 
+import numpy as np
 import pytest
 from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_equal
@@ -111,8 +112,9 @@ def test_SphereAggregation_3D() -> None:
         nifti_spheres_masker = NiftiSpheresMasker(
             seeds=testing_coords, radius=RADIUS
         )
-        nifti_spheres_masked_vbm_gm = nifti_spheres_masker.fit_transform(
-            element_data["VBM_GM"]["data"]
+        # nilearn returns a 1D array for 3D images
+        nifti_spheres_masked_vbm_gm = np.atleast_2d(
+            nifti_spheres_masker.fit_transform(element_data["VBM_GM"]["data"])
         )
 
         assert sphere_agg_vbm_gm_data.ndim == 2

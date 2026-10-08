@@ -5,6 +5,7 @@
 
 from typing import Annotated, Any, ClassVar, Literal
 
+import numpy as np
 from nilearn.maskers import NiftiMapsMasker
 from pydantic import BeforeValidator
 
@@ -185,15 +186,17 @@ class MapsAggregation(BaseMarker):
                 extra_input=extra_input,
             )
 
-        # Initialize masker
+        # Initialize masker; the maps (and mask) are already tailored to the
+        # input image, so no resampling is needed
         logger.debug("Masking")
         masker = NiftiMapsMasker(
             maps_img=maps_img,
             mask_img=mask_img,
-            target_affine=t_input_img.affine,
+            resampling_target=None,
         )
         # Mask the input data and extract data
-        data = masker.fit_transform(t_input_img)
+        # nilearn maskers return 1D arrays for 3D images, keep 2D
+        data = np.atleast_2d(masker.fit_transform(t_input_img))
 
         # Apply time dimension aggregation if required
         if self.time_method is not None:

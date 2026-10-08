@@ -146,7 +146,7 @@ need to specify its name as the ``kind`` key, as well as its parameters.
         global_signal: basic
       spike: 0.2
       detrend: false
-      standardize: true
+      standardize: zscore_sample
 
 
 For the ``UCLA CNP VBM Testing dataset`` example, we will not specify a

@@ -108,8 +108,10 @@ parameters:
      - Apply detrending on timeseries, before confound removal.
      - activated
    * - ``standardize``
-     - Scale signals to unit variance.
-     - activated
+     - | Strategy to standardize the signals: ``zscore_sample`` (zero mean
+       | and unit variance), ``psc`` (percent signal change) or ``null``
+       | (no standardization).
+     - ``zscore_sample``
    * - ``low_pass``
      - Low cutoff frequencies, in Hertz.
      - deactivated

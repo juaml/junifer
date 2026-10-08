@@ -18,7 +18,7 @@ pytestmark = pytest.mark.external
     (
         [
             True,
-            True,
+            "zscore_sample",
             None,
             None,
             None,
@@ -26,7 +26,7 @@ pytestmark = pytest.mark.external
         ],
         [
             False,
-            True,
+            "zscore_sample",
             0.1,
             None,
             None,
@@ -34,7 +34,7 @@ pytestmark = pytest.mark.external
         ],
         [
             True,
-            False,
+            None,
             None,
             0.08,
             None,
@@ -42,7 +42,7 @@ pytestmark = pytest.mark.external
         ],
         [
             False,
-            False,
+            "psc",
             None,
             None,
             2,
@@ -50,7 +50,7 @@ pytestmark = pytest.mark.external
         ],
         [
             True,
-            True,
+            "zscore_sample",
             0.1,
             0.08,
             2,
@@ -60,7 +60,7 @@ pytestmark = pytest.mark.external
 )
 def test_TemporalFilter(
     detrend: bool,
-    standardize: bool,
+    standardize: str | None,
     low_pass: float | None,
     high_pass: float | None,
     t_r: float | None,
@@ -72,8 +72,8 @@ def test_TemporalFilter(
     ----------
     detrend : bool
         The parametrized detrending flag.
-    standardize : bool
-        The parametrized standardization flag.
+    standardize : str or None
+        The parametrized standardization strategy.
     low_pass : float or None
         The parametrized low pass value.
     high_pass : float or None
@@ -98,3 +98,17 @@ def test_TemporalFilter(
         ).fit_transform(element_data)
 
         assert isinstance(output, dict)
+
+
+@pytest.mark.parametrize("standardize", [True, False])
+def test_TemporalFilter_standardize_bool(standardize: bool) -> None:
+    """Test TemporalFilter error for boolean standardize.
+
+    Parameters
+    ----------
+    standardize : bool
+        The parametrized standardization flag.
+
+    """
+    with pytest.raises(ValueError, match="does not accept booleans"):
+        TemporalFilter(standardize=standardize)

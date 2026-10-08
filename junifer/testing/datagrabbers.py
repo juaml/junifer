@@ -293,12 +293,13 @@ class UCLACNPVBMTestingDataGrabber(BaseDataGrabber):
 class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
     """DataGrabber for SPM Auditory dataset.
 
-    Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`.
+    Wrapper for :func:`nilearn.datasets.fetch_spm_auditory`. The dataset has
+    a single subject, which is provided for each of the elements.
 
     Parameters
     ----------
     n_timepoints : int or None, optional
-        The number of BOLD timepoints to keep. If None, all the 96
+        The number of BOLD timepoints to keep. If None, all the 84
         timepoints are kept (default None).
 
     """
@@ -351,16 +352,15 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         anat_fname = self.datadir / f"{subject}_T1w.nii.gz"
         # Files only depend on the parameters, so reuse them if already there
         if not fmri_fname.exists() or not anat_fname.exists():
-            nilearn_data = datasets.fetch_spm_auditory(subject_id=subject)
+            nilearn_data = datasets.fetch_spm_auditory(verbose=0)
         if not fmri_fname.exists():
-            # Each BOLD volume is a separate file, so keep only the ones
-            # needed
-            fmri_img = image.concat_imgs(
-                nilearn_data.func[: self.n_timepoints]
+            # Keep only the timepoints needed
+            fmri_img = image.index_img(
+                nilearn_data.func[0], slice(None, self.n_timepoints)
             )
             _save_atomic(fmri_fname, lambda x: nib.save(fmri_img, x))
         if not anat_fname.exists():
-            anat_img = image.concat_imgs(nilearn_data.anat)
+            anat_img = nib.load(nilearn_data.anat)
             _save_atomic(anat_fname, lambda x: nib.save(anat_img, x))
         out["BOLD"] = {"path": fmri_fname, "space": "MNI152Lin"}
         out["T1w"] = {"path": anat_fname, "space": "native"}

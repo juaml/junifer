@@ -10,11 +10,12 @@ from typing import (
     Annotated,
     Any,
     ClassVar,
+    Literal,
 )
 
 import nibabel as nib
 from nilearn import image as nimg
-from nilearn._utils.niimg_conversions import check_niimg_4d
+from nilearn.image import check_niimg_4d
 from pydantic import BeforeValidator
 
 from ..api.decorators import register_preprocessor
@@ -22,7 +23,7 @@ from ..data import get_data
 from ..datagrabber import DataType
 from ..pipeline import WorkDirManager
 from ..typing import Dependencies
-from ..utils import ensure_list_or_none
+from ..utils import check_standardize, ensure_list_or_none
 from .base import BasePreprocessor, logger
 
 
@@ -39,8 +40,11 @@ class TemporalFilter(BasePreprocessor):
     ----------
     detrend : bool, optional
         If True, detrending will be applied on timeseries (default True).
-    standardize : bool, optional
-        If True, returned signals are set to unit variance (default True).
+    standardize : {"zscore_sample", "psc"} or None, optional
+        The strategy to standardize the signals. ``"zscore_sample"`` sets
+        them to zero mean and unit variance (using the sample standard
+        deviation), ``"psc"`` converts them to percent signal change and
+        None does not standardize them (default "zscore_sample").
     low_pass : float, optional
         Low cutoff frequencies, in Hertz. If None, no filtering is applied
         (default None).
@@ -61,7 +65,10 @@ class TemporalFilter(BasePreprocessor):
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]] = [DataType.BOLD]
 
     detrend: bool = True
-    standardize: bool = True
+    standardize: Annotated[
+        Literal["zscore_sample", "psc"] | None,
+        BeforeValidator(check_standardize),
+    ] = "zscore_sample"
     low_pass: float | None = None
     high_pass: float | None = None
     t_r: float | None = None

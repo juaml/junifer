@@ -159,7 +159,7 @@ def test_data_object_dumper(
                     "wm_csf": "full",
                 },
                 detrend=True,
-                standardize=True,
+                standardize="zscore_sample",
             ),
         ],
         markers=[

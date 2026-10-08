@@ -42,7 +42,7 @@ dependencies = [
     "datalad>=1.0.0,<1.3.0",
     "pandas>=2.0.0,<2.4.0",
     "nibabel>=5.2.0,<5.4.0",
-    "nilearn>=0.10.3,<=0.10.4",
+    "nilearn>=0.14.0,<0.15",
     "sqlalchemy>=2.0.25,<=2.1.0",
     "ruamel.yaml>=0.17,<0.19",
     "h5py>=3.10",
@@ -241,6 +241,11 @@ addopts = [
 ]
 markers = [
     "external: requires resources outside the Python environment: testing datasets, junifer-data or AFNI / ANTs / FSL",
+    # Used by nilearn's test modules: importing their helpers (e.g.
+    # generate_signals from nilearn.tests.test_signal) evaluates their markers,
+    # which fails with --strict-markers unless registered here. If nilearn
+    # adds new markers to those modules, register them here too.
+    "thread_unsafe: nilearn tests that are not thread-safe",
 ]
 
 [tool.towncrier]

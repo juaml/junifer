@@ -38,6 +38,9 @@ def test_SPMAuditoryTestingDataGrabber() -> None:
         assert out["T1w"]["path"].exists()
         assert out["T1w"]["path"].is_file()
 
+        assert nib.load(out["BOLD"]["path"]).shape == (64, 64, 64, 84)
+        assert nib.load(out["T1w"]["path"]).shape == (256, 256, 54)
+
 
 def test_SPMAuditoryTestingDataGrabber_n_timepoints() -> None:
     """Test SPMAuditoryTestingDataGrabber with fewer timepoints."""

@@ -115,10 +115,7 @@ def test_ParcelAggregation_3D() -> None:
             img=testing_parcellation,
         )
         # Create NiftiMasker
-        masker = NiftiMasker(
-            testing_parcellation_bin,
-            target_affine=element_data["BOLD"]["data"].affine,
-        )
+        masker = NiftiMasker(testing_parcellation_bin)
         data = masker.fit_transform(element_data["BOLD"]["data"])
         parcellation_values = np.squeeze(
             masker.transform(testing_parcellation)
@@ -225,9 +222,10 @@ def test_ParcelAggregation_VBM() -> None:
         assert_array_equal(tailored.get_fdata(), raw.get_fdata())
 
         # Compare with nilearn
-        nifti_labels_masked_vbm = NiftiLabelsMasker(
-            labels_img=raw
-        ).fit_transform(vbm["data"])
+        # nilearn returns a 1D array for 3D images
+        nifti_labels_masked_vbm = np.atleast_2d(
+            NiftiLabelsMasker(labels_img=raw).fit_transform(vbm["data"])
+        )
         assert parcel_agg_vbm_data.shape == (1, 16)
         assert_array_almost_equal(nifti_labels_masked_vbm, parcel_agg_vbm_data)
 
