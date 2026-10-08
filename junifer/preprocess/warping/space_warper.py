@@ -4,7 +4,7 @@
 # License: AGPL
 
 from collections.abc import Sequence
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated, Any, ClassVar, Literal
 
 from pydantic import BeforeValidator
@@ -22,7 +22,7 @@ from ._fsl_warper import FSLWarper
 __all__ = ["SpaceWarper", "SpaceWarpingImpl"]
 
 
-class SpaceWarpingImpl(str, Enum):
+class SpaceWarpingImpl(StrEnum):
     """Accepted space warping implementations.
 
     * ``fsl`` : FSL's ``applywarp``

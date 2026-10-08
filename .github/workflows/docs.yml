@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-docs:
-    runs-on: [self-hosted, linux, x64, data-v7]
+    runs-on: [self-hosted, linux, x64, data-v8]
     steps:
     - name: Check ANTs
       run: |
@@ -20,7 +20,7 @@ jobs:
     - name: Check tooling
       run: |
         which make git-annex jq
-        ls -d "$HOME"/junifer_data/v7
+        ls -d "$HOME"/junifer_data/* && cat "$HOME/junifer-data-version"
     - name: Checkout repository
       uses: actions/checkout@v7
       with:

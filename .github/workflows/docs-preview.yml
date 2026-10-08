@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   build-docs:
-    runs-on: [self-hosted, linux, x64, data-v7]
+    runs-on: [self-hosted, linux, x64, data-v8]
     permissions:
       # Needed for preview deploy
       pull-requests: write
@@ -29,7 +29,7 @@ jobs:
       if: github.event.action != 'closed' # The build is not needed when the preview is removed
       run: |
         which make git-annex jq
-        ls -d "$HOME"/junifer_data/v7
+        ls -d "$HOME"/junifer_data/* && cat "$HOME/junifer-data-version"
     - name: Checkout repository
       uses: actions/checkout@v7
       with:

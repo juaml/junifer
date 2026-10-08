@@ -5,7 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from enum import Enum
+from enum import StrEnum
 from typing import Annotated, ClassVar, Literal
 
 from pydantic import AnyUrl, BeforeValidator
@@ -19,7 +19,7 @@ from ....utils import ensure_list
 __all__ = ["IXISite", "JuselessDataladIXIVBM"]
 
 
-class IXISite(str, Enum):
+class IXISite(StrEnum):
     """Accepted IXI sites."""
 
     Guys = "Guys"

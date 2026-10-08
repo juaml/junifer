@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections import Counter
 from itertools import product
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Optional
@@ -547,6 +548,17 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                 resolution=resolution,
                 target_space=target_space,
             )
+            # Map the labels to the values before resampling or warping,
+            # as small regions can be lost in the process
+            value_labels = dict(
+                zip(
+                    np.trim_zeros(
+                        np.unique(np.asarray(img.dataobj).astype(int))
+                    ).tolist(),
+                    labels,
+                    strict=True,
+                )
+            )
 
             # Convert parcellation spaces if required;
             # cannot be "native" due to earlier check
@@ -602,23 +614,27 @@ class ParcellationRegistry(BasePipelineDataRegistry):
                         warp_data=warper_spec,
                     )
 
+            # Keep the lost regions, so all elements have the same regions
+            present = set(
+                np.unique(np.asarray(img.dataobj).astype(int)).tolist()
+            )
+            lost = [
+                label
+                for value, label in value_labels.items()
+                if value not in present
+            ]
+            if lost:
+                warn_with_log(
+                    f"{len(lost)} region(s) of {name} have no voxels in the "
+                    f"target image, so they will have no data: {lost}"
+                )
             all_parcellations.append(img)
-            all_labels.append(labels)
+            all_labels.append(value_labels)
 
         # Avoid merging if there is only one parcellation
         if len(all_parcellations) == 1:
             resampled_parcellation_img = all_parcellations[0]
-            labels = dict(
-                zip(
-                    np.trim_zeros(
-                        np.unique(
-                            resampled_parcellation_img.get_fdata().astype(int)
-                        )
-                    ),
-                    all_labels[0],
-                    strict=False,
-                )
-            )
+            labels = all_labels[0]
         # Parcellations are already transformed to target standard space
         else:
             logger.debug("Merging parcellations.")
@@ -1118,16 +1134,29 @@ def _retrieve_shen(
             dataset_path=get_dataset_path(),
             **JUNIFER_DATA_PARAMS,
         )
-        labels = (
+        # The rows are sorted by name, so order them by the parcel value
+        # (first column) to match the parcellation image
+        names = (
             pd.read_csv(
                 parcellation_label_path,
                 sep=",",
                 header=None,
                 skiprows=[0],
-            )[1]
+            )
+            .sort_values(0)[1]
             .map(lambda x: x.strip())  # fix formatting
             .to_list()
         )
+        # Regions outside Brodmann areas share a name ("No_BA_region"), so
+        # number every occurrence of repeated names
+        counts = Counter(names)
+        seen: Counter = Counter()
+        labels = []
+        for name in names:
+            if counts[name] > 1:
+                seen[name] += 1
+                name = f"{name}-{seen[name]}"
+            labels.append(name)
     elif year == 2015:
         parcellation_img_path = get(
             file_path=path_prefix
@@ -1264,8 +1293,9 @@ def _retrieve_yan(
             **JUNIFER_DATA_PARAMS,
         )
 
-    # Load label file
-    labels = pd.read_csv(parcellation_label_path, sep=" ", header=None)[
+    # Load label file; the index is right-aligned with spaces, so split on
+    # any whitespace
+    labels = pd.read_csv(parcellation_label_path, sep=r"\s+", header=None)[
         1
     ].to_list()
 
@@ -1331,33 +1361,16 @@ def _retrieve_brainnetome(
         **JUNIFER_DATA_PARAMS,
     )
 
-    # Load labels
+    # Load labels (one row per label, ordered by label value)
+    parcellation_label_path = get(
+        file_path=Path("parcellations/Brainnetome/labels.csv"),
+        dataset_path=get_dataset_path(),
+        **JUNIFER_DATA_PARAMS,
+    )
     labels = (
-        sorted([f"SFG_L(R)_7_{i}" for i in range(1, 8)] * 2)
-        + sorted([f"MFG_L(R)_7_{i}" for i in range(1, 8)] * 2)
-        + sorted([f"IFG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"OrG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"PrG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"PCL_L(R)_2_{i}" for i in range(1, 3)] * 2)
-        + sorted([f"STG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"MTG_L(R)_4_{i}" for i in range(1, 5)] * 2)
-        + sorted([f"ITG_L(R)_7_{i}" for i in range(1, 8)] * 2)
-        + sorted([f"FuG_L(R)_3_{i}" for i in range(1, 4)] * 2)
-        + sorted([f"PhG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"pSTS_L(R)_2_{i}" for i in range(1, 3)] * 2)
-        + sorted([f"SPL_L(R)_5_{i}" for i in range(1, 6)] * 2)
-        + sorted([f"IPL_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"PCun_L(R)_4_{i}" for i in range(1, 5)] * 2)
-        + sorted([f"PoG_L(R)_4_{i}" for i in range(1, 5)] * 2)
-        + sorted([f"INS_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"CG_L(R)_7_{i}" for i in range(1, 8)] * 2)
-        + sorted([f"MVOcC _L(R)_5_{i}" for i in range(1, 6)] * 2)
-        + sorted([f"LOcC_L(R)_4_{i}" for i in range(1, 5)] * 2)
-        + sorted([f"LOcC_L(R)_2_{i}" for i in range(1, 3)] * 2)
-        + sorted([f"Amyg_L(R)_2_{i}" for i in range(1, 3)] * 2)
-        + sorted([f"Hipp_L(R)_2_{i}" for i in range(1, 3)] * 2)
-        + sorted([f"BG_L(R)_6_{i}" for i in range(1, 7)] * 2)
-        + sorted([f"Tha_L(R)_8_{i}" for i in range(1, 9)] * 2)
+        pd.read_csv(parcellation_label_path, sep=",")
+        .sort_values("idx")["label"]
+        .to_list()
     )
 
     return parcellation_img_path, labels
@@ -1563,7 +1576,12 @@ def _retrieve_julich_brain(
         dataset_path=get_dataset_path(),
         **JUNIFER_DATA_PARAMS,
     )
-    labels = pd.read_csv(parcellation_label_path, sep=",")["label"].to_list()
+    # The "label" column is the value in the image and "region" the name
+    labels = (
+        pd.read_csv(parcellation_label_path, sep=",")
+        .sort_values("label")["region"]
+        .to_list()
+    )
 
     return parcellation_img_path, labels
 
@@ -1571,7 +1589,7 @@ def _retrieve_julich_brain(
 def merge_parcellations(
     parcellations_list: list["Nifti1Image"],
     parcellations_names: list[str],
-    labels_lists: list[list[str]],
+    labels_lists: list[list[str] | dict[int, str]],
 ) -> tuple["Nifti1Image", dict[int, str]]:
     """Merge multiple parcellations.
 
@@ -1581,9 +1599,12 @@ def merge_parcellations(
         List of parcellations to merge.
     parcellations_names: list of str
         List of names for parcellations at the corresponding indices.
-    labels_lists : list of list of str
-        A list of lists. Each list in the list contains the labels for the
-        parcellation at the corresponding index.
+    labels_lists : list of list of str or dict
+        The labels for the parcellation at the corresponding index, either
+        as a mapping of value to label or as a list of labels for the
+        (sorted) values in the parcellation. Use the mapping if regions
+        might be missing from the parcellation (e.g., after resampling), so
+        they keep their label.
 
     Returns
     -------
@@ -1594,40 +1615,42 @@ def merge_parcellations(
         Merged parcellation value to label mappings.
 
     """
+    # Get the value to label mapping of each parcellation; lists are
+    # matched to the values in the parcellation
+    label_maps = []
+    for parc, labels in zip(parcellations_list, labels_lists, strict=True):
+        if isinstance(labels, dict):
+            label_maps.append(dict(labels))
+        else:
+            values = np.trim_zeros(np.unique(parc.get_fdata().astype(int)))
+            label_maps.append(dict(zip(values.tolist(), labels, strict=True)))
+
     # Check for duplicated labels
-    labels_lists_flat = [item for sublist in labels_lists for item in sublist]
-    if len(labels_lists_flat) != len(set(labels_lists_flat)):
+    labels_flat = [label for m in label_maps for label in m.values()]
+    if len(labels_flat) != len(set(labels_flat)):
         warn_with_log(
             "The parcellations have duplicated labels. "
             "Each label will be prefixed with the parcellation name."
         )
-        for i_parcellation, t_labels in enumerate(labels_lists):
-            labels_lists[i_parcellation] = [
-                f"{parcellations_names[i_parcellation]}_{t_label}"
-                for t_label in t_labels
-            ]
+        label_maps = [
+            {value: f"{name}_{label}" for value, label in m.items()}
+            for name, m in zip(parcellations_names, label_maps, strict=True)
+        ]
     overlapping_voxels = False
     ref_parc = parcellations_list[0]
     ref_parc_data = ref_parc.get_fdata()
 
-    # Get max value for the parcellation ROIs to get a reference for ROI value
-    # increment
-    max_val = np.max(
-        np.concatenate(
-            [np.unique(p.get_fdata().astype(int)) for p in parcellations_list]
-        )
+    # Get max value for the parcellation ROIs (including the ones that might
+    # not be in the images) to get a reference for ROI value increment
+    max_val = max(
+        max(np.max(p.get_fdata().astype(int)) for p in parcellations_list),
+        max(max(m, default=0) for m in label_maps),
     )
     # Setup parcellation value to label mapping
-    val_label_map = dict(
-        zip(
-            np.trim_zeros(np.unique(ref_parc_data.astype(int))),
-            labels_lists[0],
-            strict=False,
-        ),
-    )
+    val_label_map = dict(label_maps[0])
 
     for idx, (parc, labs) in enumerate(
-        zip(parcellations_list[1:], labels_lists[1:], strict=False)
+        zip(parcellations_list[1:], label_maps[1:], strict=True)
     ):
         # Resample to reference (1st in the list) parcellation
         if parc.shape != ref_parc.shape:
@@ -1646,14 +1669,9 @@ def merge_parcellations(
         # Increase the values of each ROI to match the labels
         # and update label mapping
         parc_data[parc_data != 0] += (idx + 1) * max_val
+        offset = (idx + 1) * max_val
         val_label_map.update(
-            dict(
-                zip(
-                    np.trim_zeros(np.unique(parc_data.astype(int))),
-                    labs,
-                    strict=False,
-                )
-            )
+            {value + offset: label for value, label in labs.items()}
         )
         # Only set new values for the voxels that are 0
         # This makes sure that the voxels that are in multiple

@@ -6,7 +6,7 @@
 
 import tempfile
 from collections.abc import Callable
-from enum import Enum
+from enum import Enum, StrEnum
 from pathlib import Path
 from typing import Any, ClassVar
 from uuid import uuid4
@@ -367,7 +367,7 @@ class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
         return out
 
 
-class PartlyCloudyAgeGroup(str, Enum):
+class PartlyCloudyAgeGroup(StrEnum):
     """Age group to fetch.
 
     * ``Adult`` : fetch adults only (n=33, ages 18-39)

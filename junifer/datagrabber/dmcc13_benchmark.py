@@ -3,7 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from enum import Enum
+from enum import StrEnum
 from itertools import product
 from typing import Annotated, Literal
 
@@ -26,7 +26,7 @@ __all__ = [
 ]
 
 
-class DMCCSession(str, Enum):
+class DMCCSession(StrEnum):
     """Accepted DMCC sessions."""
 
     Wave1Bas = "ses-wave1bas"
@@ -34,7 +34,7 @@ class DMCCSession(str, Enum):
     Wave1Rea = "ses-wave1rea"
 
 
-class DMCCTask(str, Enum):
+class DMCCTask(StrEnum):
     """Accepted DMCC tasks."""
 
     Rest = "Rest"
@@ -44,14 +44,14 @@ class DMCCTask(str, Enum):
     Stroop = "Stroop"
 
 
-class DMCCPhaseEncoding(str, Enum):
+class DMCCPhaseEncoding(StrEnum):
     """Accepted DMCC phase encoding directions."""
 
     AP = "AP"
     PA = "PA"
 
 
-class DMCCRun(str, Enum):
+class DMCCRun(StrEnum):
     """Accepted DMCC runs."""
 
     One = "1"

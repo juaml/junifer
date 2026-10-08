@@ -5,7 +5,7 @@
 
 import shutil
 import textwrap
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
 
@@ -23,7 +23,7 @@ from .queue_context_adapter import (
 __all__ = ["HTCondorAdapter", "HTCondorCollect"]
 
 
-class HTCondorCollect(str, Enum):
+class HTCondorCollect(StrEnum):
     """Accepted HTCondor collect commands.
 
     * ``"yes"``: Submit "collect" task and run even if some of the jobs

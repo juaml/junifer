@@ -357,6 +357,8 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         **kwargs,  # TODO: to keep or not?
     ) -> None:
         self.agg_func = agg_func
+        # nilearn's default (False) is deprecated, use the new equivalent
+        kwargs.setdefault("standardize", None)
         super().__init__(
             seeds=seeds,
             radius=radius,

@@ -1,16 +1,16 @@
 """Provide common types for AOMIC DataGrabbers."""
 
-from enum import Enum
+from enum import StrEnum
 
 
-class AOMICSpace(str, Enum):
+class AOMICSpace(StrEnum):
     """Accepted spaces for AOMIC."""
 
     Native = "native"
     MNI152NLin2009cAsym = "MNI152NLin2009cAsym"
 
 
-class AOMICTask(str, Enum):
+class AOMICTask(StrEnum):
     """Accepted tasks for AOMIC."""
 
     RestingState = "restingstate"

@@ -5,7 +5,7 @@
 # License: AGPL
 
 import json
-from enum import Enum
+from enum import StrEnum
 from typing import TYPE_CHECKING, Any, Optional
 
 import numpy as np
@@ -13,6 +13,7 @@ import pandas as pd
 from pandas.core.base import NoNewAttributesMixin
 from pandas.io.sql import pandasSQL_builder
 from sqlalchemy import create_engine, inspect
+from sqlalchemy.pool import NullPool
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
@@ -33,7 +34,7 @@ if TYPE_CHECKING:
 __all__ = ["SQLiteFeatureStorage", "Upsert"]
 
 
-class Upsert(str, Enum):
+class Upsert(StrEnum):
     """Accepted upsert value."""
 
     Update = "update"
@@ -99,7 +100,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 prefix = element_to_prefix(element)
         # Format URI for engine creation
         uri = f"sqlite:///{self.uri.parent}/{prefix}{self.uri.name}"
-        return create_engine(uri, echo=False)
+        return create_engine(uri, echo=False, poolclass=NullPool)
 
     def _save_upsert(
         self,
@@ -566,7 +567,7 @@ def _generate_update_statements(table, index_col, rows_to_update):
     for i, (_, keys) in enumerate(pk_indb.iterrows()):
         stmt = (
             table.update()
-            .where(and_(col == keys[j] for j, col in enumerate(pk_cols)))  # type: ignore
+            .where(and_(col == keys.iloc[j] for j, col in enumerate(pk_cols)))  # type: ignore
             .values(new_records[i])
         )
         stmts.append(stmt)

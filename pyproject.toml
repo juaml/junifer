@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "junifer"
 description = "JUelich NeuroImaging FEature extractoR"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = {text = "AGPL-3.0-only"}
 authors = [
     { name = "Fede Raimondo", email = "f.raimondo@fz-juelich.de" },
@@ -29,34 +29,32 @@ classifiers = [
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
-    "click>=8.1.3,<8.2",
-    "numpy>=1.26.0,<2.4.0",
-    "scipy>=1.10.0,<1.17.0",
-    "datalad>=1.0.0,<1.3.0",
-    "pandas>=2.0.0,<2.4.0",
-    "nibabel>=5.2.0,<5.4.0",
+    "click>=8.1.3,<8.6",
+    "numpy>=1.26.0,<2.5.0",
+    "scipy>=1.10.0,<1.18.0",
+    "datalad>=1.0.0,<1.8.0",
+    "pandas>=2.0.0,<3.1.0",
+    "nibabel>=5.2.0,<5.5.0",
     "nilearn>=0.14.0,<0.15",
-    "sqlalchemy>=2.0.25,<=2.1.0",
-    "ruamel.yaml>=0.17,<0.19",
+    "sqlalchemy>=2.0.25,<2.2.0",
+    "ruamel.yaml>=0.17,<0.20",
     "h5py>=3.10",
-    "tqdm>=4.66.1,<4.68.0",
-    "templateflow>=23.0.0,<25.0.0",
+    "tqdm>=4.66.1,<4.71.0",
+    "templateflow>=23.0.0,<26.0.0",
     "lapy>=1.0.0,<2.0.0",
-    "lazy_loader==0.4",
-    "importlib_metadata; python_version<'3.11'",
+    "lazy_loader>=0.4,<0.7",
     "looseversion==1.3.0; python_version>='3.12'",
-    "junifer-data>=1.5.0",
-    "structlog>=25.0.0,<26.0.0",
+    "junifer-data>=1.6.1",
+    "structlog>=25.0.0,<27.0.0",
     "pydantic>=2.11.4",
     "aenum>=3.1.0,<3.2.0",
-    "typing_extensions>=4.15.0,<4.16.0; python_version<'3.12'",
+    "typing_extensions>=4.15.0,<4.17.0; python_version<'3.12'",
 ]
 dynamic = ["version"]
 
@@ -71,14 +69,14 @@ junifer = "junifer.cli.cli:cli"
 
 [project.optional-dependencies]
 all = [
-    "bctpy==0.6.0",
-    "neurokit2>=0.1.7",
+    "bctpy>=0.6.0,<0.7",
+    "neurokit2==0.2.12",
 ]
-bct = ["bctpy==0.6.0"]
+bct = ["bctpy>=0.6.0,<0.7"]
 onthefly = [
-    "bctpy==0.6.0"
+    "bctpy>=0.6.0,<0.7"
 ]
-neurokit2 = ["neurokit2>=0.1.7"]
+neurokit2 = ["neurokit2==0.2.12"]
 dev = [
     "tox",
     "pre-commit",
@@ -87,14 +85,16 @@ dev = [
 ]
 sphinx = [
     "seaborn>=0.13.0,<0.14.0",
-    "sphinx>=7.3.0,<8.4.0",
-    "sphinx-gallery>=0.17.0,<0.20.0",
-    "furo>=2024.4.27,<2025.10.0",
-    "numpydoc>=1.6.0,<=1.9.0",
+    # enum-tools fails with Sphinx 9 (domdfcoding/enum_tools#118, see
+    # juaml/junifer#519)
+    "sphinx>=7.3.0,<9.0.0",
+    "sphinx-gallery>=0.17.0,<0.23.0",
+    "furo>=2024.4.27,<2026.0.0",
+    "numpydoc>=1.6.0,<1.12.0",
     "julearn==0.3.5",
     "sphinx-copybutton>=0.5.1,<0.5.3",
-    "towncrier>=24.7.0,<=25.8.0",
-    "sphinxcontrib-mermaid>=0.8.1,<=1.0.0",
+    "towncrier>=24.7.0,<26.10.0",
+    "sphinxcontrib-mermaid>=0.8.1,<2.2.0",
     "sphinxcontrib-towncrier==0.5.0a0",
     "setuptools-scm>=8",
     "autodoc_pydantic>=2.0.0",
@@ -321,11 +321,11 @@ precision = 2
 
 
 [dependency-groups]
-bct = ["bctpy==0.6.0"]
+bct = ["bctpy>=0.6.0,<0.7"]
 onthefly = [
-    "bctpy==0.6.0"
+    "bctpy>=0.6.0,<0.7"
 ]
-neurokit2 = ["neurokit2>=0.1.7"]
+neurokit2 = ["neurokit2==0.2.12"]
 dev = [
     "ipython>=8.39.0",
     "pre-commit>=4.3.0",
@@ -336,14 +336,16 @@ dev = [
 ]
 docs = [
     "seaborn>=0.13.0,<0.14.0",
-    "sphinx>=7.3.0,<8.4.0",
-    "sphinx-gallery>=0.17.0,<0.20.0",
-    "furo>=2024.4.27,<2025.10.0",
-    "numpydoc>=1.6.0,<=1.9.0",
+    # enum-tools fails with Sphinx 9 (domdfcoding/enum_tools#118, see
+    # juaml/junifer#519)
+    "sphinx>=7.3.0,<9.0.0",
+    "sphinx-gallery>=0.17.0,<0.23.0",
+    "furo>=2024.4.27,<2026.0.0",
+    "numpydoc>=1.6.0,<1.12.0",
     "julearn==0.3.5",
     "sphinx-copybutton>=0.5.1,<0.5.3",
-    "towncrier>=24.7.0,<=25.8.0",
-    "sphinxcontrib-mermaid>=0.8.1,<=1.0.0",
+    "towncrier>=24.7.0,<26.10.0",
+    "sphinxcontrib-mermaid>=0.8.1,<2.2.0",
     "sphinxcontrib-towncrier==0.5.0a0",
     "setuptools-scm>=8",
     "autodoc_pydantic>=2.0.0",

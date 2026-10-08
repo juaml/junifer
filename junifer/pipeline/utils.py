@@ -5,7 +5,7 @@
 # License: AGPL
 
 import subprocess
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import validate_call
@@ -16,7 +16,7 @@ from ..utils import raise_error, warn_with_log
 __all__ = ["ExtDep", "check_ext_dependencies"]
 
 
-class ExtDep(str, Enum):
+class ExtDep(StrEnum):
     """Accepted external dependencies."""
 
     AFNI = "afni"

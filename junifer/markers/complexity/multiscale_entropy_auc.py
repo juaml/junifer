@@ -5,6 +5,9 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from collections.abc import Generator
+from contextlib import contextmanager
+
 import neurokit2 as nk
 import numpy as np
 
@@ -15,6 +18,26 @@ from .complexity_base import ComplexityBase
 
 
 __all__ = ["MultiscaleEntropyAUC"]
+
+
+# TODO: remove once the neurokit2 pin (0.2.12) can be raised (0.2.13
+# requires pandas < 3 and setuptools < 82)
+@contextmanager
+def _numpy_trapz() -> Generator[None, None, None]:
+    """Provide ``numpy.trapz`` for ``neurokit2.entropy_multiscale``.
+
+    ``numpy.trapz`` was removed in numpy 2.4 in favour of
+    ``numpy.trapezoid``, but neurokit2 <= 0.2.12 still uses it.
+
+    """
+    if hasattr(np, "trapz"):
+        yield
+        return
+    np.trapz = np.trapezoid
+    try:
+        yield
+    finally:
+        del np.trapz
 
 
 @register_marker
@@ -111,13 +134,14 @@ class MultiscaleEntropyAUC(ComplexityBase):
         for idx_roi in range(n_roi):
             sig = extracted_bold_values[:, idx_roi]
             tol_corrected = tol * np.std(sig)
-            tmp = nk.entropy_multiscale(
-                sig,
-                scale=scale,
-                dimension=emb_dim,
-                tolerance=tol_corrected,
-                method="MSEn",
-            )
+            with _numpy_trapz():
+                tmp = nk.entropy_multiscale(
+                    sig,
+                    scale=scale,
+                    dimension=emb_dim,
+                    tolerance=tol_corrected,
+                    method="MSEn",
+                )
 
             MSEn_auc_roi[idx_roi] = tmp[0]
 

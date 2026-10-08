@@ -5,7 +5,7 @@
 # License: AGPL
 
 from collections.abc import Callable
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 import numpy as np
@@ -29,7 +29,7 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="stats")
 
 
-class AggFunc(str, Enum):
+class AggFunc(StrEnum):
     """Accepted aggregation function names.
 
     * ``mean`` -> :func:`numpy.mean`

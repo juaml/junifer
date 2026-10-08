@@ -109,8 +109,9 @@ scores = run_cross_validation(
     data=df_vbm,
     model=creator,
     cv=3,
+    scoring="r2",
 )
-print(scores)
+print(scores[["fold", "test_score"]])
 
 ###############################################################################
 # Interpretation of results:
