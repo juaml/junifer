@@ -3,7 +3,7 @@
 # Authors: Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -35,7 +35,7 @@ def get_testing_data(fname: str) -> Path:
 
 
 @contextmanager
-def config_override(key: str, val: ConfigVal) -> Iterator[None]:
+def config_override(key: str, val: ConfigVal) -> Generator[None, None, None]:
     """Temporarily set a configuration parameter.
 
     The previous state is restored on exit: the previous value if the key
