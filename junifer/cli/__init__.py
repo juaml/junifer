@@ -3,12 +3,9 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import sys
+from importlib.metadata import entry_points
 
 import lazy_loader as lazy
-
-
-from importlib.metadata import entry_points
 
 
 __getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
