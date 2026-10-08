@@ -114,16 +114,34 @@ def test_base_marker_subclassing() -> None:
     assert "T2" not in output
 
 
-class _ReadingMarker(BaseMarker):
-    """Marker that applies a function to its input."""
+def _fit(change: Callable, tmp_path: Path) -> dict:
+    """Fit a marker that applies a function to its input.
 
-    _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
-        DataType.BOLD: {"feat": StorageType.Vector},
-    }
+    Parameters
+    ----------
+    change : callable
+        The function, called with the input and the extra input.
+    tmp_path : pathlib.Path
+        The path to the test directory.
 
-    def compute(self, input, extra_input=None):
-        self._change(input, extra_input)  # type: ignore[attr-defined]
-        return {"feat": {"data": np.zeros((1, 1)), "col_names": ["x"]}}
+    Returns
+    -------
+    dict
+        The output of the marker.
+
+    """
+
+    class Marker(BaseMarker):
+        _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
+            DataType.BOLD: {"feat": StorageType.Vector},
+        }
+
+        def compute(self, input, extra_input=None):
+            change(input, extra_input)
+            return {"feat": {"data": np.zeros((1, 1)), "col_names": ["x"]}}
+
+    marker = Marker(on=["BOLD"], name="marker")
+    return marker.fit_transform(input=_input(tmp_path))
 
 
 def _input(tmp_path: Path) -> dict:
@@ -170,81 +188,121 @@ def _input(tmp_path: Path) -> dict:
     }
 
 
-def _set(input: dict, key: str, value: object) -> None:
-    """Set a value of a dictionary."""
-    input[key] = value
+def replace_value(input: dict, extra_input: dict) -> None:
+    """Replace a value."""
+    input["data"] = "new"
+
+
+def add_nested_value(input: dict, extra_input: dict) -> None:
+    """Add a value to a nested dictionary."""
+    input["meta"]["new"] = 1
+
+
+def remove_nested_value(input: dict, extra_input: dict) -> None:
+    """Remove the values of a nested dictionary."""
+    input["meta"]["element"].clear()
+
+
+def remove_value(input: dict, extra_input: dict) -> None:
+    """Remove a value."""
+    del input["path"]
+
+
+def change_array(input: dict, extra_input: dict) -> None:
+    """Change an array in place."""
+    input["array"][0] = 9.0
+
+
+def reshape_array(input: dict, extra_input: dict) -> None:
+    """Change the shape of an array in place."""
+    input["array"].shape = (2, 2)
+
+
+def change_array_dtype(input: dict, extra_input: dict) -> None:
+    """Change the dtype of an array in place."""
+    input["array"].dtype = np.int64
+
+
+def change_image_data(input: dict, extra_input: dict) -> None:
+    """Change the data of an in-memory image in place."""
+    np.asarray(input["data"].dataobj)[0, 0, 0, 0] = 9.0
+
+
+def change_image_affine(input: dict, extra_input: dict) -> None:
+    """Change the affine of an image in place."""
+    input["data"].affine[0, 3] = 9.0
+
+
+def change_dataframe(input: dict, extra_input: dict) -> None:
+    """Change a column of a data frame in place."""
+    input["confounds"]["data"]["a"] = 0.0
+
+
+def rename_dataframe_column(input: dict, extra_input: dict) -> None:
+    """Rename a column of a data frame in place."""
+    input["confounds"]["data"].rename(columns={"a": "b"}, inplace=True)
+
+
+def change_list_item(input: dict, extra_input: dict) -> None:
+    """Change an item of a list."""
+    extra_input["Warp"][0]["dst"] = "MNI"
+
+
+def append_to_list(input: dict, extra_input: dict) -> None:
+    """Append an item to a list."""
+    extra_input["Warp"].append({})
+
+
+def clear_set(input: dict, extra_input: dict) -> None:
+    """Remove the items of a set."""
+    input["meta"]["dependencies"].clear()
+
+
+def change_cached_image_data(input: dict, extra_input: dict) -> None:
+    """Change the cached data of an image of the extra input."""
+    extra_input["T1w"]["data"].get_fdata()[0, 0, 0] = 9.0
+
+
+def change_image_data_read_with_nilearn(
+    input: dict, extra_input: dict
+) -> None:
+    """Change the data of an image, after loading it with nilearn."""
+    get_data(input["mask"])[0, 0, 0] = 9.0
+
+
+def change_image_data_read_with_nibabel(
+    input: dict, extra_input: dict
+) -> None:
+    """Change the data of an image, after loading it with nibabel."""
+    input["mask"].get_fdata()[0, 0, 0] = 9.0
+
+
+# The changes of the input and the paths of the data they change
+_CHANGES = {
+    replace_value: "BOLD.data",
+    add_nested_value: "BOLD.meta.new",
+    remove_nested_value: "BOLD.meta.element.subject",
+    remove_value: "BOLD.path",
+    change_array: "BOLD.array",
+    reshape_array: "BOLD.array",
+    change_array_dtype: "BOLD.array",
+    change_image_data: "BOLD.data",
+    change_image_affine: "BOLD.data",
+    change_dataframe: "BOLD.confounds.data",
+    rename_dataframe_column: "BOLD.confounds.data",
+    change_list_item: "Warp.0.dst",
+    append_to_list: "Warp.1",
+    clear_set: "BOLD.meta.dependencies",
+    change_cached_image_data: "T1w.data",
+    change_image_data_read_with_nilearn: "BOLD.mask",
+    change_image_data_read_with_nibabel: "BOLD.mask",
+}
 
 
 @pytest.mark.parametrize(
     "change, changed",
-    [
-        (lambda i, e: _set(i, "data", "new"), "BOLD.data"),
-        (lambda i, e: _set(i["meta"], "new", 1), "BOLD.meta.new"),
-        (
-            lambda i, e: i["meta"]["element"].clear(),
-            "BOLD.meta.element.subject",
-        ),
-        (lambda i, e: i.pop("path"), "BOLD.path"),
-        (lambda i, e: i["array"].__setitem__(0, 9.0), "BOLD.array"),
-        (lambda i, e: setattr(i["array"], "shape", (2, 2)), "BOLD.array"),
-        (lambda i, e: setattr(i["array"], "dtype", np.int64), "BOLD.array"),
-        (
-            lambda i, e: np.asarray(i["data"].dataobj).__setitem__(
-                (0, 0, 0, 0), 9.0
-            ),
-            "BOLD.data",
-        ),
-        (lambda i, e: i["data"].affine.__setitem__((0, 3), 9.0), "BOLD.data"),
-        (
-            lambda i, e: i["confounds"]["data"].__setitem__("a", 0.0),
-            "BOLD.confounds.data",
-        ),
-        (
-            lambda i, e: i["confounds"]["data"].rename(
-                columns={"a": "b"}, inplace=True
-            ),
-            "BOLD.confounds.data",
-        ),
-        (lambda i, e: _set(e["Warp"][0], "dst", "MNI"), "Warp.0.dst"),
-        (lambda i, e: e["Warp"].append({}), "Warp.1"),
-        (
-            lambda i, e: i["meta"]["dependencies"].clear(),
-            "BOLD.meta.dependencies",
-        ),
-        (
-            lambda i, e: (
-                e["T1w"]["data"].get_fdata().__setitem__((0, 0, 0), 9.0)
-            ),
-            "T1w.data",
-        ),
-        (
-            lambda i, e: get_data(i["mask"]).__setitem__((0, 0, 0), 9.0),
-            "BOLD.mask",
-        ),
-        (
-            lambda i, e: i["mask"].get_fdata().__setitem__((0, 0, 0), 9.0),
-            "BOLD.mask",
-        ),
-    ],
-    ids=[
-        "replace",
-        "add-nested",
-        "remove-nested",
-        "remove",
-        "array-in-place",
-        "array-shape-in-place",
-        "array-dtype-in-place",
-        "image-data-in-place",
-        "image-affine-in-place",
-        "dataframe-in-place",
-        "dataframe-columns-in-place",
-        "list-nested",
-        "list-append",
-        "set-in-place",
-        "extra-input-cached-image-in-place",
-        "not-loaded-image-nilearn-in-place",
-        "not-loaded-image-nibabel-in-place",
-    ],
+    _CHANGES.items(),
+    ids=[change.__name__ for change in _CHANGES],
 )
 def test_base_marker_input_changed(
     tmp_path: Path, change: Callable, changed: str
@@ -256,15 +314,13 @@ def test_base_marker_input_changed(
     tmp_path : pathlib.Path
         The path to the test directory.
     change : callable
-        The parametrized change of the input (and extra input).
+        The parametrized change of the input.
     changed : str
         The parametrized path of the changed data.
 
     """
-    marker = _ReadingMarker(on=["BOLD"], name="changing")
-    marker._change = change  # type: ignore[attr-defined]
-    with pytest.raises(RuntimeError, match=rf"changing changed .*{changed}"):
-        marker.fit_transform(input=_input(tmp_path))
+    with pytest.raises(RuntimeError, match=rf"marker changed .*{changed}"):
+        _fit(change, tmp_path)
 
 
 def test_base_marker_input_not_changed(tmp_path: Path) -> None:
@@ -289,7 +345,5 @@ def test_base_marker_input_not_changed(tmp_path: Path) -> None:
         set(input["meta"]["dependencies"])
         [warp["dst"] for warp in extra_input["Warp"]]
 
-    marker = _ReadingMarker(on=["BOLD"], name="reading")
-    marker._change = read  # type: ignore[attr-defined]
-    out = marker.fit_transform(input=_input(tmp_path))
+    out = _fit(read, tmp_path)
     assert "feat" in out["BOLD"]
