@@ -5,15 +5,44 @@
 # License: AGPL
 
 import gc
+from pathlib import Path
 
 import pytest
 
 from junifer.utils.singleton import Singleton
 
 
-# Do not collect the tests of vendored packages. Paths are relative to this
-# file, so it also works when testing the installed package.
-collect_ignore = ["external/h5io", "external/BrainPrint"]
+# Vendored packages, whose tests are not collected. Paths are relative to
+# this file, so it also works when testing the installed package.
+_VENDORED = [
+    Path(__file__).parent / "external" / "h5io",
+    Path(__file__).parent / "external" / "BrainPrint",
+]
+
+
+# TODO: replace with ``collect_ignore`` once datalad/datalad#7967 is fixed
+# (see juaml/junifer#518)
+def pytest_ignore_collect(collection_path: Path) -> bool | None:
+    """Do not collect the tests of vendored packages.
+
+    This replaces ``collect_ignore``, which is not applied when datalad's
+    pytest plugin (datalad >= 1.4) is installed: its ``pytest_ignore_collect``
+    returns False for directories, so pytest's own check is never called.
+
+    Parameters
+    ----------
+    collection_path : pathlib.Path
+        The path being considered for collection.
+
+    Returns
+    -------
+    bool or None
+        True to ignore the path, None to let other hooks decide.
+
+    """
+    if any(collection_path.is_relative_to(path) for path in _VENDORED):
+        return True
+    return None
 
 
 def pytest_collection_finish(session: pytest.Session) -> None:
