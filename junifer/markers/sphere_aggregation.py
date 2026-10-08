@@ -6,6 +6,7 @@
 
 from typing import Annotated, Any, ClassVar, Literal
 
+import numpy as np
 from pydantic import BeforeValidator, PositiveFloat
 
 from ..api.decorators import register_marker
@@ -221,7 +222,8 @@ class SphereAggregation(BaseMarker):
             agg_func=agg_func,
         )
         # Fit and transform the marker on the data
-        out_values = masker.fit_transform(t_input_img)
+        # nilearn maskers return 1D arrays for 3D images, keep 2D
+        out_values = np.atleast_2d(masker.fit_transform(t_input_img))
 
         # Apply time dimension aggregation if required
         if self.time_method is not None:

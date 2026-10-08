@@ -222,7 +222,8 @@ class ParcelAggregation(BaseMarker):
         logger.debug("Masking")
         masker = NiftiMasker(parcellation_bin)
         # Mask the input data and the parcellation
-        data = masker.fit_transform(t_input_img)
+        # nilearn maskers return 1D arrays for 3D images, keep 2D
+        data = np.atleast_2d(masker.fit_transform(t_input_img))
         parcellation_values = np.squeeze(
             masker.transform(parcellation_img)
         ).astype(int)

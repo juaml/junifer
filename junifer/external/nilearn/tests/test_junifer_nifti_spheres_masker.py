@@ -3,8 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import warnings
-
 import nibabel
 import numpy as np
 import pytest
@@ -262,13 +260,16 @@ def test_standardization() -> None:
     data = np.random.RandomState(42).random_sample((3, 3, 3, 5))
     img = nibabel.Nifti1Image(data, np.eye(4))
 
-    # test zscore
-    masker = JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)], standardize="zscore")
+    # test zscore_sample
+    masker = JuniferNiftiSpheresMasker(
+        seeds=[(1, 1, 1)], standardize="zscore_sample"
+    )
     # Test the fit
     s = masker.fit_transform(img)
 
     np.testing.assert_almost_equal(s.mean(), 0)
-    np.testing.assert_almost_equal(s.std(), 1)
+    # Uses the sample standard deviation
+    np.testing.assert_almost_equal(s.std(ddof=1), 1)
 
     # test psc
     masker = JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)], standardize="psc")
@@ -294,10 +295,10 @@ def test_nifti_spheres_masker_inverse_transform() -> None:
 
 
 def test_nifti_spheres_masker_io_shapes() -> None:
-    """Ensure that masker handles 1D/2D/3D/4D data appropriately.
+    """Ensure that masker handles 3D/4D data appropriately.
 
-    transform(4D image) --> 2D output, no warning
-    transform(3D image) --> 2D output, DeprecationWarning
+    transform(4D image) --> 2D output
+    transform(3D image) --> 1D output
 
     """
     n_regions, n_volumes = 2, 5
@@ -318,20 +319,11 @@ def test_nifti_spheres_masker_io_shapes() -> None:
     )
     masker.fit()
 
-    # DeprecationWarning *should* be raised for 3D inputs
-    with pytest.warns(DeprecationWarning, match=r"Starting in version 0.12"):
-        test_data = masker.transform(img_3d)
-        assert test_data.shape == (1, n_regions)
+    test_data = masker.transform(img_3d)
+    assert test_data.shape == (n_regions,)
 
-    # DeprecationWarning should *not* be raised for 4D inputs
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "error",
-            message="Starting in version 0.12",
-            category=DeprecationWarning,
-        )
-        test_data = masker.transform(img_4d)
-        assert test_data.shape == (n_volumes, n_regions)
+    test_data = masker.transform(img_4d)
+    assert test_data.shape == (n_volumes, n_regions)
 
 
 @pytest.mark.parametrize(
