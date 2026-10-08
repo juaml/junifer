@@ -145,8 +145,8 @@ def _correlate_dataframes(
     )
 
 
-def _checksum(array: np.ndarray) -> int | None:
-    """Get the checksum of the values of an array.
+def _checksum(array: np.ndarray) -> tuple:
+    """Get the checksum of an array.
 
     Parameters
     ----------
@@ -155,17 +155,19 @@ def _checksum(array: np.ndarray) -> int | None:
 
     Returns
     -------
-    int or None
-        The CRC-32 of the bytes of the array, or None for arrays of objects.
+    tuple
+        The shape, the dtype and the CRC-32 of the bytes of the array (None
+        for arrays of objects).
 
     """
-    if array.dtype.hasobject:
-        return None
-    return zlib.crc32(memoryview(np.ascontiguousarray(array)).cast("B"))
+    crc = None
+    if not array.dtype.hasobject:
+        crc = zlib.crc32(memoryview(np.ascontiguousarray(array)).cast("B"))
+    return (array.shape, array.dtype.str, crc)
 
 
 def _checksums(value: Any) -> tuple:
-    """Get the checksums of an array, data frame or image.
+    """Get the checksums of an array, data frame, image or set.
 
     Parameters
     ----------
@@ -175,16 +177,25 @@ def _checksums(value: Any) -> tuple:
     Returns
     -------
     tuple
-        The checksums, empty for other values. For images: the affine, the
-        data (loaded with nilearn, which caches it in the image, as most
-        markers access it this way) and the data cached by nibabel's
-        ``get_fdata`` (None if not cached).
+        The checksums, empty for other values. For data frames and series:
+        the values and index, and the column labels or name. For images: the
+        affine, the data (loaded with nilearn, which caches it in the image,
+        as most markers access it this way) and the data cached by nibabel's
+        ``get_fdata`` (None if not cached). For sets: their contents.
 
     """
     if isinstance(value, np.ndarray):
         return (_checksum(value),)
     if isinstance(value, pd.DataFrame | pd.Series):
-        return (_checksum(pd.util.hash_pandas_object(value).to_numpy()),)
+        labels = (
+            tuple(value.columns)
+            if isinstance(value, pd.DataFrame)
+            else value.name
+        )
+        return (
+            _checksum(pd.util.hash_pandas_object(value).to_numpy()),
+            labels,
+        )
     if isinstance(value, SpatialImage):
         fdata = getattr(value, "_fdata_cache", None)
         return (
@@ -192,6 +203,8 @@ def _checksums(value: Any) -> tuple:
             _checksum(get_data(value)),
             None if fdata is None else _checksum(fdata),
         )
+    if isinstance(value, set | frozenset):
+        return (frozenset(value),)
     return ()
 
 
@@ -203,7 +216,7 @@ def _fingerprint(data: Any, path: tuple = ()) -> dict[tuple, tuple]:
     data : Any
         The data.
     path : tuple, optional
-        The keys leading to ``data`` (default ()).
+        The keys (or indices) leading to ``data`` (default ()).
 
     Returns
     -------
@@ -214,8 +227,13 @@ def _fingerprint(data: Any, path: tuple = ()) -> dict[tuple, tuple]:
     """
     out = {path: (data, _checksums(data))}
     if isinstance(data, dict):
-        for key, value in data.items():
-            out.update(_fingerprint(value, (*path, key)))
+        items = data.items()
+    elif isinstance(data, list | tuple):
+        items = enumerate(data)
+    else:
+        items = ()
+    for key, value in items:
+        out.update(_fingerprint(value, (*path, key)))
     return out
 
 
@@ -238,15 +256,22 @@ def _is_changed(old: tuple, new: tuple) -> bool:
     (old_value, old_sums), (new_value, new_sums) = old, new
     if new_value is not old_value:
         return True
-    if isinstance(new_value, SpatialImage) and old_sums[2] is None:
-        # The data cached by get_fdata during the computation cannot be
-        # compared with its checksum, so compare it with the data
-        fdata = getattr(new_value, "_fdata_cache", None)
-        if fdata is not None and not np.array_equal(
-            fdata, get_data(new_value), equal_nan=True
-        ):
-            return True
+    if isinstance(new_value, SpatialImage):
+        old_fdata, new_fdata = old_sums[2], new_sums[2]
         old_sums, new_sums = old_sums[:2], new_sums[:2]
+        if new_fdata is not None:
+            if old_fdata is not None and old_fdata[1] == new_fdata[1]:
+                # Same dtype: the cached data must be the same
+                if old_fdata != new_fdata:
+                    return True
+            else:
+                # The data was cached by get_fdata during the computation,
+                # possibly with another dtype: compare it with the data read
+                # as get_fdata does
+                fdata = new_value._fdata_cache
+                expected = np.asanyarray(new_value.dataobj, dtype=fdata.dtype)
+                if not np.array_equal(fdata, expected, equal_nan=True):
+                    return True
     return old_sums != new_sums
 
 

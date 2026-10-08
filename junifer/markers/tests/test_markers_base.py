@@ -140,26 +140,33 @@ def _input(tmp_path: Path) -> dict:
         The input data.
 
     """
+    # Non-integer values, which change when read as float32
+    values = np.full((2, 2, 2), 0.1)
     # File-backed image, with its data cached
     t1w_path = tmp_path / "t1w.nii.gz"
-    nib.save(nib.Nifti1Image(np.ones((2, 2, 2)), np.eye(4)), t1w_path)
+    nib.save(nib.Nifti1Image(values, np.eye(4)), t1w_path)
     t1w = nib.load(t1w_path)
     t1w.get_fdata()
     # File-backed image, without its data loaded
     mask_path = tmp_path / "mask.nii.gz"
-    nib.save(nib.Nifti1Image(np.ones((2, 2, 2)), np.eye(4)), mask_path)
-    meta = {"datagrabber": "dg", "element": {"subject": "sub-01"}}
+    nib.save(nib.Nifti1Image(values, np.eye(4)), mask_path)
+    meta = {
+        "datagrabber": "dg",
+        "element": {"subject": "sub-01"},
+        "dependencies": {"numpy"},
+    }
     return {
         "BOLD": {
             "path": tmp_path / "bold.nii.gz",
             # In-memory image
-            "data": nib.Nifti1Image(np.ones((2, 2, 2, 3)), np.eye(4)),
+            "data": nib.Nifti1Image(np.full((2, 2, 2, 3), 0.1), np.eye(4)),
             "array": np.arange(4.0),
             "mask": nib.load(mask_path),
             "confounds": {"data": pd.DataFrame({"a": [1.0, 2.0, 3.0]})},
             "meta": meta,
         },
         "T1w": {"path": t1w_path, "data": t1w, "meta": meta.copy()},
+        "Warp": [{"src": "MNI", "dst": "native"}],
     }
 
 
@@ -179,6 +186,8 @@ def _set(input: dict, key: str, value: object) -> None:
         ),
         (lambda i, e: i.pop("path"), "BOLD.path"),
         (lambda i, e: i["array"].__setitem__(0, 9.0), "BOLD.array"),
+        (lambda i, e: setattr(i["array"], "shape", (2, 2)), "BOLD.array"),
+        (lambda i, e: setattr(i["array"], "dtype", np.int64), "BOLD.array"),
         (
             lambda i, e: np.asarray(i["data"].dataobj).__setitem__(
                 (0, 0, 0, 0), 9.0
@@ -189,6 +198,18 @@ def _set(input: dict, key: str, value: object) -> None:
         (
             lambda i, e: i["confounds"]["data"].__setitem__("a", 0.0),
             "BOLD.confounds.data",
+        ),
+        (
+            lambda i, e: i["confounds"]["data"].rename(
+                columns={"a": "b"}, inplace=True
+            ),
+            "BOLD.confounds.data",
+        ),
+        (lambda i, e: _set(e["Warp"][0], "dst", "MNI"), "Warp.0.dst"),
+        (lambda i, e: e["Warp"].append({}), "Warp.1"),
+        (
+            lambda i, e: i["meta"]["dependencies"].clear(),
+            "BOLD.meta.dependencies",
         ),
         (
             lambda i, e: (
@@ -211,9 +232,15 @@ def _set(input: dict, key: str, value: object) -> None:
         "remove-nested",
         "remove",
         "array-in-place",
+        "array-shape-in-place",
+        "array-dtype-in-place",
         "image-data-in-place",
         "image-affine-in-place",
         "dataframe-in-place",
+        "dataframe-columns-in-place",
+        "list-nested",
+        "list-append",
+        "set-in-place",
         "extra-input-cached-image-in-place",
         "not-loaded-image-nilearn-in-place",
         "not-loaded-image-nibabel-in-place",
@@ -254,9 +281,13 @@ def test_base_marker_input_not_changed(tmp_path: Path) -> None:
         input["data"].get_fdata()
         float(np.sum(input["array"]))
         float(input["confounds"]["data"]["a"].sum())
-        extra_input["T1w"]["data"].get_fdata()
-        input["mask"].get_fdata()
+        # Replace the cached float64 data with float32
+        extra_input["T1w"]["data"].get_fdata(dtype=np.float32)
+        # Cache float32 data
+        input["mask"].get_fdata(dtype=np.float32)
         get_data(input["mask"])
+        set(input["meta"]["dependencies"])
+        [warp["dst"] for warp in extra_input["Warp"]]
 
     marker = _ReadingMarker(on=["BOLD"], name="reading")
     marker._change = read  # type: ignore[attr-defined]
