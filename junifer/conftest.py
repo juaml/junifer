@@ -4,6 +4,8 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import gc
+
 import pytest
 
 from junifer.utils.singleton import Singleton
@@ -12,6 +14,24 @@ from junifer.utils.singleton import Singleton
 # Do not collect the tests of vendored packages. Paths are relative to this
 # file, so it also works when testing the installed package.
 collect_ignore = ["external/h5io", "external/BrainPrint"]
+
+
+def pytest_collection_finish(session: pytest.Session) -> None:
+    """Exclude the objects alive after collection from garbage collection.
+
+    nilearn (< 0.14) forces a full garbage collection every time it gets
+    the data of an image, which has to go over all the objects of the test
+    session (modules, collected tests, etc.). Freezing them makes these
+    collections much faster.
+
+    Parameters
+    ----------
+    session : pytest.Session
+        The pytest session.
+
+    """
+    gc.collect()
+    gc.freeze()
 
 
 @pytest.fixture(autouse=True)

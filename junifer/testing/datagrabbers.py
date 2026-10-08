@@ -8,11 +8,12 @@ import tempfile
 from collections.abc import Callable
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 from uuid import uuid4
 
 import nibabel as nib
 import numpy as np
+import pandas as pd
 from nilearn import datasets, image
 
 from ..datagrabber import BaseDataGrabber, DataType
@@ -24,6 +25,7 @@ __all__ = [
     "PartlyCloudyAgeGroup",
     "PartlyCloudyTestingDataGrabber",
     "SPMAuditoryTestingDataGrabber",
+    "UCLACNPVBMTestingDataGrabber",
 ]
 
 
@@ -111,6 +113,181 @@ class OasisVBMTestingDataGrabber(BaseDataGrabber):
 
         """
         return [f"sub-{x:02d}" for x in list(range(1, 11))]
+
+
+class UCLACNPVBMTestingDataGrabber(BaseDataGrabber):
+    """DataGrabber for UCLA CNP VBM testing data.
+
+    Grey matter probability maps (computed with fMRIPrep) of 10 control
+    subjects of the UCLA Consortium for Neuropsychiatric Phenomics LA5c
+    study (OpenNeuro ds000030, release R1.0.4), downloaded with
+    :func:`nilearn.datasets.fetch_openneuro_dataset`.
+
+    The maps are in MNI152NLin2009cAsym at 1mm. Other resolutions are
+    resampled (linear interpolation) to the corresponding templateflow grid,
+    so templates and masks at that resolution do not need resampling. They
+    are cached (uncompressed) next to the original files in the nilearn data
+    directory.
+
+    Parameters
+    ----------
+    resolution : float, optional
+        The resolution (in mm) of the maps (default 2.0).
+
+    """
+
+    types: list[DataType] = [DataType.VBM_GM]  # noqa: RUF012
+    datadir: Path = Path(tempfile.mkdtemp())
+    resolution: float = 2.0
+
+    _BASE_URL: ClassVar[str] = (
+        "https://s3.amazonaws.com/openneuro/ds000030/ds000030_R1.0.4/"
+        "uncompressed"
+    )
+    # Controls spread across the age range (21 to 50 years)
+    _SUBJECTS: ClassVar[list[str]] = [
+        "sub-10206",
+        "sub-10339",
+        "sub-10388",
+        "sub-10429",
+        "sub-10460",
+        "sub-10471",
+        "sub-10527",
+        "sub-10696",
+        "sub-11059",
+        "sub-11105",
+    ]
+
+    def __enter__(self) -> "UCLACNPVBMTestingDataGrabber":
+        """Implement context entry.
+
+        Returns
+        -------
+        UCLACNPVBMTestingDataGrabber
+
+        """
+        urls = [f"{self._BASE_URL}/participants.tsv"] + [
+            f"{self._BASE_URL}/derivatives/fmriprep/{sub}/anat/"
+            f"{sub}_T1w_space-MNI152NLin2009cAsym_class-GM_probtissue.nii.gz"
+            for sub in self._SUBJECTS
+        ]
+        _, files = datasets.fetch_openneuro_dataset(urls=urls, verbose=0)
+        files = {Path(f).name: Path(f) for f in files}
+        self._participants_path = files["participants.tsv"]
+        self._paths = {
+            sub: next(f for name, f in files.items() if name.startswith(sub))
+            for sub in self._SUBJECTS
+        }
+        return self
+
+    def get_element_keys(self) -> list[str]:
+        """Get element keys.
+
+        Returns
+        -------
+        list of str
+            The element keys.
+
+        """
+        return ["subject"]
+
+    def get_elements(self) -> list[str]:
+        """Get elements.
+
+        Returns
+        -------
+        list of str
+            List of elements that can be grabbed.
+
+        """
+        return list(self._SUBJECTS)
+
+    def get_participants(self) -> pd.DataFrame:
+        """Get the participants information.
+
+        Returns
+        -------
+        pandas.DataFrame
+            The participants information (e.g. age and gender), indexed by
+            subject.
+
+        """
+        participants = pd.read_csv(self._participants_path, sep="\t")
+        participants = participants.set_index("participant_id")
+        return participants.loc[self._SUBJECTS]
+
+    def get_item(self, subject: str) -> dict[str, dict]:
+        """Implement indexing support.
+
+        Parameters
+        ----------
+        subject : str
+            The subject to retrieve.
+
+        Returns
+        -------
+        dict
+            The data along with the metadata.
+
+        """
+        path = self._paths[subject]
+        return {
+            "VBM_GM": {
+                "path": self._get_resampled(path),
+                "space": "MNI152NLin2009cAsym",
+            }
+        }
+
+    def _get_resampled(self, path: Path) -> Path:
+        """Get the map resampled to the requested resolution.
+
+        The resampled map is cached next to the original one, so it is
+        computed only once.
+
+        Parameters
+        ----------
+        path : pathlib.Path
+            The path to the original map.
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the resampled map.
+
+        """
+        res = self.resolution
+        # The data is on the 1mm templateflow grid; the grids at other
+        # resolutions keep the same bounding box
+        target_affine = np.array(
+            [
+                [res, 0, 0, -96 - (res - 1) / 2],
+                [0, res, 0, -132 - (res - 1) / 2],
+                [0, 0, res, -78 - (res - 1) / 2],
+                [0, 0, 0, 1],
+            ]
+        )
+        target_shape = tuple(int(np.ceil(n / res)) for n in (193, 229, 193))
+        img = nib.load(path)
+        # Original data is already in the requested grid
+        if img.shape[:3] == target_shape and np.allclose(
+            img.affine, target_affine
+        ):
+            return path
+
+        # Store uncompressed so it can be memory-mapped
+        out_path = path.with_name(
+            path.name.replace(".nii.gz", f"_res-{res:g}mm.nii")
+        )
+        if not out_path.exists():
+            img = image.resample_img(
+                img,
+                target_affine=target_affine,
+                target_shape=target_shape,
+                interpolation="linear",
+            )
+            img.set_data_dtype(np.float32)
+            _save_atomic(out_path, lambda x: nib.save(img, x))
+        return out_path
 
 
 class SPMAuditoryTestingDataGrabber(BaseDataGrabber):
@@ -220,6 +397,8 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
         If False, returns all :term:`fMRIPrep` confounds (default True).
     age_group : {"adult", "child", "both"}, optional
        Age group to fetch (default ``PartlyCloudyAgeGroup.Both``).
+    n_subjects : int, optional
+        The number of subjects to use (default 10).
     n_timepoints : int or None, optional
         The number of timepoints to keep. The truncated BOLD images and
         confounds are cached next to the original files in the nilearn data
@@ -231,6 +410,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
     datadir: Path = Path(tempfile.mkdtemp())
     reduce_confounds: bool = True
     age_group: PartlyCloudyAgeGroup = PartlyCloudyAgeGroup.Both
+    n_subjects: int = 10
     n_timepoints: int | None = None
 
     def __enter__(self) -> "PartlyCloudyTestingDataGrabber":
@@ -242,7 +422,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
 
         """
         self._dataset = datasets.fetch_development_fmri(
-            n_subjects=10,
+            n_subjects=self.n_subjects,
             reduce_confounds=self.reduce_confounds,
             age_group=self.age_group.value
             if isinstance(self.age_group, Enum)
@@ -270,7 +450,7 @@ class PartlyCloudyTestingDataGrabber(BaseDataGrabber):
             List of elements that can be grabbed.
 
         """
-        return [f"sub-{x:02d}" for x in list(range(1, 11))]
+        return [f"sub-{x:02d}" for x in range(1, self.n_subjects + 1)]
 
     def get_item(self, subject: str) -> dict[str, dict]:
         """Implement indexing support.
@@ -377,7 +557,7 @@ class ADHDTestingDataGrabber(BaseDataGrabber):
     ----------
     resolution : float, optional
         The resolution (in mm) of the BOLD images. The original data is in
-        3mm (default 2.0).
+        3mm, so other resolutions are resampled (default 3.0).
     n_timepoints : int or None, optional
         The number of timepoints to keep. If None, all the 176 timepoints
         are kept (default 50).
@@ -386,7 +566,7 @@ class ADHDTestingDataGrabber(BaseDataGrabber):
 
     types: list[DataType] = [DataType.BOLD]  # noqa: RUF012
     datadir: Path = Path(tempfile.mkdtemp())
-    resolution: float = 2.0
+    resolution: float = 3.0
     n_timepoints: int | None = 50
 
     def __enter__(self) -> "ADHDTestingDataGrabber":

@@ -10,6 +10,7 @@ from junifer.testing.datagrabbers import (
     OasisVBMTestingDataGrabber,
     PartlyCloudyTestingDataGrabber,
     SPMAuditoryTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
 )
 
 
@@ -20,6 +21,7 @@ def test_testing_registry() -> None:
         OasisVBMTestingDataGrabber,
         SPMAuditoryTestingDataGrabber,
         PartlyCloudyTestingDataGrabber,
+        UCLACNPVBMTestingDataGrabber,
     ]:
         PipelineComponentRegistry().register(
             step="datagrabber",
@@ -30,12 +32,14 @@ def test_testing_registry() -> None:
         "OasisVBMTestingDataGrabber",
         "SPMAuditoryTestingDataGrabber",
         "PartlyCloudyTestingDataGrabber",
+        "UCLACNPVBMTestingDataGrabber",
     }.issubset(set(PipelineComponentRegistry().step_components("datagrabber")))
     for dg in [
         ADHDTestingDataGrabber,
         OasisVBMTestingDataGrabber,
         SPMAuditoryTestingDataGrabber,
         PartlyCloudyTestingDataGrabber,
+        UCLACNPVBMTestingDataGrabber,
     ]:
         PipelineComponentRegistry().deregister(
             step="datagrabber",

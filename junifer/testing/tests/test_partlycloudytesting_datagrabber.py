@@ -83,3 +83,10 @@ def test_PartlyCloudyTestingDataGrabber_n_timepoints(
     out_confounds = pd.read_csv(out["confounds"]["path"], sep="\t")
     assert out_confounds.shape == (50, full_confounds.shape[1])
     assert_frame_equal(out_confounds, full_confounds.iloc[:50])
+
+
+def test_PartlyCloudyTestingDataGrabber_n_subjects() -> None:
+    """Test PartlyCloudyTestingDataGrabber with fewer subjects."""
+    with PartlyCloudyTestingDataGrabber(n_subjects=3) as dg:
+        assert dg.get_elements() == ["sub-01", "sub-02", "sub-03"]
+        assert dg["sub-03"]["BOLD"]["path"].exists()

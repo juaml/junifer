@@ -131,4 +131,65 @@ rm -rf /tmp/nilearn-venv
 du -sh "$HOME/nilearn_data"
 EOF
 
+# --- Files derived by junifer.testing and templateflow templates ---
+# Generated with junifer itself (from the build context), so they match what
+# the tests would otherwise create in every job: shortened BOLD files next to
+# the nilearn datasets, the UCLA CNP VBM maps (OpenNeuro ds000030) and the
+# templates used by the tests.
+COPY --chown=docker:docker pyproject.toml setup.py README.md /tmp/junifer-src/
+COPY --chown=docker:docker junifer /tmp/junifer-src/junifer
+RUN <<'EOF'
+set -eux
+python3 -m venv /tmp/junifer-venv
+# Editable: without .git, setuptools-scm cannot list the subpackages for a
+# regular install
+SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0 \
+    /tmp/junifer-venv/bin/pip install --no-cache-dir -q -e /tmp/junifer-src
+/tmp/junifer-venv/bin/python - <<'PY'
+from templateflow import api as tflow
+
+from junifer.testing.datagrabbers import (
+    ADHDTestingDataGrabber,
+    PartlyCloudyTestingDataGrabber,
+    UCLACNPVBMTestingDataGrabber,
+)
+
+# Shortened BOLD (and confounds) used by the tests
+with ADHDTestingDataGrabber() as dg:
+    dg["sub-01"]
+with PartlyCloudyTestingDataGrabber(n_timepoints=50) as dg:
+    dg["sub-01"]
+
+# VBM maps (downloaded from OpenNeuro) resampled to the 2mm grid
+with UCLACNPVBMTestingDataGrabber() as dg:
+    for element in dg.get_elements():
+        dg[element]
+
+# Templates used by the tests
+for space, res in [
+    ("MNI152Lin", 1),
+    ("MNI152Lin", 2),
+    ("MNI152NLin2009aAsym", 1),
+    ("MNI152NLin2009cAsym", 1),
+    ("MNI152NLin2009cAsym", 2),
+    ("MNI152NLin6Asym", 1),
+    ("MNI152NLin6Asym", 2),
+]:
+    tflow.get(space, resolution=res, suffix="T1w", desc=None, extension="nii.gz")
+for space in ("MNI152Lin", "MNI152NLin2009cAsym", "MNI152NLin6Asym"):
+    tflow.get(space, resolution=2, desc="brain", suffix="mask", extension="nii.gz")
+for label in ("CSF", "GM", "WM"):
+    tflow.get(
+        "MNI152NLin2009cAsym",
+        resolution=2,
+        label=label,
+        suffix="probseg",
+        extension="nii.gz",
+    )
+PY
+rm -rf /tmp/junifer-venv /tmp/junifer-src
+find "$HOME/nilearn_data" -name "*_tp-*" -o -name "*_res-*"
+du -sh "$HOME/.cache/templateflow"
+EOF
+
 ENTRYPOINT ["/start.sh"]
