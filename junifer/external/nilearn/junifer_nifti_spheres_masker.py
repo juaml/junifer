@@ -362,6 +362,7 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
             radius=radius,
             mask_img=mask_img,
             allow_overlap=allow_overlap,
+            dtype=dtype,
             **kwargs,
         )
 
@@ -408,7 +409,13 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         """
         check_is_fitted(self)
 
-        params = self._get_masker_params()
+        # The parameters are taken from NiftiSpheresMasker, as the ones not
+        # in this class' signature are passed as keyword arguments
+        params = {
+            k: getattr(self, k)
+            for k in NiftiSpheresMasker._get_param_names()
+            if k not in {"memory", "memory_level", "verbose", "copy", "n_jobs"}
+        }
         params["clean_kwargs"] = self.clean_args_
 
         signals, _ = self._cache(
