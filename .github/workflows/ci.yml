@@ -44,7 +44,7 @@ jobs:
   run-tests-external:
     needs: changes
     if: needs.changes.outputs.code == 'true' || github.event_name == 'workflow_dispatch'
-    runs-on: [self-hosted, linux, x64, data-v7]
+    runs-on: [self-hosted, linux, x64, data-v8]
     strategy:
       fail-fast: false
       matrix:
