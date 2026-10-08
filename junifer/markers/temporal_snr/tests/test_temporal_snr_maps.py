@@ -28,7 +28,10 @@ def test_TemporalSNRMaps_computation() -> None:
             input_type=DataType.BOLD, output_feature="tsnr"
         )
         # Fit-transform the data
+        bold_img = element_data["BOLD"]["data"]
         tsnr_parcels = marker.fit_transform(element_data)
+        # The input is not changed
+        assert element_data["BOLD"]["data"] is bold_img
         tsnr_parcels_bold = tsnr_parcels["BOLD"]["tsnr"]
 
         assert "data" in tsnr_parcels_bold

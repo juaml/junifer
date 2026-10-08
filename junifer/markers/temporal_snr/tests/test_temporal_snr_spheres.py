@@ -28,7 +28,10 @@ def test_TemporalSNRSpheres_computation() -> None:
             input_type=DataType.BOLD, output_feature="tsnr"
         )
         # Fit-transform the data
+        bold_img = element_data["BOLD"]["data"]
         tsnr_spheres = marker.fit_transform(element_data)
+        # The input is not changed
+        assert element_data["BOLD"]["data"] is bold_img
         tsnr_spheres_bold = tsnr_spheres["BOLD"]["tsnr"]
 
         assert "data" in tsnr_spheres_bold

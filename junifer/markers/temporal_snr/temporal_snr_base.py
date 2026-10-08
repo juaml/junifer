@@ -104,7 +104,9 @@ class TemporalSNRBase(BaseMarker):
             "img.std(axis=-1).squeeze()", img=input["data"]
         )
         mask_img = nimg.math_img("(stdv_img != 0)", stdv_img=stdv_img)
-        input["data"] = nimg.math_img(
+        # Aggregate the tSNR image, without changing the input
+        aggregation_input = dict(input.items())
+        aggregation_input["data"] = nimg.math_img(
             "np.divide(mean_img, stdv_img, where=mask_img.astype(bool))",
             mean_img=mean_img,
             stdv_img=stdv_img,
@@ -113,8 +115,8 @@ class TemporalSNRBase(BaseMarker):
         # Perform necessary aggregation and return
         return {
             "tsnr": {
-                **self.aggregate(input=input, extra_input=extra_input)[
-                    "aggregation"
-                ]
+                **self.aggregate(
+                    input=aggregation_input, extra_input=extra_input
+                )["aggregation"]
             }
         }
