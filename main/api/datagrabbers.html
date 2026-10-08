@@ -6,19 +6,40 @@
 <meta content="light dark" name="color-scheme"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
 <link href="../genindex.html" rel="index" title="Index"/><link href="../search.html" rel="search" title="Search"/><link href="datareaders.html" rel="next" title="9.1.2. DataReaders"/><link href="index.html" rel="prev" title="9. API Reference"/>
 <link as="image" href="../_static/junifer_logo.png" rel="prefetch"/>
-<!-- Generated with Sphinx 8.2.3 and Furo 2025.09.25 -->
+<!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
 <title>9.1.1. Data Grabbers - junifer documentation</title>
 <link href="../_static/pygments.css?v=d111a655" rel="stylesheet" type="text/css"/>
-<link href="../_static/styles/furo.css?v=580074bf" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/furo.css?v=7bdb33bb" rel="stylesheet" type="text/css"/>
 <link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../_static/autodoc_pydantic.css" rel="stylesheet" type="text/css"/>
-<link href="../_static/sg_gallery.css?v=d2d258e8" rel="stylesheet" type="text/css"/>
+<link href="../_static/sg_gallery.css?v=c83e6b79" rel="stylesheet" type="text/css"/>
 <link href="../_static/sg_gallery-binder.css?v=f4aeca0c" rel="stylesheet" type="text/css"/>
 <link href="../_static/sg_gallery-dataframe.css?v=2082cf3c" rel="stylesheet" type="text/css"/>
 <link href="../_static/sg_gallery-rendered-html.css?v=1277b6f3" rel="stylesheet" type="text/css"/>
 <link href="../_static/styles/furo-extensions.css?v=8dab3a3b" rel="stylesheet" type="text/css"/>
 <link href="../_static/css/custom.css?v=f7ba4aed" rel="stylesheet" type="text/css"/>
-<link href="../_static/css/version_selector.css" rel="stylesheet"/></head>
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style><link href="../_static/css/version_selector.css" rel="stylesheet"/></head>
 <body>
 <script>
       document.body.dataset.theme = localStorage.getItem("theme") || "auto";
@@ -476,7 +497,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -620,16 +641,16 @@ Can be overridden by subclasses.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “Warp”} or             <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>sessions</strong><span class="classifier">{“ses-wave1bas”, “ses-wave1pro”, “ses-wave1rea”} or                <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC sessions.
+<dt><strong>sessions</strong><span class="classifier">{“ses-wave1bas”, “ses-wave1pro”, “ses-wave1rea”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC sessions.
 By default, all available sessions are selected.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{“Rest”, “Axcpt”, “Cuedts”, “Stern”, “Stroop”} or             <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC tasks.
+<dt><strong>tasks</strong><span class="classifier">{“Rest”, “Axcpt”, “Cuedts”, “Stern”, “Stroop”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC tasks.
 By default, all available tasks are selected.</p>
 </dd>
 <dt><strong>phase_encodings</strong><span class="classifier">{“AP”, “PA”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>DMCC phase encoding directions.
@@ -1012,7 +1033,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1028,7 +1049,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1040,7 +1061,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1052,7 +1073,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1064,7 +1085,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1317,7 +1338,7 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”, “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
@@ -1626,7 +1647,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1659,13 +1680,13 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”, “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”,             “gstroop”, “workingmemory”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP1 task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”, “gstroop”, “workingmemory”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP1 task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
 <dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
@@ -2011,7 +2032,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2023,7 +2044,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2055,7 +2076,7 @@ validated to form a valid model.</p>
 <dd class="field-odd"><dl>
 <dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
 </dd>
-<dt><strong>task</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”,                 “gstroop”, “workingmemory”}</span></dt><dd><p>The task to get.</p>
+<dt><strong>task</strong><span class="classifier">{“restingstate”, “anticipation”, “emomatching”, “faces”, “gstroop”, “workingmemory”}</span></dt><dd><p>The task to get.</p>
 </dd>
 </dl>
 </dd>
@@ -2091,13 +2112,13 @@ This is useful if you want to do some validation that requires the entire model 
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
-<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”,             “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
+<dt><strong>types</strong><span class="classifier">{“BOLD”, “T1w”, “VBM_CSF”, “VBM_GM”, “VBM_WM”, “DWI”, “FreeSurfer”, “Warp”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>The data type(s) to grab.</p>
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a>, optional</span></dt><dd><p>That path where the datalad dataset will be cloned.
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “stopsignal”, “workingmemory”, “emomatching”} or             <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP2 task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“restingstate”, “stopsignal”, “workingmemory”, “emomatching”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>AOMIC PIOP2 task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
 <dt><strong>space</strong><span class="classifier">{“native”, “MNI152NLin2009cAsym”}, optional</span></dt><dd><p>AOMIC space (default <code class="docutils literal notranslate"><span class="pre">AOMICSpace.MNI152NLin2009cAsym</span></code>).</p>
@@ -2437,7 +2458,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2449,7 +2470,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2801,7 +2822,7 @@ This is useful if you want to do some validation that requires the entire model 
 If not specified, the datalad dataset will be cloned into a temporary
 directory.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,             “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”, “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
 <dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP phase encoding directions.
@@ -3113,7 +3134,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3148,7 +3169,7 @@ This is useful if you want to do some validation that requires the entire model 
 </dd>
 <dt><strong>datadir</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pathlib.Path</span></code></a></span></dt><dd><p>The path where the data is stored.</p>
 </dd>
-<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,             “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
+<dt><strong>tasks</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”, “LANGUAGE”, “GAMBLING”, “MOTOR”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP task sessions.
 By default, all available task sessions are selected.</p>
 </dd>
 <dt><strong>phase_encodings</strong><span class="classifier">{“LR”, “RL”} or <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of the options, optional</span></dt><dd><p>HCP phase encoding directions.
@@ -3426,7 +3447,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3442,7 +3463,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3454,7 +3475,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3482,7 +3503,7 @@ validated to form a valid model.</p>
 <dd class="field-odd"><dl>
 <dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject ID.</p>
 </dd>
-<dt><strong>task</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”,                “LANGUAGE”, “GAMBLING”, “MOTOR”}</span></dt><dd><p>The task.</p>
+<dt><strong>task</strong><span class="classifier">{“REST1”, “REST2”, “SOCIAL”, “WM”, “RELATIONAL”, “EMOTION”, “LANGUAGE”, “GAMBLING”, “MOTOR”}</span></dt><dd><p>The task.</p>
 </dd>
 <dt><strong>phase_encoding</strong><span class="classifier">{“LR”, “RL”}</span></dt><dd><p>The phase encoding.</p>
 </dd>
@@ -3938,7 +3959,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -4565,7 +4586,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x76560533e020&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7f806097e7a0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -4949,10 +4970,11 @@ if data type pattern key contains ‘*’ as value.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=2a2c97bb"></script>
+</div><script src="../_static/documentation_options.js?v=5490ea14"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
+<script src="../_static/sg-tags.js?v=d80f6fa4"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../_static/copybutton.js?v=f281be69"></script>
 <script src="../_static/js/custom.js?v=9868c0c7"></script>
