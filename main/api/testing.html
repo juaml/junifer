@@ -203,9 +203,9 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input aria-label="Toggle navigation of 8. Examples" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UCLA CNP VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.4. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.5. Compute Sphere and Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.5. Compute Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
 </ul>
@@ -331,7 +331,7 @@ next to the original files in the nilearn data directory.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
 <dt><strong>resolution</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The resolution (in mm) of the BOLD images. The original data is in
-3mm (default 2.0).</p>
+3mm, so other resolutions are resampled (default 3.0).</p>
 </dd>
 <dt><strong>n_timepoints</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The number of timepoints to keep. If None, all the 176 timepoints
 are kept (default 50).</p>
@@ -346,7 +346,7 @@ validated to form a valid model.</p>
 <p><details class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ADHDTestingDataGrabber"</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataGrabber for ADHD dataset.\n\nWrapper for :func:`nilearn.datasets.fetch_adhd`. The BOLD images are\ntruncated to the first ``n_timepoints``, resampled to the requested\nresolution on the MNI152NLin6Asym (FSL) grid and cached (uncompressed)\nnext to the original files in the nilearn data directory.\n\nParameters\n----------\nresolution : float, optional\n    The resolution (in mm) of the BOLD images. The original data is in\n    3mm (default 2.0).\nn_timepoints : int or None, optional\n    The number of timepoints to keep. If None, all the 176 timepoints\n    are kept (default 50)."</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataGrabber for ADHD dataset.\n\nWrapper for :func:`nilearn.datasets.fetch_adhd`. The BOLD images are\ntruncated to the first ``n_timepoints``, resampled to the requested\nresolution on the MNI152NLin6Asym (FSL) grid and cached (uncompressed)\nnext to the original files in the nilearn data directory.\n\nParameters\n----------\nresolution : float, optional\n    The resolution (in mm) of the BOLD images. The original data is in\n    3mm, so other resolutions are resampled (default 3.0).\nn_timepoints : int or None, optional\n    The number of timepoints to keep. If None, all the 176 timepoints\n    are kept (default 50)."</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -360,13 +360,13 @@ validated to form a valid model.</p>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"datadir"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmp0dml6jbs"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpgunnyn8i"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Datadir"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"resolution"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.0</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Resolution"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span>
 <span class="w">      </span><span class="p">},</span>
@@ -426,7 +426,7 @@ validated to form a valid model.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.ADHDTestingDataGrabber.datadir">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmp0dml6jbs')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.ADHDTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpgunnyn8i')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.ADHDTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.ADHDTestingDataGrabber.n_timepoints">
@@ -434,7 +434,7 @@ validated to form a valid model.</p>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.ADHDTestingDataGrabber.resolution">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.ADHDTestingDataGrabber.resolution" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3.0</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.ADHDTestingDataGrabber.resolution" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.ADHDTestingDataGrabber.types">
@@ -512,7 +512,7 @@ validated to form a valid model.</p>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"datadir"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpssj6jm3l"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpmvjtyo40"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Datadir"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
@@ -559,7 +559,7 @@ validated to form a valid model.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.OasisVBMTestingDataGrabber.datadir">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpssj6jm3l')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.OasisVBMTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpmvjtyo40')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.OasisVBMTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.OasisVBMTestingDataGrabber.types">
@@ -664,6 +664,8 @@ If False, returns all <a class="reference external" href="https://nilearn.github
 </dd>
 <dt><strong>age_group</strong><span class="classifier">{“adult”, “child”, “both”}, optional</span></dt><dd><p>Age group to fetch (default <code class="docutils literal notranslate"><span class="pre">PartlyCloudyAgeGroup.Both</span></code>).</p>
 </dd>
+<dt><strong>n_subjects</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a>, optional</span></dt><dd><p>The number of subjects to use (default 10).</p>
+</dd>
 <dt><strong>n_timepoints</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">int</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>The number of timepoints to keep. The truncated BOLD images and
 confounds are cached next to the original files in the nilearn data
 directory. If None, all the 168 timepoints are kept (default None).</p>
@@ -678,7 +680,7 @@ validated to form a valid model.</p>
 <p><details class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PartlyCloudyTestingDataGrabber"</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataGrabber for Partly Cloudy dataset.\n\nWrapper for :func:`nilearn.datasets.fetch_development_fmri`.\n\nParameters\n----------\nreduce_confounds : bool, optional\n    If True, the returned confounds only include 6 motion parameters,\n    mean framewise displacement, signal from white matter, csf, and\n    6 anatomical compcor parameters. This selection only serves the\n    purpose of having realistic examples. Depending on your research\n    question, other confounds might be more appropriate.\n    If False, returns all :term:`fMRIPrep` confounds (default True).\nage_group : {\"adult\", \"child\", \"both\"}, optional\n   Age group to fetch (default ``PartlyCloudyAgeGroup.Both``).\nn_timepoints : int or None, optional\n    The number of timepoints to keep. The truncated BOLD images and\n    confounds are cached next to the original files in the nilearn data\n    directory. If None, all the 168 timepoints are kept (default None)."</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataGrabber for Partly Cloudy dataset.\n\nWrapper for :func:`nilearn.datasets.fetch_development_fmri`.\n\nParameters\n----------\nreduce_confounds : bool, optional\n    If True, the returned confounds only include 6 motion parameters,\n    mean framewise displacement, signal from white matter, csf, and\n    6 anatomical compcor parameters. This selection only serves the\n    purpose of having realistic examples. Depending on your research\n    question, other confounds might be more appropriate.\n    If False, returns all :term:`fMRIPrep` confounds (default True).\nage_group : {\"adult\", \"child\", \"both\"}, optional\n   Age group to fetch (default ``PartlyCloudyAgeGroup.Both``).\nn_subjects : int, optional\n    The number of subjects to use (default 10).\nn_timepoints : int or None, optional\n    The number of timepoints to keep. The truncated BOLD images and\n    confounds are cached next to the original files in the nilearn data\n    directory. If None, all the 168 timepoints are kept (default None)."</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -692,7 +694,7 @@ validated to form a valid model.</p>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"datadir"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpq5vwq1x2"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpnxfecp8p"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Datadir"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
@@ -705,6 +707,11 @@ validated to form a valid model.</p>
 <span class="w">      </span><span class="nt">"age_group"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/$defs/PartlyCloudyAgeGroup"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"both"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"n_subjects"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"N Subjects"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integer"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"n_timepoints"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">"anyOf"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -765,6 +772,7 @@ validated to form a valid model.</p>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.age_group" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.age_group"><code class="xref py py-obj docutils literal notranslate"><span class="pre">age_group</span> <span class="pre">(junifer.testing.datagrabbers.PartlyCloudyAgeGroup)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datadir</span> <span class="pre">(pathlib.Path)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_subjects" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_subjects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_subjects</span> <span class="pre">(int)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_timepoints" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_timepoints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">n_timepoints</span> <span class="pre">(int</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.reduce_confounds" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.reduce_confounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reduce_confounds</span> <span class="pre">(bool)</span></code></a></p></li>
 <li><p><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.types" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span> <span class="pre">(list[junifer.datagrabber.base.DataType])</span></code></a></p></li>
@@ -777,7 +785,11 @@ validated to form a valid model.</p>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpq5vwq1x2')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpnxfecp8p')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_subjects">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n_subjects</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_subjects" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_timepoints">
@@ -873,7 +885,7 @@ validated to form a valid model.</p>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">"datadir"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmpre_aixyk"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmp7l1w37ra"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Datadir"</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
@@ -933,7 +945,7 @@ validated to form a valid model.</p>
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber.datadir">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmpre_aixyk')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmp7l1w37ra')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber.n_timepoints">
@@ -983,6 +995,171 @@ validated to form a valid model.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The data along with the metadata.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+</dd></dl>
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">junifer.testing.datagrabbers.</span></span><span class="sig-name descname"><span class="pre">UCLACNPVBMTestingDataGrabber</span></span><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber" title="Link to this definition">¶</a></dt>
+<dd><p>DataGrabber for UCLA CNP VBM testing data.</p>
+<p>Grey matter probability maps (computed with fMRIPrep) of 10 control
+subjects of the UCLA Consortium for Neuropsychiatric Phenomics LA5c
+study (OpenNeuro ds000030, release R1.0.4), downloaded with
+<a class="reference external" href="https://nilearn.github.io/stable/modules/generated/nilearn.datasets.fetch_openneuro_dataset.html#nilearn.datasets.fetch_openneuro_dataset" title="(in Nilearn)"><code class="xref py py-func docutils literal notranslate"><span class="pre">nilearn.datasets.fetch_openneuro_dataset()</span></code></a>.</p>
+<p>The maps are in MNI152NLin2009cAsym at 1mm. Other resolutions are
+resampled (linear interpolation) to the corresponding templateflow grid,
+so templates and masks at that resolution do not need resampling. They
+are cached (uncompressed) next to the original files in the nilearn data
+directory.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>resolution</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">float</span></code></a>, optional</span></dt><dd><p>The resolution (in mm) of the maps (default 2.0).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p>Create a new model by parsing and validating input data from keyword arguments.</p>
+<p>Raises [<cite>ValidationError</cite>][pydantic_core.ValidationError] if the input data cannot be
+validated to form a valid model.</p>
+<p><cite>self</cite> is explicitly positional-only to allow <cite>self</cite> as a field name.</p>
+<p><details class="autodoc_pydantic_collapsable_json">
+<summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UCLACNPVBMTestingDataGrabber"</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataGrabber for UCLA CNP VBM testing data.\n\nGrey matter probability maps (computed with fMRIPrep) of 10 control\nsubjects of the UCLA Consortium for Neuropsychiatric Phenomics LA5c\nstudy (OpenNeuro ds000030, release R1.0.4), downloaded with\n:func:`nilearn.datasets.fetch_openneuro_dataset`.\n\nThe maps are in MNI152NLin2009cAsym at 1mm. Other resolutions are\nresampled (linear interpolation) to the corresponding templateflow grid,\nso templates and masks at that resolution do not need resampling. They\nare cached (uncompressed) next to the original files in the nilearn data\ndirectory.\n\nParameters\n----------\nresolution : float, optional\n    The resolution (in mm) of the maps (default 2.0)."</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"types"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"VBM_GM"</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">"$ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"#/$defs/DataType"</span>
+<span class="w">         </span><span class="p">},</span>
+<span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Types"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"datadir"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tmp/tmp8x9aqd7b"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Datadir"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"resolution"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">"default"</span><span class="p">:</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Resolution"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"number"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">"$defs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"DataType"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Accepted data type."</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">"T1w"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"T2w"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"BOLD"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"Warp"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"VBM_GM"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"VBM_WM"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"VBM_CSF"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"fALFF"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"GCOR"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"LCOR"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"DWI"</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">"FreeSurfer"</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"DataType"</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">"additionalProperties"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Config<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>extra</strong>: <em>str = forbid</em></p></li>
+<li><p><strong>use_enum_values</strong>: <em>bool = True</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Fields<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.datadir" title="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.datadir"><code class="xref py py-obj docutils literal notranslate"><span class="pre">datadir</span> <span class="pre">(pathlib.Path)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.resolution" title="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.resolution"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolution</span> <span class="pre">(float)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.types" title="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.types"><code class="xref py py-obj docutils literal notranslate"><span class="pre">types</span> <span class="pre">(list[junifer.datagrabber.base.DataType])</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.datadir">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">datadir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/tmp/tmp8x9aqd7b')</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.datadir" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.resolution">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2.0</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.resolution" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.types">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">types</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="datagrabbers.html#junifer.datagrabber.DataType" title="junifer.datagrabber.base.DataType"><span class="pre">DataType</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[&lt;DataType.VBM_GM:</span> <span class="pre">'VBM_GM'&gt;]</span></em><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.types" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_element_keys">
+<span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_element_keys" title="Link to this definition">¶</a></dt>
+<dd><p>Get element keys.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_elements" title="Link to this definition">¶</a></dt>
+<dd><p>Get elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>List of elements that can be grabbed.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_item">
+<span class="sig-name descname"><span class="pre">get_item</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_item" title="Link to this definition">¶</a></dt>
+<dd><p>Implement indexing support.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>subject</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The subject to retrieve.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The data along with the metadata.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_participants">
+<span class="sig-name descname"><span class="pre">get_participants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_participants" title="Link to this definition">¶</a></dt>
+<dd><p>Get the participants information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><a class="reference external" href="https://pandas.pydata.org/pandas-docs/dev/reference/api/pandas.DataFrame.html#pandas.DataFrame" title="(in pandas v3.2)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></a></dt><dd><p>The participants information (e.g. age and gender), indexed by
+subject.</p>
 </dd>
 </dl>
 </dd>
@@ -1072,6 +1249,7 @@ validated to form a valid model.</p>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber</span></code></a><ul>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.age_group"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.age_group</span></code></a></li>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.datadir"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.datadir</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_subjects"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.n_subjects</span></code></a></li>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.n_timepoints"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.n_timepoints</span></code></a></li>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.reduce_confounds"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.reduce_confounds</span></code></a></li>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber.types"><code class="docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber.types</span></code></a></li>
@@ -1089,6 +1267,16 @@ validated to form a valid model.</p>
 <li><a class="reference internal" href="#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">SPMAuditoryTestingDataGrabber.get_item()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber</span></code></a><ul>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.datadir"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.datadir</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.resolution"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.resolution</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.types"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.types</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.get_element_keys()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.get_elements()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.get_item()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.testing.datagrabbers.UCLACNPVBMTestingDataGrabber.get_participants"><code class="docutils literal notranslate"><span class="pre">UCLACNPVBMTestingDataGrabber.get_participants()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -1097,7 +1285,7 @@ validated to form a valid model.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
+</div><script src="../_static/documentation_options.js?v=2a2c97bb"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

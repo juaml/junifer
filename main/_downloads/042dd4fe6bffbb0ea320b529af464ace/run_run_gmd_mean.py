@@ -1,6 +1,6 @@
 """
-UKB VBM GMD Extraction
-======================
+UCLA CNP VBM GMD Extraction
+===========================
 
 Authors: Federico Raimondo
 
@@ -13,33 +13,27 @@ from junifer.api import run
 
 
 datagrabber = {
-    "kind": "OasisVBMTestingDataGrabber",
+    "kind": "UCLACNPVBMTestingDataGrabber",
 }
 
 markers = [
     {
-        "name": "extDMN_TrimMean80",
-        "kind": "SphereAggregation",
-        "coords": "extDMN",
-        "radius": 5.0,
-        "masks": "compute_brain_mask",
+        "name": "TianxS2_TrimMean80",
+        "kind": "ParcelAggregation",
+        "parcellation": "TianxS2x3TxMNInonlinear2009cAsym",
         "method": "trim_mean",
         "method_params": {"proportiontocut": 0.2},
     },
     {
-        "name": "extDMN_Mean",
-        "kind": "SphereAggregation",
-        "coords": "extDMN",
-        "radius": 5.0,
-        "masks": "compute_brain_mask",
+        "name": "TianxS2_Mean",
+        "kind": "ParcelAggregation",
+        "parcellation": "TianxS2x3TxMNInonlinear2009cAsym",
         "method": "mean",
     },
     {
-        "name": "extDMN_Std",
-        "kind": "SphereAggregation",
-        "coords": "extDMN",
-        "radius": 5.0,
-        "masks": "compute_brain_mask",
+        "name": "TianxS2_Std",
+        "kind": "ParcelAggregation",
+        "parcellation": "TianxS2x3TxMNInonlinear2009cAsym",
         "method": "std",
     },
 ]

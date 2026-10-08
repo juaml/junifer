@@ -161,21 +161,21 @@ markers. Each Marker has a name that we can use to refer to it later,
 and a set of parameters that will be passed to the Marker.
 
 For the ``UCLA CNP VBM Testing dataset`` example, we want to compute the mean
-``VBM_GM`` value for each parcel using the ``Tian subcortical parcellation
-(scale I, 16 parcels)``, ``Tian subcortical parcellation (scale II, 32
-parcels)``, and the ``DMNBuckner`` network, using ``5mm`` spheres. Thus, we will
-configure the ``markers`` section as follows:
+``VBM_GM`` value for each parcel using the ``Schaefer parcellation (100 parcels,
+7 networks)``, ``Schaefer parcellation (200 parcels, 7 networks)``, and the
+``DMNBuckner`` network, using ``5mm`` spheres. Thus, we will configure the
+``markers`` section as follows:
 
 .. code-block:: yaml
 
   markers:
-    - name: TianxS1_mean
+    - name: Schaefer100x7_mean
       kind: ParcelAggregation
-      parcellation: TianxS1x3TxMNInonlinear2009cAsym
+      parcellation: Schaefer100x7
       method: mean
-    - name: TianxS2_mean
+    - name: Schaefer200x7_mean
       kind: ParcelAggregation
-      parcellation: TianxS2x3TxMNInonlinear2009cAsym
+      parcellation: Schaefer200x7
       method: mean
     - name: DMNBuckner_5mm_mean
       kind: SphereAggregation
@@ -217,13 +217,13 @@ looks like:
     kind: UCLACNPVBMTestingDataGrabber
 
   markers:
-    - name: TianxS1_mean
+    - name: Schaefer100x7_mean
       kind: ParcelAggregation
-      parcellation: TianxS1x3TxMNInonlinear2009cAsym
+      parcellation: Schaefer100x7
       method: mean
-    - name: TianxS2_mean
+    - name: Schaefer200x7_mean
       kind: ParcelAggregation
-      parcellation: TianxS2x3TxMNInonlinear2009cAsym
+      parcellation: Schaefer200x7
       method: mean
     - name: DMNBuckner_5mm_mean
       kind: SphereAggregation

@@ -203,9 +203,9 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../auto_examples/index.html">8. Examples</a><input aria-label="Toggle navigation of 8. Examples" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_ukbvm_gmd.html">8.1. UKB VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_datagrabber_bids_datalad.html">8.2. Generic BIDS DataGrabber for datalad.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UKB VBM GMD Extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_run_gmd_mean.html">8.3. UCLA CNP VBM GMD Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_ets_rss_marker.html">8.4. Extracting root sum of squares from edge-wise timeseries.</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.5. Compute Sphere and Parcel Aggregation.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_compute_parcel_mean.html">8.5. Compute Parcel Aggregation.</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/norun_hcpfc_pearson.html">8.6. HCP FC Extraction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../auto_examples/run_junifer_julearn.html">8.7. Run junifer and julearn.</a></li>
 </ul>
@@ -338,7 +338,7 @@ that is written in <a class="reference external" href="https://yaml.org">YAML</a
 as well as some general parameters.</p>
 <p>As an example, we will generate the configuration file for a pipeline that will
 extract the mean <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> values using two different parcellations and one set
-of coordinates, from the <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> included in <code class="docutils literal notranslate"><span class="pre">junifer</span></code>.</p>
+of coordinates, from the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> included in <code class="docutils literal notranslate"><span class="pre">junifer</span></code>.</p>
 <section id="general-parameters">
 <h2><span class="section-number">5.1.1. </span>General Parameters<a class="headerlink" href="#general-parameters" title="Link to this heading">¶</a></h2>
 <p>The general parameters are the ones that are not specific to any of the sections
@@ -391,9 +391,9 @@ task.</p>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span>
 </pre></div>
 </div>
-<p>In the <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, the section will look like this:</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, the section will look like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTestingDataGrabber</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UCLACNPVBMTestingDataGrabber</span>
 </pre></div>
 </div>
 </section>
@@ -409,7 +409,7 @@ keys to pass parameters to the DataReader constructor:</p>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DefaultDataReader</span>
 </pre></div>
 </div>
-<p>For the <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we will not specify a
+<p>For the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we will not specify a
 <code class="docutils literal notranslate"><span class="pre">datareader</span></code> step.</p>
 </section>
 <section id="preprocess">
@@ -432,7 +432,7 @@ need to specify its name as the <code class="docutils literal notranslate"><span
 <span class="w">    </span><span class="nt">standardize</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </pre></div>
 </div>
-<p>For the <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we will not specify a
+<p>For the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we will not specify a
 preprocessing step.</p>
 </section>
 <section id="marker">
@@ -440,19 +440,19 @@ preprocessing step.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">markers</span></code> section like the <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> section expects a list of
 markers. Each Marker has a name that we can use to refer to it later,
 and a set of parameters that will be passed to the Marker.</p>
-<p>For the <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we want to compute the mean
-<code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the <code class="docutils literal notranslate"><span class="pre">Schaefer</span> <span class="pre">parcellation</span> <span class="pre">(100</span> <span class="pre">parcels,</span>
-<span class="pre">7</span> <span class="pre">networks)</span></code>, <code class="docutils literal notranslate"><span class="pre">Schaefer</span> <span class="pre">parcellation</span> <span class="pre">(200</span> <span class="pre">parcels,</span> <span class="pre">7</span> <span class="pre">networks)</span></code>, and the
-<code class="docutils literal notranslate"><span class="pre">DMNBuckner</span></code> network, using <code class="docutils literal notranslate"><span class="pre">5mm</span></code> spheres. Thus, we will configure the
-<code class="docutils literal notranslate"><span class="pre">markers</span></code> section as follows:</p>
+<p>For the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, we want to compute the mean
+<code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> value for each parcel using the <code class="docutils literal notranslate"><span class="pre">Tian</span> <span class="pre">subcortical</span> <span class="pre">parcellation</span>
+<span class="pre">(scale</span> <span class="pre">I,</span> <span class="pre">16</span> <span class="pre">parcels)</span></code>, <code class="docutils literal notranslate"><span class="pre">Tian</span> <span class="pre">subcortical</span> <span class="pre">parcellation</span> <span class="pre">(scale</span> <span class="pre">II,</span> <span class="pre">32</span>
+<span class="pre">parcels)</span></code>, and the <code class="docutils literal notranslate"><span class="pre">DMNBuckner</span></code> network, using <code class="docutils literal notranslate"><span class="pre">5mm</span></code> spheres. Thus, we will
+configure the <code class="docutils literal notranslate"><span class="pre">markers</span></code> section as follows:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">markers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS1_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS1x3TxMNInonlinear2009cAsym</span>
 <span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS2_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS2x3TxMNInonlinear2009cAsym</span>
 <span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span>
@@ -471,30 +471,30 @@ key to specify the storage to use, and additional keys to pass parameters.</p>
 specify where we want to store the results:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">storage</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HDF5FeatureStorage</span>
-<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.hdf5</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/uclacnp_vbm_testing.hdf5</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="complete-example">
 <h2><span class="section-number">5.1.3. </span>Complete Example<a class="headerlink" href="#complete-example" title="Link to this heading">¶</a></h2>
-<p>This is how the full <code class="docutils literal notranslate"><span class="pre">Oasis</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example configuration file
+<p>This is how the full <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example configuration file
 looks like:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">with</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">junifer.testing.registry</span>
 
 <span class="nt">workdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp</span>
 
 <span class="nt">datagrabber</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OasisVBMTestingDataGrabber</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UCLACNPVBMTestingDataGrabber</span>
 
 <span class="nt">markers</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7_mean</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS1_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer100x7</span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS1x3TxMNInonlinear2009cAsym</span>
 <span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7_mean</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS2_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ParcelAggregation</span>
-<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Schaefer200x7</span>
+<span class="w">    </span><span class="nt">parcellation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TianxS2x3TxMNInonlinear2009cAsym</span>
 <span class="w">    </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mean</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DMNBuckner_5mm_mean</span>
 <span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SphereAggregation</span>
@@ -504,7 +504,7 @@ looks like:</p>
 
 <span class="nt">storage</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HDF5FeatureStorage</span>
-<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/oasis_vbm_testing.hdf5</span>
+<span class="w">  </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/junifer/example/uclacnp_vbm_testing.hdf5</span>
 </pre></div>
 </div>
 </section>
@@ -581,7 +581,7 @@ looks like:</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=b0846d1d"></script>
+</div><script src="../_static/documentation_options.js?v=2a2c97bb"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

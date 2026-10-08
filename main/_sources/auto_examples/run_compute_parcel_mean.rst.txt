@@ -18,31 +18,29 @@
 .. _sphx_glr_auto_examples_run_compute_parcel_mean.py:
 
 
-Compute Sphere and Parcel Aggregation.
-======================================
+Compute Parcel Aggregation.
+===========================
 
-This example uses the ``SphereAggregation`` marker to compute the mean of
-spheres around the extended default mode network coordinates (16 ROIs) for a
-3D NIfTI and the ``ParcelAggregation`` marker to compute the mean of each
-parcel using the Schaefer parcellation (100 rois, 7 Yeo networks) for a 4D
-NIfTI.
+This example uses the ``ParcelAggregation`` marker to compute the mean of each
+parcel using the Tian subcortical parcellation (scale I, 16 ROIs) for a 3D
+NIfTI and the Schaefer parcellation (100 rois, 7 Yeo networks) for a 4D NIfTI.
 
 Authors: Federico Raimondo, Synchon Mandal
 
 License: BSD 3 clause
 
-.. GENERATED FROM PYTHON SOURCE LINES 15-27
+.. GENERATED FROM PYTHON SOURCE LINES 13-25
 
 .. code-block:: Python
 
 
     from junifer.testing.datagrabbers import (
         ADHDTestingDataGrabber,
-        OasisVBMTestingDataGrabber,
+        UCLACNPVBMTestingDataGrabber,
     )
     from junifer.datagrabber import DataType
     from junifer.datareader import DefaultDataReader
-    from junifer.markers import ParcelAggregation, SphereAggregation
+    from junifer.markers import ParcelAggregation
     from junifer.stats import AggFunc
     from junifer.utils import configure_logging
 
@@ -54,11 +52,11 @@ License: BSD 3 clause
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-29
+.. GENERATED FROM PYTHON SOURCE LINES 26-27
 
 Set the logging level to info to see extra information
 
-.. GENERATED FROM PYTHON SOURCE LINES 29-31
+.. GENERATED FROM PYTHON SOURCE LINES 27-29
 
 .. code-block:: Python
 
@@ -72,52 +70,50 @@ Set the logging level to info to see extra information
 
  .. code-block:: none
 
-    2026-10-08 07:33:44 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] click: 8.1.8                   [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] numpy: 2.3.5                   [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] pandas: 2.3.3                  [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] nibabel: 5.3.3                 [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] sqlalchemy: 2.1.0              [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] ruamel.yaml: 0.18.17           [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] h5py: 3.16.0                   [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] tqdm: 4.67.3                   [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] lapy: 1.6.0                    [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] junifer_data: 1.5.0            [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] junifer: 0.0.8.dev257          [junifer] pkg=utils
-    2026-10-08 07:33:44 [info     ] ========================       [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] ===== Lib Versions =====       [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] click: 8.1.8                   [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] numpy: 2.3.5                   [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] scipy: 1.16.3                  [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] datalad: 1.1.6                 [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] pandas: 2.3.3                  [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] nibabel: 5.3.3                 [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] nilearn: 0.10.4                [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] sqlalchemy: 2.1.0              [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] ruamel.yaml: 0.18.17           [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] h5py: 3.16.0                   [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] tqdm: 4.67.3                   [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] templateflow: 24.2.2           [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] lapy: 1.6.0                    [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] junifer_data: 1.5.0            [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] junifer: 0.0.8.dev264          [junifer] pkg=utils
+    2026-10-08 07:43:10 [info     ] ========================       [junifer] pkg=utils
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
-Perform sphere aggregation on VBM GM data (3D) from OASIS dataset
+Perform parcel aggregation on VBM GM data (3D) from the UCLA CNP dataset
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-51
+.. GENERATED FROM PYTHON SOURCE LINES 31-47
 
 .. code-block:: Python
 
-    with OasisVBMTestingDataGrabber() as dg:
+    with UCLACNPVBMTestingDataGrabber() as dg:
         # Get the first element
         element = dg.get_elements()[0]
         # Read the element
         element_data = DefaultDataReader().fit_transform(dg[element])
         # Initialize marker
-        marker = SphereAggregation(
-            coords="extDMN",
-            radius=5.0,
+        marker = ParcelAggregation(
+            parcellation="TianxS1x3TxMNInonlinear2009cAsym",
             method=AggFunc.Mean,
-            masks="compute_brain_mask",
         )
         # Compute feature
         feature = marker.fit_transform(element_data)
         # Print the output
         print(feature.keys())
-        print(feature["VBM_GM"]["aggregation"]["data"].shape)  # Shape is (1 x spheres)
+        print(feature["VBM_GM"]["aggregation"]["data"].shape)  # Shape is (1 x parcels)
 
 
 
@@ -127,25 +123,30 @@ Perform sphere aggregation on VBM GM data (3D) from OASIS dataset
 
  .. code-block:: none
 
-    2026-10-08 07:33:44 [info     ] Parameters: {'types': ['VBM_GM'], 'datadir': '/tmp/tmpssj6jm3l'} [junifer] component=OasisVBMTestingDataGrabber pkg=datagrabber step=datagrabber
-    2026-10-08 07:33:44 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-    2026-10-08 07:33:44 [info     ] Reading VBM_GM from /home/docker/nilearn_data/oasis1/OAS1_0001_MR1/mwrc1OAS1_0001_MR1_mpr_anon_fslswapdim_bet.nii.gz [junifer] pkg=datareader step=datareader
-    2026-10-08 07:33:44 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
-    2026-10-08 07:33:44 [info     ] Parameters: {'on': ['T1w', 'T2w', 'BOLD', 'VBM_GM', 'VBM_WM', 'VBM_CSF', 'fALFF', 'GCOR', 'LCOR'], 'name': 'SphereAggregation', 'coords': 'extDMN', 'radius': 5.0, 'allow_overlap': False, 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': ['compute_brain_mask']} [junifer] component=SphereAggregation pkg=markers step=marker
-    2026-10-08 07:33:44 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
-    2026-10-08 07:33:44 [info     ] Downloading template MNI152Lin (brain in resolution 2) [junifer] pkg=data
-    2026-10-08 07:33:47 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
+    2026-10-08 07:43:10 [info     ] Parameters: {'types': ['VBM_GM'], 'datadir': '/tmp/tmp8x9aqd7b', 'resolution': 2.0} [junifer] component=UCLACNPVBMTestingDataGrabber pkg=datagrabber step=datagrabber
+    2026-10-08 07:43:10 [info     ] Getting element ('sub-10206',) [junifer] pkg=datagrabber step=datagrabber
+    2026-10-08 07:43:10 [info     ] Reading VBM_GM from /home/docker/nilearn_data/ds000030/ds000030_R1.0.4/uncompressed/derivatives/fmriprep/sub-10206/anat/sub-10206_T1w_space-MNI152NLin2009cAsym_class-GM_probtissue_res-2mm.nii [junifer] pkg=datareader step=datareader
+    2026-10-08 07:43:10 [info     ] VBM_GM is of type NIFTI        [junifer] pkg=datareader step=datareader
+    2026-10-08 07:43:10 [info     ] Parameters: {'on': ['T1w', 'T2w', 'BOLD', 'VBM_GM', 'VBM_WM', 'VBM_CSF', 'fALFF', 'GCOR', 'LCOR'], 'name': 'ParcelAggregation', 'parcellation': ['TianxS1x3TxMNInonlinear2009cAsym'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
+    2026-10-08 07:43:10 [info     ] Computing DataType.VBM_GM      [junifer] pkg=markers step=marker
+    2026-10-08 07:43:10 [info     ] Parcellation parameters:       [junifer] pkg=data
+    2026-10-08 07:43:10 [info     ]         resolution: 2.0               [junifer] pkg=data
+    2026-10-08 07:43:10 [info     ]         scale: 1                      [junifer] pkg=data
+    2026-10-08 07:43:10 [info     ]         space: MNI152NLin2009cAsym    [junifer] pkg=data
+    2026-10-08 07:43:10 [info     ]         magneticfield: 3T             [junifer] pkg=data
+    2026-10-08 07:43:10 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Melbourne/v1.4/3T/Subcortex-Only/Tian_Subcortex_S1_3T_2009cAsym.nii.gz [junifer] pkg=data
+    2026-10-08 07:43:12 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
     dict_keys([<DataType.VBM_GM: 'VBM_GM'>])
     (1, 16)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 52-53
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Perform parcel aggregation on BOLD data (4D) from ADHD dataset
 
-.. GENERATED FROM PYTHON SOURCE LINES 53-69
+.. GENERATED FROM PYTHON SOURCE LINES 49-65
 
 .. code-block:: Python
 
@@ -173,18 +174,18 @@ Perform parcel aggregation on BOLD data (4D) from ADHD dataset
 
  .. code-block:: none
 
-    2026-10-08 07:33:47 [info     ] Parameters: {'types': ['BOLD'], 'datadir': '/tmp/tmp0dml6jbs', 'resolution': 2.0, 'n_timepoints': 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
-    2026-10-08 07:33:47 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
-    2026-10-08 07:33:47 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-2mm_tp-50.nii [junifer] pkg=datareader step=datareader
-    2026-10-08 07:33:47 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
-    2026-10-08 07:33:47 [info     ] Parameters: {'on': ['BOLD'], 'name': 'ParcelAggregation', 'parcellation': ['Schaefer100x7'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
-    2026-10-08 07:33:47 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
-    2026-10-08 07:33:47 [info     ] Parcellation parameters:       [junifer] pkg=data
-    2026-10-08 07:33:47 [info     ]         resolution: 2.0               [junifer] pkg=data
-    2026-10-08 07:33:47 [info     ]         n_rois: 100                   [junifer] pkg=data
-    2026-10-08 07:33:47 [info     ]         yeo_networks: 7               [junifer] pkg=data
-    2026-10-08 07:33:47 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
-    2026-10-08 07:33:54 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
+    2026-10-08 07:43:12 [info     ] Parameters: {'types': ['BOLD'], 'datadir': '/tmp/tmpgunnyn8i', 'resolution': 3.0, 'n_timepoints': 50} [junifer] component=ADHDTestingDataGrabber pkg=datagrabber step=datagrabber
+    2026-10-08 07:43:12 [info     ] Getting element ('sub-01',)    [junifer] pkg=datagrabber step=datagrabber
+    2026-10-08 07:43:12 [info     ] Reading BOLD from /home/docker/nilearn_data/adhd/data/0010042/0010042_rest_tshift_RPI_voreg_mni_res-3mm_tp-50.nii [junifer] pkg=datareader step=datareader
+    2026-10-08 07:43:12 [info     ] BOLD is of type NIFTI          [junifer] pkg=datareader step=datareader
+    2026-10-08 07:43:12 [info     ] Parameters: {'on': ['BOLD'], 'name': 'ParcelAggregation', 'parcellation': ['Schaefer100x7'], 'method': 'mean', 'method_params': None, 'time_method': None, 'time_method_params': None, 'masks': None} [junifer] component=ParcelAggregation pkg=markers step=marker
+    2026-10-08 07:43:12 [info     ] Computing DataType.BOLD        [junifer] pkg=markers step=marker
+    2026-10-08 07:43:12 [info     ] Parcellation parameters:       [junifer] pkg=data
+    2026-10-08 07:43:12 [info     ]         resolution: 3.0               [junifer] pkg=data
+    2026-10-08 07:43:12 [info     ]         n_rois: 100                   [junifer] pkg=data
+    2026-10-08 07:43:12 [info     ]         yeo_networks: 7               [junifer] pkg=data
+    2026-10-08 07:43:12 [info     ] Loading parcellation: /home/docker/junifer_data/v7/parcellations/Schaefer2018/Yeo2011/Schaefer2018_100Parcels_7Networks_order_FSLMNI152_2mm.nii.gz [junifer] pkg=data
+    2026-10-08 07:43:15 [info     ] No storage specified, returning dictionary [junifer] pkg=markers step=marker
     dict_keys([<DataType.BOLD: 'BOLD'>])
     (50, 100)
 
@@ -194,7 +195,7 @@ Perform parcel aggregation on BOLD data (4D) from ADHD dataset
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 11.427 seconds)
+   **Total running time of the script:** (0 minutes 5.681 seconds)
 
 
 .. _sphx_glr_download_auto_examples_run_compute_parcel_mean.py:
