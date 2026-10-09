@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import glob
 import re
 from collections import defaultdict
 from copy import deepcopy
@@ -347,7 +348,16 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
         resolved_pattern = self._replace_patterns_glob(element, pattern)
         # Resolve path for wildcards
         if "*" in resolved_pattern or "?" in resolved_pattern:
-            t_matches = list(self.fulldir.absolute().glob(resolved_pattern))
+            # glob.glob (unlike pathlib before Python 3.12) also matches the
+            # broken symbolic links, e.g., the files of a DataLad dataset that
+            # are not downloaded yet.
+            # TODO: go back to Path.glob once Python 3.11 is dropped (end of
+            # life in October 2027)
+            fulldir = self.fulldir.absolute()
+            t_matches = [
+                fulldir / x
+                for x in glob.glob(resolved_pattern, root_dir=fulldir)
+            ]
             # Multiple matches
             if len(t_matches) > 1:
                 raise_error(
@@ -606,8 +616,13 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
                     t_keys,
                 ) = self._replace_patterns_regex(pattern)
                 t_elements = set()
-                for fname in self.fulldir.glob(glob_pattern):
-                    suffix = fname.relative_to(self.fulldir).as_posix()
+                # glob.glob (unlike pathlib before Python 3.12) also matches
+                # the broken symbolic links, e.g., the files of a DataLad
+                # dataset that are not downloaded yet.
+                # TODO: go back to Path.glob once Python 3.11 is dropped (end
+                # of life in October 2027)
+                for fname in glob.glob(glob_pattern, root_dir=self.fulldir):
+                    suffix = Path(fname).as_posix()
                     m = re.match(re_pattern, suffix)
                     if m is not None:
                         t_elements.add(tuple(m.group(k) for k in t_keys))

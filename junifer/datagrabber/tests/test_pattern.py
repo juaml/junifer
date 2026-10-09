@@ -817,3 +817,33 @@ def test_PatternDataGrabber_absolute_paths(
     path = dg[("sub-01", "rest")]["BOLD"]["path"]
     assert path.is_absolute()
     assert path == tmp_path / "data" / "sub-01" / "sub-01_task-rest_bold.nii"
+
+
+@pytest.mark.parametrize("pattern", ["{subject}/T1w.nii", "{subject}/T1*.nii"])
+def test_PatternDataGrabber_broken_symlinks(
+    tmp_path: Path, pattern: str
+) -> None:
+    """Test PatternDataGrabber with files that are broken symbolic links.
+
+    The files of a DataLad dataset that are not downloaded yet are broken
+    symbolic links.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    pattern : str
+        The parametrized pattern, with and without wildcards in the file name.
+
+    """
+    for subject in ("sub-01", "sub-02"):
+        (tmp_path / subject).mkdir()
+        (tmp_path / subject / "T1w.nii").symlink_to(tmp_path / "missing.nii")
+    dg = PatternDataGrabber(
+        datadir=tmp_path,
+        types=["T1w"],
+        patterns={"T1w": {"pattern": pattern, "space": "native"}},
+        replacements=["subject"],
+    )
+    assert dg.get_elements() == ["sub-01", "sub-02"]
+    assert dg["sub-01"]["T1w"]["path"] == tmp_path / "sub-01" / "T1w.nii"
