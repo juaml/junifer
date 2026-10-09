@@ -15,7 +15,6 @@ from junifer.utils.singleton import Singleton
 # Vendored packages, whose tests are not collected. Paths are relative to
 # this file, so it also works when testing the installed package.
 _VENDORED = [
-    Path(__file__).parent / "external" / "h5io",
     Path(__file__).parent / "external" / "BrainPrint",
 ]
 

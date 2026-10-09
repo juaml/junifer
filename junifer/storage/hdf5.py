@@ -4,24 +4,20 @@
 #          Federico Raimondo <f.raimondo@fz-juelich.de>
 # License: AGPL
 
+import io
 from collections import defaultdict
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Any, ClassVar, Literal
 
+import h5py
 import numpy as np
 import pandas as pd
+from h5io import read_hdf5, write_hdf5
 from pydantic import PositiveInt
 from tqdm import tqdm
 
 from ..api.decorators import register_storage
-from ..external.h5io.h5io import (
-    ChunkedArray,
-    ChunkedList,
-    has_hdf5,
-    read_hdf5,
-    write_hdf5,
-)
 from ..utils import raise_error
 from .base import BaseFeatureStorage, MatrixKind, StorageType, logger
 from .utils import (
@@ -36,21 +32,106 @@ from .utils import (
 __all__ = ["HDF5FeatureStorage"]
 
 
-def _create_chunk(
+# Types of the data of collected features in files written with junifer's
+# fork of h5io, and the h5io types they are stored as
+_LEGACY_TYPES = {"chunkedarray": "ndarray", "chunkedlist": "list"}
+
+
+def _node_type(node: h5py.Group | h5py.Dataset) -> str:
+    """Get the h5io type of a node.
+
+    Parameters
+    ----------
+    node : h5py.Group or h5py.Dataset
+        The node.
+
+    Returns
+    -------
+    str
+        The type.
+
+    """
+    title = node.attrs["TITLE"]
+    return title.decode() if isinstance(title, bytes) else title
+
+
+def _has_hdf5(fname: str, title: str) -> bool:
+    """Check whether a title is in an HDF5 file.
+
+    Parameters
+    ----------
+    fname : str
+        The HDF5 file.
+    title : str
+        The title.
+
+    Returns
+    -------
+    bool
+        Whether the title is in the file.
+
+    """
+    with h5py.File(fname, mode="r") as fid:
+        return title in fid
+
+
+def _read_hdf5(fname: str, title: str) -> Any:
+    """Read a title of an HDF5 file.
+
+    Features collected with junifer's fork of h5io have their data stored with
+    types that h5io does not know (see ``_LEGACY_TYPES``). To read them, the
+    feature is copied in memory with the h5io types.
+
+    Parameters
+    ----------
+    fname : str
+        The HDF5 file.
+    title : str
+        The title.
+
+    Returns
+    -------
+    Any
+        The data.
+
+    """
+    with h5py.File(fname, mode="r") as fid:
+        node = fid.get(title)
+        data = node.get("key_data") if isinstance(node, h5py.Group) else None
+        if data is not None and _node_type(data) in _LEGACY_TYPES:
+            with h5py.File(io.BytesIO(), mode="w") as copy:
+                fid.copy(node, copy, name=title)
+                copy_data = copy[title]["key_data"]
+                copy_data.attrs["TITLE"] = _LEGACY_TYPES[_node_type(data)]
+                return read_hdf5(copy, title=title, slash="ignore")
+    return read_hdf5(fname, title=title, slash="ignore")
+
+
+def _write_chunk(
+    fname: str,
+    key: str,
     chunk_data: list[np.ndarray],
     kind: StorageType,
     element_count: int,
     chunk_size: int,
     i_chunk: int,
-) -> ChunkedArray | ChunkedList:
-    """Create chunked array or list.
+) -> None:
+    """Write a chunk of the data of the elements.
+
+    The data is written in a dataset (``ndarray`` in h5io) for vectors and
+    matrices, with the elements in the last dimension, or in a group of
+    datasets (``list`` in h5io) for the other kinds.
 
     Parameters
     ----------
+    fname : str
+        The HDF5 file.
+    key : str
+        The name of the dataset or group to write to.
     chunk_data : list of numpy.ndarray
-        The data to be chunked.
+        The data of the elements in the chunk.
     kind : :enum:`.StorageType`
-        The kind of data to be chunked.
+        The kind of data.
     element_count : int
         The total number of elements.
     chunk_size : int
@@ -58,37 +139,29 @@ def _create_chunk(
     i_chunk : int
         The chunk index.
 
-    Returns
-    -------
-    ChunkedArray or ChunkedList
-        The chunked array or list.
-
     """
-    if kind in ["vector", "matrix"]:
-        features_data = np.concatenate(chunk_data, axis=-1)
-        array_shape = [features_data.shape[0]]
-        array_chunk_size = [features_data.shape[0]]
-        # Append second dimension for 3D
-        if features_data.ndim == 3:
-            array_shape.append(features_data.shape[1])
-            array_chunk_size.append(features_data.shape[1])
-        # Append final dimension of element count
-        array_shape.append(element_count)
-        # Append final dimension of chunk size
-        array_chunk_size.append(chunk_size)
-        out = ChunkedArray(
-            data=features_data,
-            shape=tuple(array_shape),
-            chunk_size=tuple(array_chunk_size),
-            n_chunk=i_chunk,
-        )
-    elif kind in ["timeseries", "scalar_table", "timeseries_2d"]:
-        out = ChunkedList(
-            data=chunk_data,
-            size=element_count,
-            offset=i_chunk * chunk_size,
-        )
-    return out
+    offset = i_chunk * chunk_size
+    with h5py.File(fname, mode="a") as fid:
+        if kind in ["vector", "matrix"]:
+            features_data = np.concatenate(chunk_data, axis=-1)
+            if key not in fid:
+                dataset = fid.create_dataset(
+                    key,
+                    shape=(*features_data.shape[:-1], element_count),
+                    dtype=features_data.dtype,
+                    chunks=(*features_data.shape[:-1], chunk_size),
+                )
+                dataset.attrs["TITLE"] = "ndarray"
+            n_elements = features_data.shape[-1]
+            fid[key][..., offset : offset + n_elements] = features_data
+        elif kind in ["timeseries", "scalar_table", "timeseries_2d"]:
+            group = fid.require_group(key)
+            group.attrs["TITLE"] = "list"
+            for i, element_data in enumerate(chunk_data):
+                dataset = group.create_dataset(
+                    f"idx_{offset + i}", data=element_data
+                )
+                dataset.attrs["TITLE"] = "ndarray"
 
 
 @register_storage
@@ -207,7 +280,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Check if group is found in the storage
-        if not has_hdf5(fname=uri, title="meta"):
+        if not _has_hdf5(fname=uri, title="meta"):
             raise_error(
                 f"Invalid junifer HDF5 file at: {uri}",
                 klass=RuntimeError,
@@ -215,11 +288,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Read metadata
         logger.debug(f"Loading HDF5 metadata from: {uri}")
-        metadata = read_hdf5(
-            fname=uri,
-            title="meta",
-            slash="ignore",
-        )
+        metadata = _read_hdf5(fname=uri, title="meta")
         logger.debug(f"Loaded HDF5 metadata from: {uri}")
 
         return metadata
@@ -236,11 +305,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         """
         # Read metadata
-        metadata = read_hdf5(
-            fname=str(self.uri.resolve()),
-            title="meta",
-            slash="ignore",
-        )
+        metadata = _read_hdf5(fname=str(self.uri.resolve()), title="meta")
         return metadata
 
     def _read_data(
@@ -280,7 +345,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             )
 
         # Check if group is found in the storage
-        if not has_hdf5(fname=uri, title=md5):
+        if not _has_hdf5(fname=uri, title=md5):
             raise_error(
                 f"{md5} not found in HDF5 file at: {uri}",
                 klass=RuntimeError,
@@ -288,11 +353,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Read data
         logger.debug(f"Loading HDF5 data for {md5} from: {uri}")
-        data = read_hdf5(
-            fname=uri,
-            title=md5,
-            slash="ignore",
-        )
+        data = _read_hdf5(fname=uri, title=md5)
         logger.debug(f"Loaded HDF5 data for {md5} from: {uri}")
 
         return data
@@ -345,11 +406,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 )
             )
         # Parameter check pass; read metadata
-        metadata = read_hdf5(
-            fname=str(self.uri.resolve()),
-            title="meta",
-            slash="ignore",
-        )
+        metadata = _read_hdf5(fname=str(self.uri.resolve()), title="meta")
         # Initialize MD5 variable
         md5: str = ""
 
@@ -397,11 +454,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             md5 = feature_name_duplicates_with_different_md5[0]
 
         # Read data from HDF5
-        hdf_data = read_hdf5(
-            fname=str(self.uri.resolve()),
-            title=md5,
-            slash="ignore",
-        )
+        hdf_data = _read_hdf5(fname=str(self.uri.resolve()), title=md5)
         return hdf_data
 
     def read_df(
@@ -677,7 +730,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
 
         # Check if MD5 exists, then read data else create empty dictionary
         # File should be present here already
-        if has_hdf5(fname=uri, title=meta_md5):
+        if _has_hdf5(fname=uri, title=meta_md5):
             stored_data = self._read_data(md5=meta_md5, element=element[0])
         else:
             logger.debug(f"Creating new data map for {meta_md5} ...")
@@ -1078,6 +1131,13 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             elements = []
             static_data = None
             kind = None
+            # The data is written in chunks to a temporary key (h5io would
+            # delete the previous chunks), and moved to the feature at the end
+            fname = str(self.uri.resolve())
+            data_key = f"collecting_{feature_md5}"
+            with h5py.File(fname, mode="a") as fid:
+                if data_key in fid:
+                    del fid[data_key]
             for file_ in tqdm(element_files, desc="file-data"):
                 logger.debug(
                     f"Reading feature MD5: '{feature_md5}' "
@@ -1085,11 +1145,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 )
 
                 # Read the data
-                t_data = read_hdf5(
-                    fname=str(file_),
-                    title=feature_md5,
-                    slash="ignore",
-                )
+                t_data = _read_hdf5(fname=str(file_), title=feature_md5)
                 if i_file == 0:
                     # Store the "static" data
                     static_data = {
@@ -1109,35 +1165,32 @@ class HDF5FeatureStorage(BaseFeatureStorage):
                 i_file += 1
                 if (i_file % t_chunk_size == 0) or i_file == element_count:
                     # If we have reached the chunk size or the end of the
-                    # elements, write the data
-
-                    # Store one chunk of data
-                    to_write = static_data.copy()
-                    to_write["element"] = []
-                    # Write data in chunks to avoid memory usage spikes
-                    # Start with the case for 2D
-                    # Write chunked array
-                    to_write["data"] = _create_chunk(
+                    # elements, write the data in chunks to avoid memory
+                    # usage spikes
+                    _write_chunk(
+                        fname=fname,
+                        key=data_key,
                         chunk_data=chunk_data,
                         kind=kind,
                         element_count=element_count,
                         chunk_size=t_chunk_size,
                         i_chunk=i_chunk,
                     )
-                    if i_file == element_count:
-                        to_write["element"] = elements
-
-                    # Write to HDF5
-                    write_hdf5(
-                        fname=str(self.uri.resolve()),
-                        data=to_write,
-                        overwrite="update",
-                        compression=0,
-                        title=feature_md5,
-                        slash="error",
-                        use_json=False,
-                    )
 
                     # Increment counters and data
                     i_chunk += 1
                     chunk_data = []
+
+            # Write the feature without the data
+            write_hdf5(
+                fname=fname,
+                data={**static_data, "element": elements},
+                overwrite="update",
+                compression=0,
+                title=feature_md5,
+                slash="error",
+                use_json=False,
+            )
+            # Move the data to the feature (as written by h5io)
+            with h5py.File(fname, mode="a") as fid:
+                fid.move(data_key, f"{feature_md5}/key_data")
