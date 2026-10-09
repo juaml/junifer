@@ -44,6 +44,28 @@ __all__ = [
 ]
 
 
+def _parse_yaml(filepath: click.Path) -> dict:
+    """Parse the YAML file and set up the working directory.
+
+    The working directory is set up before anything else, as all the
+    components assume it is available.
+
+    Parameters
+    ----------
+    filepath : click.Path
+        The filepath to the configuration file.
+
+    Returns
+    -------
+    dict
+        The configuration.
+
+    """
+    config = cli_func.parse_yaml(filepath)  # type: ignore
+    cli_func._setup_workdir(config.get("workdir"))
+    return config
+
+
 def _validate_optional_verbose(
     ctx: click.Context, param: str, value: str | None
 ):
@@ -162,7 +184,7 @@ def run(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO(synchon): add validation
     # Parse YAML
-    config = cli_func.parse_yaml(filepath)
+    config = _parse_yaml(filepath)
     # Retrieve working directory
     workdir = config["workdir"]
     # Fetch datagrabber
@@ -232,7 +254,7 @@ def collect(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
-    config = cli_func.parse_yaml(filepath)
+    config = _parse_yaml(filepath)
     # Fetch storage
     storage = config["storage"]
     # Perform operation
@@ -299,7 +321,7 @@ def queue(
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # TODO: add validation
     # Parse YAML
-    config = cli_func.parse_yaml(filepath)  # type: ignore
+    config = _parse_yaml(filepath)
     # Check queue section
     if "queue" not in config:
         raise_error(f"No queue configuration found in {filepath}.")
@@ -450,7 +472,7 @@ def reset(
     # Setup logging
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
-    config = cli_func.parse_yaml(filepath)
+    config = _parse_yaml(filepath)
     # Perform operation
     cli_func.reset(config)
 
@@ -510,7 +532,7 @@ def list_elements(
     # Setup logging
     configure_logging(level=verbose, level_datalad=verbose_datalad)
     # Parse YAML
-    config = cli_func.parse_yaml(filepath)
+    config = _parse_yaml(filepath)
     # Fetch datagrabber
     datagrabber = config["datagrabber"]
     # Parse elements
