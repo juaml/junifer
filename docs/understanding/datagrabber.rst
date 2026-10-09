@@ -173,6 +173,94 @@ option can select some of them, with the values of the keys separated by
 
 See :ref:`running_elements` for more details.
 
+.. _datagrabber_multiple:
+
+Combining datasets
+------------------
+
+The :class:`.MultipleDataGrabber` combines several DataGrabbers, e.g., to use
+data from different datasets. For example, we can take the ``BOLD`` and
+``T1w`` images from a dataset with the fMRIPrep derivatives, the ``VBM_GM``
+images from a dataset with the CAT12 derivatives, and the confounds of the
+``BOLD`` images from a third dataset:
+
+.. code-block:: yaml
+
+  datagrabber:
+    kind: MultipleDataGrabber
+    datagrabbers:
+      # BOLD and T1w from the fMRIPrep derivatives
+      - kind: DataladAOMICPIOP1
+        types:
+          - BOLD
+          - T1w
+        tasks:
+          - restingstate
+      # VBM from the CAT12 derivatives
+      - kind: PatternDataladDataGrabber
+        uri: https://example.org/aomic-piop1-cat12
+        types:
+          - VBM_GM
+        patterns:
+          VBM_GM:
+            pattern: "{subject}/mri/mwp1{subject}_T1w.nii"
+            space: MNI152NLin2009cAsym
+        replacements:
+          - subject
+      # Only the confounds of the BOLD images
+      - kind: PatternDataladDataGrabber
+        uri: https://example.org/aomic-piop1-confounds
+        types:
+          - BOLD
+        patterns:
+          BOLD:
+            confounds:
+              pattern: "{subject}/func/{subject}_task-{task}_acq-*_desc-confounds.tsv"
+              format: fmriprep
+        replacements:
+          - subject
+          - task
+        partial_pattern_ok: true
+
+The DataGrabbers are combined with these rules:
+
+* **Each data type is grabbed by one DataGrabber**, which is chosen with the
+  ``types`` of each DataGrabber. Here, the first one grabs ``BOLD`` and
+  ``T1w``, and the second one ``VBM_GM``. If the first one also grabbed
+  ``VBM_GM`` (e.g., without setting its ``types``), an error would be raised,
+  asking to remove it from the ``types`` of one of them.
+* **A DataGrabber that only grabs the nested data types of a data type**
+  (without the main file of the data type) replaces these nested data types
+  of the other DataGrabber. Here, the third one only grabs the ``confounds``
+  of ``BOLD``, so they replace the ones of the first DataGrabber, regardless
+  of the order of the DataGrabbers.
+* **The elements are the ones available in all the DataGrabbers.** The
+  DataGrabbers can have different keys: the element keys are the ones of the
+  first DataGrabber, followed by the other keys of the other DataGrabbers, and
+  each DataGrabber grabs an element with its own keys. The keys with the same
+  name must have the same values in all the datasets (e.g., the same subject
+  names).
+
+For the element ``(sub-0001, restingstate)``:
+
+.. list-table::
+   :widths: auto
+   :header-rows: 1
+
+   * - DataGrabber
+     - Keys
+     - Grabs
+   * - First (fMRIPrep)
+     - ``subject``, ``task``
+     - ``(sub-0001, restingstate)``: the ``BOLD`` image (with its mask) and
+       the ``T1w`` image
+   * - Second (CAT12)
+     - ``subject``
+     - ``sub-0001``: the ``VBM_GM`` image
+   * - Third (confounds)
+     - ``subject``, ``task``
+     - ``(sub-0001, restingstate)``: the confounds of the ``BOLD`` image
+
 Base Classes
 ------------
 
@@ -209,3 +297,6 @@ might want to use to implement your own DataGrabber.
      - | It is a combination of :class:`.PatternDataGrabber` and
        | :class:`.DataladDataGrabber`. This is probably the class you are looking
        | for when using Datalad datasets.
+   * - :class:`.MultipleDataGrabber`
+     - | It combines several DataGrabbers, e.g., to use data from different
+       | datasets (see :ref:`datagrabber_multiple`).
