@@ -73,10 +73,20 @@ def test_base_preprocessor_subclassing() -> None:
 
     meta = output["BOLD"]["meta"]
     assert "preprocess" in meta
-    assert "class" in meta["preprocess"]
-    assert "MyBasePreprocessor" == meta["preprocess"]["class"]
-    assert "parameter" in meta["preprocess"]
-    assert 1 == meta["preprocess"]["parameter"]
+    assert len(meta["preprocess"]) == 1
+    assert "class" in meta["preprocess"][0]
+    assert "MyBasePreprocessor" == meta["preprocess"][0]["class"]
+    assert "parameter" in meta["preprocess"][0]
+    assert 1 == meta["preprocess"][0]["parameter"]
+
+    # A second preprocessor is recorded after the first one
+    output = MyBasePreprocessor(on="BOLD", parameter=2).fit_transform(
+        input=output
+    )
+    assert [x["parameter"] for x in output["BOLD"]["meta"]["preprocess"]] == [
+        1,
+        2,
+    ]
 
     assert "T1w" in output
     assert "data" in output["T1w"]

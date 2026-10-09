@@ -48,8 +48,10 @@ def test_BaseFeatureStorage() -> None:
                 feature_md5=feature_md5,
             )
 
-        def store_metadata(self, meta_md5, element, meta):
-            super().store_metadata(meta_md5, meta, element)
+        def store_metadata(
+            self, meta_md5, element, meta, processed_element=None
+        ):
+            super().store_metadata(meta_md5, meta, element, processed_element)
 
         def collect(self):
             super().collect()

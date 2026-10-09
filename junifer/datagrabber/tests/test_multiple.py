@@ -578,3 +578,11 @@ def test_MultipleDataGrabber_three_datasets(tmp_path: Path) -> None:
         tmp_path / "confounds/sub-02"
     )
     assert out["VBM_GM"]["path"].parent == tmp_path / "cat/sub-02/mri"
+    # The element being processed, and the keys that the data depends on
+    for data_type in ("BOLD", "VBM_GM"):
+        assert out[data_type]["meta"]["element"] == {
+            "subject": "sub-02",
+            "task": "rest",
+        }
+    assert out["BOLD"]["meta"]["_element_keys"] == ["subject", "task"]
+    assert out["VBM_GM"]["meta"]["_element_keys"] == ["subject"]

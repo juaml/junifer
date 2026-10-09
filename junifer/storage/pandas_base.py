@@ -116,7 +116,11 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         return index
 
     def store_df(
-        self, meta_md5: str, element: dict, df: pd.DataFrame | pd.Series
+        self,
+        meta_md5: str,
+        element: dict,
+        df: pd.DataFrame | pd.Series,
+        processed_element: dict | None = None,
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -128,6 +132,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         df : pandas.DataFrame or pandas.Series
             The pandas DataFrame or Series to store.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         Raises
         ------
@@ -148,6 +156,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         data: np.ndarray | list,
         col_names: Sequence[str] | None = None,
         rows_col_name: str | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store 2D data.
 
@@ -165,6 +174,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The column name to use in case number of rows greater than 1.
             If None and number of rows greater than 1, then the name will be
             "idx" (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         # Convert element metadata to index
@@ -178,7 +191,12 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             index=idx,  # type: ignore
         )
         # Store dataframe
-        self.store_df(meta_md5=meta_md5, element=element, df=df)
+        self.store_df(
+            meta_md5=meta_md5,
+            element=element,
+            df=df,
+            processed_element=processed_element,
+        )
 
     def store_vector(
         self,
@@ -186,6 +204,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         element: dict,
         data: np.ndarray | list,
         col_names: Sequence[str] | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store vector.
 
@@ -199,6 +218,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The vector data to store.
         col_names : list-like of str, optional
             The column labels (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         if isinstance(data, list):
@@ -216,6 +239,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             element=element,
             data=data,
             col_names=col_names,
+            processed_element=processed_element,
         )
 
     def store_timeseries(
@@ -224,6 +248,7 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
         element: dict,
         data: np.ndarray,
         col_names: Sequence[str] | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store timeseries.
 
@@ -237,6 +262,10 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             The timeseries data to store.
         col_names : list-like of str, optional
             The column labels (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         self._store_2d(
@@ -245,4 +274,5 @@ class PandasBaseFeatureStorage(BaseFeatureStorage):
             data=data,
             col_names=col_names,
             rows_col_name="timepoint",
+            processed_element=processed_element,
         )

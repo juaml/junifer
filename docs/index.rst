@@ -33,6 +33,7 @@ enabling others to extend it easily.
    help
    contribution
    maintaining
+   internals
    faq
    whats_new
 

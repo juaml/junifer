@@ -154,6 +154,73 @@ def test_process_meta_hash() -> None:
     assert hash4 != hash6
 
 
+def test_process_meta_element_keys() -> None:
+    """Test metadata processing with the element keys of the data."""
+    meta = {
+        "element": {"subject": "sub-01", "task": "rest"},
+        "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "VBM_GM",
+    }
+    # All the keys of the element by default
+    hash_all, meta_all, element_all = process_meta(meta)
+    assert element_all == {"subject": "sub-01", "task": "rest"}
+    assert meta_all["_element_keys"] == ["subject", "task"]
+    # Only the keys of the element that the data depends on, which are the
+    # same for all the tasks
+    hashes = set()
+    for task in ("rest", "movie"):
+        t_meta = {
+            **meta,
+            "element": {"subject": "sub-01", "task": task},
+            "_element_keys": ["subject"],
+        }
+        t_hash, t_processed, t_element = process_meta(t_meta)
+        assert t_element == {"subject": "sub-01"}
+        assert t_processed["_element_keys"] == ["subject"]
+        hashes.add(t_hash)
+    assert len(hashes) == 1
+    assert hash_all not in hashes
+    # Keys that are not in the element
+    with pytest.raises(ValueError, match=r"keys \['session'\]"):
+        process_meta({**meta, "_element_keys": ["subject", "session"]})
+
+
+def test_process_meta_preprocessors() -> None:
+    """Test the metadata hash depends on all the preprocessors."""
+    hashes = []
+    for first in (1, 2):
+        meta = {
+            "element": {"subject": "sub-01"},
+            "dependencies": ["numpy"],
+            "preprocess": [
+                {"class": "A", "parameter": first},
+                {"class": "B", "parameter": 1},
+            ],
+            "marker": {"name": "fc"},
+            "type": "BOLD",
+        }
+        t_hash, _, _ = process_meta(meta)
+        hashes.append(t_hash)
+    # Only the first preprocessor is different
+    assert hashes[0] != hashes[1]
+
+
+def test_process_meta_junifer_version() -> None:
+    """Test the metadata hash depends on the version of junifer."""
+    meta = {
+        "element": {"subject": "sub-01"},
+        "dependencies": ["numpy"],
+        "marker": {"name": "fc"},
+        "type": "BOLD",
+    }
+    _, processed, _ = process_meta(meta)
+    assert processed["dependencies"] == {
+        "numpy": get_dependency_version("numpy"),
+        "junifer": get_dependency_version("junifer"),
+    }
+
+
 def test_process_meta_invalid_metadata_key() -> None:
     """Test invalid metadata key check for metadata hash processing."""
     meta = {}

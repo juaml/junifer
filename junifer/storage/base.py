@@ -183,7 +183,13 @@ class BaseFeatureStorage(BaseModel, ABC):
         )  # pragma: no cover
 
     @abstractmethod
-    def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
+    def store_metadata(
+        self,
+        meta_md5: str,
+        element: dict,
+        meta: dict,
+        processed_element: dict | None = None,
+    ) -> None:
         """Store metadata.
 
         Parameters
@@ -194,6 +200,11 @@ class BaseFeatureStorage(BaseModel, ABC):
             The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
 
         """
         raise_error(
@@ -217,9 +228,6 @@ class BaseFeatureStorage(BaseModel, ABC):
             If ``kind`` is invalid.
 
         """
-        # Imported here to avoid circular import
-        from .utils import process_meta
-
         # Do the check before calling the abstract methods, otherwise the
         # meta might be stored even if the data is not stored.
         if kind not in self._STORAGE_TYPES:
@@ -227,11 +235,24 @@ class BaseFeatureStorage(BaseModel, ABC):
                 msg=f"I don't know how to store {kind}.",
                 klass=ValueError,
             )
-        # Process and store metadata
+        # Imported here to avoid circular import
+        from .utils import process_meta
+
+        # Process and store metadata: the data is stored for the element with
+        # the keys that it depends on, and the element being processed is
+        # passed as ``processed_element`` (e.g., to choose the file to store
+        # the data of each element being processed)
         t_meta = kwargs.pop("meta")
+        processed_element = t_meta.get("element")
         meta_md5, t_meta, t_element = process_meta(t_meta)
-        self.store_metadata(meta_md5=meta_md5, element=t_element, meta=t_meta)
+        self.store_metadata(
+            meta_md5=meta_md5,
+            element=t_element,
+            meta=t_meta,
+            processed_element=processed_element,
+        )
         # Store data
+        kwargs["processed_element"] = processed_element
         if kind == "matrix":
             self.store_matrix(meta_md5=meta_md5, element=t_element, **kwargs)
         elif kind == "timeseries":
@@ -258,6 +279,7 @@ class BaseFeatureStorage(BaseModel, ABC):
         row_names: Sequence[str] | None = None,
         matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
+        processed_element: dict | None = None,
     ) -> None:
         """Store matrix.
 
@@ -279,6 +301,12 @@ class BaseFeatureStorage(BaseModel, ABC):
             Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
 
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_matrix().",
@@ -291,6 +319,7 @@ class BaseFeatureStorage(BaseModel, ABC):
         element: dict,
         data: np.ndarray | list,
         col_names: Sequence[str] | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store vector.
 
@@ -305,6 +334,12 @@ class BaseFeatureStorage(BaseModel, ABC):
         col_names : list-like of str, optional
             The column labels (default None).
 
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_vector().",
@@ -317,6 +352,7 @@ class BaseFeatureStorage(BaseModel, ABC):
         element: dict,
         data: np.ndarray,
         col_names: Sequence[str] | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store timeseries.
 
@@ -331,6 +367,12 @@ class BaseFeatureStorage(BaseModel, ABC):
         col_names : list-like of str, optional
             The column labels (default None).
 
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries().",
@@ -344,6 +386,7 @@ class BaseFeatureStorage(BaseModel, ABC):
         data: np.ndarray,
         col_names: Sequence[str] | None = None,
         row_names: Sequence[str] | None = None,
+        processed_element: dict | None = None,
     ) -> None:
         """Store 2D timeseries.
 
@@ -360,6 +403,12 @@ class BaseFeatureStorage(BaseModel, ABC):
         row_names : list-like of str, optional
             The row labels (default None).
 
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
+
         """
         raise_error(
             msg="Concrete classes need to implement store_timeseries_2d().",
@@ -374,6 +423,7 @@ class BaseFeatureStorage(BaseModel, ABC):
         col_names: Sequence[str] | None = None,
         row_names: Sequence[str] | None = None,
         row_header_col_name: str | None = "feature",
+        processed_element: dict | None = None,
     ) -> None:
         """Store table with scalar values.
 
@@ -391,6 +441,12 @@ class BaseFeatureStorage(BaseModel, ABC):
             The row labels (default None).
         row_header_col_name : str, optional
             The column name for the row header column (default "feature").
+
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, with all
+            the keys of the element, which can be used to choose where to
+            store the data (e.g., the file of each element being processed).
+            If None, ``element`` is used (default None).
 
         """
         raise_error(

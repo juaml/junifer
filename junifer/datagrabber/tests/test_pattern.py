@@ -501,8 +501,18 @@ def test_PatternDataGrabber_elements_func(
         "session": "ses-1",
         "task": "rest",
     }
+    assert out["BOLD"]["meta"]["_element_keys"] == [
+        "subject",
+        "session",
+        "task",
+    ]
     if "VBM_GM" in types:
         assert out["VBM_GM"]["path"].name == "sub-02_GM.nii"
+        # The element being processed, and the keys that the data depends on
+        assert (
+            out["VBM_GM"]["meta"]["element"] == out["BOLD"]["meta"]["element"]
+        )
+        assert out["VBM_GM"]["meta"]["_element_keys"] == ["subject"]
 
 
 def test_PatternDataGrabber_elements_join(tmp_path: Path) -> None:

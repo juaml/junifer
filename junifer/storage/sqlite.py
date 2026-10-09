@@ -58,8 +58,9 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         support concurrency (default True).
     upsert : :enum:`.Upsert`, optional
         Upsert mode. If ``Upsert.Ignore`` is used, the existing elements are
-        ignored. If ``Upsert.Update``, the existing elements are updated
-        (default ``Upsert.Update``).
+        ignored, so the elements that are already stored are not stored
+        again. If ``Upsert.Update``, the existing elements are updated
+        (default ``Upsert.Ignore``).
 
     See Also
     --------
@@ -68,7 +69,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
     """
 
-    upsert: Upsert = Upsert.Update
+    upsert: Upsert = Upsert.Ignore
 
     def get_engine(self, element: dict | None = None) -> "Engine":
         """Get engine.
@@ -340,7 +341,13 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         df = df.set_index(index_names)
         return df
 
-    def store_metadata(self, meta_md5: str, element: dict, meta: dict) -> None:
+    def store_metadata(
+        self,
+        meta_md5: str,
+        element: dict,
+        meta: dict,
+        processed_element: dict | None = None,
+    ) -> None:
         """Implement metadata storing in the storage.
 
         Parameters
@@ -351,10 +358,15 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         # Get sqlalchemy engine
-        engine = self.get_engine(element=element)
+        # The file of the element being processed (if single_output=False)
+        engine = self.get_engine(element=processed_element or element)
         table_name = f"meta_{meta_md5}"
         if table_name not in inspect(engine).get_table_names():
             # Convert metadata to dataframe
@@ -363,7 +375,11 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             self._save_upsert(meta_df, "meta", engine)
 
     def store_df(
-        self, meta_md5: str, element: dict, df: pd.DataFrame | pd.Series
+        self,
+        meta_md5: str,
+        element: dict,
+        df: pd.DataFrame | pd.Series,
+        processed_element: dict | None = None,
     ) -> None:
         """Implement pandas DataFrame storing.
 
@@ -375,6 +391,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             The element as a dictionary.
         df : pandas.DataFrame or pandas.Series
             The pandas DataFrame or Series to store.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         Raises
         ------
@@ -409,7 +429,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
 
         table_name = f"meta_{meta_md5}"
         # Get sqlalchemy engine
-        engine = self.get_engine(element)
+        # The file of the element being processed (if single_output=False)
+        engine = self.get_engine(element=processed_element or element)
         # Save data
         self._save_upsert(df, table_name, engine)
 
@@ -422,6 +443,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         row_names: list[str] | None = None,
         matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
+        processed_element: dict | None = None,
     ) -> None:
         """Store matrix.
 
@@ -442,6 +464,10 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         diagonal : bool, optional
             Whether to store the diagonal. If ``matrix_kind=MatrixKind.Full``,
             setting this to False will raise an error (default True).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         # Row data validation
@@ -493,7 +519,12 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             data_df.index.names = new_names
 
         # Store dataframe
-        self.store_df(meta_md5=meta_md5, element=element, df=data_df)
+        self.store_df(
+            meta_md5=meta_md5,
+            element=element,
+            df=data_df,
+            processed_element=processed_element,
+        )
 
     def collect(self) -> None:
         """Implement data collection.
@@ -513,7 +544,8 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
         # Create new instance
         out_storage = SQLiteFeatureStorage(uri=self.uri, upsert=Upsert.Ignore)
         # Glob files
-        files = self.uri.parent.glob(f"*{self.uri.name}")
+        # Only the files of the elements, not the collected file
+        files = self.uri.parent.glob(f"*_{self.uri.name}")
         for elem in tqdm(files, desc="file"):
             logger.debug(f"Reading from {elem.absolute()!s}")
             in_storage = SQLiteFeatureStorage(uri=elem)
@@ -524,6 +556,7 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
             )
             # Save metadata
             out_storage._save_upsert(t_meta_df, "meta")
+            in_features = in_storage.list_features()
             # Save dataframes
             for meta_md5 in tqdm(t_meta_df.index, desc="feature"):
                 logger.debug(f"Collecting feature {meta_md5}")
@@ -531,8 +564,27 @@ class SQLiteFeatureStorage(PandasBaseFeatureStorage):
                 # properly
                 table_name = f"meta_{meta_md5}"
                 t_df = in_storage.read_df(feature_md5=meta_md5)
+                # Only the files of single elements can be collected
+                element_keys = in_features[meta_md5]["_element_keys"]
+                n_elements = len(
+                    t_df.index.to_frame(index=False)[
+                        element_keys
+                    ].drop_duplicates()
+                )
+                if n_elements != 1:
+                    raise_error(
+                        msg=(
+                            f"The file {elem} has {n_elements} elements for "
+                            f"the feature {meta_md5}, but only the files with "
+                            "one element (as stored for each element with "
+                            "`single_output=False`) can be collected"
+                        ),
+                        klass=RuntimeError,
+                    )
                 # Save data
-                out_storage._save_upsert(t_df, table_name, if_exists="nocheck")
+                # Skip the elements already collected (e.g., the data of a
+                # subject in the files of each of its tasks)
+                out_storage._save_upsert(t_df, table_name)
 
 
 # TODO: refactor

@@ -9,23 +9,30 @@ import logging
 import sys
 import tempfile
 from contextlib import AbstractContextManager, nullcontext
+from copy import deepcopy
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 
+import nibabel as nib
+import numpy as np
 import pytest
 from nibabel.filebasedimages import ImageFileError
 from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, parse_yaml, queue, reset, run
-from junifer.datagrabber import PatternDataGrabber
+from junifer.api.decorators import register_marker
+from junifer.datagrabber import DataType, PatternDataGrabber
 from junifer.datagrabber.base import BaseDataGrabber
+from junifer.markers import BaseMarker
 from junifer.pipeline import (
     MarkerCollection,
     PipelineComponentRegistry,
     WorkDirManager,
 )
-from junifer.typing import Elements
+from junifer.storage import StorageType
+from junifer.storage.base import BaseFeatureStorage
+from junifer.typing import Dependencies, Elements, MarkerInOutMappings
 
 
 pytestmark = pytest.mark.external
@@ -1460,3 +1467,119 @@ def _run_selectors(
         elements=elements,
     )
     return n_searches
+
+
+@register_marker
+class _ImageMean(BaseMarker):
+    """Marker storing the mean of an image, for BOLD and VBM_GM."""
+
+    _DEPENDENCIES: ClassVar[Dependencies] = {"numpy"}
+    _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings] = {
+        DataType.BOLD: {"mean": StorageType.Vector},
+        DataType.VBM_GM: {"mean": StorageType.Vector},
+    }
+
+    def compute(self, input: dict, extra_input: dict | None = None) -> dict:
+        data = np.asarray(input["data"].dataobj, dtype=float)
+        return {
+            "mean": {"data": np.array([[data.mean()]]), "col_names": ["mean"]}
+        }
+
+
+@pytest.mark.parametrize("single_output", [True, False])
+@pytest.mark.parametrize(
+    "storage_kind", ["HDF5FeatureStorage", "SQLiteFeatureStorage"]
+)
+def test_run_data_types_element_keys(
+    tmp_path: Path, storage_kind: str, single_output: bool
+) -> None:
+    """Test run function storing data types with different element keys.
+
+    The BOLD data depends on the subject and the task, and the VBM data only
+    on the subject, so it is stored once for each subject. The elements are
+    run twice, as when trying a few elements and then running all of them.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    storage_kind : str
+        The parametrized storage.
+    single_output : bool
+        The parametrized storage in a single file.
+
+    """
+    datadir = tmp_path / "data"
+    # BOLD: 10 * subject + task (1: rest, 2: movie); VBM: subject
+    for i, subject in enumerate(("sub-01", "sub-02"), start=1):
+        (datadir / subject).mkdir(parents=True)
+        nib.save(
+            nib.Nifti1Image(np.full((2, 2, 2), float(i)), np.eye(4)),
+            datadir / subject / f"{subject}_GM.nii",
+        )
+        for j, task in enumerate(("rest", "movie"), start=1):
+            nib.save(
+                nib.Nifti1Image(
+                    np.full((2, 2, 2, 3), 10.0 * i + j), np.eye(4)
+                ),
+                datadir / subject / f"{subject}_task-{task}_bold.nii",
+            )
+    datagrabber = {
+        "kind": "PatternDataGrabber",
+        "datadir": str(datadir),
+        "types": ["BOLD", "VBM_GM"],
+        "patterns": {
+            "BOLD": {
+                "pattern": "{subject}/{subject}_task-{task}_bold.nii",
+                "space": "native",
+            },
+            "VBM_GM": {
+                "pattern": "{subject}/{subject}_GM.nii",
+                "space": "native",
+            },
+        },
+        "replacements": ["subject", "task"],
+    }
+    uri = tmp_path / "out" / "features.db"
+    storage = {
+        "kind": storage_kind,
+        "uri": str(uri),
+        "single_output": single_output,
+    }
+    # A few elements, and then all of them
+    for elements in ([("sub-01", "rest")], None):
+        run(
+            workdir=tmp_path / "workdir",
+            datagrabber=deepcopy(datagrabber),
+            markers=[{"kind": "_ImageMean", "name": "mean"}],
+            storage=deepcopy(storage),
+            elements=elements,
+        )
+        if not single_output:
+            collect(deepcopy(storage))
+
+    reader = PipelineComponentRegistry().build_component_instance(
+        step="storage",
+        name=storage_kind,
+        baseclass=BaseFeatureStorage,
+        init_params={"uri": uri},
+    )
+    features = {
+        meta["name"]: md5 for md5, meta in reader.list_features().items()
+    }
+    bold = reader.read_df(feature_md5=features["BOLD_mean_mean"])
+    vbm = reader.read_df(feature_md5=features["VBM_GM_mean_mean"])
+    assert sorted(bold.index) == [
+        ("sub-01", "movie"),
+        ("sub-01", "rest"),
+        ("sub-02", "movie"),
+        ("sub-02", "rest"),
+    ]
+    assert sorted(bold["mean"]) == [11, 12, 21, 22]
+    # Once for each subject
+    assert vbm.index.names == ["subject"]
+    assert sorted(vbm.index.get_level_values("subject")) == [
+        "sub-01",
+        "sub-02",
+    ]
+    assert sorted(vbm["mean"]) == [1, 2]

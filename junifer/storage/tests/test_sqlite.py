@@ -13,7 +13,7 @@ from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 from sqlalchemy import create_engine
 
-from junifer.storage import MatrixKind, SQLiteFeatureStorage
+from junifer.storage import MatrixKind, SQLiteFeatureStorage, Upsert
 from junifer.storage.utils import element_to_prefix, process_meta
 
 
@@ -214,7 +214,7 @@ def test_upsert_update(tmp_path: Path) -> None:
 
     """
     uri = tmp_path / "test_upsert_delete.sqlite"
-    storage = SQLiteFeatureStorage(uri=uri)
+    storage = SQLiteFeatureStorage(uri=uri, upsert=Upsert.Update)
     # Save to database
     storage.store_df(
         meta_md5="table_name", element={"subject": "test"}, df=df1

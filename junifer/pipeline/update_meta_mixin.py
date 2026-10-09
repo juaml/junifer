@@ -14,6 +14,7 @@ class UpdateMetaMixin:
         self,
         input: dict | list[dict],
         step_name: str,
+        append: bool = False,
     ) -> None:
         """Update metadata.
 
@@ -23,6 +24,10 @@ class UpdateMetaMixin:
             The data object to update.
         step_name : str
             The name of the pipeline step.
+        append : bool, optional
+            Whether to append the metadata of the step to a list, for the
+            steps that can be several (e.g., the preprocessors), instead of
+            replacing the metadata of the previous step (default False).
 
         """
         # Initialize empty dictionary for the step's metadata
@@ -39,7 +44,10 @@ class UpdateMetaMixin:
             if "meta" not in entry:
                 entry["meta"] = {}
             # Add step name
-            entry["meta"][step_name] = t_meta
+            if append:
+                entry["meta"].setdefault(step_name, []).append(t_meta)
+            else:
+                entry["meta"][step_name] = t_meta
             # Add step dependencies
             if "dependencies" not in entry["meta"]:
                 entry["meta"]["dependencies"] = set()

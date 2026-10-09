@@ -414,30 +414,46 @@ class PatternDataGrabber(BaseDataGrabber, PatternValidationMixin):
             )
         return patterns
 
-    def get_element_keys(self) -> list[str]:
-        """Get element keys.
+    def get_type_element_keys(self, data_type: str) -> list[str]:
+        """Get the element keys that the data of a data type depends on.
 
-        For each item in the "element" tuple, this functions returns the
-        corresponding key, that is, the ``replacements`` of the patterns of
-        the data types to grab (e.g., without ``task`` if only anatomical
-        data types are grabbed).
+        Parameters
+        ----------
+        data_type : str
+            The data type.
 
         Returns
         -------
         list of str
-            The element keys.
+            The replacements in the patterns of the data type (including the
+            nested ones), in the order of ``replacements``.
 
         """
-        patterns = [
-            pattern
-            for t_type in self.get_types()
-            for pattern in self._get_type_patterns(t_type)
-        ]
+        patterns = self._get_type_patterns(data_type)
         return [
             x
             for x in self.replacements
             if any(f"{{{x}}}" in pattern for pattern in patterns)
         ]
+
+    def get_element_keys(self) -> list[str]:
+        """Get element keys.
+
+        For each item in the "element" tuple, this functions returns the
+        corresponding key: the replacements in the patterns of the data
+        types to grab (see :meth:`.get_type_element_keys`), e.g., without
+        ``task`` if only anatomical data types are grabbed.
+
+        Returns
+        -------
+        list of str
+            The element keys, in the order of ``replacements``.
+
+        """
+        keys = {
+            k for t in self.get_types() for k in self.get_type_element_keys(t)
+        }
+        return [x for x in self.replacements if x in keys]
 
     def get_replacement_values(self) -> dict[str, list[str]]:
         """Get the values of the replacements to grab.

@@ -74,9 +74,12 @@ def _meta_hash(meta: dict) -> str:
     logger.debug(f"Hashing metadata: {meta}")
     if "dependencies" not in meta:
         raise_error("The metadata must contain the key 'dependencies'")
-    # Convert dependencies set into {dependency: version} dictionary
+    # Convert dependencies set into {dependency: version} dictionary, with
+    # junifer, so that the features computed with different versions of
+    # junifer have different hashes
     meta["dependencies"] = {
-        dep: get_dependency_version(dep) for dep in meta["dependencies"]
+        dep: get_dependency_version(dep)
+        for dep in {*meta["dependencies"], "junifer"}
     }
     # Remove datadir from datagrabber only if datalad-based
     if meta.get("datagrabber") is not None:
@@ -92,8 +95,13 @@ def _meta_hash(meta: dict) -> str:
 def process_meta(meta: dict) -> tuple[str, dict, dict]:
     """Process the metadata for storage.
 
-    It removes the key "element" and adds the "_element_keys" with the keys
-    used to index the element.
+    It removes the key "element" (the element being processed) and keeps
+    "_element_keys", the keys of the element that the data depends on (set by
+    the DataGrabber, e.g., only the subject for data that is the same for all
+    the tasks of a subject). If not set, all the keys of the element are used.
+    The element of the data, with only these keys, is the one to store, so the
+    data that does not depend on a key is stored once instead of once for
+    each of its values.
 
     Parameters
     ----------
@@ -107,12 +115,13 @@ def process_meta(meta: dict) -> tuple[str, dict, dict]:
     dict
         The processed metadata for storage.
     dict
-        The element.
+        The element of the data, with the keys in "_element_keys".
 
     Raises
     ------
     ValueError
-        If ``meta=None`` or if it does not contain the key "element".
+        If ``meta=None``, if it does not contain the key "element" or if
+        "_element_keys" has keys that are not in the element.
 
     """
     if meta is None:
@@ -130,7 +139,18 @@ def process_meta(meta: dict) -> tuple[str, dict, dict]:
     if "type" not in t_meta:
         raise_error(msg="`meta` must contain the key 'type'")
 
-    t_meta["_element_keys"] = list(element.keys())
+    # The keys of the element that the data depends on
+    element_keys = t_meta.get("_element_keys") or list(element.keys())
+    missing = [k for k in element_keys if k not in element]
+    if missing:
+        raise_error(
+            msg=(
+                f"The keys {missing} of `meta['_element_keys']` are not in "
+                f"the element: {element}"
+            )
+        )
+    t_meta["_element_keys"] = list(element_keys)
+    element = {k: element[k] for k in element_keys}
     type_ = t_meta["type"]
     name = t_meta["marker"]["name"]
     t_meta["name"] = f"{type_}_{name}"

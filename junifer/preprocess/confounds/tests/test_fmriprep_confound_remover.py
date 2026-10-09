@@ -519,7 +519,7 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
 
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
-        t_meta = output["BOLD"]["meta"]["preprocess"]
+        (t_meta,) = output["BOLD"]["meta"]["preprocess"]
         assert t_meta["class"] == "fMRIPrepConfoundRemover"
         # It should have all the default parameters
         assert t_meta["strategy"] == confound_remover.strategy
@@ -575,7 +575,7 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
 
         assert "meta" in output["BOLD"]
         assert "preprocess" in output["BOLD"]["meta"]
-        t_meta = output["BOLD"]["meta"]["preprocess"]
+        (t_meta,) = output["BOLD"]["meta"]["preprocess"]
         assert t_meta["class"] == "fMRIPrepConfoundRemover"
         # It should have all the default parameters
         assert t_meta["strategy"] == confound_remover.strategy

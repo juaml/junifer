@@ -30,6 +30,14 @@ your own ``Storage`` by providing a concrete implementation of
 :class:`.BaseFeatureStorage` or open an issue on `junifer Github`_ and we can
 help you out.
 
+The data of each element is stored only once: running the same elements again
+with the same configuration (e.g., after trying a few elements and then running
+all of them), or collecting the files of the elements again, does not change
+the data already stored, which is not stored again. The data that does not
+depend on all the keys of the element (e.g., the ``VBM_GM`` data of a subject,
+for elements with the subject and the task) is stored once for its keys (see
+:ref:`internals`).
+
 .. _storage_types:
 
 Storage Types
