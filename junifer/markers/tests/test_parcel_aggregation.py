@@ -20,7 +20,7 @@ from junifer.data import MaskRegistry, ParcellationRegistry
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.parcel_aggregation import ParcelAggregation
-from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
+from junifer.storage import HDF5FeatureStorage, StorageType
 from junifer.testing.datagrabbers import (
     PartlyCloudyTestingDataGrabber,
     UCLACNPVBMTestingDataGrabber,
@@ -275,9 +275,8 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
     # Store 3D
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_parcel_storage_3D.sqlite",
-            upsert=Upsert.Ignore,
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_parcel_storage_3D.hdf5",
         )
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",
@@ -297,9 +296,8 @@ def test_ParcelAggregation_storage(tmp_path: Path) -> None:
     # Store 4D
     with PartlyCloudyTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_parcel_storage_4D.sqlite",
-            upsert=Upsert.Ignore,
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_parcel_storage_4D.hdf5",
         )
         marker = ParcelAggregation(
             parcellation="TianxS1x3TxMNInonlinear2009cAsym",

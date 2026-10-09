@@ -31,7 +31,7 @@ def read_transform(
     Parameters
     ----------
     storage : storage-like
-        The storage class, for example, SQLiteFeatureStorage.
+        The storage class, for example, HDF5FeatureStorage.
     transform : str
         The kind of transform formatted as ``<package>_<function>``,
         for example, ``bctpy_degrees_und``.

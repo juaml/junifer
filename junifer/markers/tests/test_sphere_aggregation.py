@@ -15,7 +15,7 @@ from junifer.data import CoordinatesRegistry, MaskRegistry
 from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers.sphere_aggregation import SphereAggregation
-from junifer.storage import SQLiteFeatureStorage, StorageType, Upsert
+from junifer.storage import HDF5FeatureStorage, StorageType
 from junifer.testing.datagrabbers import (
     SPMAuditoryTestingDataGrabber,
     UCLACNPVBMTestingDataGrabber,
@@ -168,9 +168,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     # Store 3D
     with UCLACNPVBMTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub-10206"])
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_sphere_storage_3D.sqlite",
-            upsert=Upsert.Ignore,
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_sphere_storage_3D.hdf5",
         )
         marker = SphereAggregation(
             coords=COORDS, method="mean", radius=RADIUS, on=[DataType.VBM_GM]
@@ -185,9 +184,8 @@ def test_SphereAggregation_storage(tmp_path: Path) -> None:
     # Store 4D
     with SPMAuditoryTestingDataGrabber() as dg:
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_sphere_storage_4D.sqlite",
-            upsert=Upsert.Ignore,
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_sphere_storage_4D.hdf5",
         )
         marker = SphereAggregation(
             coords=COORDS, method="mean", radius=RADIUS, on=DataType.BOLD

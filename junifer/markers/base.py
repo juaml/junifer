@@ -214,7 +214,7 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
         output : dict
             The computed result as a dictionary to store.
         storage : storage-like
-            The storage class, for example, SQLiteFeatureStorage.
+            The storage class, for example, HDF5FeatureStorage.
 
         """
         s_type = self.storage_type(data_type, feature)
@@ -233,7 +233,7 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
         input : dict
             The Junifer Data object.
         storage : storage-like, optional
-            The storage class, for example, SQLiteFeatureStorage.
+            The storage class, for example, HDF5FeatureStorage.
 
         Returns
         -------

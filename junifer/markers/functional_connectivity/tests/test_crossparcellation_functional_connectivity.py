@@ -13,7 +13,7 @@ from junifer.datagrabber import DataType
 from junifer.datareader import DefaultDataReader
 from junifer.markers import CrossParcellationFC
 from junifer.pipeline import WorkDirManager
-from junifer.storage import SQLiteFeatureStorage, Upsert
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -85,9 +85,8 @@ def test_store(tmp_path: Path) -> None:
             parcellation_two=parcellation_two,
             corr_method="spearman",
         )
-        storage = SQLiteFeatureStorage(
-            uri=tmp_path / "test_crossparcellation.sqlite",
-            upsert=Upsert.Ignore,
+        storage = HDF5FeatureStorage(
+            uri=tmp_path / "test_crossparcellation.hdf5",
         )
         # Fit transform marker on data with storage
         crossparcellation.fit_transform(input=element_data, storage=storage)

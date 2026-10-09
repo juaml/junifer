@@ -14,7 +14,7 @@ from nilearn.maskers import NiftiLabelsMasker
 from junifer.data import ParcellationRegistry
 from junifer.datareader import DefaultDataReader
 from junifer.markers.ets_rss import RSSETSMarker
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -69,7 +69,7 @@ def test_store(tmp_path: Path) -> None:
         # Get element data
         element_data = DefaultDataReader().fit_transform(dg["sub-01"])
         # Create storage
-        storage = SQLiteFeatureStorage(uri=tmp_path / "test_rss_ets.sqlite")
+        storage = HDF5FeatureStorage(uri=tmp_path / "test_rss_ets.hdf5")
         # Compute the RSSETSMarker and store
         _ = RSSETSMarker(parcellation=PARCELLATION).fit_transform(
             input=element_data, storage=storage

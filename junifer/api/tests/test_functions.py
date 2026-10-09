@@ -92,7 +92,7 @@ def markers() -> list[dict[str, list[str] | str]]:
 def storage() -> dict[str, str]:
     """Return a storage as a dictionary."""
     return {
-        "kind": "SQLiteFeatureStorage",
+        "kind": "HDF5FeatureStorage",
     }
 
 
@@ -158,7 +158,7 @@ def test_run_single_element(
 
     """
     # Set storage
-    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
+    storage["uri"] = str((tmp_path / "out.hdf5").resolve())
     # Run operations
     with expect:
         run(
@@ -169,7 +169,7 @@ def test_run_single_element(
             elements=element,
         )
         # Check files
-        files = list(tmp_path.glob("*.sqlite"))
+        files = list(tmp_path.glob("*.hdf5"))
         assert len(files) == 1
 
 
@@ -191,7 +191,7 @@ def test_run_single_element_with_preprocessing(
 
     """
     # Set storage
-    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
+    storage["uri"] = str((tmp_path / "out.hdf5").resolve())
     # Run operations
     run(
         workdir={"path": tmp_path, "cleanup": False},
@@ -209,7 +209,7 @@ def test_run_single_element_with_preprocessing(
         elements=["sub-01"],
     )
     # Check files
-    files = list(tmp_path.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.hdf5"))
     assert len(files) == 1
 
 
@@ -250,7 +250,7 @@ def test_run_multi_element_multi_output(
 
     """
     # Set storage
-    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
+    storage["uri"] = str((tmp_path / "out.hdf5").resolve())
     storage["single_output"] = False  # type: ignore
     # Run operations
     with expect:
@@ -262,7 +262,7 @@ def test_run_multi_element_multi_output(
             elements=element,
         )
         # Check files
-        files = list(tmp_path.glob("*.sqlite"))
+        files = list(tmp_path.glob("*.hdf5"))
         assert len(files) == 2
 
 
@@ -287,7 +287,7 @@ def test_run_multi_element_single_output(
 
     """
     # Set storage
-    storage["uri"] = str((tmp_path / "out.sqlite").resolve())
+    storage["uri"] = str((tmp_path / "out.hdf5").resolve())
     storage["single_output"] = True  # type: ignore
     # Run operations
     run(
@@ -298,9 +298,9 @@ def test_run_multi_element_single_output(
         elements=["sub-01", "sub-03"],
     )
     # Check files
-    files = list(tmp_path.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.hdf5"))
     assert len(files) == 1
-    assert files[0].name == "out.sqlite"
+    assert files[0].name == "out.hdf5"
 
 
 def test_run_and_collect(
@@ -324,7 +324,7 @@ def test_run_and_collect(
 
     """
     # Set storage
-    uri = tmp_path / "out.sqlite"
+    uri = tmp_path / "out.hdf5"
     storage["uri"] = str(uri.resolve())
     storage["single_output"] = False  # type: ignore
     # Run operations
@@ -343,9 +343,9 @@ def test_run_and_collect(
     )
     elements = dg.get_elements()  # type: ignore
     # This should create one file per element
-    files = list(tmp_path.glob("*.sqlite"))
+    files = list(tmp_path.glob("*.hdf5"))
     assert len(files) == len(elements)
-    # But the test.sqlite file should not exist
+    # But the test.hdf5 file should not exist
     assert not uri.exists()
     # Collect in storage
     collect(storage)
@@ -660,7 +660,7 @@ def test_reset_run(
 
     """
     # Create storage
-    storage["uri"] = tmp_path / "test_reset_run.sqlite"  # type: ignore
+    storage["uri"] = tmp_path / "test_reset_run.hdf5"  # type: ignore
     # Run operation to generate files
     run(
         workdir=tmp_path,
@@ -711,7 +711,7 @@ def test_reset_queue(
     with monkeypatch.context() as m:
         m.chdir(tmp_path)
         # Create storage
-        storage["uri"] = "test_reset_queue.sqlite"
+        storage["uri"] = "test_reset_queue.hdf5"
         # Set job name
         if job_name is None:
             job_name = "junifer_job"

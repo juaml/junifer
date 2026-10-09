@@ -15,7 +15,7 @@ from junifer.datareader import DefaultDataReader
 from junifer.markers import ALFFImpl, ALFFSpheres
 from junifer.pipeline import WorkDirManager
 from junifer.pipeline.utils import _check_afni
-from junifer.storage import SQLiteFeatureStorage
+from junifer.storage import HDF5FeatureStorage
 from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
 
 
@@ -93,9 +93,7 @@ def test_ALFFSpheres(caplog: pytest.LogCaptureFixture, tmp_path: Path) -> None:
             # Reset log capture
             caplog.clear()
             # Initialize storage
-            storage = SQLiteFeatureStorage(
-                uri=tmp_path / "falff_spheres.sqlite"
-            )
+            storage = HDF5FeatureStorage(uri=tmp_path / "falff_spheres.hdf5")
             # Fit transform marker on data with storage
             marker.fit_transform(
                 input=element_data,
