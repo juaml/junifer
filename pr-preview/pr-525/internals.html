@@ -465,7 +465,11 @@ is not set).</p></li>
 includes <code class="docutils literal notranslate"><span class="pre">_element_keys</span></code> and the versions of the dependencies of the
 steps and of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>, but not <code class="docutils literal notranslate"><span class="pre">element</span></code>: the data of all the elements
 of a feature have the same hash, and the features computed with different
-versions of <code class="docutils literal notranslate"><span class="pre">junifer</span></code> (or of the dependencies) have different hashes.</p></li>
+versions of <code class="docutils literal notranslate"><span class="pre">junifer</span></code> (or of the dependencies) have different hashes.
+This is by design, for reproducibility: the differences between features
+with the same hash can only come from the data, not from different
+versions of the algorithms. A feature computed again with another version
+is a new feature, with the same name, so it must be read by its MD5.</p></li>
 </ul>
 </section>
 <section id="storage">
@@ -570,7 +574,7 @@ the first pass, and once for each of its features in the second one.</p></li>
       
     </aside>
   </div>
-</div><script src="_static/documentation_options.js?v=d116feab"></script>
+</div><script src="_static/documentation_options.js?v=756e7ab2"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/furo.js?v=46bd48cc"></script>
