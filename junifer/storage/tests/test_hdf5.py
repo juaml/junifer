@@ -10,6 +10,7 @@ from pathlib import Path
 import h5py
 import numpy as np
 import pytest
+from h5io import read_hdf5
 from numpy.testing import assert_array_equal
 from pandas.testing import assert_frame_equal
 
@@ -1166,3 +1167,149 @@ def test_collect_error_single_output() -> None:
     ):
         storage = HDF5FeatureStorage(uri="/tmp", single_output=True)
         storage.collect()
+
+
+def test_read_collected_with_h5io_fork() -> None:
+    """Test reading features collected with junifer's fork of h5io.
+
+    The file was collected from three elements (``sub-01`` to ``sub-03``),
+    each with a vector, a matrix and a timeseries computed from the element
+    index ``i``.
+
+    """
+    uri = Path(__file__).parent / "data" / "collected_h5io_fork.hdf5"
+    storage = HDF5FeatureStorage(uri=uri)
+    md5s = {meta["name"]: md5 for md5, meta in storage.list_features().items()}
+    elements = [{"subject": f"sub-0{i}"} for i in range(1, 4)]
+    # The vector data is stored as a "chunkedarray"
+    vector = storage.read(feature_md5=md5s["BOLD_vec"])
+    assert vector["element"] == elements
+    assert vector["data"].dtype == np.float32
+    for i in range(3):
+        assert_array_equal(
+            vector["data"][:, i], np.float32(np.array([0.1, 0.2]) + i)
+        )
+    # The matrix data is stored as a "chunkedarray"
+    matrix = storage.read(feature_md5=md5s["BOLD_mat"])
+    assert matrix["element"] == elements
+    for i in range(3):
+        assert_array_equal(
+            matrix["data"][..., i], np.array([[1.0, 0.5], [0.5, 1.0]]) + i
+        )
+    # The timeseries data is stored as a "chunkedlist"
+    timeseries = storage.read(feature_md5=md5s["BOLD_ts"])
+    assert timeseries["element"] == elements
+    assert len(timeseries["data"]) == 3
+    for i in range(3):
+        assert_array_equal(
+            timeseries["data"][i], np.arange(6.0).reshape(3, 2) + i
+        )
+    assert storage.read_df(feature_md5=md5s["BOLD_ts"]).shape == (9, 2)
+
+
+def _store_and_collect(uri: Path, force_float32: bool) -> HDF5FeatureStorage:
+    """Store a vector and a timeseries for three elements and collect them.
+
+    Parameters
+    ----------
+    uri : pathlib.Path
+        The path to the collected file.
+    force_float32 : bool
+        Whether to store the data as float32.
+
+    Returns
+    -------
+    HDF5FeatureStorage
+        The storage of the collected file.
+
+    """
+    storage = HDF5FeatureStorage(
+        uri=uri,
+        single_output=False,
+        force_float32=force_float32,
+        chunk_size=2,
+    )
+    for i in range(3):
+        meta = {
+            "element": {"subject": f"sub-0{i}"},
+            "dependencies": [],
+            "type": "BOLD",
+        }
+        storage.store(
+            kind="vector",
+            meta={**meta, "marker": {"name": "vec"}},
+            data=np.array([[0.1, 0.2]]) + i,
+            col_names=["a", "b"],
+        )
+        storage.store(
+            kind="timeseries",
+            meta={**meta, "marker": {"name": "ts"}},
+            data=np.arange(6.0).reshape(3, 2) + i,
+            col_names=["a", "b"],
+        )
+    storage.collect()
+    return HDF5FeatureStorage(uri=uri)
+
+
+@pytest.mark.parametrize(
+    "force_float32, dtype", [(True, np.float32), (False, np.float64)]
+)
+def test_collect_dtype(
+    tmp_path: Path, force_float32: bool, dtype: np.dtype
+) -> None:
+    """Test collected data keeps its dtype.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    force_float32 : bool
+        The parametrized casting of the data to float32.
+    dtype : numpy.dtype
+        The parametrized dtype of the collected data.
+
+    """
+    storage = _store_and_collect(tmp_path / "out.hdf5", force_float32)
+    md5s = {meta["name"]: md5 for md5, meta in storage.list_features().items()}
+    vector = storage.read(feature_md5=md5s["BOLD_vec"])
+    timeseries = storage.read(feature_md5=md5s["BOLD_ts"])
+    assert vector["data"].dtype == dtype
+    assert all(x.dtype == dtype for x in timeseries["data"])
+    # The elements are collected in any order
+    for i_element, element in enumerate(vector["element"]):
+        i = int(element["subject"][-1])
+        expected = np.array([0.1, 0.2]) + i
+        assert_array_equal(
+            vector["data"][:, i_element], expected.astype(dtype)
+        )
+
+
+def test_collect_h5io_types(tmp_path: Path) -> None:
+    """Test collected data is stored with h5io types and can be re-collected.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    uri = tmp_path / "out.hdf5"
+    storage = _store_and_collect(uri, force_float32=False)
+    collected = {
+        md5: read_hdf5(uri, title=md5) for md5 in storage.list_features()
+    }
+    # The data is only in the features
+    with h5py.File(uri, mode="r") as fid:
+        assert set(fid.keys()) == {"meta", *collected.keys()}
+    # Collect again
+    _store_and_collect(uri, force_float32=False)
+    for md5, feature in collected.items():
+        recollected = read_hdf5(uri, title=md5)
+        assert recollected["element"] == feature["element"]
+        if isinstance(feature["data"], list):
+            for new, old in zip(
+                recollected["data"], feature["data"], strict=True
+            ):
+                assert_array_equal(new, old)
+        else:
+            assert_array_equal(recollected["data"], feature["data"])

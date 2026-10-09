@@ -45,6 +45,7 @@ dependencies = [
     "sqlalchemy>=2.0.25,<2.2.0",
     "ruamel.yaml>=0.17,<0.20",
     "h5py>=3.10",
+    "h5io>=0.2.5,<0.3",
     "tqdm>=4.66.1,<4.71.0",
     "templateflow>=23.0.0,<26.0.0",
     "lapy>=1.0.0,<2.0.0",
@@ -113,7 +114,6 @@ docs = ["junifer[sphinx,all]"]
 [tool.setuptools]
 packages = [
     "junifer",
-    "junifer.external.h5io.h5io",
     "junifer.external.BrainPrint.brainprint",
     "junifer.external.BrainPrint.brainprint.utils",
 ]
@@ -124,7 +124,7 @@ local_scheme = "no-local-version"
 write_to = "junifer/_version.py"
 
 [tool.codespell]
-skip = "*/auto_examples/*,*.html,.git/,*.pyc,*/_build/*,*/h5io/*,*/BrainPrint/*,uv.lock"
+skip = "*/auto_examples/*,*.html,.git/,*.pyc,*/_build/*,*/BrainPrint/*,uv.lock"
 count = ""
 quiet-level = 3
 ignore-words = "ignore_words.txt"
@@ -137,7 +137,6 @@ extend-exclude = [
     "__init__.py",
     "__init__.pyi",
     "junifer/_version.py",
-    "junifer/external/h5io",
     "junifer/external/BrainPrint",
     "docs",
     "examples",
@@ -305,7 +304,6 @@ omit = [
     "*/_version.py",
     "*/tests/*",
     "*/junifer/configs/*",
-    "*/junifer/external/h5io/*",
     "*/junifer/external/BrainPrint/*",
 ]
 
