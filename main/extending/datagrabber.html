@@ -375,6 +375,12 @@ elements. For example, it is usually the case that the <code class="docutils lit
 acquired for each task, but once in the entire session. So in this case, the
 <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">rest</span></code>) will be the same
 as the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image for the element (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>, <code class="docutils literal notranslate"><span class="pre">ses1</span></code>, <code class="docutils literal notranslate"><span class="pre">stroop</span></code>).</p>
+<p>When the DataGrabber only grabs some of the data types, the elements only have
+the items that these data types need. For example, if only the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image is
+grabbed, the elements are (<code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">session</span></code>), e.g., (<code class="docutils literal notranslate"><span class="pre">sub001</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ses1</span></code>), so that the same <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image is not processed once for each task.
+For the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> (see below), the items that the data types
+need are the replacements in their patterns.</p>
 <p>We will now continue this section using as an example, a dataset in BIDS format
 in which 9 subjects (<code class="docutils literal notranslate"><span class="pre">sub-01</span></code> to <code class="docutils literal notranslate"><span class="pre">sub-09</span></code>) were scanned each during 3
 sessions (<code class="docutils literal notranslate"><span class="pre">ses-01</span></code>, <code class="docutils literal notranslate"><span class="pre">ses-02</span></code>, <code class="docutils literal notranslate"><span class="pre">ses-03</span></code>) and each session included a
@@ -503,6 +509,91 @@ to set the <code class="docutils literal notranslate"><span class="pre">datadir<
 <span class="w">   </span><span class="nt">datadir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/project/test/data</span>
 </pre></div>
 </div>
+<p>The DataGrabber finds the elements by searching the dataset for the files that
+match the pattern of each data type. An element is only available if it has the
+files of all the data types to grab. In our BIDS example, <code class="docutils literal notranslate"><span class="pre">ses-03</span></code> only has
+anatomical data, so the elements with <code class="docutils literal notranslate"><span class="pre">ses-03</span></code> are only available when only
+the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> data type is grabbed.</p>
+<section id="restricting-the-values-of-the-replacements">
+<span id="extending-datagrabbers-replacement-values"></span><h4>Restricting the values of the replacements<a class="headerlink" href="#restricting-the-values-of-the-replacements" title="Link to this heading">¶</a></h4>
+<p>By default, the DataGrabber grabs all the values of the replacements found in
+the dataset. To only grab some of them, <code class="docutils literal notranslate"><span class="pre">replacements</span></code> can be a dictionary
+with the values to grab for each replacement (or <code class="docutils literal notranslate"><span class="pre">None</span></code> to grab all of them).
+For example, to only grab the first two sessions of our BIDS example with the
+<a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> in the YAML file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataGrabber</span>
+<span class="w">   </span><span class="nt">datadir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/project/test/data</span>
+<span class="w">   </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
+<span class="w">   </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">T1w</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"</span>
+<span class="w">         </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">      </span><span class="nt">BOLD</span><span class="p">:</span>
+<span class="w">         </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"</span>
+<span class="w">         </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin6Asym</span>
+<span class="w">   </span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">      </span><span class="nt">session</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ses-01</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ses-02</span>
+</pre></div>
+</div>
+<p>The elements with other values are not listed, and grabbing them raises an
+error. The values are ignored if the data types to grab do not use the
+replacement, e.g., the <code class="docutils literal notranslate"><span class="pre">session</span></code> values with a data type that is the same for
+all the sessions.</p>
+<p>A DataGrabber can also take the values to grab from one of its fields, e.g.,
+<code class="docutils literal notranslate"><span class="pre">sessions</span></code>, by linking the field to the replacement with
+<code class="docutils literal notranslate"><span class="pre">_REPLACEMENT_FIELDS</span></code>. The values of the field can be strings or enumerations
+(a <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.StrEnum" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.StrEnum</span></code></a> is recommended, so its members are also the strings),
+and the replacement cannot have values in <code class="docutils literal notranslate"><span class="pre">replacements</span></code> too:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrEnum</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClassVar</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.api.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_datagrabber</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.datagrabber</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataType</span><span class="p">,</span> <span class="n">PatternDataGrabber</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataGrabberPatterns</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Sessions</span><span class="p">(</span><span class="n">StrEnum</span><span class="p">):</span>
+    <span class="n">ses_01</span> <span class="o">=</span> <span class="s2">"ses-01"</span>
+    <span class="n">ses_02</span> <span class="o">=</span> <span class="s2">"ses-02"</span>
+    <span class="n">ses_03</span> <span class="o">=</span> <span class="s2">"ses-03"</span>
+
+
+<span class="nd">@register_datagrabber</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExampleBIDSDataGrabber</span><span class="p">(</span><span class="n">PatternDataGrabber</span><span class="p">):</span>
+
+    <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DataType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">DataType</span><span class="o">.</span><span class="n">T1w</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">BOLD</span><span class="p">]</span>
+    <span class="n">patterns</span><span class="p">:</span> <span class="n">DataGrabberPatterns</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"T1w"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/anat/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_T1w.nii.gz"</span><span class="p">,</span>
+            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"native"</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"BOLD"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"pattern"</span><span class="p">:</span> <span class="s2">"</span><span class="si">{subject}</span><span class="s2">/</span><span class="si">{session}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_</span><span class="si">{session}</span><span class="s2">_task-rest_bold.nii.gz"</span><span class="p">,</span>
+            <span class="s2">"space"</span><span class="p">:</span> <span class="s2">"MNI152NLin6Asym"</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+    <span class="n">replacements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+    <span class="n">sessions</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Sessions</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Sessions</span><span class="p">)</span>
+    <span class="c1"># Only grab the sessions in the `sessions` field</span>
+    <span class="n">_REPLACEMENT_FIELDS</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"session"</span><span class="p">:</span> <span class="s2">"sessions"</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Then, the sessions to grab can be set in the YAML file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ExampleBIDSDataGrabber</span>
+<span class="w">   </span><span class="nt">datadir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/project/test/data</span>
+<span class="w">   </span><span class="nt">sessions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ses-01</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ses-02</span>
+</pre></div>
+</div>
+</section>
 <section id="optional-using-datalad">
 <h4>Optional: Using datalad<a class="headerlink" href="#optional-using-datalad" title="Link to this heading">¶</a></h4>
 <p>If you are using <a class="reference external" href="https://datalad.org">datalad</a>, you can use the <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a>
@@ -587,15 +678,28 @@ be used to specify the path to the root directory of the dataset after doing
 </div>
 </section>
 <section id="advanced-using-unix-like-path-expansion-directives">
-<h4>Advanced: Using Unix-like path expansion directives<a class="headerlink" href="#advanced-using-unix-like-path-expansion-directives" title="Link to this heading">¶</a></h4>
+<span id="extending-datagrabbers-path-expansion"></span><h4>Advanced: Using Unix-like path expansion directives<a class="headerlink" href="#advanced-using-unix-like-path-expansion-directives" title="Link to this heading">¶</a></h4>
 <p>It is also possible to use some advanced Unix-like path expansion tricks to
 define our patterns.</p>
-<p>A very common thing would be to use <code class="docutils literal notranslate"><span class="pre">*</span></code> to match any number of
-characters but we cannot use it right after a replacement like:</p>
+<p>A very common thing would be to use <code class="docutils literal notranslate"><span class="pre">*</span></code> to match any number of characters
+or <code class="docutils literal notranslate"><span class="pre">?</span></code> to match a single character, both to find the elements and to grab
+their data. For example, if the acquisition of the BOLD images depends on the
+task (e.g., <code class="docutils literal notranslate"><span class="pre">sub-01_task-rest_acq-mb3_bold.nii.gz</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sub-01_task-stroop_acq-seq_bold.nii.gz</span></code>), the pattern can match any
+acquisition, so the task values are <code class="docutils literal notranslate"><span class="pre">rest</span></code> and <code class="docutils literal notranslate"><span class="pre">stroop</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"</span><span class="si">{subject}</span><span class="s2">/func/</span><span class="si">{subject}</span><span class="s2">_task-</span><span class="si">{task}</span><span class="s2">_acq-*_bold.nii.gz"</span>
+</pre></div>
+</div>
+<p>Similarly, <code class="docutils literal notranslate"><span class="pre">?</span></code> can match the first character of <code class="docutils literal notranslate"><span class="pre">rfMRI</span></code> (resting-state)
+and <code class="docutils literal notranslate"><span class="pre">tfMRI</span></code> (task) in the HCP dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"</span><span class="si">{subject}</span><span class="s2">/MNINonLinear/Results/?fMRI_</span><span class="si">{task}</span><span class="s2">_</span><span class="si">{phase_encoding}</span><span class="s2">/?fMRI_</span><span class="si">{task}</span><span class="s2">_</span><span class="si">{phase_encoding}</span><span class="s2">.nii.gz"</span>
+</pre></div>
+</div>
+<p>The pattern must match exactly one file for each element, and we cannot use
+<code class="docutils literal notranslate"><span class="pre">*</span></code> right after a replacement like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s2">"derivatives/freesurfer/</span><span class="si">{subject}</span><span class="s2">*"</span>
 </pre></div>
 </div>
-<p>or if there are multiple files or no files which can be globbed.</p>
 <p>We can also use <code class="docutils literal notranslate"><span class="pre">[]</span></code> and <code class="docutils literal notranslate"><span class="pre">[!]</span></code> to glob certain tricky files like with the
 case of FreeSurfer derivatives. The file structure seen in a typical
 FreeSurfer derivative of a dataset (like <code class="docutils literal notranslate"><span class="pre">AOMIC</span></code> ones) is like so:</p>
@@ -854,6 +958,7 @@ same dataset.</p>
 <li><a class="reference internal" href="#step-2-think-about-the-dataset-s-structure">7.3.2. Step 2: Think about the dataset’s structure</a></li>
 <li><a class="reference internal" href="#step-3-create-a-data-grabber">7.3.3. Step 3: Create a Data Grabber</a><ul>
 <li><a class="reference internal" href="#option-a-extending-from-patterndatagrabber">Option A: Extending from PatternDataGrabber</a><ul>
+<li><a class="reference internal" href="#restricting-the-values-of-the-replacements">Restricting the values of the replacements</a></li>
 <li><a class="reference internal" href="#optional-using-datalad">Optional: Using datalad</a></li>
 <li><a class="reference internal" href="#advanced-using-unix-like-path-expansion-directives">Advanced: Using Unix-like path expansion directives</a></li>
 </ul>
@@ -873,7 +978,7 @@ same dataset.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=49a83448"></script>
+</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

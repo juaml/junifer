@@ -357,8 +357,251 @@ not only meant to work with Datalad datasets but any dataset.</p>
 <a class="reference internal" href="../builtin.html"><span class="doc">Built-in Pipeline Components</span></a>. And, if you want to implement your own DataGrabber, you need
 to provide concrete implementations of abstract base classes already provided.</p>
 </section>
+<section id="elements">
+<span id="datagrabber-elements"></span><h2><span class="section-number">4.3.2. </span>Elements<a class="headerlink" href="#elements" title="Link to this heading">¶</a></h2>
+<p>A DataGrabber gives the data of a dataset in small units called <em>elements</em>. An
+element is the smallest unit of data that can be processed: it has one file
+for each <a class="reference internal" href="data.html#data-types"><span class="std std-ref">data type</span></a> (e.g., one <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image and one
+<code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image). Each element is identified by the values of its <em>keys</em>, e.g.,
+the element <code class="docutils literal notranslate"><span class="pre">("sub-01",</span> <span class="pre">"rest")</span></code> has the value <code class="docutils literal notranslate"><span class="pre">sub-01</span></code> for the key
+<code class="docutils literal notranslate"><span class="pre">subject</span></code> and <code class="docutils literal notranslate"><span class="pre">rest</span></code> for the key <code class="docutils literal notranslate"><span class="pre">task</span></code>.</p>
+<p>To see how this works, we will use this small dataset with two subjects, a
+<code class="docutils literal notranslate"><span class="pre">T1w</span></code> image for each subject and a <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image for each subject and task
+(<code class="docutils literal notranslate"><span class="pre">sub-02</span></code> has no <code class="docutils literal notranslate"><span class="pre">movie</span></code> task):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sub-01/anat/sub-01_T1w.nii.gz
+sub-01/func/sub-01_task-rest_bold.nii.gz
+sub-01/func/sub-01_task-movie_bold.nii.gz
+sub-02/anat/sub-02_T1w.nii.gz
+sub-02/func/sub-02_task-rest_bold.nii.gz
+</pre></div>
+</div>
+<p>A <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> describes the files of each data type with a
+<em>pattern</em>, where the parts that change between the files (the <em>replacements</em>)
+are written between braces:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataGrabber</span>
+<span class="w">  </span><span class="nt">datadir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/example</span>
+<span class="w">  </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
+<span class="w">  </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">T1w</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/anat/{subject}_T1w.nii.gz"</span>
+<span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">    </span><span class="nt">BOLD</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/func/{subject}_task-{task}_bold.nii.gz"</span>
+<span class="w">      </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native</span>
+<span class="w">  </span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task</span>
+</pre></div>
+</div>
+<section id="which-data-types-are-grabbed">
+<h3>Which data types are grabbed<a class="headerlink" href="#which-data-types-are-grabbed" title="Link to this heading">¶</a></h3>
+<p>The DataGrabber finds the elements by searching the dataset for the files that
+match the patterns. The keys of the elements are the replacements in the
+patterns of the data types to grab (<code class="docutils literal notranslate"><span class="pre">types</span></code>), and an element is only
+available if it has a file for each of these data types:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">types</span></code></p></th>
+<th class="head"><p>Keys</p></th>
+<th class="head"><p>Elements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1w</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sub-01</span></code>, <code class="docutils literal notranslate"><span class="pre">sub-02</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BOLD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">movie)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-02,</span> <span class="pre">rest)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1w</span></code>, <code class="docutils literal notranslate"><span class="pre">BOLD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">movie)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-02,</span> <span class="pre">rest)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>With only <code class="docutils literal notranslate"><span class="pre">T1w</span></code>, the elements do not have the <code class="docutils literal notranslate"><span class="pre">task</span></code> key, as the <code class="docutils literal notranslate"><span class="pre">T1w</span></code>
+image does not depend on the task: each <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image is processed once. With
+<code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, the elements need the task, so the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image of <code class="docutils literal notranslate"><span class="pre">sub-01</span></code> is part
+of two elements, <code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">movie)</span></code> and <code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>.</p>
+</section>
+<section id="which-values-are-grabbed">
+<h3>Which values are grabbed<a class="headerlink" href="#which-values-are-grabbed" title="Link to this heading">¶</a></h3>
+<p>By default, all the values found in the dataset are grabbed. They can be
+restricted with <code class="docutils literal notranslate"><span class="pre">replacements</span></code>, giving the values to grab for each
+replacement (or <code class="docutils literal notranslate"><span class="pre">null</span></code> to grab all of them). For example, to only grab the
+<code class="docutils literal notranslate"><span class="pre">rest</span></code> task:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">subject</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+<span class="w">  </span><span class="nt">task</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rest</span>
+</pre></div>
+</div>
+<p>The <a class="reference internal" href="../builtin.html"><span class="doc">built-in DataGrabbers</span></a> have parameters for this instead,
+e.g., <code class="docutils literal notranslate"><span class="pre">tasks</span></code> in <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a>. The values only restrict the
+elements of the data types that use the replacement:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">types</span></code></p></th>
+<th class="head"><p>Values to grab</p></th>
+<th class="head"><p>Elements</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BOLD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: <code class="docutils literal notranslate"><span class="pre">rest</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-02,</span> <span class="pre">rest)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BOLD</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>: <code class="docutils literal notranslate"><span class="pre">sub-02</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-02,</span> <span class="pre">rest)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">T1w</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: <code class="docutils literal notranslate"><span class="pre">rest</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sub-01</span></code>, <code class="docutils literal notranslate"><span class="pre">sub-02</span></code> (the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image does not depend on the task)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The elements with other values are not listed, and asking for them (e.g.,
+<code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">movie)</span></code> when only <code class="docutils literal notranslate"><span class="pre">rest</span></code> is grabbed) raises an error. See
+<a class="reference internal" href="../extending/datagrabber.html#extending-datagrabbers-replacement-values"><span class="std std-ref">Restricting the values of the replacements</span></a> for more details, and
+<a class="reference internal" href="../extending/datagrabber.html#extending-datagrabbers-path-expansion"><span class="std std-ref">Advanced: Using Unix-like path expansion directives</span></a> for patterns with <code class="docutils literal notranslate"><span class="pre">*</span></code>, e.g., to
+match files whose names change with the task.</p>
+</section>
+<section id="which-elements-are-processed">
+<h3>Which elements are processed<a class="headerlink" href="#which-elements-are-processed" title="Link to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">list-elements</span></code> command lists the elements of the dataset. By default,
+the <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">queue</span></code> commands process all of them, but the <code class="docutils literal notranslate"><span class="pre">--element</span></code>
+option can select some of them, with the values of the keys separated by
+<code class="docutils literal notranslate"><span class="pre">,</span></code>. With <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">--element</span></code></p></th>
+<th class="head"><p>Elements processed</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sub-01,rest</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>: a <em>complete</em> element (a value for each key, in
+order), the dataset is not searched</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sub-01</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">movie)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>: a <em>partial</em> element selects all
+the elements with its values</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rest</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-01,</span> <span class="pre">rest)</span></code>, <code class="docutils literal notranslate"><span class="pre">(sub-02,</span> <span class="pre">rest)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sub-03</span></code></p></td>
+<td><p>None: an error is raised, as no element matches it</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>See <a class="reference internal" href="../using/running.html#running-elements"><span class="std std-ref">Complete and partial elements</span></a> for more details.</p>
+</section>
+</section>
+<section id="combining-datasets">
+<span id="datagrabber-multiple"></span><h2><span class="section-number">4.3.3. </span>Combining datasets<a class="headerlink" href="#combining-datasets" title="Link to this heading">¶</a></h2>
+<p>The <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> combines several DataGrabbers, e.g., to use
+data from different datasets. For example, we can take the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> and
+<code class="docutils literal notranslate"><span class="pre">T1w</span></code> images from a dataset with the fMRIPrep derivatives, the <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code>
+images from a dataset with the CAT12 derivatives, and the confounds of the
+<code class="docutils literal notranslate"><span class="pre">BOLD</span></code> images from a third dataset:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MultipleDataGrabber</span>
+<span class="w">  </span><span class="nt">datagrabbers</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># BOLD and T1w from the fMRIPrep derivatives</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
+<span class="w">      </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">T1w</span>
+<span class="w">      </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span>
+<span class="w">    </span><span class="c1"># VBM from the CAT12 derivatives</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataladDataGrabber</span>
+<span class="w">      </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/aomic-piop1-cat12</span>
+<span class="w">      </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VBM_GM</span>
+<span class="w">      </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">VBM_GM</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/mri/mwp1{subject}_T1w.nii"</span>
+<span class="w">          </span><span class="nt">space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MNI152NLin2009cAsym</span>
+<span class="w">      </span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
+<span class="w">    </span><span class="c1"># Only the confounds of the BOLD images</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PatternDataladDataGrabber</span>
+<span class="w">      </span><span class="nt">uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://example.org/aomic-piop1-confounds</span>
+<span class="w">      </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BOLD</span>
+<span class="w">      </span><span class="nt">patterns</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">BOLD</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">confounds</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">"{subject}/func/{subject}_task-{task}_acq-*_desc-confounds.tsv"</span>
+<span class="w">            </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">fmriprep</span>
+<span class="w">      </span><span class="nt">replacements</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">task</span>
+<span class="w">      </span><span class="nt">partial_pattern_ok</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>The DataGrabbers are combined with these rules:</p>
+<ul class="simple">
+<li><p><strong>Each data type is grabbed by one DataGrabber</strong>, which is chosen with the
+<code class="docutils literal notranslate"><span class="pre">types</span></code> of each DataGrabber. Here, the first one grabs <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> and
+<code class="docutils literal notranslate"><span class="pre">T1w</span></code>, and the second one <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code>. If the first one also grabbed
+<code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> (e.g., without setting its <code class="docutils literal notranslate"><span class="pre">types</span></code>), an error would be raised,
+asking to remove it from the <code class="docutils literal notranslate"><span class="pre">types</span></code> of one of them.</p></li>
+<li><p><strong>A DataGrabber that only grabs the nested data types of a data type</strong>
+(without the main file of the data type) replaces these nested data types
+of the other DataGrabber. Here, the third one only grabs the <code class="docutils literal notranslate"><span class="pre">confounds</span></code>
+of <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>, so they replace the ones of the first DataGrabber, regardless
+of the order of the DataGrabbers.</p></li>
+<li><p><strong>The elements are the ones available in all the DataGrabbers.</strong> The
+DataGrabbers can have different keys: the element keys are the ones of the
+first DataGrabber, followed by the other keys of the other DataGrabbers, and
+each DataGrabber grabs an element with its own keys. The keys with the same
+name must have the same values in all the datasets (e.g., the same subject
+names).</p></li>
+</ul>
+<p>For the element <code class="docutils literal notranslate"><span class="pre">(sub-0001,</span> <span class="pre">restingstate)</span></code>:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>DataGrabber</p></th>
+<th class="head"><p>Keys</p></th>
+<th class="head"><p>Grabs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>First (fMRIPrep)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-0001,</span> <span class="pre">restingstate)</span></code>: the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image (with its mask) and
+the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image</p></td>
+</tr>
+<tr class="row-odd"><td><p>Second (CAT12)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sub-0001</span></code>: the <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> image</p></td>
+</tr>
+<tr class="row-even"><td><p>Third (confounds)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">subject</span></code>, <code class="docutils literal notranslate"><span class="pre">task</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">(sub-0001,</span> <span class="pre">restingstate)</span></code>: the confounds of the <code class="docutils literal notranslate"><span class="pre">BOLD</span></code> image</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section id="base-classes">
-<h2><span class="section-number">4.3.2. </span>Base Classes<a class="headerlink" href="#base-classes" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">4.3.4. </span>Base Classes<a class="headerlink" href="#base-classes" title="Link to this heading">¶</a></h2>
 <p>In this section, we showcase different abstract and concrete base classes you
 might want to use to implement your own DataGrabber.</p>
 <div class="table-wrapper colwidths-auto docutils container">
@@ -375,7 +618,7 @@ might want to use to implement your own DataGrabber.</p>
 <div class="line">own DataGrabber. You should try to avoid using this directly and</div>
 <div class="line">instead use <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> or</div>
 <div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a>. To build your own custom <em>low-level</em></div>
-<div class="line">DataGrabber, you need to override the <code class="docutils literal notranslate"><span class="pre">get_elements_keys</span></code>,</div>
+<div class="line">DataGrabber, you need to override the <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code>,</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">get_elements</span></code> and <code class="docutils literal notranslate"><span class="pre">get_item</span></code> methods, and most of the time you</div>
 <div class="line">should also override other existing methods like <code class="docutils literal notranslate"><span class="pre">__enter__</span></code> and</div>
 <div class="line"><code class="docutils literal notranslate"><span class="pre">__exit__</span></code>.</div>
@@ -406,6 +649,13 @@ might want to use to implement your own DataGrabber.</p>
 <div class="line">It is a combination of <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> and</div>
 <div class="line"><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a>. This is probably the class you are looking</div>
 <div class="line">for when using Datalad datasets.</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a></p></td>
+<td><div class="line-block">
+<div class="line">It combines several DataGrabbers, e.g., to use data from different</div>
+<div class="line">datasets (see <a class="reference internal" href="#datagrabber-multiple"><span class="std std-ref">Combining datasets</span></a>).</div>
 </div>
 </td>
 </tr>
@@ -469,7 +719,14 @@ might want to use to implement your own DataGrabber.</p>
 <ul>
 <li><a class="reference internal" href="#">4.3. Data Grabber</a><ul>
 <li><a class="reference internal" href="#description">4.3.1. Description</a></li>
-<li><a class="reference internal" href="#base-classes">4.3.2. Base Classes</a></li>
+<li><a class="reference internal" href="#elements">4.3.2. Elements</a><ul>
+<li><a class="reference internal" href="#which-data-types-are-grabbed">Which data types are grabbed</a></li>
+<li><a class="reference internal" href="#which-values-are-grabbed">Which values are grabbed</a></li>
+<li><a class="reference internal" href="#which-elements-are-processed">Which elements are processed</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#combining-datasets">4.3.3. Combining datasets</a></li>
+<li><a class="reference internal" href="#base-classes">4.3.4. Base Classes</a></li>
 </ul>
 </li>
 </ul>
@@ -478,7 +735,7 @@ might want to use to implement your own DataGrabber.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=49a83448"></script>
+</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

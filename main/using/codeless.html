@@ -412,6 +412,17 @@ task.</p>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">restingstate</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">types</span></code> parameter restricts the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a> to grab,
+which also determines the elements to process. For example, with only the VBM
+data, which does not depend on the task, the elements only have the subject, so
+the VBM data of each subject is processed once (and <code class="docutils literal notranslate"><span class="pre">tasks</span></code> is not needed):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataladAOMICPIOP1</span>
+<span class="w">  </span><span class="nt">types</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VBM_GM</span>
+</pre></div>
+</div>
+<p>See <a class="reference internal" href="../understanding/datagrabber.html#datagrabber-elements"><span class="std std-ref">Elements</span></a> for more details on the elements.</p>
 <p>In the <code class="docutils literal notranslate"><span class="pre">UCLA</span> <span class="pre">CNP</span> <span class="pre">VBM</span> <span class="pre">Testing</span> <span class="pre">dataset</span></code> example, the section will look like this:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datagrabber</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UCLACNPVBMTestingDataGrabber</span>
@@ -602,7 +613,7 @@ looks like:</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=49a83448"></script>
+</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

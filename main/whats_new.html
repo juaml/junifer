@@ -340,7 +340,7 @@
 <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
 <section id="junifer-release-2026-10-09">
-<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev306 (2026-10-09)<a class="headerlink" href="#junifer-release-2026-10-09" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev311 (2026-10-09)<a class="headerlink" href="#junifer-release-2026-10-09" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -417,6 +417,12 @@ others, instead of failing or returning values for the lost regions, and
 <a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRMaps" title="junifer.markers.TemporalSNRMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRMaps</span></code></a> replacing the BOLD data with the tSNR map, so the
 markers computed after them in a pipeline used the tSNR map instead of the
 BOLD data by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/522">#522</a>)</p></li>
+<li><p>Fix a relative <code class="docutils literal notranslate"><span class="pre">datadir</span></code> of the DataGrabber in the YAML being relative to
+the current directory (e.g., the job directory when queueing) instead of the
+YAML file by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Fix partial element selectors (e.g., only the subject) always being reported
+as invalid by <a class="reference internal" href="api/api.html#junifer.api.functions.run" title="junifer.api.functions.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>, after computing their elements by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
@@ -435,9 +441,21 @@ values change slightly by <a class="reference external" href="https://fraimondo.
 <li><p>Use the BIDS version of the SPM auditory dataset in
 <a class="reference internal" href="api/testing.html#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber" title="junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPMAuditoryTestingDataGrabber</span></code></a>, which has 84 timepoints instead of
 96 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/516">#516</a>)</p></li>
-<li><p>Use <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.StrEnum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.StrEnum</span></code></a> for the enumerations, so <code class="docutils literal notranslate"><span class="pre">str()</span></code> and formatting
+<li><p>Use <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.StrEnum" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">enum.StrEnum</span></code></a> for the enumerations, so <code class="docutils literal notranslate"><span class="pre">str()</span></code> and formatting
 of their members give their value (e.g. <code class="docutils literal notranslate"><span class="pre">"mean"</span></code>) instead of
 <code class="docutils literal notranslate"><span class="pre">"AggFunc.Mean"</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/520">#520</a>)</p></li>
+<li><p>Find the elements of <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a>,
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.HCP1200" title="junifer.datagrabber.HCP1200"><code class="xref py py-class docutils literal notranslate"><span class="pre">HCP1200</span></code></a> and <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DMCC13Benchmark" title="junifer.datagrabber.DMCC13Benchmark"><code class="xref py py-class docutils literal notranslate"><span class="pre">DMCC13Benchmark</span></code></a>
+in the dataset, so only the elements with data are listed, and return
+absolute paths in <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Use only the replacements of the data types to grab as element keys in
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> (e.g., only <code class="docutils literal notranslate"><span class="pre">subject</span></code> with VBM data), so the
+data that does not depend on, e.g., the task is not processed once for each
+task by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Require the element selectors to have the same number of values, and each
+data type to be grabbed by only one of the DataGrabbers of
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
@@ -454,6 +472,9 @@ and the codeless documentation, so no example needs warping by <a class="referen
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/515">#515</a>)</p></li>
 <li><p>Fix the docs build and the julearn example, whose scores were <code class="docutils literal notranslate"><span class="pre">NaN</span></code> with
 <code class="docutils literal notranslate"><span class="pre">scikit-learn</span></code> 1.8 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/520">#520</a>)</p></li>
+<li><p>Document the elements of the DataGrabbers, combining datasets with
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a>, complete and partial elements, and restricting
+the values of the replacements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements">
@@ -489,6 +510,9 @@ parcellation was already on its grid by <a class="reference external" href="http
 <li><p>Raise an error if a marker changes its input data (which is shared with the
 other markers of a pipeline), checking the values and their contents (arrays,
 data frames and images) by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/522">#522</a>)</p></li>
+<li><p>Run complete elements (with a value for each element key, e.g., in each
+queued job) without searching the dataset for its elements by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -499,6 +523,15 @@ data frames and images) by <a class="reference external" href="https://fraimondo
 <li><p>Add <a class="reference internal" href="api/testing.html#junifer.testing.datagrabbers.ADHDTestingDataGrabber" title="junifer.testing.datagrabbers.ADHDTestingDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">ADHDTestingDataGrabber</span></code></a> and <code class="docutils literal notranslate"><span class="pre">n_timepoints</span></code> for
 <a class="reference internal" href="api/testing.html#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber" title="junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPMAuditoryTestingDataGrabber</span></code></a> and
 <a class="reference internal" href="api/testing.html#junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber" title="junifer.testing.datagrabbers.PartlyCloudyTestingDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PartlyCloudyTestingDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/511">#511</a>)</p></li>
+<li><p>Allow <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> to combine DataGrabbers with different
+element keys, joining their elements on the common keys, and to replace
+nested data types (e.g., the confounds of <code class="docutils literal notranslate"><span class="pre">BOLD</span></code>) with a DataGrabber that
+only grabs them by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Allow restricting the values of the replacements to grab in
+<a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>, with <code class="docutils literal notranslate"><span class="pre">replacements</span></code> as a dictionary or with
+fields linked with <code class="docutils literal notranslate"><span class="pre">_REPLACEMENT_FIELDS</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">tasks</span></code> in the built-in
+DataGrabbers), and using the <code class="docutils literal notranslate"><span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">?</span></code> wildcards in the patterns to
+find the elements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
 </ul>
 </section>
 <section id="miscellaneous">
@@ -828,8 +861,8 @@ global configuration by <a class="reference external" href="https://fraimondo.gi
 necessary data components by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/407">#407</a>)</p></li>
 <li><p>Allow masks to be warped, if found, in <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/408">#408</a>)</p></li>
-<li><p>Add support for coloured <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a> to use with <code class="docutils literal notranslate"><span class="pre">junifer</span></code>’s
-<a class="reference external" href="https://docs.python.org/3/library/logging.handlers.html#logging.StreamHandler" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.StreamHandler</span></code></a> based on environment by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+<li><p>Add support for coloured <a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Formatter" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Formatter</span></code></a> to use with <code class="docutils literal notranslate"><span class="pre">junifer</span></code>’s
+<a class="reference external" href="https://docs.python.org/3/library/logging.handlers.html#logging.StreamHandler" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">logging.StreamHandler</span></code></a> based on environment by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/412">#412</a>)</p></li>
 <li><p>Allow storage of 2D timeseries, currently only supported by
 HDF5FeatureStorage by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/422">#422</a>)</p></li>
@@ -1604,7 +1637,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 <div class="toc-tree">
 <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2026-10-09">14.1. junifer 0.0.8.dev306 (2026-10-09)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2026-10-09">14.1. junifer 0.0.8.dev311 (2026-10-09)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1686,7 +1719,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 </div>
 </aside>
 </div>
-</div><script src="_static/documentation_options.js?v=49a83448"></script>
+</div><script src="_static/documentation_options.js?v=e6ee74c1"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="_static/scripts/furo.js?v=46bd48cc"></script>

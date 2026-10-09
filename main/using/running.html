@@ -360,7 +360,8 @@ commands will extract the features:</p>
 run. This parameter can be specified multiple times to run multiple elements.
 If the <em>element</em> requires several parameters, they can be specified by
 separating them with <code class="docutils literal notranslate"><span class="pre">,</span></code>. It also accepts a file (e.g., <code class="docutils literal notranslate"><span class="pre">elements.txt</span></code>)
-containing complete or partial element(s).</p></li>
+containing complete or partial element(s) (see
+<a class="reference internal" href="#running-elements"><span class="std std-ref">Complete and partial elements</span></a>).</p></li>
 </ul>
 <section id="example-of-running-two-elements">
 <h2><span class="section-number">5.2.1. </span>Example of running two elements:<a class="headerlink" href="#example-of-running-two-elements" title="Link to this heading">¶</a></h2>
@@ -403,6 +404,35 @@ sub-02
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sub-01
 </pre></div>
 </div>
+</section>
+<section id="complete-and-partial-elements">
+<span id="running-elements"></span><h2><span class="section-number">5.2.3. </span>Complete and partial elements<a class="headerlink" href="#complete-and-partial-elements" title="Link to this heading">¶</a></h2>
+<p>An <em>element</em> has a value for each of its <em>keys</em>, e.g., <code class="docutils literal notranslate"><span class="pre">subject</span></code> and
+<code class="docutils literal notranslate"><span class="pre">session</span></code>. The keys depend on the <a class="reference internal" href="../understanding/data.html#data-types"><span class="std std-ref">data types</span></a> that the
+DataGrabber grabs: an element only has the keys that the data types need. For
+example, a DataGrabber with resting-state BOLD (one per subject and session) and
+VBM data (one per subject) has the keys <code class="docutils literal notranslate"><span class="pre">subject</span></code> and <code class="docutils literal notranslate"><span class="pre">session</span></code> when
+grabbing the BOLD data, but only <code class="docutils literal notranslate"><span class="pre">subject</span></code> when grabbing only the VBM data, so
+that the VBM data of a subject is not processed once for each session. The
+<code class="docutils literal notranslate"><span class="pre">list-elements</span></code> command lists the elements with their values, in the order of
+the keys:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>junifer<span class="w"> </span>list-elements<span class="w"> </span>config.yaml
+</pre></div>
+</div>
+<p>The elements given with <code class="docutils literal notranslate"><span class="pre">--element</span></code> can be:</p>
+<ul class="simple">
+<li><p><em>Complete</em>, with a value for each key, in the order of the keys, e.g.,
+<code class="docutils literal notranslate"><span class="pre">sub-01,ses-01</span></code>. Only these elements are run, without searching the
+dataset for its elements. This is the case for the jobs created by
+<a class="reference internal" href="queueing.html#queueing"><span class="std std-ref">queue</span></a>, which run one element each.</p></li>
+<li><p><em>Partial</em>, with fewer values, e.g., <code class="docutils literal notranslate"><span class="pre">sub-01</span></code>. They run all the elements of
+the dataset that have these values for any key, e.g., all the sessions of
+<code class="docutils literal notranslate"><span class="pre">sub-01</span></code>. This requires searching the dataset for its elements.</p></li>
+</ul>
+<p>All the elements given in a command must have the same number of values, so
+they are either all complete or all partial. A partial element that does not
+match any element of the dataset is reported before running any element, while
+a complete element without data fails when its data is grabbed.</p>
 </section>
 </section>
 <section id="collecting-results">
@@ -617,6 +647,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 <li><a class="reference internal" href="#">5.2. Running Jobs</a><ul>
 <li><a class="reference internal" href="#example-of-running-two-elements">5.2.1. Example of running two elements:</a></li>
 <li><a class="reference internal" href="#example-of-elements-with-multiple-parameters-and-verbose-output">5.2.2. Example of elements with multiple parameters and verbose output:</a></li>
+<li><a class="reference internal" href="#complete-and-partial-elements">5.2.3. Complete and partial elements</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#collecting-results">5.3. Collecting Results</a></li>
@@ -638,7 +669,7 @@ graph via <a class="reference external" href="https://github.com/aestrivex/bctpy
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=49a83448"></script>
+</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
