@@ -134,6 +134,10 @@ When storing the output of a marker, ``process_meta`` (in ``junifer.storage.util
   steps and of ``junifer``, but not ``element``: the data of all the elements
   of a feature have the same hash, and the features computed with different
   versions of ``junifer`` (or of the dependencies) have different hashes.
+  This is by design, for reproducibility: the differences between features
+  with the same hash can only come from the data, not from different
+  versions of the algorithms. A feature computed again with another version
+  is a new feature, with the same name, so it must be read by its MD5.
 
 Storage
 -------
