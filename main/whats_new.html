@@ -339,8 +339,8 @@
 <article id="furo-main-content" role="main">
 <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2026-10-08">
-<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev290 (2026-10-08)<a class="headerlink" href="#junifer-release-2026-10-08" title="Link to this heading">¶</a></h2>
+<section id="junifer-release-2026-10-09">
+<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev298 (2026-10-09)<a class="headerlink" href="#junifer-release-2026-10-09" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -410,6 +410,10 @@ markers are computed on the regions with data and give <code class="docutils lit
 others, instead of failing or returning values for the lost regions, and
 <a class="reference internal" href="api/markers.html#junifer.markers.RSSETSMarker" title="junifer.markers.RSSETSMarker"><code class="xref py py-class docutils literal notranslate"><span class="pre">RSSETSMarker</span></code></a> only uses the edges with data by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/521">#521</a>)</p></li>
+<li><p>Fix <a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRParcels" title="junifer.markers.TemporalSNRParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRParcels</span></code></a>, <a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRSpheres" title="junifer.markers.TemporalSNRSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRSpheres</span></code></a> and
+<a class="reference internal" href="api/markers.html#junifer.markers.TemporalSNRMaps" title="junifer.markers.TemporalSNRMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSNRMaps</span></code></a> replacing the BOLD data with the tSNR map, so the
+markers computed after them in a pipeline used the tSNR map instead of the
+BOLD data by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/522">#522</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
@@ -473,6 +477,9 @@ default in <a class="reference internal" href="api/testing.html#junifer.testing.
 <li><p>Speed up <a class="reference internal" href="api/markers.html#junifer.markers.ParcelAggregation" title="junifer.markers.ParcelAggregation"><code class="xref py py-class docutils literal notranslate"><span class="pre">ParcelAggregation</span></code></a> by not passing a target affine to the
 masker, which made <code class="docutils literal notranslate"><span class="pre">nilearn</span></code> crop and copy the input image even when the
 parcellation was already on its grid by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/515">#515</a>)</p></li>
+<li><p>Raise an error if a marker changes its input data (which is shared with the
+other markers of a pipeline), checking the values and their contents (arrays,
+data frames and images) by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/522">#522</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -526,6 +533,10 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/520">#520</a>)</p></li>
 <li><p>Cap <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> below 9, as <code class="docutils literal notranslate"><span class="pre">enum-tools</span></code> does not support it yet by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/520">#520</a>)</p></li>
+<li><p>Use <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a> instead of <a class="reference internal" href="api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a> in
+the tests and documentation, as the latter is only kept for compatibility,
+and fix the component registry test leaving components de-registered by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/523">#523</a>)</p></li>
 </ul>
 </section>
 <section id="deprecations-and-removals">
@@ -1582,7 +1593,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 <div class="toc-tree">
 <ul>
 <li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2026-10-08">14.1. junifer 0.0.8.dev290 (2026-10-08)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2026-10-09">14.1. junifer 0.0.8.dev298 (2026-10-09)</a><ul>
 <li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
@@ -1664,7 +1675,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 </div>
 </aside>
 </div>
-</div><script src="_static/documentation_options.js?v=a3df3423"></script>
+</div><script src="_static/documentation_options.js?v=804c072c"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="_static/scripts/furo.js?v=46bd48cc"></script>

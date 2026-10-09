@@ -130,8 +130,8 @@ First we load the storage like so:
 
     from junifer.storage import HDF5FeatureStorage
 
-    # You need to import and use SQLiteFeatureStorage if you chose that
-    # for storage while extracting features
+    # If the features were stored with the legacy SQLiteFeatureStorage,
+    # import and use that class instead
     storage = HDF5FeatureStorage("<path/to/your/collected/file>")
 
 The best way to start analysing would be to list all the extracted features
