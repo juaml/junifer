@@ -92,7 +92,7 @@ def test_bids_PatternDataladDataGrabber_datadir() -> None:
                 "space": "MNI152NLin6Asym",
             },
             "BOLD": {
-                "pattern": "{subject}/func/{subject}_task-rest_*.nii.gz",
+                "pattern": "{subject}/func/{subject}_task-rest_*bold.nii.gz",
                 "space": "MNI152NLin6Asym",
             },
         },
@@ -101,15 +101,18 @@ def test_bids_PatternDataladDataGrabber_datadir() -> None:
         rootdir=Path("example_bids"),
     ) as dg:
         assert dg.fulldir == Path(datadir) / "example_bids"
+        assert len(dg.get_elements()) > 0
         for elem in dg:
             t_sub = dg[elem]
+            # The paths are absolute
             assert "path" in t_sub["T1w"]
             assert t_sub["T1w"]["path"] == (
-                dg.fulldir / f"{elem}/anat/{elem}_T1w.nii.gz"
+                dg.fulldir.absolute() / f"{elem}/anat/{elem}_T1w.nii.gz"
             )
             assert "path" in t_sub["BOLD"]
             assert t_sub["BOLD"]["path"] == (
-                dg.fulldir / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
+                dg.fulldir.absolute()
+                / f"{elem}/func/{elem}_task-rest_bold.nii.gz"
             )
 
 

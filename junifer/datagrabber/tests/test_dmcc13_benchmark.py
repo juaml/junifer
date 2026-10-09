@@ -269,10 +269,16 @@ def test_DMCC13Benchmark_partial_data_access(
     with dg:
         all_elements = dg.get_elements()
         test_element = all_elements[0]
-        _, ses, task, phase, run = test_element
-        out = dg[("sub-01", ses, task, phase, run)]
+        # Elements only have the subject if no data type of the tasks is
+        # grabbed
+        if isinstance(test_element, tuple):
+            out = dg[("sub-01", *test_element[1:])]
+        else:
+            out = dg["sub-01"]
         # Assert data type
         if isinstance(types, str):
             types = [types]
         for type_ in types:
             assert type_ in out
+            element = out[type_]["meta"]["element"]
+            assert list(element) == dg.get_element_keys()

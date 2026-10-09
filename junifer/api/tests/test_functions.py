@@ -18,8 +18,13 @@ from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, parse_yaml, queue, reset, run
+from junifer.datagrabber import PatternDataGrabber
 from junifer.datagrabber.base import BaseDataGrabber
-from junifer.pipeline import PipelineComponentRegistry, WorkDirManager
+from junifer.pipeline import (
+    MarkerCollection,
+    PipelineComponentRegistry,
+    WorkDirManager,
+)
 from junifer.typing import Elements
 
 
@@ -100,11 +105,8 @@ def storage() -> dict[str, str]:
 @pytest.mark.parametrize(
     "datagrabber, element, expect",
     [
-        (
-            _datagrabber,
-            [("sub-01",)],
-            pytest.raises(RuntimeError, match="element selectors are invalid"),
-        ),
+        # A complete element
+        (_datagrabber, [("sub-01",)], nullcontext()),
         (
             _datagrabber,
             ["sub-01"],
@@ -120,15 +122,16 @@ def storage() -> dict[str, str]:
             [("sub-01", "ses-01")],
             pytest.raises(ImageFileError, match="is not a gzip file"),
         ),
+        # Complete elements without data
         (
             _bids_ses_datagrabber,
             [("sub-01", "ses-100")],
-            pytest.raises(RuntimeError, match="element selectors are invalid"),
+            pytest.raises(RuntimeError, match="Cannot access"),
         ),
         (
             _bids_ses_datagrabber,
             [("sub-100", "ses-01")],
-            pytest.raises(RuntimeError, match="element selectors are invalid"),
+            pytest.raises(RuntimeError, match="Cannot access"),
         ),
     ],
 )
@@ -217,10 +220,7 @@ def test_run_single_element_with_preprocessing(
 @pytest.mark.parametrize(
     "element, expect",
     [
-        (
-            [("sub-01",), ("sub-03",)],
-            pytest.raises(RuntimeError, match="element selectors are invalid"),
-        ),
+        ([("sub-01",), ("sub-03",)], nullcontext()),
         (["sub-01", "sub-03"], nullcontext()),
     ],
 )
@@ -1195,6 +1195,67 @@ def test_parse_storage_uri_relative(tmp_path: Path) -> None:
     assert "storage" in contents
 
 
+@pytest.mark.parametrize(
+    "datadir, expected",
+    [
+        # Relative to the YAML file
+        ("data", "data"),
+        ("../other/data", "../other/data"),
+        # Absolute
+        ("/absolute/data", "/absolute/data"),
+    ],
+)
+def test_parse_yaml_datadir(
+    tmp_path: Path, datadir: str, expected: str
+) -> None:
+    """Test YAML parsing with the data directory of the datagrabber.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    datadir : str
+        The parametrized data directory.
+    expected : str
+        The parametrized data directory, relative to the YAML file.
+
+    """
+    fname = tmp_path / "config.yaml"
+    yaml.dump(
+        {"datagrabber": {"kind": "DG", "datadir": datadir}}, stream=fname
+    )
+    contents = parse_yaml(fname)
+    assert contents["datagrabber"]["datadir"] == str(
+        (tmp_path / expected).resolve()
+    )
+
+
+def test_parse_yaml_datadir_multiple(tmp_path: Path) -> None:
+    """Test YAML parsing with the data directories of multiple datagrabbers.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    fname = tmp_path / "config.yaml"
+    datagrabber = {
+        "kind": "MultipleDataGrabber",
+        "datagrabbers": [
+            {"kind": "DG", "datadir": "data"},
+            {"kind": "DG", "datadir": "/absolute/data"},
+            {"kind": "DG"},
+        ],
+    }
+    yaml.dump({"datagrabber": datagrabber}, stream=fname)
+    contents = parse_yaml(fname)
+    datagrabbers = contents["datagrabber"]["datagrabbers"]
+    assert datagrabbers[0]["datadir"] == str(tmp_path / "data")
+    assert datagrabbers[1]["datadir"] == "/absolute/data"
+    assert "datadir" not in datagrabbers[2]
+
+
 def test_parse_yaml_queue_venv_relative(tmp_path: Path) -> None:
     """Test YAML parsing with relative venv queue.
 
@@ -1207,3 +1268,195 @@ def test_parse_yaml_queue_venv_relative(tmp_path: Path) -> None:
     fname = tmp_path / "test_parse_yaml_queue_venv_relative.yaml"
     fname.write_text("queue:\n  env:\n    kind: venv\n    name: .venv\n")
     _ = parse_yaml(fname)
+
+
+@pytest.mark.parametrize(
+    "elements, expected, searches",
+    [
+        # Complete elements, without searching the dataset
+        ([("sub-01", "rest")], [("sub-01", "rest")], 0),
+        (
+            [("sub-01", "rest"), ("sub-02", "movie")],
+            [("sub-01", "rest"), ("sub-02", "movie")],
+            0,
+        ),
+        # Partial elements: all the tasks of a subject
+        (["sub-01"], [("sub-01", "movie"), ("sub-01", "rest")], 1),
+        ([("sub-01",)], [("sub-01", "movie"), ("sub-01", "rest")], 1),
+        # Without duplicates
+        (
+            [("sub-01", "rest"), ("sub-01", "rest")],
+            [("sub-01", "rest")],
+            0,
+        ),
+        # ("sub-01", "rest") matches both selectors
+        (
+            ["sub-01", "rest"],
+            [("sub-01", "movie"), ("sub-01", "rest"), ("sub-02", "rest")],
+            1,
+        ),
+    ],
+)
+def test_run_element_selectors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    markers: list[dict[str, str]],
+    elements: Elements,
+    expected: list[tuple[str, str]],
+    searches: int,
+) -> None:
+    """Test run function with complete and partial element selectors.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    elements : list of str or tuple
+        The parametrized element selectors.
+    expected : list of tuple of str
+        The parametrized elements to compute.
+    searches : int
+        The parametrized number of searches of the elements of the dataset.
+
+    """
+    computed = []
+    n_searches = _run_selectors(
+        tmp_path, monkeypatch, markers, elements, computed
+    )
+    assert sorted(computed) == expected
+    assert n_searches == searches
+
+
+def test_run_element_selectors_invalid(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    markers: list[dict[str, str]],
+) -> None:
+    """Test run function with partial selectors matching no element.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    markers : list of dict
+        Testing markers as list of dictionary.
+
+    """
+    computed = []
+    with pytest.raises(RuntimeError, match=r"invalid:\n\['sub-03'\]"):
+        _run_selectors(
+            tmp_path, monkeypatch, markers, ["sub-01", "sub-03"], computed
+        )
+    # Nothing is computed, not even the elements of the valid selectors
+    assert computed == []
+
+
+def test_run_element_selectors_sizes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    markers: list[dict[str, str]],
+) -> None:
+    """Test run function with selectors of different numbers of values.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    markers : list of dict
+        Testing markers as list of dictionary.
+
+    """
+    computed = []
+    with pytest.raises(ValueError, match="same number of values"):
+        _run_selectors(
+            tmp_path,
+            monkeypatch,
+            markers,
+            ["sub-01", ("sub-02", "rest")],
+            computed,
+        )
+    assert computed == []
+
+
+def _run_selectors(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    markers: list[dict[str, str]],
+    elements: Elements,
+    computed: list[tuple[str, str]],
+) -> int:
+    """Run with element selectors, only recording the elements to compute.
+
+    The dataset has two subjects (``sub-01`` and ``sub-02``) with two tasks
+    (``rest`` and ``movie``).
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    elements : list of str or tuple
+        The element selectors.
+    computed : list of tuple of str
+        The list to add the computed elements to.
+
+    Returns
+    -------
+    int
+        The number of searches of the elements of the dataset.
+
+    """
+    datadir = tmp_path / "data"
+    for subject in ("sub-01", "sub-02"):
+        (datadir / subject).mkdir(parents=True)
+        for task in ("rest", "movie"):
+            (datadir / subject / f"{subject}_task-{task}_bold.nii").touch()
+    n_searches = 0
+    get_elements = PatternDataGrabber.get_elements
+
+    def fit(self: MarkerCollection, input: dict) -> None:
+        element = input["BOLD"]["meta"]["element"]
+        computed.append((element["subject"], element["task"]))
+
+    def counted_get_elements(self: PatternDataGrabber) -> Elements:
+        nonlocal n_searches
+        n_searches += 1
+        return get_elements(self)
+
+    monkeypatch.setattr(MarkerCollection, "fit", fit)
+    monkeypatch.setattr(
+        PatternDataGrabber, "get_elements", counted_get_elements
+    )
+    run(
+        workdir=tmp_path / "workdir",
+        datagrabber={
+            "kind": "PatternDataGrabber",
+            "datadir": str(datadir),
+            "types": ["BOLD"],
+            "patterns": {
+                "BOLD": {
+                    "pattern": "{subject}/{subject}_task-{task}_bold.nii",
+                    "space": "MNI152NLin6Asym",
+                },
+            },
+            "replacements": ["subject", "task"],
+        },
+        markers=markers,
+        storage={
+            "kind": "HDF5FeatureStorage",
+            "uri": str(tmp_path / "out.hdf5"),
+        },
+        elements=elements,
+    )
+    return n_searches

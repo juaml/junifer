@@ -185,5 +185,7 @@ The ``queue`` command accepts the following arguments:
   job submit files will be created but not submitted.
 * ``--overwrite``: Overwrite the job folder if it already exists. If not
   specified, the command will fail if the job folder already exists.
-* ``--element``: Queue only the specified element(s). If not specified, all
-  elements will be queued.
+* ``--element``: Queue only the specified element(s), complete or partial (see
+  :ref:`running_elements`). If not specified, all elements will be queued.
+  Each job runs one complete element, so it does not search the dataset for
+  its elements.
