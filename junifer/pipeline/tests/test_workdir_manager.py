@@ -29,6 +29,21 @@ def test_workdir_manager_workdir(tmp_path: Path) -> None:
     assert workdir_mgr.workdir == tmp_path
 
 
+def test_workdir_manager_create_workdir(tmp_path: Path) -> None:
+    """Test WorkDirManager creates the workdir if it does not exist.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    workdir = tmp_path / "new" / "workdir"
+    workdir_mgr = WorkDirManager(workdir=workdir)
+    assert workdir_mgr.workdir == workdir
+    assert workdir.is_dir()
+
+
 def test_workdir_manager_get_and_delete_element_tempdir(
     tmp_path: Path,
 ) -> None:

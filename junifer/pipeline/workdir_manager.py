@@ -63,16 +63,16 @@ class WorkDirManager(metaclass=Singleton):
         # Check and set topmost level directory if not provided
         if self._workdir is None:
             self._workdir = Path(tempfile.gettempdir()) / "junifer"
-            # Create directory if not found
-            if not self._workdir.is_dir():
-                logger.debug(
-                    "Creating working directory at "
-                    f"{self._workdir.resolve()!s}"
-                )
-                self._workdir.mkdir(parents=True)
+
+        # Create directory if not found
+        if not self._workdir.is_dir():
             logger.debug(
-                f"Setting working directory to {self._workdir.resolve()!s}"
+                f"Creating working directory at {self._workdir.resolve()!s}"
             )
+            self._workdir.mkdir(parents=True)
+        logger.debug(
+            f"Setting working directory to {self._workdir.resolve()!s}"
+        )
 
     def _cleanup(self) -> None:
         """Clean up the element and temporary directories."""

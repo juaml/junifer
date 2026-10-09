@@ -4,6 +4,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import tempfile
 from collections.abc import Callable
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from click.testing import CliRunner
 from ruamel.yaml import YAML
 
 from junifer.cli.cli import (
+    _parse_yaml,
     collect,
     list_elements,
     queue,
@@ -21,6 +23,7 @@ from junifer.cli.cli import (
     wtf,
 )
 from junifer.cli.parser import _parse_elements_file
+from junifer.pipeline import WorkDirManager
 
 
 pytestmark = pytest.mark.external
@@ -381,6 +384,75 @@ def test_list_elements_output_file(
     assert list_elements_result.exit_code == 0
     with open(output_file) as f:
         assert f"{elements[0]}\n{elements[1]}" == f.read()
+
+
+@pytest.mark.parametrize(
+    "workdir, expected",
+    [
+        ("workdir", "workdir"),
+        ({"path": "workdir", "cleanup": False}, "workdir"),
+        (None, "junifer"),
+    ],
+    ids=["path", "dict", "default"],
+)
+def test_parse_yaml_workdir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    workdir: str | dict | None,
+    expected: str,
+) -> None:
+    """Test the working directory is set up when parsing the YAML.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    workdir : str or dict or None
+        The parametrized working directory in the YAML. If None, the YAML
+        has no working directory.
+    expected : str
+        The parametrized working directory set up, relative to ``tmp_path``.
+
+    """
+    # Use the test directory for relative paths and as temporary directory,
+    # where the default working directory is
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+    contents = {"datagrabber": {"kind": "PartlyCloudyTestingDataGrabber"}}
+    if workdir is not None:
+        contents["workdir"] = workdir
+    yaml.dump(contents, stream=tmp_path / "in.yaml")
+    # The configuration is not changed
+    assert _parse_yaml(tmp_path / "in.yaml") == contents  # type: ignore
+    assert WorkDirManager().workdir.resolve() == tmp_path / expected
+    assert (tmp_path / expected).is_dir()
+
+
+def test_list_elements_workdir(tmp_path: Path) -> None:
+    """Test elements listing in the working directory of the YAML.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # Get test config
+    infile = Path(__file__).parent / "data" / "partly_cloudy_agg_mean_tian.yml"
+    contents = yaml.load(infile)
+    # Working directory
+    workdir = tmp_path / "workdir"
+    contents["workdir"] = str(workdir)
+    # Write new test config
+    outfile = tmp_path / "in.yaml"
+    yaml.dump(contents, stream=outfile)
+    # Invoke list elements command
+    list_elements_result = runner.invoke(list_elements, [str(outfile)])
+    # Check
+    assert list_elements_result.exit_code == 0
+    assert WorkDirManager().workdir == workdir
 
 
 def test_wtf_short() -> None:

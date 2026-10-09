@@ -136,6 +136,45 @@ def _get_storage(storage_config: dict) -> StorageLike:
     )
 
 
+def _get_workdir_params(workdir: str | Path | dict | None) -> dict:
+    """Get the parameters of the working directory manager.
+
+    Parameters
+    ----------
+    workdir : str or pathlib.Path or dict or None
+        The working directory as a path, or as a dictionary with the keys
+        ``path`` and ``cleanup`` (default True). If None, the default of
+        :class:`.WorkDirManager` is used.
+
+    Returns
+    -------
+    dict
+        The parameters for :class:`.WorkDirManager`.
+
+    """
+    if isinstance(workdir, dict):
+        return {
+            "workdir": Path(workdir["path"]),
+            "cleanup": workdir.get("cleanup", True),
+        }
+    if workdir is None:
+        return {"workdir": None, "cleanup": True}
+    return {"workdir": Path(workdir), "cleanup": True}
+
+
+def _setup_workdir(workdir: str | Path | dict | None) -> None:
+    """Set up the working directory manager.
+
+    Parameters
+    ----------
+    workdir : str or pathlib.Path or dict or None
+        The working directory (see :func:`_get_workdir_params`).
+
+    """
+    WorkDirManager(**_get_workdir_params(workdir))
+    atexit.register(WorkDirManager()._cleanup)
+
+
 def run(
     workdir: str | Path | dict,
     datagrabber: dict,
@@ -180,25 +219,15 @@ def run(
         If invalid element selectors are found.
 
     """
-    # Conditional to handle workdir config
-    if isinstance(workdir, str | Path):
-        if isinstance(workdir, str):
-            workdir = {"workdir": Path(workdir), "cleanup": True}
-        else:
-            workdir = {"workdir": workdir, "cleanup": True}
-    elif isinstance(workdir, dict):
-        workdir["workdir"] = workdir.pop("path")
-
     # Initiate working directory manager with correct variation
-    if not workdir["cleanup"]:
+    if not _get_workdir_params(workdir)["cleanup"]:
         if elements is None or len(elements) > 1:
             raise_error(
                 "Cannot disable `workdir.cleanup` as "
                 f"{len(elements) if elements is not None else 'all'} "
                 "elements will be processed"
             )
-    WorkDirManager(**workdir)
-    atexit.register(WorkDirManager()._cleanup)
+    _setup_workdir(workdir)
 
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber.copy())
@@ -253,7 +282,7 @@ def run(
                 mc.fit(datagrabber_object[t_element])
 
 
-def collect(storage: dict) -> None:
+def collect(storage: dict, workdir: str | Path | dict | None = None) -> None:
     """Collect and store data.
 
     Parameters
@@ -262,8 +291,12 @@ def collect(storage: dict) -> None:
         Storage to use. Must have a key ``kind`` with the kind of
         storage to use. All other keys are passed to the storage
         constructor.
+    workdir : str or pathlib.Path or dict or None, optional
+        The working directory, as in :func:`.run`. If None, the default of
+        :class:`.WorkDirManager` is used (default None).
 
     """
+    _setup_workdir(workdir)
     logger.info(f"Collecting data using {storage['kind']}")
     logger.debug(f"\tStorage params: {storage}")
     if "single_output" not in storage:
@@ -307,6 +340,7 @@ def queue(
         if the ``jobdir`` exists and ``overwrite = False``.
 
     """
+    _setup_workdir(config.get("workdir"))
     valid_kind = ["HTCondor", "GNUParallelLocal"]
     if kind not in valid_kind:
         raise_error(
@@ -410,6 +444,7 @@ def reset(config: dict) -> None:
         The configuration to be used for resetting.
 
     """
+    _setup_workdir(config.get("workdir"))
     # Fetch storage
     storage = config["storage"]
     storage_uri = Path(storage["uri"])
@@ -442,6 +477,7 @@ def reset(config: dict) -> None:
 def list_elements(
     datagrabber: dict,
     elements: Elements | None = None,
+    workdir: str | Path | dict | None = None,
 ) -> str:
     """List elements of the datagrabber filtered using `elements`.
 
@@ -454,8 +490,13 @@ def list_elements(
     elements : list or None, optional
         Element(s) to filter using. Will be used to index the DataGrabber
         (default None).
+    workdir : str or pathlib.Path or dict or None, optional
+        Directory where the DataGrabber will be used, as in :func:`.run`.
+        If None, the default of :class:`.WorkDirManager` is used
+        (default None).
 
     """
+    _setup_workdir(workdir)
     # Get datagrabber to use
     datagrabber_object = _get_datagrabber(datagrabber)
 

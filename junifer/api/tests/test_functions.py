@@ -7,6 +7,7 @@
 
 import logging
 import sys
+import tempfile
 from contextlib import AbstractContextManager, nullcontext
 from pathlib import Path
 from typing import Any
@@ -18,7 +19,7 @@ from ruamel.yaml import YAML
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, parse_yaml, queue, reset, run
 from junifer.datagrabber.base import BaseDataGrabber
-from junifer.pipeline import PipelineComponentRegistry
+from junifer.pipeline import PipelineComponentRegistry, WorkDirManager
 from junifer.typing import Elements
 
 
@@ -639,6 +640,143 @@ def test_queue_without_elements(
             assert "Queue done" in caplog.text
 
 
+def _workdir(tmp_path: Path, as_dict: bool) -> tuple[str | dict, Path]:
+    """Get a working directory in the test directory.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    as_dict : bool
+        Whether to give the working directory as a dictionary or a path.
+
+    Returns
+    -------
+    str or dict
+        The working directory, as given to the functions.
+    pathlib.Path
+        The path to the working directory.
+
+    """
+    path = tmp_path / "workdir"
+    workdir = {"path": str(path), "cleanup": True} if as_dict else str(path)
+    return workdir, path
+
+
+@pytest.mark.parametrize("as_dict", [False, True])
+@pytest.mark.parametrize("elements", [None, ["sub-01"]])
+def test_queue_workdir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    datagrabber: dict[str, str],
+    elements: list[str] | None,
+    as_dict: bool,
+) -> None:
+    """Test queue sets up the working directory.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    elements : list of str or None
+        The parametrized elements to queue. If None, the elements are
+        listed using the datagrabber.
+    as_dict : bool
+        Whether to give the working directory as a dictionary or a path.
+
+    """
+    workdir, path = _workdir(tmp_path, as_dict)
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        queue(
+            config={"workdir": workdir, "datagrabber": datagrabber},
+            kind="HTCondor",
+            elements=elements,
+        )
+    assert WorkDirManager().workdir == path
+    assert path.is_dir()
+    # The working directory is written to the job configuration as given
+    config = YAML().load(tmp_path / "junifer_jobs/junifer_job/config.yaml")
+    assert config["workdir"] == workdir
+
+
+def test_queue_workdir_cleanup(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    datagrabber: dict[str, str],
+) -> None:
+    """Test queued jobs clean up the working directory.
+
+    Disabling the cleanup only applies to queueing (e.g. to debug it), as
+    the jobs would otherwise leave the files of each element.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+
+    """
+    workdir = {"path": str(tmp_path / "workdir"), "cleanup": False}
+    with monkeypatch.context() as m:
+        m.chdir(tmp_path)
+        with pytest.warns(RuntimeWarning, match="will be set to True"):
+            queue(
+                config={"workdir": workdir, "datagrabber": datagrabber},
+                kind="HTCondor",
+            )
+    # Queueing does not clean up
+    assert WorkDirManager()._cleanup_dirs is False
+    # The jobs clean up
+    config = YAML().load(tmp_path / "junifer_jobs/junifer_job/config.yaml")
+    assert config["workdir"]["cleanup"] is True
+
+
+@pytest.mark.parametrize("as_dict", [False, True])
+def test_collect_workdir(tmp_path: Path, as_dict: bool) -> None:
+    """Test collect sets up the working directory.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    as_dict : bool
+        Whether to give the working directory as a dictionary or a path.
+
+    """
+    workdir, path = _workdir(tmp_path, as_dict)
+    storage = {"kind": "HDF5FeatureStorage", "uri": str(tmp_path / "out.hdf5")}
+    collect(storage, workdir=workdir)
+    assert WorkDirManager().workdir == path
+    assert path.is_dir()
+
+
+@pytest.mark.parametrize("as_dict", [False, True])
+def test_reset_workdir(tmp_path: Path, as_dict: bool) -> None:
+    """Test reset sets up the working directory.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    as_dict : bool
+        Whether to give the working directory as a dictionary or a path.
+
+    """
+    workdir, path = _workdir(tmp_path, as_dict)
+    storage = {"uri": str(tmp_path / "out.hdf5")}
+    reset(config={"workdir": workdir, "storage": storage})
+    assert WorkDirManager().workdir == path
+    assert path.is_dir()
+
+
 def test_reset_run(
     tmp_path: Path,
     datagrabber: dict[str, str],
@@ -767,6 +905,40 @@ def test_list_elements(
     """
     listed_elements = list_elements(datagrabber, elements)
     assert "sub-01" in listed_elements
+
+
+@pytest.mark.parametrize("as_dict", [False, True, None])
+def test_list_elements_workdir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    datagrabber: dict[str, str],
+    as_dict: bool | None,
+) -> None:
+    """Test elements listing sets up the working directory.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
+    datagrabber : dict
+        Testing datagrabber as dictionary.
+    as_dict : bool or None
+        Whether to give the working directory as a dictionary or a path.
+        If None, no working directory is given and the default is used.
+
+    """
+    if as_dict is None:
+        # The default working directory is in the temporary directory
+        monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
+        workdir, path = None, tmp_path / "junifer"
+    else:
+        workdir, path = _workdir(tmp_path, as_dict)
+    listed_elements = list_elements(datagrabber, workdir=workdir)
+    assert "sub-01" in listed_elements
+    assert WorkDirManager().workdir == path
+    assert path.is_dir()
 
 
 def test_parse_yaml_failure() -> None:
