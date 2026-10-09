@@ -113,6 +113,10 @@ def test_DataladAOMICPIOP2(
         all_elements = dg.get_elements()
         test_element = all_elements[0]
         out = dg[test_element]
+        # Elements only have the subject if no data type of the tasks is
+        # grabbed
+        if not isinstance(test_element, tuple):
+            test_element = (test_element,)
         # Assert data type
         if isinstance(type_, str):
             type_ = [type_]
@@ -129,6 +133,7 @@ def test_DataladAOMICPIOP2(
             assert "element" in meta
             assert "subject" in meta["element"]
             assert test_element[0] == meta["element"]["subject"]
+            assert list(meta["element"]) == dg.get_element_keys()
             # Assert nested data type if not None
             if nested_types is not None:
                 for nested_type in nested_types:

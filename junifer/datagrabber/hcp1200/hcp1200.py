@@ -6,8 +6,7 @@
 # License: AGPL
 
 from enum import StrEnum
-from itertools import product
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import BeforeValidator
 
@@ -115,8 +114,8 @@ class HCP1200(PatternDataGrabber):
         "BOLD": {
             "pattern": (
                 "{subject}/MNINonLinear/Results/"
-                "{task}_{phase_encoding}/"
-                "{task}_{phase_encoding}"
+                "?fMRI_{task}_{phase_encoding}/"
+                "?fMRI_{task}_{phase_encoding}"
                 "{suffix}.nii.gz"
             ),
             "space": "MNI152NLin6Asym",
@@ -145,6 +144,11 @@ class HCP1200(PatternDataGrabber):
         ],
     }
     replacements: list[str] = ["subject", "task", "phase_encoding"]  # noqa: RUF012
+    # Only grab the specified tasks and phase encodings
+    _REPLACEMENT_FIELDS: ClassVar[dict[str, str]] = {
+        "task": "tasks",
+        "phase_encoding": "phase_encodings",
+    }
 
     def validate_datagrabber_params(self) -> None:
         """Run extra logical validation for datagrabber."""
@@ -158,55 +162,3 @@ class HCP1200(PatternDataGrabber):
             "pattern"
         ].replace("{suffix}", suffix)
         super().validate_datagrabber_params()
-
-    def get_item(self, subject: str, task: str, phase_encoding: str) -> dict:
-        """Get the specified item from the dataset.
-
-        Parameters
-        ----------
-        subject : str
-            The subject ID.
-        task : {"REST1", "REST2", "SOCIAL", "WM", "RELATIONAL", "EMOTION", \
-               "LANGUAGE", "GAMBLING", "MOTOR"}
-            The task.
-        phase_encoding : {"LR", "RL"}
-            The phase encoding.
-
-        Returns
-        -------
-        dict
-            Dictionary of dictionaries for each type of data required for the
-            specified element.
-
-        """
-        # Resting task
-        if "REST" in task:
-            new_task = f"rfMRI_{task}"
-        else:
-            new_task = f"tfMRI_{task}"
-
-        return super().get_item(
-            subject=subject, task=new_task, phase_encoding=phase_encoding
-        )
-
-    def get_elements(self) -> list:
-        """Implement fetching list of elements in the dataset.
-
-        Returns
-        -------
-        list
-            The list of elements that can be grabbed in the dataset.
-
-        """
-        subjects = [
-            x.name
-            for x in self.datadir.iterdir()
-            if x.is_dir() and not x.name.startswith(".")
-        ]
-        elems = []
-        for subject, task, phase_encoding in product(
-            subjects, self.tasks, self.phase_encodings
-        ):
-            elems.append((subject, task, phase_encoding))
-
-        return elems

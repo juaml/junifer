@@ -261,25 +261,12 @@ def run(
     # Fit elements
     with datagrabber_object:
         if elements is not None:
-            # Keep track of valid selectors
-            valid_elements = []
-            for t_element in datagrabber_object.filter(elements):
-                valid_elements.append(t_element)
-                mc.fit(datagrabber_object[t_element])
-            # Compute invalid selectors
-            invalid_elements = set(elements) - set(valid_elements)
-            # Report if invalid selectors are found
-            if invalid_elements:
-                raise_error(
-                    msg=(
-                        "The following element selectors are invalid:\n"
-                        f"{invalid_elements}"
-                    ),
-                    klass=RuntimeError,
-                )
+            # Only get the elements of the dataset for partial selectors
+            to_fit = datagrabber_object.select_elements(elements)
         else:
-            for t_element in datagrabber_object:
-                mc.fit(datagrabber_object[t_element])
+            to_fit = datagrabber_object.get_elements()
+        for t_element in to_fit:
+            mc.fit(datagrabber_object[t_element])
 
 
 def collect(storage: dict, workdir: str | Path | dict | None = None) -> None:
@@ -627,6 +614,23 @@ def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
                 contents["storage"]["uri"] = str(
                     (filepath.parent / uri_path).resolve()
                 )
+
+    # Compute the absolute path of the data directory of the datagrabber (and
+    # of the datagrabbers of a MultipleDataGrabber) if it is relative; same
+    # motivation as above. Otherwise, it would be relative to the current
+    # working directory, which is the job directory when queueing.
+    if "datagrabber" in contents:
+        datagrabbers = [
+            contents["datagrabber"],
+            *contents["datagrabber"].get("datagrabbers", []),
+        ]
+        for datagrabber in datagrabbers:
+            if "datadir" in datagrabber:
+                datadir = Path(datagrabber["datadir"])
+                if not datadir.is_absolute():
+                    datagrabber["datadir"] = str(
+                        (filepath.parent / datadir).resolve()
+                    )
 
     # Allow relative path if queue env kind is venv; same motivation as above
     if "queue" in contents:

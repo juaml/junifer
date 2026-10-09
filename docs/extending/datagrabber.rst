@@ -48,6 +48,13 @@ acquired for each task, but once in the entire session. So in this case, the
 ``T1w`` image for the element (``sub001``, ``ses1``, ``rest``) will be the same
 as the ``T1w`` image for the element (``sub001``, ``ses1``, ``stroop``).
 
+When the DataGrabber only grabs some of the data types, the elements only have
+the items that these data types need. For example, if only the ``T1w`` image is
+grabbed, the elements are (``subject``, ``session``), e.g., (``sub001``,
+``ses1``), so that the same ``T1w`` image is not processed once for each task.
+For the :class:`.PatternDataGrabber` (see below), the items that the data types
+need are the replacements in their patterns.
+
 We will now continue this section using as an example, a dataset in BIDS format
 in which 9 subjects (``sub-01`` to ``sub-09``) were scanned each during 3
 sessions (``ses-01``, ``ses-02``, ``ses-03``) and each session included a
@@ -200,6 +207,102 @@ to set the ``datadir``.
          kind: ExampleBIDSDataGrabber
          datadir: /data/project/test/data
 
+The DataGrabber finds the elements by searching the dataset for the files that
+match the pattern of each data type. An element is only available if it has the
+files of all the data types to grab. In our BIDS example, ``ses-03`` only has
+anatomical data, so the elements with ``ses-03`` are only available when only
+the ``T1w`` data type is grabbed.
+
+
+.. _extending_datagrabbers_replacement_values:
+
+Restricting the values of the replacements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the DataGrabber grabs all the values of the replacements found in
+the dataset. To only grab some of them, ``replacements`` can be a dictionary
+with the values to grab for each replacement (or ``None`` to grab all of them).
+For example, to only grab the first two sessions of our BIDS example with the
+:class:`.PatternDataGrabber` in the YAML file:
+
+.. code-block:: yaml
+
+      datagrabber:
+         kind: PatternDataGrabber
+         datadir: /data/project/test/data
+         types:
+            - T1w
+            - BOLD
+         patterns:
+            T1w:
+               pattern: "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz"
+               space: native
+            BOLD:
+               pattern: "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz"
+               space: MNI152NLin6Asym
+         replacements:
+            subject: null
+            session:
+               - ses-01
+               - ses-02
+
+The elements with other values are not listed, and grabbing them raises an
+error. The values are ignored if the data types to grab do not use the
+replacement, e.g., the ``session`` values with a data type that is the same for
+all the sessions.
+
+A DataGrabber can also take the values to grab from one of its fields, e.g.,
+``sessions``, by linking the field to the replacement with
+``_REPLACEMENT_FIELDS``. The values of the field can be strings or enumerations
+(a :class:`enum.StrEnum` is recommended, so its members are also the strings),
+and the replacement cannot have values in ``replacements`` too:
+
+.. code-block:: python
+
+    from enum import StrEnum
+    from typing import ClassVar
+
+    from junifer.api.decorators import register_datagrabber
+    from junifer.datagrabber import DataType, PatternDataGrabber
+    from junifer.typing import DataGrabberPatterns
+
+
+    class Sessions(StrEnum):
+        ses_01 = "ses-01"
+        ses_02 = "ses-02"
+        ses_03 = "ses-03"
+
+
+    @register_datagrabber
+    class ExampleBIDSDataGrabber(PatternDataGrabber):
+
+        types: list[DataType] = [DataType.T1w, DataType.BOLD]
+        patterns: DataGrabberPatterns = {
+            "T1w": {
+                "pattern": "{subject}/{session}/anat/{subject}_{session}_T1w.nii.gz",
+                "space": "native",
+            },
+            "BOLD": {
+                "pattern": "{subject}/{session}/func/{subject}_{session}_task-rest_bold.nii.gz",
+                "space": "MNI152NLin6Asym",
+            },
+        }
+        replacements: list[str] = ["subject", "session"]
+        sessions: list[Sessions] = list(Sessions)
+        # Only grab the sessions in the `sessions` field
+        _REPLACEMENT_FIELDS: ClassVar[dict[str, str]] = {"session": "sessions"}
+
+Then, the sessions to grab can be set in the YAML file:
+
+.. code-block:: yaml
+
+      datagrabber:
+         kind: ExampleBIDSDataGrabber
+         datadir: /data/project/test/data
+         sessions:
+            - ses-01
+            - ses-02
+
 
 Optional: Using datalad
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,20 +399,38 @@ This approach can be used directly from the YAML, like so:
      uri: "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
      rootdir: example_bids_ses
 
+.. _extending_datagrabbers_path_expansion:
+
 Advanced: Using Unix-like path expansion directives
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is also possible to use some advanced Unix-like path expansion tricks to
 define our patterns.
 
-A very common thing would be to use ``*`` to match any number of
-characters but we cannot use it right after a replacement like:
+A very common thing would be to use ``*`` to match any number of characters
+or ``?`` to match a single character, both to find the elements and to grab
+their data. For example, if the acquisition of the BOLD images depends on the
+task (e.g., ``sub-01_task-rest_acq-mb3_bold.nii.gz`` and
+``sub-01_task-stroop_acq-seq_bold.nii.gz``), the pattern can match any
+acquisition, so the task values are ``rest`` and ``stroop``:
+
+.. code-block:: python
+
+    "{subject}/func/{subject}_task-{task}_acq-*_bold.nii.gz"
+
+Similarly, ``?`` can match the first character of ``rfMRI`` (resting-state)
+and ``tfMRI`` (task) in the HCP dataset:
+
+.. code-block:: python
+
+    "{subject}/MNINonLinear/Results/?fMRI_{task}_{phase_encoding}/?fMRI_{task}_{phase_encoding}.nii.gz"
+
+The pattern must match exactly one file for each element, and we cannot use
+``*`` right after a replacement like:
 
 .. code-block:: python
 
     "derivatives/freesurfer/{subject}*"
-
-or if there are multiple files or no files which can be globbed.
 
 We can also use ``[]`` and ``[!]`` to glob certain tricky files like with the
 case of FreeSurfer derivatives. The file structure seen in a typical

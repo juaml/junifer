@@ -43,6 +43,61 @@ class DataType(str, AEnum):
     FreeSurfer = "FreeSurfer"
 
 
+def _matches(element: Element, selector: Element) -> bool:
+    """Check whether an element matches a selector.
+
+    Parameters
+    ----------
+    element : ``Element``
+        The element.
+    selector : ``Element``
+        The partial or complete element selector: a value (the element must
+        have it) or a tuple of values (the element must have all of them).
+
+    Returns
+    -------
+    bool
+        Whether the element matches the selector.
+
+    """
+    if not isinstance(element, tuple):
+        element = (element,)
+    if isinstance(selector, tuple):
+        return set(selector).issubset(element)
+    return selector in element
+
+
+def _selectors_as_tuples(selection: Elements) -> list[tuple]:
+    """Get the element selectors as tuples, checking they have the same size.
+
+    Parameters
+    ----------
+    selection : ``Elements``
+        The list of partial or complete element selectors.
+
+    Returns
+    -------
+    list of tuple
+        The selectors, as tuples (a single value is a tuple of one value).
+
+    Raises
+    ------
+    ValueError
+        If the selectors have different numbers of values.
+
+    """
+    selectors = [s if isinstance(s, tuple) else (s,) for s in selection]
+    if len({len(selector) for selector in selectors}) > 1:
+        raise_error(
+            msg=(
+                "The element selectors must have the same number of values: "
+                f"{selection}"
+            ),
+            klass=ValueError,
+        )
+    return selectors
+
+
 class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
     """Abstract base class for data fetcher.
 
@@ -125,6 +180,7 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
             zip(self.get_element_keys(), element, strict=False)
         )
         logger.debug(f"Named element: {named_element}")
+        self._check_element(named_element)
         # Fetch element
         out = self.get_item(**named_element)
         # Update metadata
@@ -138,6 +194,16 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
                 t_val["meta"]["element"] = named_element
 
         return out
+
+    def _check_element(self, element: dict) -> None:
+        """Check the element can be grabbed.
+
+        Parameters
+        ----------
+        element : dict
+            The element, as given to :meth:`.get_item`.
+
+        """
 
     def __enter__(self) -> "BaseDataGrabber":
         """Context entry."""
@@ -177,44 +243,96 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         Parameters
         ----------
         selection : ``Elements``
-            The list of partial or complete element selectors to filter using.
+            The list of partial or complete element selectors to filter using,
+            with the same number of values.
 
         Yields
         ------
         object
             An element that can be indexed by the DataGrabber.
 
+        Raises
+        ------
+        ValueError
+            If the selectors have different numbers of values.
+
         """
+        selectors = _selectors_as_tuples(selection)
+        for element in self.get_elements():
+            if any(_matches(element, selector) for selector in selectors):
+                yield element
 
-        def filter_func(element: Element) -> bool:
-            """Filter element based on selection.
+    def select_elements(self, selection: Elements) -> list[Element]:
+        """Select the elements to grab.
 
-            Parameters
-            ----------
-            element : ``Elements``
-                The element to be filtered.
+        All the selectors must have the same number of values (a single value
+        counts as a tuple of one value), so they are either all complete
+        elements or all partial selectors:
 
-            Returns
-            -------
-            bool
-                If the element passes the filter or not.
+        * Complete elements have a value for each element key, in the order of
+          :meth:`.get_element_keys`, e.g., ``("sub-01", "rest")`` for the keys
+          ``["subject", "task"]``. They are the elements to grab, so the
+          elements of the dataset are not needed (they are not searched for).
+          Repeated elements are only returned once.
+        * Partial selectors have fewer values, e.g., ``"sub-01"`` or
+          ``("sub-01",)``. They select the elements of the dataset that match
+          them, i.e., that have all their values for any key (see
+          :meth:`.filter`). The elements of the dataset are searched for once,
+          and each element is returned once, even if several selectors match
+          it: with ``["sub-01", "rest"]``, the element ``("sub-01", "rest")``
+          matches both selectors and is returned once, together with the other
+          tasks of ``sub-01`` and the ``rest`` task of the other subjects.
 
-            """
-            # Convert element to tuple
-            if not isinstance(element, tuple):
-                element = (element,)
-            # Filter based on selection kind
-            if isinstance(selection[0], str):
-                for opt in selection:
-                    if opt in element:
-                        return True
-            elif isinstance(selection[0], tuple):
-                for opt in selection:
-                    if set(opt).issubset(element):
-                        return True
-            return False
+        Parameters
+        ----------
+        selection : ``Elements``
+            The list of partial or complete element selectors.
 
-        yield from filter(filter_func, self.get_elements())
+        Returns
+        -------
+        list of tuple
+            The selected elements, without duplicates.
+
+        Raises
+        ------
+        ValueError
+            If the selectors have different numbers of values.
+        RuntimeError
+            If a partial selector does not match any element.
+
+        """
+        selectors = _selectors_as_tuples(selection)
+        if not selectors:
+            return []
+        # Complete elements: the selectors are the elements, without the
+        # repeated ones
+        if len(selectors[0]) == len(self.get_element_keys()):
+            # Remove the repeated selectors, keeping the order
+            return list(dict.fromkeys(selectors))
+        # Partial selectors: the elements of the dataset that match them, in a
+        # single pass over the elements. Each element is checked once, so it
+        # is returned once even if several selectors match it
+        selected = []
+        matched = set()
+        for element in self.get_elements():
+            t_matched = [
+                i
+                for i, selector in enumerate(selectors)
+                if _matches(element, selector)
+            ]
+            if t_matched:
+                selected.append(element)
+                matched.update(t_matched)
+        # The selectors that no element matches
+        invalid = [
+            given for i, given in enumerate(selection) if i not in matched
+        ]
+        if invalid:
+            raise_error(
+                msg=f"The following element selectors are invalid:\n{invalid}",
+                klass=RuntimeError,
+            )
+        return selected
 
     @abstractmethod
     def get_element_keys(self) -> list[str]:

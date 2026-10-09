@@ -96,6 +96,20 @@ task.
     kind: DataladAOMICPIOP1
     tasks: restingstate
 
+The ``types`` parameter restricts the :ref:`data types <data_types>` to grab,
+which also determines the elements to process. For example, with only the VBM
+data, which does not depend on the task, the elements only have the subject, so
+the VBM data of each subject is processed once (and ``tasks`` is not needed):
+
+.. code-block:: yaml
+
+  datagrabber:
+    kind: DataladAOMICPIOP1
+    types:
+      - VBM_GM
+
+See :ref:`datagrabber_elements` for more details on the elements.
+
 In the ``UCLA CNP VBM Testing dataset`` example, the section will look like this:
 
 .. code-block:: yaml

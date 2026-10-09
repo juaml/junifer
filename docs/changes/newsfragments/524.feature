@@ -1,0 +1,1 @@
+Allow restricting the values of the replacements to grab in :class:`.PatternDataGrabber`, with ``replacements`` as a dictionary or with fields linked with ``_REPLACEMENT_FIELDS`` (e.g., ``tasks`` in the built-in DataGrabbers), and using the ``*`` and ``?`` wildcards in the patterns to find the elements by `Fede Raimondo`_

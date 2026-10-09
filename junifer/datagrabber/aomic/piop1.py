@@ -7,8 +7,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-from itertools import product
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -90,14 +89,14 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         "BOLD": {
             "pattern": (
                 "derivatives/fmriprep/{subject}/func/"
-                "{subject}_task-{task}_"
+                "{subject}_task-{task}_acq-*_"
                 "{sp_func_desc}"
                 "desc-preproc_bold.nii.gz"
             ),
             "mask": {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/func/"
-                    "{subject}_task-{task}_"
+                    "{subject}_task-{task}_acq-*_"
                     "{sp_func_desc}"
                     "desc-brain_mask.nii.gz"
                 ),
@@ -105,7 +104,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             "confounds": {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/func/"
-                    "{subject}_task-{task}_"
+                    "{subject}_task-{task}_acq-*_"
                     "desc-confounds_regressors.tsv"
                 ),
                 "format": "fmriprep",
@@ -113,7 +112,7 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
             "reference": {
                 "pattern": (
                     "derivatives/fmriprep/{subject}/func/"
-                    "{subject}_task-{task}_"
+                    "{subject}_task-{task}_acq-*_"
                     "{sp_func_desc}"
                     "boldref.nii.gz"
                 ),
@@ -222,6 +221,8 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         ],
     }
     replacements: list[str] = ["subject", "task"]  # noqa: RUF012
+    # Only grab the specified tasks
+    _REPLACEMENT_FIELDS: ClassVar[dict[str, str]] = {"task": "tasks"}
     confounds_format: ConfoundsFormat = ConfoundsFormat.FMRIPrep
 
     def validate_datagrabber_params(self) -> None:
@@ -265,51 +266,3 @@ class DataladAOMICPIOP1(PatternDataladDataGrabber):
         else:
             self.patterns["BOLD"]["prewarp_space"] = "native"
         super().validate_datagrabber_params()
-
-    def get_item(self, subject: str, task: str) -> dict:
-        """Get the specified item from the dataset.
-
-        Parameters
-        ----------
-        subject : str
-            The subject ID.
-        task : {"restingstate", "anticipation", "emomatching", "faces", \
-                "gstroop", "workingmemory"}
-            The task to get.
-
-        Returns
-        -------
-        out : dict
-            Dictionary of paths for each type of data required for the
-            specified element.
-
-        """
-
-        task_acqs = {
-            "anticipation": "seq",
-            "emomatching": "seq",
-            "faces": "mb3",
-            "gstroop": "seq",
-            "restingstate": "mb3",
-            "workingmemory": "seq",
-        }
-        acq = task_acqs[task]
-        new_task = f"{task}_acq-{acq}"
-
-        return super().get_item(subject=subject, task=new_task)
-
-    def get_elements(self) -> list:
-        """Implement fetching list of subjects in the dataset.
-
-        Returns
-        -------
-        list of str
-            The list of subjects in the dataset.
-
-        """
-        subjects = [f"sub-{x:04d}" for x in range(1, 217)]
-        elems = []
-        for subject, task in product(subjects, self.tasks):
-            elems.append((subject, task))
-
-        return elems

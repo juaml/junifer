@@ -30,7 +30,8 @@ The ``run`` command accepts the following additional arguments:
   run. This parameter can be specified multiple times to run multiple elements.
   If the *element* requires several parameters, they can be specified by
   separating them with ``,``. It also accepts a file (e.g., ``elements.txt``)
-  containing complete or partial element(s).
+  containing complete or partial element(s) (see
+  :ref:`running_elements`).
 
 Example of running two elements:
 --------------------------------
@@ -89,6 +90,40 @@ and then the ``elements.txt`` would be like so:
 .. code-block:: text
 
     sub-01
+
+.. _running_elements:
+
+Complete and partial elements
+-----------------------------
+
+An *element* has a value for each of its *keys*, e.g., ``subject`` and
+``session``. The keys depend on the :ref:`data types <data_types>` that the
+DataGrabber grabs: an element only has the keys that the data types need. For
+example, a DataGrabber with resting-state BOLD (one per subject and session) and
+VBM data (one per subject) has the keys ``subject`` and ``session`` when
+grabbing the BOLD data, but only ``subject`` when grabbing only the VBM data, so
+that the VBM data of a subject is not processed once for each session. The
+``list-elements`` command lists the elements with their values, in the order of
+the keys:
+
+.. code-block:: bash
+
+    junifer list-elements config.yaml
+
+The elements given with ``--element`` can be:
+
+* *Complete*, with a value for each key, in the order of the keys, e.g.,
+  ``sub-01,ses-01``. Only these elements are run, without searching the
+  dataset for its elements. This is the case for the jobs created by
+  :ref:`queue <queueing>`, which run one element each.
+* *Partial*, with fewer values, e.g., ``sub-01``. They run all the elements of
+  the dataset that have these values for any key, e.g., all the sessions of
+  ``sub-01``. This requires searching the dataset for its elements.
+
+All the elements given in a command must have the same number of values, so
+they are either all complete or all partial. A partial element that does not
+match any element of the dataset is reported before running any element, while
+a complete element without data fails when its data is grabbed.
 
 
 .. _collect:

@@ -4,8 +4,7 @@
 # License: AGPL
 
 from enum import StrEnum
-from itertools import product
-from typing import Annotated, Literal
+from typing import Annotated, ClassVar, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
@@ -228,6 +227,13 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
         "phase_encoding",
         "run",
     ]
+    # Only grab the specified sessions, tasks, phase encodings and runs
+    _REPLACEMENT_FIELDS: ClassVar[dict[str, str]] = {
+        "session": "sessions",
+        "task": "tasks",
+        "phase_encoding": "phase_encodings",
+        "run": "runs",
+    }
     confounds_format: ConfoundsFormat = ConfoundsFormat.FMRIPrep
 
     def validate_datagrabber_params(self) -> None:
@@ -275,106 +281,3 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
             )
             self.types.append(DataType.Warp)
         super().validate_datagrabber_params()
-
-    def get_item(
-        self,
-        subject: str,
-        session: str,
-        task: str,
-        phase_encoding: str,
-        run: str,
-    ) -> dict:
-        """Get the specified item from the dataset.
-
-        Parameters
-        ----------
-        subject : str
-            The subject ID.
-        session : {"ses-wave1bas", "ses-wave1pro", "ses-wave1rea"}
-            The session to get.
-        task : {"Rest", "Axcpt", "Cuedts", "Stern", "Stroop"}
-            The task to get.
-        phase_encoding : {"AP", "PA"}
-            The phase encoding to get.
-        run : {"1", "2"}
-            The run to get.
-
-        Returns
-        -------
-        out : dict
-            Dictionary of paths for each type of data required for the
-            specified element.
-
-        """
-        # Format run
-        if phase_encoding == "AP":
-            run = "1"
-        else:
-            run = "2"
-        # Fetch item
-        out = super().get_item(
-            subject=subject,
-            session=session,
-            task=task,
-            phase_encoding=phase_encoding,
-            run=run,
-        )
-        return out
-
-    def get_elements(self) -> list:
-        """Implement fetching list of subjects in the dataset.
-
-        Returns
-        -------
-        list of str
-            The list of subjects in the dataset.
-
-        """
-        subjects = [
-            "sub-f1031ax",
-            "sub-f1552xo",
-            "sub-f1659oa",
-            "sub-f1670rz",
-            "sub-f1951tt",
-            "sub-f3300jh",
-            "sub-f3720ca",
-            "sub-f5004cr",
-            "sub-f5407sl",
-            "sub-f5416zj",
-            "sub-f8113do",
-            "sub-f8570ui",
-            "sub-f9057kp",
-        ]
-        elems = []
-        # For wave1bas session
-        for subject, session, task, phase_encoding in product(
-            subjects,
-            ["ses-wave1bas"],
-            self.tasks,
-            self.phase_encodings,
-        ):
-            if phase_encoding == "AP":
-                run = "1"
-            else:
-                run = "2"
-            # Bypass for f1951tt not having run 2 for Rest
-            if subject == "sub-f1951tt" and task == "Rest" and run == "2":
-                continue
-            elems.append((subject, session, task, phase_encoding, run))
-        # For other sessions
-        for subject, session, task, phase_encoding in product(
-            subjects,
-            ["ses-wave1pro", "ses-wave1rea"],
-            ["Rest"],
-            self.phase_encodings,
-        ):
-            if phase_encoding == "AP":
-                run = "1"
-            else:
-                run = "2"
-            # Bypass for f5416zj for not having wave1rea session
-            if subject == "sub-f5416zj" and session == "ses-wave1rea":
-                continue
-            elems.append((subject, session, task, phase_encoding, run))
-
-        return elems

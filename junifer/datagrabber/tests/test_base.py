@@ -118,3 +118,16 @@ def test_BaseDataGrabber_filter_multi() -> None:
         assert ("sub02", "movie") not in list(
             dg.filter([("sub01", "rest")])  # type: ignore
         )
+        # Partial selectors as values or tuples
+        assert list(dg.filter(["sub01"])) == [
+            ("sub01", "rest"),
+            ("sub01", "movie"),
+        ]
+        assert list(dg.filter([("rest",)])) == [
+            ("sub01", "rest"),
+            ("sub02", "rest"),
+            ("sub03", "rest"),
+        ]
+        # The selectors must have the same number of values
+        with pytest.raises(ValueError, match="same number of values"):
+            list(dg.filter(["sub01", ("sub02", "rest")]))  # type: ignore
