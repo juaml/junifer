@@ -478,7 +478,13 @@ need to implement the following methods:
 
 - ``get_item``: to get a single item from the dataset.
 - ``get_elements``: to get the list of all elements present in the dataset
-- ``get_element_keys``: to get the keys of the elements in the dataset.
+- ``get_element_keys``: to get the keys of the elements in the dataset. They
+  also give the order of the values in each element, which must match the
+  parameters of ``get_item``.
+
+Optionally, if the data of some data types does not depend on all the keys of
+the element, we can also implement ``get_type_element_keys`` (see
+:ref:`extending_datagrabbers_type_keys`).
 
 .. note::
 
@@ -517,17 +523,15 @@ need to remember that for session *ses-03* there is no BOLD data.
    from itertools import product
 
 
-   def get_elements(self) -> list[str]:
+   def get_elements(self) -> list[tuple[str, str]]:
        subjects = ["sub-01", "sub-02", "sub-03"]
        sessions = ["ses-01", "ses-02"]
 
        # If we are not working on BOLD data, we can add "ses-03"
        if "BOLD" not in self.types:
            sessions.append("ses-03")
-       elements = []
-       for subject, element in product(subjects, sessions):
-           elements.append({"subject": subject, "session": session})
-       return elements
+       # The values of each element, in the order of the element keys
+       return list(product(subjects, sessions))
 
 
 And finally, we can implement the ``get_element_keys`` method. This method needs
@@ -540,10 +544,38 @@ method, in the same order.
    def get_element_keys(self) -> list[str]:
        return ["subject", "session"]
 
+.. _extending_datagrabbers_type_keys:
+
+Data types with different keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the data of every data type depends on all the element keys. If
+the data of a data type only depends on some of them, the DataGrabber can say
+so by implementing ``get_type_element_keys``, which returns the element keys
+that the data of a data type depends on. For example, if the ``T1w`` image of
+our dataset was acquired once for each subject, instead of once for each
+session:
+
+.. code-block:: python
+
+   def get_type_element_keys(self, data_type: str) -> list[str]:
+       if data_type == "T1w":
+           return ["subject"]
+       return ["subject", "session"]
+
+Then, the ``T1w`` data (and the features computed from it) is stored once for
+each subject, instead of once for each session (see :ref:`internals`). The
+element keys must still be all the keys that the data types to grab depend on:
+if only ``T1w`` was grabbed, ``get_element_keys`` should return
+``["subject"]`` (and ``get_elements`` and ``get_item`` should only use the
+subject).
+
 
 So, to summarise, our DataGrabber will look like this:
 
 .. code-block:: python
+
+   from itertools import product
 
    from junifer.api.decorators import register_datagrabber
    from junifer.datagrabber import BaseDataGrabber
@@ -566,18 +598,15 @@ So, to summarise, our DataGrabber will look like this:
            }
            return out
 
-       def get_elements(self) -> list[str]:
+       def get_elements(self) -> list[tuple[str, str]]:
            subjects = ["sub-01", "sub-02", "sub-03"]
            sessions = ["ses-01", "ses-02"]
 
            # If we are not working on BOLD data, we can add "ses-03"
            if "BOLD" not in self.types:
                sessions.append("ses-03")
-           elements = []
-           for subject in subjects:
-               for session in sessions:
-                   elements.append({"subject": subject, "session": session})
-           return elements
+           # The values of each element, in the order of the element keys
+           return list(product(subjects, sessions))
 
        def get_element_keys(self) -> list[str]:
            return ["subject", "session"]

@@ -183,17 +183,38 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         self._check_element(named_element)
         # Fetch element
         out = self.get_item(**named_element)
-        # Update metadata
-        for _, t_val in out.items():
+        # Update metadata: the element being processed and the keys of the
+        # element that the data of each data type depends on
+        for t_type, t_val in out.items():
             self.update_meta(t_val, "datagrabber")
+            element_keys = self.get_type_element_keys(t_type)
             # Conditional for list dtype vals like Warp
-            if isinstance(t_val, list):
-                for entry in t_val:
-                    entry["meta"]["element"] = named_element
-            else:
-                t_val["meta"]["element"] = named_element
+            for entry in t_val if isinstance(t_val, list) else [t_val]:
+                entry["meta"]["element"] = named_element
+                entry["meta"]["_element_keys"] = element_keys
 
         return out
+
+    def get_type_element_keys(self, data_type: str) -> list[str]:
+        """Get the element keys that the data of a data type depends on.
+
+        The element keys (see :meth:`.get_element_keys`) are the keys that
+        the data types to grab depend on.
+
+        Parameters
+        ----------
+        data_type : str
+            The data type.
+
+        Returns
+        -------
+        list of str
+            The element keys, all of them unless a subclass knows which ones
+            the data type depends on (e.g., only the subject for data that is
+            the same for all the tasks of a subject).
+
+        """
+        return self.get_element_keys()
 
     def _check_element(self, element: dict) -> None:
         """Check the element can be grabbed.

@@ -225,6 +225,7 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
                 # Set output to the Junifer Data object
                 logger.debug(f"Adding {type_} to output")
                 out[type_] = t_out
-                # Update metadata for step
-                self.update_meta(out[type_], "preprocess")
+                # Update metadata for step, after the ones of the previous
+                # preprocessors
+                self.update_meta(out[type_], "preprocess", append=True)
         return out

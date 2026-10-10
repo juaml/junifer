@@ -190,11 +190,35 @@ class MultipleDataGrabber(BaseDataGrabber):
             to_update = out[kind]
             if not isinstance(to_update, list):
                 to_update = [to_update]
+            element_keys = self.get_type_element_keys(kind)
             for t_kind in to_update:
                 self.update_meta(t_kind, "datagrabber")
                 t_kind["meta"]["datagrabber"]["datagrabbers"] = metas
                 t_kind["meta"]["element"] = named_element
+                t_kind["meta"]["_element_keys"] = element_keys
         return out
+
+    def get_type_element_keys(self, data_type: str) -> list[str]:
+        """Get the element keys that the data of a data type depends on.
+
+        Parameters
+        ----------
+        data_type : str
+            The data type.
+
+        Returns
+        -------
+        list of str
+            The element keys that the data of the data type depends on in all
+            the DataGrabbers grabbing it (e.g., the one grabbing the main file
+            and the one grabbing only its nested data types).
+
+        """
+        keys = set()
+        for dg in self.datagrabbers:
+            if data_type in dg.get_types():
+                keys.update(dg.get_type_element_keys(data_type))
+        return [k for k in self.get_element_keys() if k in keys]
 
     def __enter__(self) -> "MultipleDataGrabber":
         """Implement context entry."""

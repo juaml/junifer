@@ -107,6 +107,35 @@ def _read_hdf5(fname: str, title: str) -> Any:
     return read_hdf5(fname, title=title, slash="ignore")
 
 
+def _read_elements(fname: str, feature_md5s: list[str]) -> dict[str, list]:
+    """Get the elements that a file has for each feature, without the data.
+
+    Parameters
+    ----------
+    fname : str
+        The HDF5 file.
+    feature_md5s : list of str
+        The MD5 of the feature to check.
+
+    Returns
+    -------
+    dict
+        The elements present in the file for each feature (MD5 -> list of
+        elements). Each element is a tuple of its values, e.g.,
+        ``("sub-01",)``, as all the elements of a feature have the same keys.
+
+    """
+    out = {}
+    with h5py.File(fname, mode="r") as fid:
+        for feature_md5 in feature_md5s:
+            # Copy only the elements of the feature, not its data
+            with h5py.File(io.BytesIO(), mode="w") as copy:
+                fid.copy(fid[feature_md5]["key_element"], copy, name="element")
+                elements = read_hdf5(copy, title="element", slash="ignore")
+            out[feature_md5] = [tuple(e.values()) for e in elements]
+    return out
+
+
 def _write_chunk(
     fname: str,
     key: str,
@@ -640,6 +669,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: dict[str, str],
         meta: dict[str, Any],
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store metadata.
 
@@ -656,15 +686,20 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as a dictionary.
         meta : dict
             The metadata as a dictionary.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
-        # Get correct URI for element;
+        # Get correct URI for the element being processed;
         # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element)
+        file_element = processed_element or element
+        uri = self._fetch_correct_uri_for_io(element=file_element)
 
         # Check if file exists, then read metadata else create empty dictionary
         if Path(uri).exists():
-            metadata = self._read_metadata(element=element)
+            metadata = self._read_metadata(element=file_element)
         else:
             logger.debug(f"Creating new file at {uri} ...")
             metadata = {}
@@ -701,6 +736,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         meta_md5: str,
         element: list[dict[str, str]],
         data: np.ndarray,
+        processed_element: dict[str, str] | None = None,
         **kwargs: Any,
     ) -> None:
         """Store data.
@@ -720,18 +756,23 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The element as list of dictionary.
         data : numpy.ndarray
             The data to store.
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
         **kwargs : dict
             Keyword arguments passed from the calling method.
 
         """
-        # Get correct URI for element;
+        # Get correct URI for the element being processed;
         # is different from uri if single_output is False
-        uri = self._fetch_correct_uri_for_io(element=element[0])
+        file_element = processed_element or element[0]
+        uri = self._fetch_correct_uri_for_io(element=file_element)
 
         # Check if MD5 exists, then read data else create empty dictionary
         # File should be present here already
         if _has_hdf5(fname=uri, title=meta_md5):
-            stored_data = self._read_data(md5=meta_md5, element=element[0])
+            stored_data = self._read_data(md5=meta_md5, element=file_element)
         else:
             logger.debug(f"Creating new data map for {meta_md5} ...")
             stored_data = {}
@@ -848,6 +889,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         matrix_kind: MatrixKind = MatrixKind.Full,
         diagonal: bool = True,
         row_header_col_name: str = "ROI",
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store matrix.
 
@@ -873,6 +915,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             setting this to False will raise an error (default True).
         row_header_col_name : str, optional
             The column name for the row header column (default "ROI").
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         # Row data validation
@@ -894,6 +940,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind=StorageType.Matrix,
             meta_md5=meta_md5,
             element=[element],  # convert to list
+            processed_element=processed_element,
             data=data[:, :, np.newaxis],  # convert to 3D
             column_headers=col_names,
             row_headers=row_names,
@@ -908,6 +955,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element: dict[str, str],
         data: np.ndarray | list,
         col_names: Sequence[str] | None = None,
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store vector.
 
@@ -921,6 +969,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The vector data to store.
         col_names : list-like of str, optional
             The column labels (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         if isinstance(data, list):
@@ -941,6 +993,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind=StorageType.Vector,
             meta_md5=meta_md5,
             element=[element],  # convert to list
+            processed_element=processed_element,
             data=processed_data[:, np.newaxis],  # convert to 2D
             column_headers=col_names,
         )
@@ -951,6 +1004,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         element: dict,
         data: np.ndarray,
         col_names: Sequence[str] | None = None,
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store timeseries.
 
@@ -964,12 +1018,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The timeseries data to store.
         col_names : list-like of str, optional
             The column labels (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         self._store_data(
             kind=StorageType.Timeseries,
             meta_md5=meta_md5,
             element=[element],  # convert to list
+            processed_element=processed_element,
             data=[data],  # convert to list
             column_headers=col_names,
             row_header_column_name="timepoint",
@@ -982,6 +1041,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         data: np.ndarray,
         col_names: Sequence[str] | None = None,
         row_names: Sequence[str] | None = None,
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store 2D timeseries.
 
@@ -997,6 +1057,10 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The column labels (default None).
         row_names : list-like of str, optional
             The row labels (default None).
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         store_timeseries_2d_checks(
@@ -1008,6 +1072,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             kind=StorageType.Timeseries2D,
             meta_md5=meta_md5,
             element=[element],  # convert to list
+            processed_element=processed_element,
             data=[data],  # convert to list
             column_headers=col_names,
             row_headers=row_names,
@@ -1021,6 +1086,7 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         col_names: Sequence[str] | None = None,
         row_names: Sequence[str] | None = None,
         row_header_col_name: str | None = "feature",
+        processed_element: dict[str, str] | None = None,
     ) -> None:
         """Store table with scalar values.
 
@@ -1038,12 +1104,17 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             The row labels (default None).
         row_header_col_name : str, optional
             The column name for the row header column (default "feature").
+        processed_element : dict or None, optional
+            The element being processed when the data was computed, used to
+            choose the file of each element if ``single_output=False``. If
+            None, ``element`` is used (default None).
 
         """
         self._store_data(
             kind=StorageType.ScalarTable,
             meta_md5=meta_md5,
             element=[element],  # convert to list
+            processed_element=processed_element,
             data=[data],  # convert to list
             column_headers=col_names,
             row_headers=row_names,
@@ -1077,8 +1148,12 @@ class HDF5FeatureStorage(BaseFeatureStorage):
         logger.info(
             f"Collecting metadata from {self.uri.parent}/*_{self.uri.name}"
         )
-        # Collect element files per feature MD5
+        # Collect element files per feature MD5, only the ones with elements
+        # of the feature that are not in other files: the data of an element
+        # can be in the files of several elements being processed (e.g., the
+        # data of a subject in the files of each of its tasks)
         elements_per_feature_md5 = defaultdict(list)
+        seen_elements = defaultdict(set)
         out_metadata = {}
         for file_ in tqdm(
             self.uri.parent.glob(f"*_{self.uri.name}"), desc="file-metadata"
@@ -1095,7 +1170,28 @@ class HDF5FeatureStorage(BaseFeatureStorage):
             out_metadata.update(in_metadata)
 
             # Update element files for found MD5s
-            for feature_md5 in in_metadata.keys():
+            file_elements = _read_elements(str(file_), list(in_metadata))
+            for feature_md5, elements in file_elements.items():
+                # Only the files of single elements can be collected
+                if len(elements) != 1:
+                    raise_error(
+                        msg=(
+                            f"The file {file_} has {len(elements)} elements "
+                            f"for the feature {feature_md5}, but only the "
+                            "files with one element (as stored for each "
+                            "element with `single_output=False`) can be "
+                            "collected"
+                        ),
+                        klass=RuntimeError,
+                    )
+                (element,) = elements
+                if element in seen_elements[feature_md5]:
+                    logger.debug(
+                        f"Skipping {file_} for {feature_md5}: its element "
+                        "is in another file"
+                    )
+                    continue
+                seen_elements[feature_md5].add(element)
                 elements_per_feature_md5[feature_md5].append(file_)
 
         logger.info("Writing metadata to HDF5 file ...")
