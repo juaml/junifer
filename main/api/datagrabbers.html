@@ -252,8 +252,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">13. Implementation details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">14. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">15. What’s new</a></li>
 </ul>
 </div>
 <div class="sidebar-tree version-selector" id="version-selector">
@@ -497,7 +498,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -573,6 +574,29 @@ or tuples of strings to index the DataGrabber.</p>
 <dd class="field-even"><dl class="simple">
 <dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>Dictionary of paths for each type of data required for the
 specified element.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.BaseDataGrabber.get_type_element_keys">
+<span class="sig-name descname"><span class="pre">get_type_element_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.BaseDataGrabber.get_type_element_keys" title="Link to this definition">¶</a></dt>
+<dd><p>Get the element keys that the data of a data type depends on.</p>
+<p>The element keys (see <a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys" title="junifer.datagrabber.BaseDataGrabber.get_element_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_element_keys()</span></code></a>) are the keys that
+the data types to grab depend on.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys, all of them unless a subclass knows which ones
+the data type depends on (e.g., only the subject for data that is
+the same for all the tasks of a subject).</p>
 </dd>
 </dl>
 </dd>
@@ -1085,7 +1109,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1101,7 +1125,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1113,7 +1137,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1125,7 +1149,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1137,7 +1161,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -1658,7 +1682,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2043,7 +2067,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2055,7 +2079,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2434,7 +2458,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -2446,7 +2470,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3074,7 +3098,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3387,7 +3411,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3403,7 +3427,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3415,7 +3439,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3915,7 +3939,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -3977,6 +4001,27 @@ specified element.</p>
 </dl>
 <p class="rubric">Notes</p>
 <p>This function is not implemented for this class as it is useless.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_type_element_keys">
+<span class="sig-name descname"><span class="pre">get_type_element_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.MultipleDataGrabber.get_type_element_keys" title="Link to this definition">¶</a></dt>
+<dd><p>Get the element keys that the data of a data type depends on.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys that the data of the data type depends on in all
+the DataGrabbers grabbing it (e.g., the one grabbing the main file
+and the one grabbing only its nested data types).</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="junifer.datagrabber.MultipleDataGrabber.get_types">
@@ -4231,13 +4276,13 @@ validated to form a valid model.</p>
 <span class="sig-name descname"><span class="pre">get_element_keys</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_element_keys" title="Link to this definition">¶</a></dt>
 <dd><p>Get element keys.</p>
 <p>For each item in the “element” tuple, this functions returns the
-corresponding key, that is, the <code class="docutils literal notranslate"><span class="pre">replacements</span></code> of the patterns of
-the data types to grab (e.g., without <code class="docutils literal notranslate"><span class="pre">task</span></code> if only anatomical
-data types are grabbed).</p>
+corresponding key: the replacements in the patterns of the data
+types to grab (see <a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_type_element_keys" title="junifer.datagrabber.PatternDataGrabber.get_type_element_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">get_type_element_keys()</span></code></a>), e.g., without
+<code class="docutils literal notranslate"><span class="pre">task</span></code> if only anatomical data types are grabbed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys.</p>
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The element keys, in the order of <code class="docutils literal notranslate"><span class="pre">replacements</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -4294,6 +4339,26 @@ fields of the replacements (see <code class="docutils literal notranslate"><span
 <dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a></dt><dd><p>The lists of values of the replacements to grab, by replacement.
 The replacements without values (to grab all of them) are not
 included.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="junifer.datagrabber.PatternDataGrabber.get_type_element_keys">
+<span class="sig-name descname"><span class="pre">get_type_element_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.datagrabber.PatternDataGrabber.get_type_element_keys" title="Link to this definition">¶</a></dt>
+<dd><p>Get the element keys that the data of a data type depends on.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>data_type</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></span></dt><dd><p>The data type.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">str</span></code></a></dt><dd><p>The replacements in the patterns of the data type (including the
+nested ones), in the order of <code class="docutils literal notranslate"><span class="pre">replacements</span></code>.</p>
 </dd>
 </dl>
 </dd>
@@ -4608,7 +4673,7 @@ validated to form a valid model.</p>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function ensure_list at 0x7df5c026a5c0&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function ensure_list at 0x7b9f2b64a5c0&gt;</p></li>
 <li><p><strong>json_schema_input_type</strong> = PydanticUndefined</p></li>
 </ul>
 </dd>
@@ -4776,6 +4841,7 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_elements()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_item()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_type_element_keys"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_type_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.get_types()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.model_post_init"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.model_post_init()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.BaseDataGrabber.select_elements"><code class="docutils literal notranslate"><span class="pre">BaseDataGrabber.select_elements()</span></code></a></li>
@@ -4942,6 +5008,7 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_element_keys"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_elements()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_item()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_type_element_keys"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_type_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.get_types"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.get_types()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.MultipleDataGrabber.validate_datagrabber_params"><code class="docutils literal notranslate"><span class="pre">MultipleDataGrabber.validate_datagrabber_params()</span></code></a></li>
 </ul>
@@ -4956,6 +5023,7 @@ if data type pattern key contains ‘*’ as value.</p>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_elements"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_elements()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_item"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_item()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_replacement_values"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_replacement_values()</span></code></a></li>
+<li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.get_type_element_keys"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.get_type_element_keys()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.validate_datagrabber_params"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.validate_datagrabber_params()</span></code></a></li>
 <li><a class="reference internal" href="#junifer.datagrabber.PatternDataGrabber.skip_file_check"><code class="docutils literal notranslate"><span class="pre">PatternDataGrabber.skip_file_check</span></code></a></li>
 </ul>
@@ -4986,7 +5054,7 @@ if data type pattern key contains ‘*’ as value.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
+</div><script src="../_static/documentation_options.js?v=bee7ea7f"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

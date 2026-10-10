@@ -252,8 +252,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">13. Implementation details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">14. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">15. What’s new</a></li>
 </ul>
 </div>
 <div class="sidebar-tree version-selector" id="version-selector">
@@ -359,6 +360,13 @@ saving <code class="docutils literal notranslate"><span class="pre">matrix</span
 your own <code class="docutils literal notranslate"><span class="pre">Storage</span></code> by providing a concrete implementation of
 <a class="reference internal" href="../api/storage.html#junifer.storage.BaseFeatureStorage" title="junifer.storage.BaseFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFeatureStorage</span></code></a> or open an issue on <a class="reference external" href="https://github.com/juaml/junifer">junifer Github</a> and we can
 help you out.</p>
+<p>The data of each element is stored only once: running the same elements again
+with the same configuration (e.g., after trying a few elements and then running
+all of them), or collecting the files of the elements again, does not change
+the data already stored, which is not stored again. The data that does not
+depend on all the keys of the element (e.g., the <code class="docutils literal notranslate"><span class="pre">VBM_GM</span></code> data of a subject,
+for elements with the subject and the task) is stored once for its keys (see
+<a class="reference internal" href="../internals.html#internals"><span class="std std-ref">Implementation details</span></a>).</p>
 </section>
 <section id="storage-types">
 <span id="id2"></span><h2><span class="section-number">4.7.2. </span>Storage Types<a class="headerlink" href="#storage-types" title="Link to this heading">¶</a></h2>
@@ -509,7 +517,7 @@ analyses.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
+</div><script src="../_static/documentation_options.js?v=bee7ea7f"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

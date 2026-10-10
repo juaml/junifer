@@ -252,8 +252,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">10. Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">11. Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../maintaining.html">12. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../faq.html">13. FAQs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">14. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals.html">13. Implementation details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">14. FAQs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../whats_new.html">15. What’s new</a></li>
 </ul>
 </div>
 <div class="sidebar-tree version-selector" id="version-selector">
@@ -739,8 +740,13 @@ need to implement the following methods:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">get_item</span></code>: to get a single item from the dataset.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">get_elements</span></code>: to get the list of all elements present in the dataset</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code>: to get the keys of the elements in the dataset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code>: to get the keys of the elements in the dataset. They
+also give the order of the values in each element, which must match the
+parameters of <code class="docutils literal notranslate"><span class="pre">get_item</span></code>.</p></li>
 </ul>
+<p>Optionally, if the data of some data types does not depend on all the keys of
+the element, we can also implement <code class="docutils literal notranslate"><span class="pre">get_type_element_keys</span></code> (see
+<a class="reference internal" href="#extending-datagrabbers-type-keys"><span class="std std-ref">Data types with different keys</span></a>).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If the DataGrabber requires any extra parameter, they could be defined as
@@ -771,17 +777,15 @@ need to remember that for session <em>ses-03</em> there is no BOLD data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
     <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"sub-01"</span><span class="p">,</span> <span class="s2">"sub-02"</span><span class="p">,</span> <span class="s2">"sub-03"</span><span class="p">]</span>
     <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ses-01"</span><span class="p">,</span> <span class="s2">"ses-02"</span><span class="p">]</span>
 
     <span class="c1"># If we are not working on BOLD data, we can add "ses-03"</span>
     <span class="k">if</span> <span class="s2">"BOLD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
         <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"ses-03"</span><span class="p">)</span>
-    <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">subject</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">sessions</span><span class="p">):</span>
-        <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"subject"</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
-    <span class="k">return</span> <span class="n">elements</span>
+    <span class="c1"># The values of each element, in the order of the element keys</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">sessions</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>And finally, we can implement the <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code> method. This method needs
@@ -792,8 +796,30 @@ method, in the same order.</p>
     <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
 </pre></div>
 </div>
+<section id="data-types-with-different-keys">
+<span id="extending-datagrabbers-type-keys"></span><h4>Data types with different keys<a class="headerlink" href="#data-types-with-different-keys" title="Link to this heading">¶</a></h4>
+<p>By default, the data of every data type depends on all the element keys. If
+the data of a data type only depends on some of them, the DataGrabber can say
+so by implementing <code class="docutils literal notranslate"><span class="pre">get_type_element_keys</span></code>, which returns the element keys
+that the data of a data type depends on. For example, if the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> image of
+our dataset was acquired once for each subject, instead of once for each
+session:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">get_type_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s2">"T1w"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then, the <code class="docutils literal notranslate"><span class="pre">T1w</span></code> data (and the features computed from it) is stored once for
+each subject, instead of once for each session (see <a class="reference internal" href="../internals.html#internals"><span class="std std-ref">Implementation details</span></a>). The
+element keys must still be all the keys that the data types to grab depend on:
+if only <code class="docutils literal notranslate"><span class="pre">T1w</span></code> was grabbed, <code class="docutils literal notranslate"><span class="pre">get_element_keys</span></code> should return
+<code class="docutils literal notranslate"><span class="pre">["subject"]</span></code> (and <code class="docutils literal notranslate"><span class="pre">get_elements</span></code> and <code class="docutils literal notranslate"><span class="pre">get_item</span></code> should only use the
+subject).</p>
 <p>So, to summarise, our DataGrabber will look like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">junifer.api.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_datagrabber</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">product</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">junifer.api.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">register_datagrabber</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">junifer.datagrabber</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseDataGrabber</span>
 
 
@@ -814,23 +840,21 @@ method, in the same order.</p>
         <span class="p">}</span>
         <span class="k">return</span> <span class="n">out</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="n">subjects</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"sub-01"</span><span class="p">,</span> <span class="s2">"sub-02"</span><span class="p">,</span> <span class="s2">"sub-03"</span><span class="p">]</span>
         <span class="n">sessions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"ses-01"</span><span class="p">,</span> <span class="s2">"ses-02"</span><span class="p">]</span>
 
         <span class="c1"># If we are not working on BOLD data, we can add "ses-03"</span>
         <span class="k">if</span> <span class="s2">"BOLD"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
             <span class="n">sessions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"ses-03"</span><span class="p">)</span>
-        <span class="n">elements</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">subject</span> <span class="ow">in</span> <span class="n">subjects</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">session</span> <span class="ow">in</span> <span class="n">sessions</span><span class="p">:</span>
-                <span class="n">elements</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"subject"</span><span class="p">:</span> <span class="n">subject</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">:</span> <span class="n">session</span><span class="p">})</span>
-        <span class="k">return</span> <span class="n">elements</span>
+        <span class="c1"># The values of each element, in the order of the element keys</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">sessions</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_element_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">"subject"</span><span class="p">,</span> <span class="s2">"session"</span><span class="p">]</span>
 </pre></div>
 </div>
+</section>
 <section id="id1">
 <h4>Optional: Using datalad<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h4>
 <p>If this dataset is in a datalad dataset, we can extend from
@@ -964,6 +988,7 @@ same dataset.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#option-b-extending-from-basedatagrabber">Option B: Extending from BaseDataGrabber</a><ul>
+<li><a class="reference internal" href="#data-types-with-different-keys">Data types with different keys</a></li>
 <li><a class="reference internal" href="#id1">Optional: Using datalad</a></li>
 </ul>
 </li>
@@ -978,7 +1003,7 @@ same dataset.</p>
 </div>
 </aside>
 </div>
-</div><script src="../_static/documentation_options.js?v=e6ee74c1"></script>
+</div><script src="../_static/documentation_options.js?v=bee7ea7f"></script>
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

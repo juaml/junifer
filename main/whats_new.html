@@ -4,10 +4,10 @@
 <head><meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1" name="viewport"/>
 <meta content="light dark" name="color-scheme"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
-<link href="genindex.html" rel="index" title="Index"/><link href="search.html" rel="search" title="Search"/><link href="faq.html" rel="prev" title="13. FAQs"/>
+<link href="genindex.html" rel="index" title="Index"/><link href="search.html" rel="search" title="Search"/><link href="faq.html" rel="prev" title="14. FAQs"/>
 <link as="image" href="_static/junifer_logo.png" rel="prefetch"/>
 <!-- Generated with Sphinx 8.2.3 and Furo 2025.12.19 -->
-<title>14. What’s new - junifer documentation</title>
+<title>15. What’s new - junifer documentation</title>
 <link href="_static/pygments.css?v=d111a655" rel="stylesheet" type="text/css"/>
 <link href="_static/styles/furo.css?v=7bdb33bb" rel="stylesheet" type="text/css"/>
 <link href="_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
@@ -252,8 +252,9 @@
 <li class="toctree-l1"><a class="reference internal" href="help.html">10. Getting Help</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contribution.html">11. Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="maintaining.html">12. Maintaining</a></li>
-<li class="toctree-l1"><a class="reference internal" href="faq.html">13. FAQs</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">14. What’s new</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals.html">13. Implementation details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">14. FAQs</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">15. What’s new</a></li>
 </ul>
 </div>
 <div class="sidebar-tree version-selector" id="version-selector">
@@ -338,11 +339,11 @@
 </div>
 <article id="furo-main-content" role="main">
 <section id="what-s-new">
-<span id="whats-new"></span><h1><span class="section-number">14. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2026-10-09">
-<h2><span class="section-number">14.1. </span>junifer 0.0.8.dev311 (2026-10-09)<a class="headerlink" href="#junifer-release-2026-10-09" title="Link to this heading">¶</a></h2>
+<span id="whats-new"></span><h1><span class="section-number">15. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
+<section id="junifer-release-2026-10-10">
+<h2><span class="section-number">15.1. </span>junifer 0.0.8.dev314 (2026-10-10)<a class="headerlink" href="#junifer-release-2026-10-10" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
-<h3><span class="section-number">14.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Allow <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a> to convert data from native to template space
 when <code class="docutils literal notranslate"><span class="pre">using="auto"</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/482">#482</a>)</p></li>
@@ -423,10 +424,17 @@ YAML file by <a class="reference external" href="https://fraimondo.github.io">Fe
 <li><p>Fix partial element selectors (e.g., only the subject) always being reported
 as invalid by <a class="reference internal" href="api/api.html#junifer.api.functions.run" title="junifer.api.functions.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a>, after computing their elements by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Fix the same features being stored more than once: for each value of the
+element keys that the data does not depend on (e.g., the VBM features of a
+subject once per task), when running an element again, and when collecting
+again (<a class="reference internal" href="api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a> also collected its own output file) by
+<a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
+<li><p>Fix the metadata of the preprocessors being replaced by the one of the last
+preprocessor by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
 </ul>
 </section>
 <section id="api-changes">
-<h3><span class="section-number">14.1.2. </span>API Changes<a class="headerlink" href="#api-changes" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.2. </span>API Changes<a class="headerlink" href="#api-changes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Sanitise the VOI names of built-in coordinates by replacing spaces with <code class="docutils literal notranslate"><span class="pre">_</span></code>
 and adding a <code class="docutils literal notranslate"><span class="pre">-{i}</span></code> suffix to duplicated names, which changes the feature
@@ -456,10 +464,29 @@ task by <a class="reference external" href="https://fraimondo.github.io">Fede Ra
 <li><p>Require the element selectors to have the same number of values, and each
 data type to be grabbed by only one of the DataGrabbers of
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">upsert="ignore"</span></code> by default in <a class="reference internal" href="api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a>, so the
+elements already stored are not stored again by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
+<li><p>Add the version of <code class="docutils literal notranslate"><span class="pre">junifer</span></code> to the MD5 of the features, as for the
+dependencies of the markers and steps, for reproducibility: features computed
+with different versions of <code class="docutils literal notranslate"><span class="pre">junifer</span></code> are different features, so the
+differences between features (e.g., between datasets) can only come from the
+data. Running again with a new version stores the features again, with the
+same name, next to the ones computed with the previous version by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
+<li><p>Store the metadata of the preprocessors as a list, in order, in
+<code class="docutils literal notranslate"><span class="pre">meta["preprocess"]</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
+<li><p>Add the <code class="docutils literal notranslate"><span class="pre">processed_element</span></code> argument to the <code class="docutils literal notranslate"><span class="pre">store_*</span></code> methods of
+<a class="reference internal" href="api/storage.html#junifer.storage.BaseFeatureStorage" title="junifer.storage.BaseFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFeatureStorage</span></code></a>, the element being processed, so the concrete
+storages can name the file of each element; custom storages must accept it by
+<a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
+<li><p>Raise an error in the <code class="docutils literal notranslate"><span class="pre">collect</span></code> method of <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a> and
+<a class="reference internal" href="api/storage.html#junifer.storage.SQLiteFeatureStorage" title="junifer.storage.SQLiteFeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">SQLiteFeatureStorage</span></code></a> if a file to collect has more than one
+element, as <code class="docutils literal notranslate"><span class="pre">collect</span></code> only compacts the files of single elements by <a class="reference external" href="https://fraimondo.github.io">Fede
+Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
 </ul>
 </section>
 <section id="improved-documentation">
-<h3><span class="section-number">14.1.3. </span>Improved Documentation<a class="headerlink" href="#improved-documentation" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.3. </span>Improved Documentation<a class="headerlink" href="#improved-documentation" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add documentation on adding confounds format by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/364">#364</a>)</p></li>
 <li><p>Build the documentation of all the released versions with
@@ -475,10 +502,13 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 <li><p>Document the elements of the DataGrabbers, combining datasets with
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.MultipleDataGrabber" title="junifer.datagrabber.MultipleDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultipleDataGrabber</span></code></a>, complete and partial elements, and restricting
 the values of the replacements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Add the “Implementation details” page with the elements, the fields of the
+metadata and the storage, and document the data types with different element
+keys when extending DataGrabbers by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
 </ul>
 </section>
 <section id="enhancements">
-<h3><span class="section-number">14.1.4. </span>Enhancements<a class="headerlink" href="#enhancements" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.4. </span>Enhancements<a class="headerlink" href="#enhancements" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve logging consistency of components by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/239">#239</a>)</p></li>
 <li><p>Adopt Pydantic for user-facing core objects to perform automatic validation
@@ -513,10 +543,14 @@ data frames and images) by <a class="reference external" href="https://fraimondo
 <li><p>Run complete elements (with a value for each element key, e.g., in each
 queued job) without searching the dataset for its elements by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Store the features for the element with only the keys that the data type
+depends on (e.g., only <code class="docutils literal notranslate"><span class="pre">subject</span></code> for VBM data, when the elements also have
+<code class="docutils literal notranslate"><span class="pre">task</span></code>), and skip the elements already stored by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
 </ul>
 </section>
 <section id="features">
-<h3><span class="section-number">14.1.5. </span>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.5. </span>Features<a class="headerlink" href="#features" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Enable confounds format to be added by introducing
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.register_confounds_format" title="junifer.datagrabber.register_confounds_format"><code class="xref py py-func docutils literal notranslate"><span class="pre">register_confounds_format()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/364">#364</a>)</p></li>
@@ -532,10 +566,12 @@ only grabs them by <a class="reference external" href="https://fraimondo.github.
 fields linked with <code class="docutils literal notranslate"><span class="pre">_REPLACEMENT_FIELDS</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">tasks</span></code> in the built-in
 DataGrabbers), and using the <code class="docutils literal notranslate"><span class="pre">*</span></code> and <code class="docutils literal notranslate"><span class="pre">?</span></code> wildcards in the patterns to
 find the elements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/524">#524</a>)</p></li>
+<li><p>Add <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.BaseDataGrabber.get_type_element_keys" title="junifer.datagrabber.BaseDataGrabber.get_type_element_keys"><code class="xref py py-meth docutils literal notranslate"><span class="pre">BaseDataGrabber.get_type_element_keys()</span></code></a> to get the element keys
+that the data of a data type depends on by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/525">#525</a>)</p></li>
 </ul>
 </section>
 <section id="miscellaneous">
-<h3><span class="section-number">14.1.6. </span>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.6. </span>Miscellaneous<a class="headerlink" href="#miscellaneous" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Drop Python 3.9 and add Python 3.14 support, upgrade codebase to follow
 modern syntax, bump dependencies and add <code class="docutils literal notranslate"><span class="pre">uv</span></code> support. (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/474">#474</a>)</p></li>
@@ -584,16 +620,16 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 </ul>
 </section>
 <section id="deprecations-and-removals">
-<h3><span class="section-number">14.1.7. </span>Deprecations and Removals<a class="headerlink" href="#deprecations-and-removals" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.1.7. </span>Deprecations and Removals<a class="headerlink" href="#deprecations-and-removals" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Drop support for Python 3.10 by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/520">#520</a>)</p></li>
 </ul>
 </section>
 </section>
 <section id="junifer-0-0-7-2026-03-04">
-<h2><span class="section-number">14.2. </span>Junifer 0.0.7 (2026-03-04)<a class="headerlink" href="#junifer-0-0-7-2026-03-04" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.2. </span>Junifer 0.0.7 (2026-03-04)<a class="headerlink" href="#junifer-0-0-7-2026-03-04" title="Link to this heading">¶</a></h2>
 <section id="id1">
-<h3><span class="section-number">14.2.1. </span>Bugfixes<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.1. </span>Bugfixes<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Allow <code class="docutils literal notranslate"><span class="pre">timeseries_2d</span></code> storage for <a class="reference internal" href="api/storage.html#junifer.storage.HDF5FeatureStorage" title="junifer.storage.HDF5FeatureStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">HDF5FeatureStorage</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede
 Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/444">#444</a>)</p></li>
@@ -606,7 +642,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id2">
-<h3><span class="section-number">14.2.2. </span>API Changes<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.2. </span>API Changes<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">fname</span></code>, <code class="docutils literal notranslate"><span class="pre">overwrite</span></code> and <code class="docutils literal notranslate"><span class="pre">output_format</span></code> have been removed from
 <a class="reference internal" href="api/utils.html#junifer.utils.configure_logging" title="junifer.utils.configure_logging"><code class="xref py py-func docutils literal notranslate"><span class="pre">configure_logging()</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/231">#231</a>)</p></li>
@@ -620,7 +656,7 @@ a valid argument for <code class="docutils literal notranslate"><span class="pre
 </ul>
 </section>
 <section id="id3">
-<h3><span class="section-number">14.2.3. </span>Improved Documentation<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.3. </span>Improved Documentation<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add documentation on extending data registries by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/450">#450</a>)</p></li>
@@ -630,7 +666,7 @@ extending data dump assets by <a class="reference external" href="https://github
 </ul>
 </section>
 <section id="id4">
-<h3><span class="section-number">14.2.4. </span>Enhancements<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.4. </span>Enhancements<a class="headerlink" href="#id4" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Allow parcellation registration with non-continuous ranges as values by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/257">#257</a>)</p></li>
@@ -653,7 +689,7 @@ by <a class="reference external" href="https://github.com/synchon">Synchon Manda
 </ul>
 </section>
 <section id="id5">
-<h3><span class="section-number">14.2.5. </span>Features<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.5. </span>Features<a class="headerlink" href="#id5" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Introduce <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.TemporalFilter" title="junifer.preprocess.TemporalFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalFilter</span></code></a> preprocessor for temporally filtering BOLD
 data by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/432">#432</a>)</p></li>
@@ -678,7 +714,7 @@ spaces via both FSL and ANTs by <a class="reference external" href="https://gith
 </ul>
 </section>
 <section id="id6">
-<h3><span class="section-number">14.2.6. </span>Miscellaneous<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.2.6. </span>Miscellaneous<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Adopt <code class="docutils literal notranslate"><span class="pre">structlog</span></code> for logging infrastructure by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/231">#231</a>)</p></li>
@@ -710,9 +746,9 @@ image by <a class="reference external" href="https://fraimondo.github.io">Fede R
 </section>
 </section>
 <section id="junifer-0-0-6-2025-03-24">
-<h2><span class="section-number">14.3. </span>Junifer 0.0.6 (2025-03-24)<a class="headerlink" href="#junifer-0-0-6-2025-03-24" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.3. </span>Junifer 0.0.6 (2025-03-24)<a class="headerlink" href="#junifer-0-0-6-2025-03-24" title="Link to this heading">¶</a></h2>
 <section id="id7">
-<h3><span class="section-number">14.3.1. </span>Bugfixes<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.1. </span>Bugfixes<a class="headerlink" href="#id7" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fix <code class="docutils literal notranslate"><span class="pre">mri_binarize</span></code> command preparation for structures with multiple indices
 in <a class="reference internal" href="api/markers.html#junifer.markers.BrainPrint" title="junifer.markers.BrainPrint"><code class="xref py py-class docutils literal notranslate"><span class="pre">BrainPrint</span></code></a> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/356">#356</a>)</p></li>
@@ -746,7 +782,7 @@ values by <a class="reference external" href="https://fraimondo.github.io">Fede 
 </ul>
 </section>
 <section id="id8">
-<h3><span class="section-number">14.3.2. </span>API Changes<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.2. </span>API Changes<a class="headerlink" href="#id8" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">get_parcellation</span></code>, <code class="docutils literal notranslate"><span class="pre">load_parcellation</span></code>, <code class="docutils literal notranslate"><span class="pre">list_parcellation</span></code>,
 <code class="docutils literal notranslate"><span class="pre">register_parcellation</span></code> , <code class="docutils literal notranslate"><span class="pre">get_coordinates</span></code>, <code class="docutils literal notranslate"><span class="pre">load_coordinates</span></code>,
@@ -782,7 +818,7 @@ for <code class="docutils literal notranslate"><span class="pre">strategy</span>
 </ul>
 </section>
 <section id="id9">
-<h3><span class="section-number">14.3.3. </span>Improved Documentation<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.3. </span>Improved Documentation<a class="headerlink" href="#id9" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve Sphinx configuration and extensions by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/358">#358</a>)</p></li>
 <li><p>Add documentation on analysing extracted features by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
@@ -792,7 +828,7 @@ for <code class="docutils literal notranslate"><span class="pre">strategy</span>
 </ul>
 </section>
 <section id="id10">
-<h3><span class="section-number">14.3.4. </span>Enhancements<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.4. </span>Enhancements<a class="headerlink" href="#id10" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Raise error when partial or complete element selectors are invalid when
 running the pipeline by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/319">#319</a>)</p></li>
@@ -841,7 +877,7 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 </ul>
 </section>
 <section id="id11">
-<h3><span class="section-number">14.3.5. </span>Features<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.5. </span>Features<a class="headerlink" href="#id11" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Introduce <a class="reference internal" href="api/onthefly.html#junifer.onthefly._brainprint.normalize" title="junifer.onthefly._brainprint.normalize"><code class="xref py py-func docutils literal notranslate"><span class="pre">normalize()</span></code></a> and <a class="reference internal" href="api/onthefly.html#junifer.onthefly._brainprint.reweight" title="junifer.onthefly._brainprint.reweight"><code class="xref py py-func docutils literal notranslate"><span class="pre">reweight()</span></code></a> functions for downstream
 BrainPrint analysis in <a class="reference internal" href="api/onthefly.html#module-junifer.onthefly._brainprint" title="junifer.onthefly._brainprint"><code class="xref py py-mod docutils literal notranslate"><span class="pre">onthefly._brainprint</span></code></a> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
@@ -869,7 +905,7 @@ HDF5FeatureStorage by <a class="reference external" href="https://fraimondo.gith
 </ul>
 </section>
 <section id="id12">
-<h3><span class="section-number">14.3.6. </span>Miscellaneous<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.3.6. </span>Miscellaneous<a class="headerlink" href="#id12" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Adopt lazy-import mechanism for the package by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/355">#355</a>)</p></li>
 <li><p>Refactor <code class="docutils literal notranslate"><span class="pre">api</span></code> sub-package and introduce new <code class="docutils literal notranslate"><span class="pre">cli</span></code> sub-package by
@@ -910,9 +946,9 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </section>
 </section>
 <section id="junifer-0-0-5-2024-07-22">
-<h2><span class="section-number">14.4. </span>Junifer 0.0.5 (2024-07-22)<a class="headerlink" href="#junifer-0-0-5-2024-07-22" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.4. </span>Junifer 0.0.5 (2024-07-22)<a class="headerlink" href="#junifer-0-0-5-2024-07-22" title="Link to this heading">¶</a></h2>
 <section id="id13">
-<h3><span class="section-number">14.4.1. </span>Bugfixes<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.1. </span>Bugfixes<a class="headerlink" href="#id13" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Remove extra dimension from parcellations warped via ANTs to other template
 spaces by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/324">#324</a>)</p></li>
@@ -927,7 +963,7 @@ types requirement by <a class="reference external" href="https://github.com/sync
 </ul>
 </section>
 <section id="id14">
-<h3><span class="section-number">14.4.2. </span>API Changes<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.2. </span>API Changes<a class="headerlink" href="#id14" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>For <a class="reference internal" href="api/markers.html#junifer.markers.CrossParcellationFC" title="junifer.markers.CrossParcellationFC"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossParcellationFC</span></code></a>, <code class="docutils literal notranslate"><span class="pre">aggregation_method</span></code> and
 <code class="docutils literal notranslate"><span class="pre">correlation_method</span></code> have been renamed to <code class="docutils literal notranslate"><span class="pre">agg_method</span></code> and
@@ -946,7 +982,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id15">
-<h3><span class="section-number">14.4.3. </span>Improved Documentation<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.3. </span>Improved Documentation<a class="headerlink" href="#id15" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve sub-package level docstrings to better reflect their purposes by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/115">#115</a>)</p></li>
@@ -958,7 +994,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id16">
-<h3><span class="section-number">14.4.4. </span>Enhancements<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.4. </span>Enhancements<a class="headerlink" href="#id16" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add test to be sure that <a class="reference internal" href="api/nilearn.html#junifer.external.nilearn.JuniferNiftiSpheresMasker" title="junifer.external.nilearn.JuniferNiftiSpheresMasker"><code class="xref py py-class docutils literal notranslate"><span class="pre">JuniferNiftiSpheresMasker</span></code></a> with mean
 aggregation function behaves exactly as
@@ -979,7 +1015,7 @@ estimator and <code class="docutils literal notranslate"><span class="pre">corre
 </ul>
 </section>
 <section id="id17">
-<h3><span class="section-number">14.4.5. </span>Features<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.5. </span>Features<a class="headerlink" href="#id17" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Introduce <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.Smoothing" title="junifer.preprocess.Smoothing"><code class="xref py py-class docutils literal notranslate"><span class="pre">Smoothing</span></code></a> for smoothing / blurring images as a
 preprocessing step by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/161">#161</a>)</p></li>
@@ -1004,7 +1040,7 @@ with varying width and depth by <a class="reference external" href="https://gith
 </ul>
 </section>
 <section id="id18">
-<h3><span class="section-number">14.4.6. </span>Miscellaneous<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.6. </span>Miscellaneous<a class="headerlink" href="#id18" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve CI to allow external tool installation to fail gracefully and update
 necessary dependency version and conditional checks by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
@@ -1022,7 +1058,7 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 </ul>
 </section>
 <section id="id19">
-<h3><span class="section-number">14.4.7. </span>Deprecations and Removals<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.4.7. </span>Deprecations and Removals<a class="headerlink" href="#id19" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Remove <code class="docutils literal notranslate"><span class="pre">Power</span></code> coordinates, <code class="docutils literal notranslate"><span class="pre">fetch_icbm152_brain_gm_mask</span></code> mask,
 <code class="docutils literal notranslate"><span class="pre">BOLDWarper</span></code> Preprocessor by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/336">#336</a>)</p></li>
@@ -1030,9 +1066,9 @@ Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/
 </section>
 </section>
 <section id="junifer-0-0-4-2024-04-05">
-<h2><span class="section-number">14.5. </span>Junifer 0.0.4 (2024-04-05)<a class="headerlink" href="#junifer-0-0-4-2024-04-05" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.5. </span>Junifer 0.0.4 (2024-04-05)<a class="headerlink" href="#junifer-0-0-4-2024-04-05" title="Link to this heading">¶</a></h2>
 <section id="id20">
-<h3><span class="section-number">14.5.1. </span>Bugfixes<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.1. </span>Bugfixes<a class="headerlink" href="#id20" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Make copying of assets in <code class="docutils literal notranslate"><span class="pre">with</span></code> block of YAML, relative to YAML and not to
 current working directory by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> and <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
@@ -1075,7 +1111,7 @@ other running scripts by <a class="reference external" href="https://fraimondo.g
 </ul>
 </section>
 <section id="id21">
-<h3><span class="section-number">14.5.2. </span>API Changes<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.2. </span>API Changes<a class="headerlink" href="#id21" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Rename <code class="docutils literal notranslate"><span class="pre">Power</span></code> coordinates to <code class="docutils literal notranslate"><span class="pre">Power2011</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a>
 (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/245">#245</a>)</p></li>
@@ -1109,7 +1145,7 @@ implementation-based variations, in particular <a class="reference internal" hre
 </ul>
 </section>
 <section id="id22">
-<h3><span class="section-number">14.5.3. </span>Improved Documentation<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.3. </span>Improved Documentation<a class="headerlink" href="#id22" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add Zenodo badge in <code class="docutils literal notranslate"><span class="pre">README</span></code> and improve general documentation by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/247">#247</a>)</p></li>
@@ -1125,7 +1161,7 @@ writing custom Preprocessors by <a class="reference external" href="https://gith
 </ul>
 </section>
 <section id="id23">
-<h3><span class="section-number">14.5.4. </span>Enhancements<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.4. </span>Enhancements<a class="headerlink" href="#id23" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Support element(s) to be specified via text file for <code class="docutils literal notranslate"><span class="pre">--element</span></code> option of
 <code class="docutils literal notranslate"><span class="pre">junifer</span> <span class="pre">run</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/182">#182</a>)</p></li>
@@ -1164,7 +1200,7 @@ objects having implementation-based variations by <a class="reference external" 
 </ul>
 </section>
 <section id="id24">
-<h3><span class="section-number">14.5.5. </span>Features<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.5. </span>Features<a class="headerlink" href="#id24" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Introduce complexity markers: <a class="reference internal" href="api/markers.html#junifer.markers.complexity.HurstExponent" title="junifer.markers.complexity.HurstExponent"><code class="xref py py-class docutils literal notranslate"><span class="pre">HurstExponent</span></code></a>,
 <a class="reference internal" href="api/markers.html#junifer.markers.complexity.MultiscaleEntropyAUC" title="junifer.markers.complexity.MultiscaleEntropyAUC"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiscaleEntropyAUC</span></code></a>, <a class="reference internal" href="api/markers.html#junifer.markers.complexity.PermEntropy" title="junifer.markers.complexity.PermEntropy"><code class="xref py py-class docutils literal notranslate"><span class="pre">PermEntropy</span></code></a>,
@@ -1217,7 +1253,7 @@ queueing and <a class="reference internal" href="api/api.html#junifer.api.queue_
 </ul>
 </section>
 <section id="id25">
-<h3><span class="section-number">14.5.6. </span>Miscellaneous<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.6. </span>Miscellaneous<a class="headerlink" href="#id25" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Update dependencies requirements by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/253">#253</a>)</p></li>
 <li><p>Pin <code class="docutils literal notranslate"><span class="pre">ruff</span></code> to <code class="docutils literal notranslate"><span class="pre">0.1.0</span></code> as the lowest version and update <code class="docutils literal notranslate"><span class="pre">pre-commit</span></code>
@@ -1249,7 +1285,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id26">
-<h3><span class="section-number">14.5.7. </span>Deprecations and Removals<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.5.7. </span>Deprecations and Removals<a class="headerlink" href="#id26" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">BOLDWarper</span></code> and mark for removal in v0.0.4 by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/301">#301</a>)</p></li>
@@ -1257,9 +1293,9 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </section>
 </section>
 <section id="junifer-0-0-3-2023-07-21">
-<h2><span class="section-number">14.6. </span>Junifer 0.0.3 (2023-07-21)<a class="headerlink" href="#junifer-0-0-3-2023-07-21" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.6. </span>Junifer 0.0.3 (2023-07-21)<a class="headerlink" href="#junifer-0-0-3-2023-07-21" title="Link to this heading">¶</a></h2>
 <section id="id27">
-<h3><span class="section-number">14.6.1. </span>Bugfixes<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.1. </span>Bugfixes<a class="headerlink" href="#id27" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Enable YAML 1.2 support and allow multiline strings in YAML which would not
 work earlier by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/223">#223</a>)</p></li>
@@ -1268,7 +1304,7 @@ work earlier by <a class="reference external" href="https://github.com/synchon">
 </ul>
 </section>
 <section id="id28">
-<h3><span class="section-number">14.6.2. </span>API Changes<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.2. </span>API Changes<a class="headerlink" href="#id28" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Expose <code class="docutils literal notranslate"><span class="pre">types</span></code> parameter for <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICID1000" title="junifer.datagrabber.DataladAOMICID1000"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICID1000</span></code></a>,
 <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP1" title="junifer.datagrabber.DataladAOMICPIOP1"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP1</span></code></a>, <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladAOMICPIOP2" title="junifer.datagrabber.DataladAOMICPIOP2"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladAOMICPIOP2</span></code></a> and
@@ -1282,7 +1318,7 @@ work earlier by <a class="reference external" href="https://github.com/synchon">
 </ul>
 </section>
 <section id="id29">
-<h3><span class="section-number">14.6.3. </span>Improved Documentation<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.3. </span>Improved Documentation<a class="headerlink" href="#id29" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Improve general prose, formatting and code blocks in docs and set line length
 for <code class="docutils literal notranslate"><span class="pre">.rst</span></code> files to 80 by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/220">#220</a>)</p></li>
@@ -1291,7 +1327,7 @@ for <code class="docutils literal notranslate"><span class="pre">.rst</span></co
 </ul>
 </section>
 <section id="id30">
-<h3><span class="section-number">14.6.4. </span>Enhancements<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.4. </span>Enhancements<a class="headerlink" href="#id30" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Change validation of <code class="docutils literal notranslate"><span class="pre">types</span></code> against <code class="docutils literal notranslate"><span class="pre">patterns</span></code> to allow a subset of
 <code class="docutils literal notranslate"><span class="pre">patterns</span></code>’s types to be used for <code class="docutils literal notranslate"><span class="pre">DataGrabber</span></code> data fetch by <a class="reference external" href="https://github.com/synchon">Synchon
@@ -1311,7 +1347,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id31">
-<h3><span class="section-number">14.6.5. </span>Features<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.5. </span>Features<a class="headerlink" href="#id31" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">AICHA</span> <span class="pre">v1</span></code> and <code class="docutils literal notranslate"><span class="pre">AICHA</span> <span class="pre">v2</span></code> parcellations to <code class="docutils literal notranslate"><span class="pre">junifer.data</span></code> by
 <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/173">#173</a>)</p></li>
@@ -1324,7 +1360,7 @@ transform operations on stored data by <a class="reference external" href="https
 </ul>
 </section>
 <section id="id32">
-<h3><span class="section-number">14.6.6. </span>Miscellaneous<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.6.6. </span>Miscellaneous<a class="headerlink" href="#id32" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Consistent docstrings for pytest fixtures used in the test suite by <a class="reference external" href="https://github.com/synchon">Synchon
 Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/228">#228</a>)</p></li>
@@ -1342,9 +1378,9 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </section>
 </section>
 <section id="junifer-0-0-2-2023-03-31">
-<h2><span class="section-number">14.7. </span>Junifer 0.0.2 (2023-03-31)<a class="headerlink" href="#junifer-0-0-2-2023-03-31" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.7. </span>Junifer 0.0.2 (2023-03-31)<a class="headerlink" href="#junifer-0-0-2-2023-03-31" title="Link to this heading">¶</a></h2>
 <section id="id33">
-<h3><span class="section-number">14.7.1. </span>Bugfixes<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.7.1. </span>Bugfixes<a class="headerlink" href="#id33" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fix a bug in which relative storage URIs will be computed relative to the CWD
 and not to the location of the YAML file by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>. (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/127">#127</a>)</p></li>
@@ -1384,7 +1420,7 @@ class, because of missing extra_input parameter by <a class="reference external"
 </ul>
 </section>
 <section id="id34">
-<h3><span class="section-number">14.7.2. </span>API Changes<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.7.2. </span>API Changes<a class="headerlink" href="#id34" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add <code class="docutils literal notranslate"><span class="pre">confounds_format</span></code> parameter to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a>
 constructor for improved handling of confounds specified via
@@ -1407,7 +1443,7 @@ related markers by <a class="reference external" href="https://fraimondo.github.
 </ul>
 </section>
 <section id="id35">
-<h3><span class="section-number">14.7.3. </span>Improved Documentation<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.7.3. </span>Improved Documentation<a class="headerlink" href="#id35" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add more documentation on registering parcellations, coordinates, and masks
 by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/166">#166</a>)</p></li>
@@ -1421,7 +1457,7 @@ README by <a class="reference external" href="https://github.com/synchon">Syncho
 </ul>
 </section>
 <section id="id36">
-<h3><span class="section-number">14.7.4. </span>Enhancements<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.7.4. </span>Enhancements<a class="headerlink" href="#id36" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Organize functional connectivity markers in
 <code class="docutils literal notranslate"><span class="pre">junifer.markers.functional_connectivity</span></code> by <a class="reference external" href="https://github.com/synchon">Synchon Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/107">#107</a>)</p></li>
@@ -1452,7 +1488,7 @@ Mandal</a> (<a class="extlink-gh reference external" href="https://github.com/ju
 </ul>
 </section>
 <section id="id37">
-<h3><span class="section-number">14.7.5. </span>Features<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.7.5. </span>Features<a class="headerlink" href="#id37" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add <a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCParcels" title="junifer.markers.EdgeCentricFCParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCParcels</span></code></a> and <a class="reference internal" href="api/markers.html#junifer.markers.EdgeCentricFCSpheres" title="junifer.markers.EdgeCentricFCSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">EdgeCentricFCSpheres</span></code></a> by
 <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/64">#64</a>)</p></li>
@@ -1474,9 +1510,9 @@ when used as <code class="docutils literal notranslate"><span class="pre">method
 </section>
 </section>
 <section id="junifer-0-0-1-2022-12-20">
-<h2><span class="section-number">14.8. </span>Junifer 0.0.1 (2022-12-20)<a class="headerlink" href="#junifer-0-0-1-2022-12-20" title="Link to this heading">¶</a></h2>
+<h2><span class="section-number">15.8. </span>Junifer 0.0.1 (2022-12-20)<a class="headerlink" href="#junifer-0-0-1-2022-12-20" title="Link to this heading">¶</a></h2>
 <section id="id38">
-<h3><span class="section-number">14.8.1. </span>Bugfixes<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.1. </span>Bugfixes<a class="headerlink" href="#id38" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Fix a bug in which a <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.PatternDataGrabber" title="junifer.datagrabber.PatternDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataGrabber</span></code></a> would now work with
 relative <code class="docutils literal notranslate"><span class="pre">datadir</span></code> paths (reported by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a>, fixed by
@@ -1492,14 +1528,14 @@ one field by <a class="reference external" href="https://fraimondo.github.io">Fe
 </ul>
 </section>
 <section id="id39">
-<h3><span class="section-number">14.8.2. </span>API Changes<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.2. </span>API Changes<a class="headerlink" href="#id39" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Change the <code class="docutils literal notranslate"><span class="pre">single_output</span></code> default parameter in storage classes from
 <code class="docutils literal notranslate"><span class="pre">False</span></code> to <code class="docutils literal notranslate"><span class="pre">True</span></code> by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/134">#134</a>)</p></li>
 </ul>
 </section>
 <section id="id40">
-<h3><span class="section-number">14.8.3. </span>Improved Documentation<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.3. </span>Improved Documentation<a class="headerlink" href="#id40" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add an example how to use <code class="docutils literal notranslate"><span class="pre">junifer</span></code> and <code class="docutils literal notranslate"><span class="pre">julearn</span></code> in one pipeline to
 extract features and do machine learning by <a class="reference external" href="https://github.com/LeSasse">Leonard Sasse</a>,
@@ -1511,7 +1547,7 @@ documentation by <a class="reference external" href="https://fraimondo.github.io
 </ul>
 </section>
 <section id="id41">
-<h3><span class="section-number">14.8.4. </span>Enhancements<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.4. </span>Enhancements<a class="headerlink" href="#id41" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Add comments to <a class="reference internal" href="api/datagrabbers.html#junifer.datagrabber.DataladDataGrabber" title="junifer.datagrabber.DataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladDataGrabber</span></code></a> datagrabber and change to use
 <code class="docutils literal notranslate"><span class="pre">datalad-clone</span></code> instead of <code class="docutils literal notranslate"><span class="pre">datalad-install</span></code> by <a class="reference external" href="https://github.com/bpoldrack">Benjamin Poldrack</a>
@@ -1537,7 +1573,7 @@ validation for pipeline steps by <a class="reference external" href="https://git
 </ul>
 </section>
 <section id="id42">
-<h3><span class="section-number">14.8.5. </span>Features<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.5. </span>Features<a class="headerlink" href="#id42" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Implement <a class="reference internal" href="api/testing.html#junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber" title="junifer.testing.datagrabbers.SPMAuditoryTestingDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">SPMAuditoryTestingDataGrabber</span></code></a> datagrabber by
 <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/52">#52</a>)</p></li>
@@ -1585,7 +1621,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 </ul>
 </section>
 <section id="id43">
-<h3><span class="section-number">14.8.6. </span>Miscellaneous<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h3>
+<h3><span class="section-number">15.8.6. </span>Miscellaneous<a class="headerlink" href="#id43" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Create the repository based on the mockup by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a></p></li>
 </ul>
@@ -1602,7 +1638,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 <div class="context">
 <span>Previous</span>
 </div>
-<div class="title"><span class="section-number">13. </span>FAQs</div>
+<div class="title"><span class="section-number">14. </span>FAQs</div>
 </div>
 </a>
 </div>
@@ -1636,79 +1672,79 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 <div class="toc-tree-container">
 <div class="toc-tree">
 <ul>
-<li><a class="reference internal" href="#">14. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2026-10-09">14.1. junifer 0.0.8.dev311 (2026-10-09)</a><ul>
-<li><a class="reference internal" href="#bugfixes">14.1.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#api-changes">14.1.2. API Changes</a></li>
-<li><a class="reference internal" href="#improved-documentation">14.1.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#enhancements">14.1.4. Enhancements</a></li>
-<li><a class="reference internal" href="#features">14.1.5. Features</a></li>
-<li><a class="reference internal" href="#miscellaneous">14.1.6. Miscellaneous</a></li>
-<li><a class="reference internal" href="#deprecations-and-removals">14.1.7. Deprecations and Removals</a></li>
+<li><a class="reference internal" href="#">15. What’s new</a><ul>
+<li><a class="reference internal" href="#junifer-release-2026-10-10">15.1. junifer 0.0.8.dev314 (2026-10-10)</a><ul>
+<li><a class="reference internal" href="#bugfixes">15.1.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#api-changes">15.1.2. API Changes</a></li>
+<li><a class="reference internal" href="#improved-documentation">15.1.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#enhancements">15.1.4. Enhancements</a></li>
+<li><a class="reference internal" href="#features">15.1.5. Features</a></li>
+<li><a class="reference internal" href="#miscellaneous">15.1.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#deprecations-and-removals">15.1.7. Deprecations and Removals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-7-2026-03-04">14.2. Junifer 0.0.7 (2026-03-04)</a><ul>
-<li><a class="reference internal" href="#id1">14.2.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id2">14.2.2. API Changes</a></li>
-<li><a class="reference internal" href="#id3">14.2.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id4">14.2.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id5">14.2.5. Features</a></li>
-<li><a class="reference internal" href="#id6">14.2.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#junifer-0-0-7-2026-03-04">15.2. Junifer 0.0.7 (2026-03-04)</a><ul>
+<li><a class="reference internal" href="#id1">15.2.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id2">15.2.2. API Changes</a></li>
+<li><a class="reference internal" href="#id3">15.2.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id4">15.2.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id5">15.2.5. Features</a></li>
+<li><a class="reference internal" href="#id6">15.2.6. Miscellaneous</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-6-2025-03-24">14.3. Junifer 0.0.6 (2025-03-24)</a><ul>
-<li><a class="reference internal" href="#id7">14.3.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id8">14.3.2. API Changes</a></li>
-<li><a class="reference internal" href="#id9">14.3.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id10">14.3.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id11">14.3.5. Features</a></li>
-<li><a class="reference internal" href="#id12">14.3.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#junifer-0-0-6-2025-03-24">15.3. Junifer 0.0.6 (2025-03-24)</a><ul>
+<li><a class="reference internal" href="#id7">15.3.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id8">15.3.2. API Changes</a></li>
+<li><a class="reference internal" href="#id9">15.3.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id10">15.3.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id11">15.3.5. Features</a></li>
+<li><a class="reference internal" href="#id12">15.3.6. Miscellaneous</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-5-2024-07-22">14.4. Junifer 0.0.5 (2024-07-22)</a><ul>
-<li><a class="reference internal" href="#id13">14.4.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id14">14.4.2. API Changes</a></li>
-<li><a class="reference internal" href="#id15">14.4.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id16">14.4.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id17">14.4.5. Features</a></li>
-<li><a class="reference internal" href="#id18">14.4.6. Miscellaneous</a></li>
-<li><a class="reference internal" href="#id19">14.4.7. Deprecations and Removals</a></li>
+<li><a class="reference internal" href="#junifer-0-0-5-2024-07-22">15.4. Junifer 0.0.5 (2024-07-22)</a><ul>
+<li><a class="reference internal" href="#id13">15.4.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id14">15.4.2. API Changes</a></li>
+<li><a class="reference internal" href="#id15">15.4.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id16">15.4.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id17">15.4.5. Features</a></li>
+<li><a class="reference internal" href="#id18">15.4.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#id19">15.4.7. Deprecations and Removals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-4-2024-04-05">14.5. Junifer 0.0.4 (2024-04-05)</a><ul>
-<li><a class="reference internal" href="#id20">14.5.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id21">14.5.2. API Changes</a></li>
-<li><a class="reference internal" href="#id22">14.5.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id23">14.5.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id24">14.5.5. Features</a></li>
-<li><a class="reference internal" href="#id25">14.5.6. Miscellaneous</a></li>
-<li><a class="reference internal" href="#id26">14.5.7. Deprecations and Removals</a></li>
+<li><a class="reference internal" href="#junifer-0-0-4-2024-04-05">15.5. Junifer 0.0.4 (2024-04-05)</a><ul>
+<li><a class="reference internal" href="#id20">15.5.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id21">15.5.2. API Changes</a></li>
+<li><a class="reference internal" href="#id22">15.5.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id23">15.5.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id24">15.5.5. Features</a></li>
+<li><a class="reference internal" href="#id25">15.5.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#id26">15.5.7. Deprecations and Removals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-3-2023-07-21">14.6. Junifer 0.0.3 (2023-07-21)</a><ul>
-<li><a class="reference internal" href="#id27">14.6.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id28">14.6.2. API Changes</a></li>
-<li><a class="reference internal" href="#id29">14.6.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id30">14.6.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id31">14.6.5. Features</a></li>
-<li><a class="reference internal" href="#id32">14.6.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#junifer-0-0-3-2023-07-21">15.6. Junifer 0.0.3 (2023-07-21)</a><ul>
+<li><a class="reference internal" href="#id27">15.6.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id28">15.6.2. API Changes</a></li>
+<li><a class="reference internal" href="#id29">15.6.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id30">15.6.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id31">15.6.5. Features</a></li>
+<li><a class="reference internal" href="#id32">15.6.6. Miscellaneous</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-2-2023-03-31">14.7. Junifer 0.0.2 (2023-03-31)</a><ul>
-<li><a class="reference internal" href="#id33">14.7.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id34">14.7.2. API Changes</a></li>
-<li><a class="reference internal" href="#id35">14.7.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id36">14.7.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id37">14.7.5. Features</a></li>
+<li><a class="reference internal" href="#junifer-0-0-2-2023-03-31">15.7. Junifer 0.0.2 (2023-03-31)</a><ul>
+<li><a class="reference internal" href="#id33">15.7.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id34">15.7.2. API Changes</a></li>
+<li><a class="reference internal" href="#id35">15.7.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id36">15.7.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id37">15.7.5. Features</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#junifer-0-0-1-2022-12-20">14.8. Junifer 0.0.1 (2022-12-20)</a><ul>
-<li><a class="reference internal" href="#id38">14.8.1. Bugfixes</a></li>
-<li><a class="reference internal" href="#id39">14.8.2. API Changes</a></li>
-<li><a class="reference internal" href="#id40">14.8.3. Improved Documentation</a></li>
-<li><a class="reference internal" href="#id41">14.8.4. Enhancements</a></li>
-<li><a class="reference internal" href="#id42">14.8.5. Features</a></li>
-<li><a class="reference internal" href="#id43">14.8.6. Miscellaneous</a></li>
+<li><a class="reference internal" href="#junifer-0-0-1-2022-12-20">15.8. Junifer 0.0.1 (2022-12-20)</a><ul>
+<li><a class="reference internal" href="#id38">15.8.1. Bugfixes</a></li>
+<li><a class="reference internal" href="#id39">15.8.2. API Changes</a></li>
+<li><a class="reference internal" href="#id40">15.8.3. Improved Documentation</a></li>
+<li><a class="reference internal" href="#id41">15.8.4. Enhancements</a></li>
+<li><a class="reference internal" href="#id42">15.8.5. Features</a></li>
+<li><a class="reference internal" href="#id43">15.8.6. Miscellaneous</a></li>
 </ul>
 </li>
 </ul>
@@ -1719,7 +1755,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 </div>
 </aside>
 </div>
-</div><script src="_static/documentation_options.js?v=e6ee74c1"></script>
+</div><script src="_static/documentation_options.js?v=bee7ea7f"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="_static/scripts/furo.js?v=46bd48cc"></script>
