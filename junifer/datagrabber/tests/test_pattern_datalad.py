@@ -236,7 +236,10 @@ def test_PatternDataladDataGrabber_subdatasets_search(
 def test_PatternDataladDataGrabber_subdatasets_files(
     tmp_path: Path, subdatasets_uri: AnyUrl
 ) -> None:
-    """Test searching the files of a dataset with sub-datasets.
+    """Test the patterns of a dataset with sub-datasets.
+
+    The files of the dataset can be searched, and the patterns without
+    wildcards can have files in the sub-datasets.
 
     Parameters
     ----------
@@ -256,3 +259,19 @@ def test_PatternDataladDataGrabber_subdatasets_files(
     with dg:
         assert dg.get_elements() == ["sub-01", "sub-02"]
         assert dg["sub-02"]["T1w"]["path"].read_text() == "sub-02"
+    # A pattern without wildcards in a sub-dataset
+    dg = PatternDataladDataGrabber(
+        uri=subdatasets_uri,
+        datadir=tmp_path / "clone",
+        types=["T1w"],
+        patterns={
+            "T1w": {
+                "pattern": "{subject}_T1w.nii",
+                "space": "native",
+                "mask": {"pattern": "sub-01/T1w.nii", "space": "native"},
+            }
+        },
+        replacements=["subject"],
+    )
+    with dg:
+        assert dg.get_elements() == ["sub-01", "sub-02"]

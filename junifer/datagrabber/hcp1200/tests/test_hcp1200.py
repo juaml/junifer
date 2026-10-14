@@ -380,3 +380,4 @@ def test_DataladHCP1200_subdatasets(tmp_path: Path) -> None:
     )
     with config_override("datagrabber.skipidcheck", True), dg:
         assert dg.get_elements() == ["100206", "100307"]
+        assert dg["100206"]["T1w"]["path"].read_text() == "100206 T1w"
