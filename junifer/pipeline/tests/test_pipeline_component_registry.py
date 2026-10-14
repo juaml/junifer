@@ -5,11 +5,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import importlib
 import logging
+import pkgutil
 from abc import ABC
 
 import pytest
 
+import junifer
 from junifer.datagrabber.pattern import PatternDataGrabber
 from junifer.pipeline.pipeline_component_registry import (
     PipelineComponentRegistry,
@@ -152,6 +155,37 @@ def test_pipeline_component_registry_get_class():
     # Get class
     obj = PipelineComponentRegistry().get_class(step="datagrabber", name="bar")
     assert isinstance(obj, type(bar))
+
+
+def test_pipeline_component_registry_get_class_builtin() -> None:
+    """Test get class for the built-in components of the registry."""
+    # A new registry, with the built-in components not imported yet (the
+    # singleton might have imported some of them)
+    registry = object.__new__(PipelineComponentRegistry)
+    registry.__init__()
+    for step in registry.steps:
+        for name in registry.step_components(step=step):
+            assert isinstance(registry.components[step][name], str)
+            klass = registry.get_class(step=step, name=name)
+            assert klass.__name__ == name
+    # Import all the components of the sub-packages of the steps, which
+    # registers them, and check that they are all built-in components, except
+    # the ones with optional dependencies, which are registered by importing
+    # their sub-package (e.g., with ``with:`` in the YAML)
+    optional = ("junifer.markers.complexity.",)
+    for module in pkgutil.walk_packages(junifer.__path__, "junifer."):
+        if ".tests" not in module.name:
+            importlib.import_module(module.name)
+    for step, subpkg in registry._step_to_subpkg_mappings.items():
+        for name, klass in (
+            PipelineComponentRegistry().components[step].items()
+        ):
+            if isinstance(klass, str):
+                continue
+            if klass.__module__.startswith(optional):
+                assert name not in registry.components[step]
+            elif klass.__module__.startswith(f"junifer.{subpkg}."):
+                assert name in registry.components[step]
 
 
 def test_pipeline_component_registry_build():

@@ -15,7 +15,24 @@ if find_spec("neurokit2") is None:
         msg="Could not find `neurokit2`, make sure the package is installed.",
         klass=ImportError,
     )
-else:
-    import lazy_loader as lazy
 
-    __getattr__, __dir__, __all__ = lazy.attach_stub(__name__, __file__)
+# Not lazy: importing the sub-package (e.g., with ``with:`` in the YAML)
+# registers the markers, as they are not built-in components of the registry
+from .hurst_exponent import HurstExponent  # noqa: E402
+from .range_entropy import RangeEntropy  # noqa: E402
+from .range_entropy_auc import RangeEntropyAUC  # noqa: E402
+from .perm_entropy import PermEntropy  # noqa: E402
+from .weighted_perm_entropy import WeightedPermEntropy  # noqa: E402
+from .sample_entropy import SampleEntropy  # noqa: E402
+from .multiscale_entropy_auc import MultiscaleEntropyAUC  # noqa: E402
+
+
+__all__ = [
+    "HurstExponent",
+    "RangeEntropy",
+    "RangeEntropyAUC",
+    "PermEntropy",
+    "WeightedPermEntropy",
+    "SampleEntropy",
+    "MultiscaleEntropyAUC",
+]

@@ -83,8 +83,9 @@ class AFNISmoothing:
             "-automask",
             f"-FWHM {fwhm}",
         ]
-        # Call 3dBlurToFWHM
-        run_ext_cmd(name="3dBlurToFWHM", cmd=blur_cmd)
+        # Call 3dBlurToFWHM, in the tempdir as it writes 3dFWHMx.1D and
+        # 3dFWHMx.1D.png in the current directory
+        run_ext_cmd(name="3dBlurToFWHM", cmd=blur_cmd, cwd=element_tempdir)
 
         # Read header to get output suffix
         header = input["data"].header

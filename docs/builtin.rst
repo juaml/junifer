@@ -197,6 +197,14 @@ Marker
 Available
 ~~~~~~~~~
 
+The markers with a module in the *With* column need optional dependencies
+(e.g., ``neurokit2`` for ``junifer.markers.complexity``), so they are only
+available in the YAML file if their module is added to ``with``:
+
+.. code-block:: yaml
+
+  with: junifer.markers.complexity
+
 .. list-table::
    :widths: auto
    :header-rows: 1
@@ -205,123 +213,156 @@ Available
      - Description
      - State
      - Version Added
+     - With
    * - :class:`.ParcelAggregation`
      - Apply parcellation and perform aggregation function
      - Done
      - 0.0.1
+     -
    * - :class:`.SphereAggregation`
      - Spherical aggregation using mean
      - Done
      - 0.0.1
+     -
    * - :class:`.MapsAggregation`
      - Apply maps (probabilistic atlas) and extract mean time series per region
      - Done
      - 0.0.7
+     -
    * - :class:`.FunctionalConnectivityParcels`
      - Compute functional connectivity over parcellation
      - Done
      - 0.0.1
+     -
    * - :class:`.FunctionalConnectivitySpheres`
      - Compute functional connectivity over spheres placed on coordinates
      - Done
      - 0.0.1
+     -
    * - :class:`.FunctionalConnectivityMaps`
      - Compute functional connectivity over maps (probabilistic atlas)
      - Done
      - 0.0.7
+     -
    * - :class:`.CrossParcellationFC`
      - Compute functional connectivity across two parcellations
      - Done
      - 0.0.1
+     -
    * - :class:`.RSSETSMarker`
      - Compute root sum of squares of edgewise timeseries
      - Done
      - 0.0.1
+     -
    * - :class:`.ReHoParcels`
      - Calculate regional homogeneity over parcellation
      - Done
      - 0.0.1
+     -
    * - :class:`.ReHoSpheres`
      - Calculate regional homogeneity over spheres placed on coordinates
      - Done
      - 0.0.1
+     -
    * - :class:`.ReHoMaps`
      - Calculate regional homogeneity over maps (probabilistic atlas)
      - Done
      - 0.0.7
+     -
    * - :class:`.ALFFParcels`
      - Calculate (f)ALFF and aggregate using parcellations
      - Done
      - 0.0.1
+     -
    * - :class:`.ALFFSpheres`
      - Calculate (f)ALFF and aggregate using spheres placed on coordinates
      - Done
      - 0.0.1
+     -
    * - :class:`.ALFFMaps`
      - Calculate (f)ALFF and aggregate using maps (probabilistic atlas)
      - Done
      - 0.0.7
+     -
    * - :class:`.EdgeCentricFCParcels`
      - | Calculate edge-centric functional connectivity over parcellation, as
        | found in
        | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
+     -
    * - :class:`.EdgeCentricFCSpheres`
      - | Calculate edge-centric functional connectivity over spheres placed on
        | coordinates, as found in
        | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.2
+     -
    * - :class:`.EdgeCentricFCMaps`
      - | Calculate edge-centric functional connectivity over maps (probabilistic atlas),
        | as found in
        | `Jo et al. (2021) <https://doi.org/10.1016/j.neuroimage.2021.118204>`_
      - Done
      - 0.0.7
+     -
    * - :class:`.TemporalSNRParcels`
      - Calculate temporal signal-to-noise ratio using parcellations
      - Done
      - 0.0.2
+     -
    * - :class:`.TemporalSNRSpheres`
      - | Calculate temporal signal-to-noise ratio using spheres placed on
        | coordinates
      - Done
      - 0.0.2
+     -
    * - :class:`.TemporalSNRMaps`
      - Calculate temporal signal-to-noise ratio using maps (probabilistic atlas)
      - Done
      - 0.0.7
+     -
    * - :class:`.HurstExponent`
      - | Calculate Hurst exponent of a time series as found in
        | `Peng et al. (1995) <https://doi.org/10.1063/1.166141>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
    * - :class:`.MultiscaleEntropyAUC`
      - | Calculate AUC of multiscale entropy of a time series as found in
        | `Costa et al. (2002) <https://doi.org/10.1103/PhysRevLett.89.068102>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
    * - :class:`.PermEntropy`
      - | Calculate permutation entropy of a time series as found in
        | `Bandt at al. (2002) <https://doi.org/10.1103/PhysRevLett.88.174102>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
    * - :class:`.RangeEntropy`
      - | Calculate range entropy of a time series as found in
        | `Omidvarnia et al. (2018) <https://doi.org/10.3390/e20120962>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
    * - :class:`.RangeEntropyAUC`
      - | Calculate AUC of range entropy of a time series as found in
        | `Omidvarnia et al. (2018) <https://doi.org/10.3390/e20120962>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
    * - :class:`.SampleEntropy`
      - | Calculate sample entropy of a time series as found in
        | `Richman et al. (2000) <https://doi.org/10.1152/ajpheart.2000.278.6.H2039>`_
      - Done
      - 0.0.4
+     - ``junifer.markers.complexity``
+   * - :class:`.WeightedPermEntropy`
+     - | Calculate weighted permutation entropy of a time series as found in
+       | `Fadlallah et al. (2013) <https://doi.org/10.1103/PhysRevE.87.022911>`_
+     - Done
+     - 0.0.4
+     - ``junifer.markers.complexity``
 
 Planned
 ~~~~~~~
