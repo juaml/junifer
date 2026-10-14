@@ -83,24 +83,30 @@ class PipelineComponentRegistry(metaclass=Singleton):
                 "TemporalFilter": "TemporalFilter",
             },
             "marker": {
+                "ALFFMaps": "ALFFMaps",
                 "ALFFParcels": "ALFFParcels",
                 "ALFFSpheres": "ALFFSpheres",
                 "BaseMarker": "BaseMarker",
                 "BrainPrint": "BrainPrint",
                 "CrossParcellationFC": "CrossParcellationFC",
+                "EdgeCentricFCMaps": "EdgeCentricFCMaps",
                 "EdgeCentricFCParcels": "EdgeCentricFCParcels",
                 "EdgeCentricFCSpheres": "EdgeCentricFCSpheres",
+                "FunctionalConnectivityMaps": "FunctionalConnectivityMaps",
                 "FunctionalConnectivityParcels": (
                     "FunctionalConnectivityParcels"
                 ),
                 "FunctionalConnectivitySpheres": (
                     "FunctionalConnectivitySpheres"
                 ),
+                "MapsAggregation": "MapsAggregation",
                 "ParcelAggregation": "ParcelAggregation",
+                "ReHoMaps": "ReHoMaps",
                 "ReHoParcels": "ReHoParcels",
                 "ReHoSpheres": "ReHoSpheres",
                 "RSSETSMarker": "RSSETSMarker",
                 "SphereAggregation": "SphereAggregation",
+                "TemporalSNRMaps": "TemporalSNRMaps",
                 "TemporalSNRParcels": "TemporalSNRParcels",
                 "TemporalSNRSpheres": "TemporalSNRSpheres",
             },
