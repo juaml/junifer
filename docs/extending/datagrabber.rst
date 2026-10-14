@@ -399,6 +399,17 @@ This approach can be used directly from the YAML, like so:
      uri: "https://cerebra.fz-juelich.de/junifer/datalad-example-bids-ses.git"
      rootdir: example_bids_ses
 
+.. important::
+
+   The elements are found by searching the files of the dataset, but the files
+   of a datalad *sub-dataset* are only there once the sub-dataset is installed.
+   If the patterns search the files of a sub-dataset (e.g., a dataset with a
+   sub-dataset for each subject), :class:`.PatternDataladDataGrabber` raises
+   an error when installing the dataset. These DataGrabbers must implement
+   ``get_elements`` without searching the files (e.g., from the names of the
+   sub-datasets) and build the paths in the sub-datasets without wildcards,
+   as :class:`.DataladHCP1200` does.
+
 .. _extending_datagrabbers_path_expansion:
 
 Advanced: Using Unix-like path expansion directives

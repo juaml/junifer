@@ -3,6 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
+
 import pytest
 
 from junifer.datareader import DefaultDataReader
@@ -47,15 +49,23 @@ def test_Smoothing_nilearn(data_type: str) -> None:
 @pytest.mark.skipif(
     _check_afni() is False, reason="requires AFNI to be in PATH"
 )
-def test_Smoothing_afni(data_type: str) -> None:
+def test_Smoothing_afni(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, data_type: str
+) -> None:
     """Test Smoothing using AFNI.
 
     Parameters
     ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    monkeypatch : pytest.MonkeyPatch
+        The pytest.MonkeyPatch object.
     data_type : str
         The parametrized data type.
 
     """
+    # Run in an empty directory, to check that no files are written in it
+    monkeypatch.chdir(tmp_path)
     with SPMAuditoryTestingDataGrabber(n_timepoints=10) as dg:
         # Read data
         element_data = DefaultDataReader().fit_transform(dg["sub001"])
@@ -67,6 +77,7 @@ def test_Smoothing_afni(data_type: str) -> None:
         ).fit_transform(element_data)
 
         assert isinstance(output, dict)
+    assert list(tmp_path.iterdir()) == []
 
 
 @pytest.mark.parametrize(

@@ -16,7 +16,7 @@ __all__ = ["parse_elements"]
 
 
 def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
-    """Parse elements from cli.
+    """Parse elements from cli, or from the configuration if not in the cli.
 
     Parameters
     ----------
@@ -28,13 +28,13 @@ def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
     Returns
     -------
     list or None
-        The element(s) as list or None.
+        The element(s) as list, or None (all the elements) if they are not in
+        the command-line options nor in the configuration.
 
     Raises
     ------
     ValueError
-        If no element is found either in the command-line options or
-        the configuration file.
+        If the ``elements`` key of the configuration has no value.
 
     Warns
     -----
@@ -44,9 +44,22 @@ def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
 
     """
     logger.debug(f"Parsing elements: {element}")
-    # Early return None to continue with all elements
+    # Use the elements of the configuration if not in the command line
     if not element:
-        return None
+        if "elements" not in config:
+            # None to continue with all elements
+            return None
+        elements = config["elements"]
+        if elements is None:
+            raise_error(
+                "The `elements` key is set in the configuration, but its value"
+                " is `None`. It is likely that there is an empty `elements` "
+                "section in the yaml configuration file."
+            )
+        # A single element, and the elements with multiple values as tuples
+        if not isinstance(elements, list):
+            elements = [elements]
+        return [tuple(x) if isinstance(x, list) else x for x in elements]
     # Check if the element is a file for single element;
     # if yes, then parse elements from it
     if len(element) == 1 and Path(element[0]).resolve().is_file():
@@ -55,7 +68,7 @@ def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
         # Process multi-keyed elements
         elements = [tuple(x.split(",")) if "," in x else x for x in element]
     logger.debug(f"Parsed elements: {elements}")
-    if elements is not None and "elements" in config:
+    if "elements" in config:
         warn_with_log(
             "One or more elements have been specified in both the command "
             "line and in the config file. The command line has precedence "
@@ -64,15 +77,6 @@ def parse_elements(element: tuple[str, ...], config: dict) -> Elements | None:
             "the configuration file will be ignored. To remove this warning, "
             "please remove the `elements` item from the configuration file."
         )
-    elif elements is None:
-        # Check in config
-        elements = config.get("elements", None)
-        if elements is None:
-            raise_error(
-                "The `elements` key is set in the configuration, but its value"
-                " is `None`. It is likely that there is an empty `elements` "
-                "section in the yaml configuration file."
-            )
     return elements
 
 

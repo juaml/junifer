@@ -76,7 +76,7 @@ The following parameters are available for HTCondor:
   temporary directory.
 * ``extra_preamble``: Extra lines to be added to the HTCondor submit file. This
   can be used to add extra parameters to the job, such as ``requirements``.
-* ``collect``: This parameter allows to include a collect to the DAG to collect
+* ``collect_task``: This parameter allows to include a collect to the DAG to collect
   the results once all of the individual element jobs are finished. This is
   useful if you want to run a ``junifer collect`` job only once all of the
   individual element jobs are finished. Valid options are:
@@ -101,7 +101,7 @@ Example in YAML:
       shell: zsh
     mem: 8G
     disk: 2G
-    collect: "yes"  # wrap it in string to avoid boolean
+    collect_task: "yes"  # wrap it in string to avoid boolean
 
 Alternatively, if you use ``venv``, the YAML would look like so:
 
@@ -116,7 +116,7 @@ Alternatively, if you use ``venv``, the YAML would look like so:
       shell: zsh
     mem: 8G
     disk: 2G
-    collect: "yes"  # wrap it in string to avoid boolean
+    collect_task: "yes"  # wrap it in string to avoid boolean
 
 .. _queueing_local:
 

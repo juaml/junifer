@@ -6,6 +6,7 @@
 import collections.abc
 import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 from .logging import logger, raise_error
@@ -20,7 +21,7 @@ __all__ = [
 ]
 
 
-def run_ext_cmd(name: str, cmd: list[str]) -> None:
+def run_ext_cmd(name: str, cmd: list[str], cwd: Path | None = None) -> None:
     """Run external command via subprocess.
 
     Parameters
@@ -29,6 +30,10 @@ def run_ext_cmd(name: str, cmd: list[str]) -> None:
         The name of the command.
     cmd : list of str
         The command to run as list of string.
+    cwd : pathlib.Path or None, optional
+        The directory to run the command in, e.g., for commands that write
+        extra files in the current directory. If None, the current directory
+        is used (default None).
 
     Raises
     ------
@@ -47,6 +52,7 @@ def run_ext_cmd(name: str, cmd: list[str]) -> None:
         stderr=subprocess.STDOUT,
         shell=True,  # needed for respecting $PATH
         check=False,
+        cwd=cwd,
     )
     # Check for success or failure
     if process.returncode == 0:

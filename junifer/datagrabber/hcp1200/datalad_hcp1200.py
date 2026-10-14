@@ -5,12 +5,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from itertools import product
 from pathlib import Path
 from typing import Annotated, Literal
 
 from pydantic import AnyUrl, BeforeValidator
 
 from ...api.decorators import register_datagrabber
+from ...typing import Elements
 from ...utils import ensure_list
 from ..base import DataType
 from ..datalad_base import DataladDataGrabber
@@ -67,3 +69,29 @@ class DataladHCP1200(DataladDataGrabber, HCP1200):
     def skip_file_check(self) -> bool:
         """Skip file check existence."""
         return True
+
+    def get_elements(self) -> Elements:
+        """Implement fetching list of elements in the dataset.
+
+        The subjects are sub-datasets, whose files are only there once they
+        are installed, so the files are not searched: the elements are all
+        the subjects (the directories of the dataset) with the tasks and
+        phase encodings to grab, even if some of them have no data.
+
+        Returns
+        -------
+        list
+            The list of elements that can be grabbed in the dataset.
+
+        """
+        subjects = sorted(
+            x.name
+            for x in self.fulldir.iterdir()
+            if x.is_dir() and not x.name.startswith(".")
+        )
+        values = {"subject": subjects, **self.get_replacement_values()}
+        element_keys = self.get_element_keys()
+        elements = list(product(*(values[k] for k in element_keys)))
+        if len(element_keys) == 1:
+            return [element[0] for element in elements]
+        return elements

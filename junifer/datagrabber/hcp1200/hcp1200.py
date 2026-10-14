@@ -162,3 +162,29 @@ class HCP1200(PatternDataGrabber):
             "pattern"
         ].replace("{suffix}", suffix)
         super().validate_datagrabber_params()
+
+    def _replace_patterns_glob(self, element: dict, pattern: str) -> str:
+        """Replace ``pattern`` with the ``element`` so it can be globbed.
+
+        The BOLD data of the resting-state tasks is in ``rfMRI_*`` and of the
+        other tasks in ``tfMRI_*``, so the path of an element is built
+        without searching the files, which are in sub-datasets in
+        :class:`.DataladHCP1200`.
+
+        Parameters
+        ----------
+        element : dict
+            The element to be used in the replacement.
+        pattern : str
+            The pattern to be replaced.
+
+        Returns
+        -------
+        str
+            The pattern with the element replaced.
+
+        """
+        if "task" in element:
+            prefix = "rfMRI" if "REST" in element["task"] else "tfMRI"
+            pattern = pattern.replace("?fMRI_", f"{prefix}_")
+        return super()._replace_patterns_glob(element, pattern)

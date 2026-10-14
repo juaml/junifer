@@ -91,6 +91,16 @@ and then the ``elements.txt`` would be like so:
 
     sub-01
 
+The elements can also be set in the YAML file, with the ``elements`` key. They
+are used by ``run``, ``queue`` and ``list-elements`` when ``--element`` is not
+given (``--element`` has precedence over the YAML file):
+
+.. code-block:: yaml
+
+    elements:
+      - [sub-01, ses-01]
+      - [sub-02, ses-01]
+
 .. _running_elements:
 
 Complete and partial elements

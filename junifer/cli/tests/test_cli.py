@@ -22,7 +22,7 @@ from junifer.cli.cli import (
     selftest,
     wtf,
 )
-from junifer.cli.parser import _parse_elements_file
+from junifer.cli.parser import _parse_elements_file, parse_elements
 from junifer.pipeline import WorkDirManager
 
 
@@ -203,6 +203,47 @@ def test_multi_element_access(
     read_elements = _parse_elements_file(test_file_path)
     # Check
     assert read_elements == expected_list
+
+
+@pytest.mark.parametrize(
+    "element, config, expected",
+    [
+        ((), {}, None),
+        ((), {"elements": ["sub-01", "sub-02"]}, ["sub-01", "sub-02"]),
+        ((), {"elements": "sub-01"}, ["sub-01"]),
+        ((), {"elements": [["sub-01", "ses-01"]]}, [("sub-01", "ses-01")]),
+        (("sub-01", "sub-02,ses-01"), {}, ["sub-01", ("sub-02", "ses-01")]),
+    ],
+)
+def test_parse_elements(
+    element: tuple[str, ...], config: dict, expected: list | None
+) -> None:
+    """Test parsing the elements from the command line or the configuration.
+
+    Parameters
+    ----------
+    element : tuple of str
+        The parametrized elements of the command line.
+    config : dict
+        The parametrized configuration.
+    expected : list or None
+        The parametrized elements to expect.
+
+    """
+    assert parse_elements(element, config) == expected
+
+
+def test_parse_elements_command_line_precedence() -> None:
+    """Test the elements of the command line have precedence."""
+    with pytest.warns(RuntimeWarning, match="command line has precedence"):
+        elements = parse_elements(("sub-01",), {"elements": ["sub-02"]})
+    assert elements == ["sub-01"]
+
+
+def test_parse_elements_empty_config() -> None:
+    """Test an empty elements key in the configuration."""
+    with pytest.raises(ValueError, match="its value is `None`"):
+        parse_elements((), {"elements": None})
 
 
 def test_queue(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
