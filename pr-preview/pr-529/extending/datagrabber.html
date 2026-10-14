@@ -665,6 +665,17 @@ be used to specify the path to the root directory of the dataset after doing
 <span class="w">  </span><span class="nt">rootdir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example_bids_ses</span>
 </pre></div>
 </div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>The elements are found by searching the files of the dataset, but the files
+of a datalad <em>sub-dataset</em> are only there once the sub-dataset is installed.
+If the patterns search the files of a sub-dataset (e.g., a dataset with a
+sub-dataset for each subject), <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.PatternDataladDataGrabber" title="junifer.datagrabber.PatternDataladDataGrabber"><code class="xref py py-class docutils literal notranslate"><span class="pre">PatternDataladDataGrabber</span></code></a> raises
+an error when installing the dataset. These DataGrabbers must implement
+<code class="docutils literal notranslate"><span class="pre">get_elements</span></code> without searching the files (e.g., from the names of the
+sub-datasets) and build the paths in the sub-datasets without wildcards,
+as <a class="reference internal" href="../api/datagrabbers.html#junifer.datagrabber.DataladHCP1200" title="junifer.datagrabber.DataladHCP1200"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataladHCP1200</span></code></a> does.</p>
+</div>
 </section>
 <section id="advanced-using-unix-like-path-expansion-directives">
 <span id="extending-datagrabbers-path-expansion"></span><h4>Advanced: Using Unix-like path expansion directives<a class="headerlink" href="#advanced-using-unix-like-path-expansion-directives" title="Link to this heading">¶</a></h4>
@@ -997,7 +1008,7 @@ same dataset.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=891f6015"></script>
+</div><script src="../_static/documentation_options.js?v=7c468e67"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
