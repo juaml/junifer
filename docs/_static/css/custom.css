@@ -51,8 +51,19 @@ body:not([data-theme="light"]) .mermaid svg .marker{
   width: 15em;
 }
 
+/* The content takes the width left (not the width of its tables, which do not
+   wrap, and scroll instead), so the table of contents on the right is not
+   narrowed or moved out of the page */
+.main {
+  min-width: 0;
+}
+
 .content {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
   width: auto;
+}
+
+.toc-drawer {
+  flex-shrink: 0;
 }
