@@ -172,10 +172,15 @@ def test_pipeline_component_registry_get_class_builtin() -> None:
     # registers them, and check that they are all built-in components, except
     # the ones with optional dependencies, which are registered by importing
     # their sub-package (e.g., with ``with:`` in the YAML)
-    optional = ("junifer.markers.complexity.",)
+    optional = ("junifer.markers.complexity",)
     for module in pkgutil.walk_packages(junifer.__path__, "junifer."):
-        if ".tests" not in module.name:
+        if ".tests" in module.name:
+            continue
+        try:
             importlib.import_module(module.name)
+        except ImportError:
+            # Only if the optional dependencies are not installed
+            assert module.name.startswith(optional)
     for step, subpkg in registry._step_to_subpkg_mappings.items():
         for name, klass in (
             PipelineComponentRegistry().components[step].items()
