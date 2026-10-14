@@ -8,6 +8,7 @@ import tempfile
 from collections.abc import Iterable
 from pathlib import Path
 
+import datalad.api as dl
 import pytest
 from pydantic import AnyUrl
 
@@ -320,3 +321,62 @@ def test_HCP1200_incorrect_access_icafix(
             tasks=tasks,
             ica_fix=ica_fix,
         )
+
+
+def test_DataladHCP1200_subdatasets(tmp_path: Path) -> None:
+    """Test DataladHCP1200 with a sub-dataset for each subject, as HCP.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    dataset = dl.create(tmp_path / "origin", result_renderer="disabled")
+    for subject in ("100206", "100307"):
+        subdataset = dataset.create(subject, result_renderer="disabled")
+        for folder in ("rfMRI_REST1_LR", "tfMRI_WM_RL"):
+            path = (
+                subdataset.pathobj
+                / "MNINonLinear"
+                / "Results"
+                / folder
+                / f"{folder}.nii.gz"
+            )
+            path.parent.mkdir(parents=True)
+            path.write_text(f"{subject} {folder}")
+        path = subdataset.pathobj / "T1w" / "T1w_acpc_dc_restore.nii.gz"
+        path.parent.mkdir(parents=True)
+        path.write_text(f"{subject} T1w")
+    dataset.save(recursive=True, result_renderer="disabled")
+    dg = DataladHCP1200(
+        uri=AnyUrl(f"file://{dataset.path}"),
+        datadir=tmp_path / "clone",
+        rootdir=Path("."),
+        types=["BOLD", "T1w"],
+        tasks=["REST1", "WM"],
+        phase_encodings=["LR", "RL"],
+    )
+    with config_override("datagrabber.skipidcheck", True), dg:
+        # All the subjects with the tasks and phase encodings, without
+        # installing the sub-datasets
+        assert dg.get_elements() == [
+            (subject, task, phase_encoding)
+            for subject in ("100206", "100307")
+            for task in ("REST1", "WM")
+            for phase_encoding in ("LR", "RL")
+        ]
+        assert not (dg.fulldir / "100206" / "T1w").exists()
+        out = dg[("100307", "WM", "RL")]
+        assert out["BOLD"]["path"].read_text() == "100307 tfMRI_WM_RL"
+        assert out["T1w"]["path"].read_text() == "100307 T1w"
+        out = dg[("100206", "REST1", "LR")]
+        assert out["BOLD"]["path"].read_text() == "100206 rfMRI_REST1_LR"
+    dg = DataladHCP1200(
+        uri=AnyUrl(f"file://{dataset.path}"),
+        datadir=tmp_path / "clone",
+        rootdir=Path("."),
+        types=["T1w"],
+    )
+    with config_override("datagrabber.skipidcheck", True), dg:
+        assert dg.get_elements() == ["100206", "100307"]

@@ -7,6 +7,8 @@
 
 from pathlib import Path
 
+import datalad.api as dl
+import pytest
 from pydantic import AnyUrl
 
 from junifer.datagrabber import DataType, PatternDataladDataGrabber
@@ -174,3 +176,83 @@ def test_bids_PatternDataladDataGrabber_session():
             for i in range(1, 10)
         ]
         assert set(subs) == set(expected_subs)
+
+
+@pytest.fixture
+def subdatasets_uri(tmp_path: Path) -> AnyUrl:
+    """Return the URI of a dataset with a sub-dataset for each subject.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    dataset = dl.create(tmp_path / "origin", result_renderer="disabled")
+    for subject in ("sub-01", "sub-02"):
+        subdataset = dataset.create(subject, result_renderer="disabled")
+        (subdataset.pathobj / "T1w.nii").write_text(subject)
+        (dataset.pathobj / f"{subject}_T1w.nii").write_text(subject)
+    dataset.save(recursive=True, result_renderer="disabled")
+    return AnyUrl(f"file://{dataset.path}")
+
+
+@pytest.mark.parametrize(
+    "pattern",
+    ["{subject}/T1w.nii", "{subject}/T1*.nii"],
+)
+def test_PatternDataladDataGrabber_subdatasets_search(
+    tmp_path: Path, subdatasets_uri: AnyUrl, pattern: str
+) -> None:
+    """Test searching the files of the sub-datasets raises an error.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    subdatasets_uri : pydantic.AnyUrl
+        The URI of the dataset with a sub-dataset for each subject.
+    pattern : str
+        The parametrized pattern, which searches the files of the
+        sub-datasets.
+
+    """
+    dg = PatternDataladDataGrabber(
+        uri=subdatasets_uri,
+        datadir=tmp_path / "clone",
+        types=["T1w"],
+        patterns={"T1w": {"pattern": pattern, "space": "native"}},
+        replacements=["subject"],
+    )
+    with pytest.raises(RuntimeError, match="searches the files of the"):
+        with dg:
+            pass
+    # The cloned dataset is removed
+    assert not (tmp_path / "clone").exists() or not any(
+        (tmp_path / "clone").iterdir()
+    )
+
+
+def test_PatternDataladDataGrabber_subdatasets_files(
+    tmp_path: Path, subdatasets_uri: AnyUrl
+) -> None:
+    """Test searching the files of a dataset with sub-datasets.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    subdatasets_uri : pydantic.AnyUrl
+        The URI of the dataset with a sub-dataset for each subject.
+
+    """
+    dg = PatternDataladDataGrabber(
+        uri=subdatasets_uri,
+        datadir=tmp_path / "clone",
+        types=["T1w"],
+        patterns={"T1w": {"pattern": "{subject}_T1w.nii", "space": "native"}},
+        replacements=["subject"],
+    )
+    with dg:
+        assert dg.get_elements() == ["sub-01", "sub-02"]
+        assert dg["sub-02"]["T1w"]["path"].read_text() == "sub-02"
