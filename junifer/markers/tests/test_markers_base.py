@@ -347,3 +347,30 @@ def test_base_marker_input_not_changed(tmp_path: Path) -> None:
 
     out = _fit(read, tmp_path)
     assert "feat" in out["BOLD"]
+
+
+def test_base_marker_input_not_loaded(tmp_path: Path) -> None:
+    """Test checking the input does not load the data of the images.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    input = _input(tmp_path)
+
+    class Marker(BaseMarker):
+        _MARKER_INOUT_MAPPINGS = {  # noqa: RUF012
+            DataType.BOLD: {"feat": StorageType.Vector},
+        }
+
+        def compute(self, input, extra_input=None):
+            return {"feat": {"data": np.zeros((1, 1)), "col_names": ["x"]}}
+
+    Marker(on=["BOLD"], name="marker").fit_transform(input=input)
+    # The file-backed image without its data loaded is still not loaded
+    mask = input["BOLD"]["mask"]
+    assert not mask.in_memory
+    assert getattr(mask, "_data_cache", None) is None
+    assert getattr(mask, "_fdata_cache", None) is None
