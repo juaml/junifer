@@ -8,6 +8,7 @@ from pathlib import Path
 
 import nibabel as nib
 import numpy as np
+from tqdm import tqdm
 
 from ...utils import config, raise_error, run_ext_cmd
 from ..base import logger
@@ -73,7 +74,7 @@ def warp_in_chunks(
         f"{chunk_size} volumes"
     )
     warped_chunks = []
-    for i, start in enumerate(starts):
+    for i, start in enumerate(tqdm(starts, desc=f"{name} chunks")):
         chunk_path = tempdir / f"chunk{i}_{input_path.name}"
         warped_chunk_path = tempdir / f"chunk{i}_{output_path.name}"
         chunk = img.slicer[..., start : start + chunk_size]
