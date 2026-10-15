@@ -110,6 +110,7 @@ class ANTsMapsWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n LanczosWindowedSinc",
                 f"-i {prewarp_maps_path.resolve()}",
                 # use resampled reference
@@ -147,6 +148,7 @@ class ANTsMapsWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n LanczosWindowedSinc",
                 f"-i {prewarp_maps_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",

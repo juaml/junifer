@@ -114,6 +114,7 @@ class ANTsParcellationWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
@@ -157,6 +158,7 @@ class ANTsParcellationWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",

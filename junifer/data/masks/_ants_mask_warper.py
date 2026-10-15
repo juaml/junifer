@@ -131,6 +131,7 @@ class ANTsMaskWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_mask_path.resolve()}",
                 # use resampled reference
@@ -168,6 +169,7 @@ class ANTsMaskWarper:
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 f"-n {_get_interpolation_method(mask_img)}",
                 f"-i {prewarp_mask_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",

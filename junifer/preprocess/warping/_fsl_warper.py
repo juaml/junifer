@@ -15,6 +15,7 @@ from ...pipeline import ExtDep, WorkDirManager
 from ...typing import Dependencies, ExternalDependencies
 from ...utils import raise_error, run_ext_cmd
 from ..base import logger
+from ._utils import warp_in_chunks
 
 
 __all__ = ["FSLWarper"]
@@ -108,18 +109,22 @@ class FSLWarper:
 
             # Create a tempfile for warped output
             applywarp_out_path = element_tempdir / "warped_data.nii.gz"
-            # Set applywarp command
-            applywarp_cmd = [
-                "applywarp",
-                "--interp=spline",
-                f"-i {input['path'].resolve()}",
-                # use resampled reference
-                f"-r {flirt_out_path.resolve()}",
-                f"-w {warp_file_path.resolve()}",
-                f"-o {applywarp_out_path.resolve()}",
-            ]
-            # Call applywarp
-            run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
+            # Call applywarp in chunks of volumes
+            warp_in_chunks(
+                name="applywarp",
+                input_path=input["path"].resolve(),
+                output_path=applywarp_out_path.resolve(),
+                cmd=lambda in_path, out_path: [
+                    "applywarp",
+                    "--interp=spline",
+                    f"-i {in_path}",
+                    # use resampled reference
+                    f"-r {flirt_out_path.resolve()}",
+                    f"-w {warp_file_path.resolve()}",
+                    f"-o {out_path}",
+                ],
+                tempdir=element_tempdir,
+            )
 
             logger.debug("Updating warped data")
             input.update(
@@ -223,18 +228,22 @@ class FSLWarper:
                 element_tempdir
                 / f"warped_data_from_native_to_{reference}.nii.gz"
             )
-            # Set applywarp command
-            applywarp_cmd = [
-                "applywarp",
-                "--interp=spline",
-                f"-i {input['path'].resolve()}",
-                # use resampled reference or original
-                f"-r {ref_path.resolve()}",
-                f"-w {warp_file_path.resolve()}",
-                f"-o {applywarp_out_path.resolve()}",
-            ]
-            # Call applywarp
-            run_ext_cmd(name="applywarp", cmd=applywarp_cmd)
+            # Call applywarp in chunks of volumes
+            warp_in_chunks(
+                name="applywarp",
+                input_path=input["path"].resolve(),
+                output_path=applywarp_out_path.resolve(),
+                cmd=lambda in_path, out_path: [
+                    "applywarp",
+                    "--interp=spline",
+                    f"-i {in_path}",
+                    # use resampled reference or original
+                    f"-r {ref_path.resolve()}",
+                    f"-w {warp_file_path.resolve()}",
+                    f"-o {out_path}",
+                ],
+                tempdir=element_tempdir,
+            )
 
             logger.debug("Updating warped data")
             input.update(
