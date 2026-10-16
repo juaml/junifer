@@ -15,7 +15,6 @@ from typing import Any
 import numpy as np
 import pandas as pd
 from nibabel.spatialimages import SpatialImage
-from nilearn.image import get_data
 from scipy.stats import zscore
 
 from ..utils import raise_error
@@ -162,8 +161,38 @@ def _checksum(array: np.ndarray) -> tuple:
     """
     crc = None
     if not array.dtype.hasobject:
+        # The transpose of an array in Fortran order (e.g., the data of a
+        # NIfTI image) is in C order, so it is not copied
+        if array.flags.f_contiguous and not array.flags.c_contiguous:
+            array = array.T
         crc = zlib.crc32(memoryview(np.ascontiguousarray(array)).cast("B"))
     return (array.shape, array.dtype.str, crc)
+
+
+def _image_data(img: SpatialImage) -> tuple:
+    """Get the data of an image in memory.
+
+    The data read from the file of an image is not loaded, as it cannot be
+    changed (unless it is cached) and it would be kept in memory.
+
+    Parameters
+    ----------
+    img : nibabel.spatialimages.SpatialImage
+        The image.
+
+    Returns
+    -------
+    tuple
+        The data of the image if it is in memory (the data of an image
+        created from an array, or the data cached by nilearn, e.g., with
+        ``nilearn.image.get_data``) and the data cached by nibabel's
+        ``get_fdata``, or None.
+
+    """
+    data = img.dataobj
+    if not isinstance(data, np.ndarray):
+        data = getattr(img, "_data_cache", None)
+    return data, getattr(img, "_fdata_cache", None)
 
 
 def _checksums(value: Any) -> tuple:
@@ -179,9 +208,8 @@ def _checksums(value: Any) -> tuple:
     tuple
         The checksums, empty for other values. For data frames and series:
         the values and index, and the column labels or name. For images: the
-        affine, the data (loaded with nilearn, which caches it in the image,
-        as most markers access it this way) and the data cached by nibabel's
-        ``get_fdata`` (None if not cached). For sets: their contents.
+        affine and the data in memory (see :func:`_image_data`, None if not in
+        memory). For sets: their contents.
 
     """
     if isinstance(value, np.ndarray):
@@ -197,11 +225,12 @@ def _checksums(value: Any) -> tuple:
             labels,
         )
     if isinstance(value, SpatialImage):
-        fdata = getattr(value, "_fdata_cache", None)
         return (
             _checksum(value.affine),
-            _checksum(get_data(value)),
-            None if fdata is None else _checksum(fdata),
+            *(
+                None if data is None else _checksum(data)
+                for data in _image_data(value)
+            ),
         )
     if isinstance(value, set | frozenset):
         return (frozenset(value),)
@@ -257,21 +286,26 @@ def _is_changed(old: tuple, new: tuple) -> bool:
     if new_value is not old_value:
         return True
     if isinstance(new_value, SpatialImage):
-        old_fdata, new_fdata = old_sums[2], new_sums[2]
-        old_sums, new_sums = old_sums[:2], new_sums[:2]
-        if new_fdata is not None:
-            if old_fdata is not None and old_fdata[1] == new_fdata[1]:
-                # Same dtype: the cached data must be the same
-                if old_fdata != new_fdata:
+        # The affine must be the same
+        if old_sums[0] != new_sums[0]:
+            return True
+        for old_data, new_data, data in zip(
+            old_sums[1:], new_sums[1:], _image_data(new_value), strict=True
+        ):
+            if new_data is None:
+                # Not in memory (or no longer cached)
+                continue
+            if old_data is not None and old_data[1] == new_data[1]:
+                # Same dtype: the data in memory must be the same
+                if old_data != new_data:
                     return True
             else:
-                # The data was cached by get_fdata during the computation,
-                # possibly with another dtype: compare it with the data read
-                # as get_fdata does
-                fdata = new_value._fdata_cache
-                expected = np.asanyarray(new_value.dataobj, dtype=fdata.dtype)
-                if not np.array_equal(fdata, expected, equal_nan=True):
+                # The data was cached during the computation, possibly with
+                # another dtype: compare it with the data read from the file
+                expected = np.asanyarray(new_value.dataobj, dtype=data.dtype)
+                if not np.array_equal(data, expected, equal_nan=True):
                     return True
+        return False
     return old_sums != new_sums
 
 
