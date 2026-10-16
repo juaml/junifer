@@ -50,6 +50,7 @@ class JuniferALFF(metaclass=Singleton):
         highpass: float,
         lowpass: float,
         tr: float | None,
+        mask_path: Path | None = None,
     ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF + fALFF map.
 
@@ -63,6 +64,10 @@ class JuniferALFF(metaclass=Singleton):
             Lowpass cutoff frequency.
         tr : positive float, optional
             The Repetition Time of the BOLD data.
+        mask_path : pathlib.Path, optional
+            Path to the mask to restrict the computation to. The voxels
+            outside the mask are set to 0. If None, all the voxels are used
+            (default None).
 
         Returns
         -------
@@ -102,15 +107,22 @@ class JuniferALFF(metaclass=Singleton):
             f"nyquist = {fft_freqs[-1]}"
         )
 
-        # Process voxels in chunks to bound FFT memory
+        # Process voxels (only the ones in the mask, if any) in chunks to
+        # bound FFT memory
         flat = niimg_data.reshape(-1, n_timepoints)
-        numerator = np.empty(flat.shape[0])
-        denominator = np.empty(flat.shape[0])
+        if mask_path is not None:
+            mask_data = np.squeeze(np.asarray(nib.load(mask_path).dataobj))
+            voxels = np.flatnonzero(mask_data.reshape(-1) != 0)
+        else:
+            voxels = np.arange(flat.shape[0])
+        numerator = np.zeros(flat.shape[0])
+        denominator = np.zeros(flat.shape[0])
         chunk = 20_000
-        for start in range(0, flat.shape[0], chunk):
-            amp = np.abs(sp.fft.rfft(flat[start : start + chunk], axis=-1))
-            denominator[start : start + chunk] = amp @ weights
-            numerator[start : start + chunk] = amp @ band_weights
+        for start in range(0, len(voxels), chunk):
+            t_voxels = voxels[start : start + chunk]
+            amp = np.abs(sp.fft.rfft(flat[t_voxels], axis=-1))
+            denominator[t_voxels] = amp @ weights
+            numerator[t_voxels] = amp @ band_weights
         spatial_shape = niimg_data.shape[:-1]
         numerator = numerator.reshape(spatial_shape)
         denominator = denominator.reshape(spatial_shape)

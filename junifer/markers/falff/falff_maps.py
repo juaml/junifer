@@ -92,7 +92,7 @@ class ALFFMaps(ALFFBase):
 
         # Compute ALFF + fALFF
         alff_output, falff_output, alff_output_path, falff_output_path = (
-            self._compute(input_data=input)
+            self._compute(input_data=input, extra_input=extra_input)
         )
 
         # Perform aggregation on ALFF + fALFF

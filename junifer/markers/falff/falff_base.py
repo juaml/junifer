@@ -17,11 +17,13 @@ from typing import (
 
 from pydantic import BeforeValidator, PositiveFloat
 
+from ...data import get_data
 from ...datagrabber import DataType
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils import ensure_list_or_none
 from ..base import BaseMarker, logger
+from ..utils import _save_mask
 from ._afni_falff import AFNIALFF
 from ._junifer_falff import JuniferALFF
 
@@ -66,8 +68,10 @@ class ALFFBase(BaseMarker):
         The parameters to pass to the aggregation function.
         See :func:`.get_aggfunc_by_name` for options (default None).
     masks : str, dict, list of them or None, optional
-        The specification of the masks to apply to regions before extracting
-        signals. Check :ref:`Using Masks <using_masks>` for more details.
+        The specification of the masks to apply. The ALFF and fALFF
+        computation is restricted to the voxels in the mask, and the mask is
+        also applied to regions before extracting signals. Check
+        :ref:`Using Masks <using_masks>` for more details.
         If None, will not apply any mask (default None).
     name : str or None, optional
         The name of the marker.
@@ -115,6 +119,7 @@ class ALFFBase(BaseMarker):
     def _compute(
         self,
         input_data: dict[str, Any],
+        extra_input: dict[str, Any] | None = None,
     ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF and fALFF.
 
@@ -123,7 +128,8 @@ class ALFFBase(BaseMarker):
         input_data : dict
             The input to the marker.
         extra_input : dict, optional
-            The other fields in the pipeline data object (default None).
+            The other fields in the pipeline data object. Used to compute
+            the mask in the space of ``input_data`` (default None).
 
         Returns
         -------
@@ -144,12 +150,26 @@ class ALFFBase(BaseMarker):
             estimator = AFNIALFF()
         elif self.using == "junifer":
             estimator = JuniferALFF()
+        # Get mask in the space of the input data
+        mask_path = None
+        if self.masks is not None:
+            logger.debug(f"Masking with {self.masks}")
+            mask_path = _save_mask(
+                get_data(
+                    kind="mask",
+                    names=self.masks,
+                    target_data=input_data,
+                    extra_input=extra_input,
+                ),
+                prefix="alff_mask",
+            )
         # Compute ALFF + fALFF
         alff, falff, alff_path, falff_path = estimator.compute(  # type: ignore
             input_path=input_data["path"],
             highpass=self.highpass,
             lowpass=self.lowpass,
             tr=self.tr,
+            mask_path=mask_path,
         )
 
         # If the input data space is native already, the original path should

@@ -8,16 +8,57 @@
 #          Amir Omidvarnia <a.omidvarnia@fz-juelich.de>
 # License: AGPL
 
+import hashlib
 import zlib
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
+import nibabel as nib
 import numpy as np
 import pandas as pd
 from nibabel.spatialimages import SpatialImage
 from scipy.stats import zscore
 
+from ..pipeline import WorkDirManager
 from ..utils import raise_error
+
+
+def _save_mask(mask_img: SpatialImage, prefix: str) -> Path:
+    """Save mask to the working directory, named by its content.
+
+    The same mask always gets the same path, so that the cached computations
+    (e.g., ReHo or ALFF) can be reused by markers using the same mask.
+
+    Parameters
+    ----------
+    mask_img : Niimg-like object
+        The mask to save.
+    prefix : str
+        The prefix of the file name.
+
+    Returns
+    -------
+    pathlib.Path
+        The path to the saved mask.
+
+    """
+    mask_data = np.squeeze(np.asarray(mask_img.dataobj)) != 0
+    digest = hashlib.sha256()
+    digest.update(str(mask_data.shape).encode())
+    digest.update(np.packbits(mask_data).tobytes())
+    digest.update(mask_img.affine.tobytes())
+    mask_path = (
+        WorkDirManager().workdir / f"{prefix}_{digest.hexdigest()[:16]}.nii"
+    )
+    if not mask_path.exists():
+        nib.save(
+            nib.Nifti1Image(
+                mask_data.astype(np.uint8), mask_img.affine, mask_img.header
+            ),
+            mask_path,
+        )
+    return mask_path
 
 
 def _has_data(data: np.ndarray) -> np.ndarray:

@@ -5,6 +5,7 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import nibabel as nib
 import numpy as np
 import pandas as pd
 import pytest
@@ -498,6 +499,9 @@ def test_fMRIPrepConfoundRemover_fit_transform() -> None:
         # Fit-transform
         output = confound_remover.fit_transform(element_data)
         output_img = output["BOLD"]["data"]
+        # The data is loaded from the saved file, not kept in memory
+        assert nib.is_proxy(output_img.dataobj)
+        assert output_img.get_filename() == str(output["BOLD"]["path"])
         output_bold = output_img.get_fdata()
         output_tr = output_img.header.get_zooms()[3]
 
@@ -554,6 +558,9 @@ def test_fMRIPrepConfoundRemover_fit_transform_masks() -> None:
         # Fit-transform
         output = confound_remover.fit_transform(element_data)
         output_img = output["BOLD"]["data"]
+        # The data is loaded from the saved file, not kept in memory
+        assert nib.is_proxy(output_img.dataobj)
+        assert output_img.get_filename() == str(output["BOLD"]["path"])
         output_bold = output_img.get_fdata()
         output_tr = output_img.header.get_zooms()[3]
 

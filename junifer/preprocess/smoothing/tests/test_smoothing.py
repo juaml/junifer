@@ -5,6 +5,7 @@
 
 from pathlib import Path
 
+import nibabel as nib
 import pytest
 
 from junifer.datareader import DefaultDataReader
@@ -40,6 +41,11 @@ def test_Smoothing_nilearn(data_type: str) -> None:
         ).fit_transform(element_data)
 
         assert isinstance(output, dict)
+        # The data is loaded from the saved file, not kept in memory
+        assert nib.is_proxy(output[data_type]["data"].dataobj)
+        assert output[data_type]["data"].get_filename() == str(
+            output[data_type]["path"]
+        )
 
 
 @pytest.mark.parametrize(

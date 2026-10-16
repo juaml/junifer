@@ -159,8 +159,10 @@ class TemporalSlicer(BasePreprocessor):
             {
                 # Update path to sync with "data"
                 "path": sliced_img_path,
-                # Update data
-                "data": sliced_img,
+                # Update data, loaded from the file to not keep the
+                # in-memory image (memory-mapped, as the file is not
+                # compressed)
+                "data": nib.load(sliced_img_path),
             }
         )
 

@@ -3,6 +3,7 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import nibabel as nib
 import pytest
 
 from junifer.datareader import DefaultDataReader
@@ -98,6 +99,11 @@ def test_TemporalFilter(
         ).fit_transform(element_data)
 
         assert isinstance(output, dict)
+        # The data is loaded from the saved file, not kept in memory
+        assert nib.is_proxy(output["BOLD"]["data"].dataobj)
+        assert output["BOLD"]["data"].get_filename() == str(
+            output["BOLD"]["path"]
+        )
 
 
 @pytest.mark.parametrize("standardize", [True, False])

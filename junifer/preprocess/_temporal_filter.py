@@ -201,8 +201,10 @@ class TemporalFilter(BasePreprocessor):
             {
                 # Update path to sync with "data"
                 "path": filtered_data_path,
-                # Update data
-                "data": cleaned_img,
+                # Update data, loaded from the file to not keep the
+                # in-memory image (memory-mapped, as the file is not
+                # compressed)
+                "data": nib.load(filtered_data_path),
             }
         )
 
