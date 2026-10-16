@@ -94,7 +94,7 @@ class ANTsWarper:
 
             # Create a tempfile for resampled reference output
             resample_image_out_path = (
-                element_tempdir / "resampled_reference.nii.gz"
+                element_tempdir / "resampled_reference.nii"
             )
             # Set ResampleImage command
             resample_image_cmd = [
@@ -110,7 +110,7 @@ class ANTsWarper:
             run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
 
             # Create a tempfile for warped output
-            apply_transforms_out_path = element_tempdir / "warped_data.nii.gz"
+            apply_transforms_out_path = element_tempdir / "warped_data.nii"
             # Call antsApplyTransforms in single precision, in chunks of
             # volumes
             warp_in_chunks(
@@ -152,7 +152,7 @@ class ANTsWarper:
             if input.get("mask") is not None:
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = (
-                    element_tempdir / "warped_mask.nii.gz"
+                    element_tempdir / "warped_mask.nii"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [
@@ -220,7 +220,7 @@ class ANTsWarper:
                     # Create a tempfile for resampled reference output
                     ref_path = (
                         element_tempdir
-                        / f"resampled_reference-{reference}.nii.gz"
+                        / f"resampled_reference-{reference}.nii"
                     )
                     # Set ResampleImage command
                     resample_image_cmd = [
@@ -251,12 +251,12 @@ class ANTsWarper:
                     extra_input=None,
                 )
                 # Save template
-                ref_path = element_tempdir / f"{reference}_T1w.nii.gz"
+                ref_path = element_tempdir / f"{reference}_T1w.nii"
                 nib.save(template_space_img, ref_path)
 
             # Create a tempfile for warped output
             warped_output_path = element_tempdir / (
-                f"warped_data_from_{input_space}_to_{reference}.nii.gz"
+                f"warped_data_from_{input_space}_to_{reference}.nii"
             )
 
             # Call antsApplyTransforms in single precision, in chunks of
@@ -301,7 +301,7 @@ class ANTsWarper:
                 logger.debug("Warping associated mask")
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = element_tempdir / (
-                    f"warped_mask_from_{input_space}_to_{reference}.nii.gz"
+                    f"warped_mask_from_{input_space}_to_{reference}.nii"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [

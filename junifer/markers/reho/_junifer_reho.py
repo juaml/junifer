@@ -204,7 +204,7 @@ class JuniferReHo(metaclass=Singleton):
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="junifer_reho"
         )
-        output_path = element_tempdir / "output.nii.gz"
+        output_path = element_tempdir / "output.nii"
         # Save computed data to file
         nib.save(output_data, output_path)
 

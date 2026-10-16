@@ -94,9 +94,10 @@ class FSLWarper:
                 )
 
             # Create a tempfile for resampled reference output
-            flirt_out_path = element_tempdir / "resampled_reference.nii.gz"
+            flirt_out_path = element_tempdir / "resampled_reference.nii"
             # Set flirt command
             flirt_cmd = [
+                "FSLOUTPUTTYPE=NIFTI",
                 "flirt",
                 "-interp spline",
                 f"-in {extra_input['T1w']['path'].resolve()}",
@@ -108,13 +109,14 @@ class FSLWarper:
             run_ext_cmd(name="flirt", cmd=flirt_cmd)
 
             # Create a tempfile for warped output
-            applywarp_out_path = element_tempdir / "warped_data.nii.gz"
+            applywarp_out_path = element_tempdir / "warped_data.nii"
             # Call applywarp in chunks of volumes
             warp_in_chunks(
                 name="applywarp",
                 input_path=input["path"].resolve(),
                 output_path=applywarp_out_path.resolve(),
                 cmd=lambda in_path, out_path: [
+                    "FSLOUTPUTTYPE=NIFTI",
                     "applywarp",
                     "--interp=spline",
                     f"-i {in_path}",
@@ -145,11 +147,10 @@ class FSLWarper:
             # Check for data type's mask and warp if found
             if input.get("mask") is not None:
                 # Create a tempfile for warped mask output
-                applywarp_mask_out_path = (
-                    element_tempdir / "warped_mask.nii.gz"
-                )
+                applywarp_mask_out_path = element_tempdir / "warped_mask.nii"
                 # Set applywarp command
                 applywarp_mask_cmd = [
+                    "FSLOUTPUTTYPE=NIFTI",
                     "applywarp",
                     "--interp=nn",
                     f"-i {input['mask']['path'].resolve()}",
@@ -206,10 +207,11 @@ class FSLWarper:
                 logger.debug("Resampling reference to match input resolution")
                 # Create a tempfile for resampled reference output
                 ref_path = (
-                    element_tempdir / f"resampled_reference-{reference}.nii.gz"
+                    element_tempdir / f"resampled_reference-{reference}.nii"
                 )
                 # Set flirt command
                 flirt_cmd = [
+                    "FSLOUTPUTTYPE=NIFTI",
                     "flirt",
                     "-interp spline",
                     f"-in {input['reference']['path'].resolve()}",
@@ -225,8 +227,7 @@ class FSLWarper:
 
             # Create a tempfile for warped output
             applywarp_out_path = (
-                element_tempdir
-                / f"warped_data_from_native_to_{reference}.nii.gz"
+                element_tempdir / f"warped_data_from_native_to_{reference}.nii"
             )
             # Call applywarp in chunks of volumes
             warp_in_chunks(
@@ -234,6 +235,7 @@ class FSLWarper:
                 input_path=input["path"].resolve(),
                 output_path=applywarp_out_path.resolve(),
                 cmd=lambda in_path, out_path: [
+                    "FSLOUTPUTTYPE=NIFTI",
                     "applywarp",
                     "--interp=spline",
                     f"-i {in_path}",
@@ -267,10 +269,11 @@ class FSLWarper:
                 # Create a tempfile for warped mask output
                 applywarp_mask_out_path = (
                     element_tempdir
-                    / f"warped_mask_from_native_to_{reference}.nii.gz"
+                    / f"warped_mask_from_native_to_{reference}.nii"
                 )
                 # Set applywarp command
                 applywarp_mask_cmd = [
+                    "FSLOUTPUTTYPE=NIFTI",
                     "applywarp",
                     "--interp=nn",
                     f"-i {input['mask']['path'].resolve()}",

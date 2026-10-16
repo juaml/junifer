@@ -66,13 +66,14 @@ class FSLMapsWarper:
         )
 
         # Save existing maps image to a tempfile
-        prewarp_maps_path = element_tempdir / "prewarp_maps.nii.gz"
+        prewarp_maps_path = element_tempdir / "prewarp_maps.nii"
         nib.save(maps_img, prewarp_maps_path)
 
         # Create a tempfile for warped output
-        warped_maps_path = element_tempdir / "maps_warped.nii.gz"
+        warped_maps_path = element_tempdir / "maps_warped.nii"
         # Set applywarp command
         applywarp_cmd = [
+            "FSLOUTPUTTYPE=NIFTI",
             "applywarp",
             "--interp=spline",
             f"-i {prewarp_maps_path.resolve()}",

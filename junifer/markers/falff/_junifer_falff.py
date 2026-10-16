@@ -137,8 +137,8 @@ class JuniferALFF(metaclass=Singleton):
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="junifer_lff"
         )
-        output_alff_path = element_tempdir / "output_alff.nii.gz"
-        output_falff_path = element_tempdir / "output_falff.nii.gz"
+        output_alff_path = element_tempdir / "output_alff.nii"
+        output_falff_path = element_tempdir / "output_falff.nii"
         # Save computed data to file
         nib.save(alff_data, output_alff_path)
         nib.save(falff_data, output_falff_path)

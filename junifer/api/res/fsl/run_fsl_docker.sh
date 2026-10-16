@@ -34,6 +34,10 @@ echo "Docker args: ${docker_args[*]}" >&2
 echo "Corrected args for FSL: ${corrected_args[*]}" >&2
 
 cwd=$(pwd)
+# Pass the output type, as FSL writes it instead of the type of the extension
+if [ -n "${FSLOUTPUTTYPE}" ]; then
+    docker_args+=("-e FSLOUTPUTTYPE=${FSLOUTPUTTYPE}")
+fi
 cmd="docker run --rm ${docker_args[*]} -v ${cwd}:${cwd} -w ${cwd} brainlife/fsl ${corrected_args[*]}"
 echo "Running command: ${cmd}" >&2
 ${cmd}

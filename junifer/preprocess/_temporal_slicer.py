@@ -151,7 +151,7 @@ class TemporalSlicer(BasePreprocessor):
         # Fix t_r as nilearn messes it up
         sliced_img.header["pixdim"][4] = t_r
         # Save sliced data
-        sliced_img_path = element_tempdir / "sliced_data.nii.gz"
+        sliced_img_path = element_tempdir / "sliced_data.nii"
         nib.save(sliced_img, sliced_img_path)
 
         logger.debug("Updating `BOLD`")

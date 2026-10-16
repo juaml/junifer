@@ -100,11 +100,11 @@ class ANTsMapsWarper:
             logger.debug("Using ANTs for maps transformation")
 
             # Save existing maps image to a tempfile
-            prewarp_maps_path = element_tempdir / "prewarp_maps.nii.gz"
+            prewarp_maps_path = element_tempdir / "prewarp_maps.nii"
             nib.save(maps_img, prewarp_maps_path)
 
             # Create a tempfile for warped output
-            warped_maps_path = element_tempdir / "maps_warped.nii.gz"
+            warped_maps_path = element_tempdir / "maps_warped.nii"
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
@@ -134,15 +134,15 @@ class ANTsMapsWarper:
                 extra_input=None,
             )
             # Save template to a tempfile
-            template_space_img_path = element_tempdir / f"{dst}_T1w.nii.gz"
+            template_space_img_path = element_tempdir / f"{dst}_T1w.nii"
             nib.save(template_space_img, template_space_img_path)
 
             # Save existing maps image to a tempfile
-            prewarp_maps_path = element_tempdir / "prewarp_maps.nii.gz"
+            prewarp_maps_path = element_tempdir / "prewarp_maps.nii"
             nib.save(maps_img, prewarp_maps_path)
 
             # Create a tempfile for warped output
-            warped_maps_path = element_tempdir / "maps_warped.nii.gz"
+            warped_maps_path = element_tempdir / "maps_warped.nii"
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",

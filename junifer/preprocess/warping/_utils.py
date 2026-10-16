@@ -75,8 +75,9 @@ def warp_in_chunks(
     )
     warped_chunks = []
     for i, start in enumerate(tqdm(starts, desc=f"{name} chunks")):
-        chunk_path = tempdir / f"chunk{i}_{input_path.name}"
-        warped_chunk_path = tempdir / f"chunk{i}_{output_path.name}"
+        # Uncompressed, as they are deleted right after being read
+        chunk_path = tempdir / f"chunk{i}_input_{output_path.stem}.nii"
+        warped_chunk_path = tempdir / f"chunk{i}_{output_path.stem}.nii"
         chunk = img.slicer[..., start : start + chunk_size]
         # The data is read scaled, so save it as float instead of scaling it
         # again (with a different scaling) in its data type
