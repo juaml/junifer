@@ -74,7 +74,7 @@ class NilearnSmoothing:
         smoothed_img = nimg.smooth_img(imgs=input["data"], fwhm=fwhm)
 
         # Save smoothed output
-        smoothed_img_path = element_tempdir / "smoothed_data.nii.gz"
+        smoothed_img_path = element_tempdir / "smoothed_data.nii"
         nib.save(smoothed_img, smoothed_img_path)
 
         logger.debug("Updating smoothed data")

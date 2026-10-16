@@ -620,7 +620,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
                 extra_input=extra_input,
             )
             # Save generated mask for use later
-            generated_mask_img_path = element_tempdir / "generated_mask.nii.gz"
+            generated_mask_img_path = element_tempdir / "generated_mask.nii"
             nib.save(mask_img, generated_mask_img_path)
 
             # Save BOLD mask and link it to the BOLD data type dict;
@@ -686,7 +686,7 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
         # Fix t_r as nilearn messes it up
         cleaned_img.header["pixdim"][4] = t_r
         # Save deconfounded data
-        deconfounded_img_path = element_tempdir / "deconfounded_data.nii.gz"
+        deconfounded_img_path = element_tempdir / "deconfounded_data.nii"
         nib.save(cleaned_img, deconfounded_img_path)
 
         logger.debug("Updating `BOLD`")

@@ -87,13 +87,14 @@ class FSLMaskWarper:
         )
 
         # Save existing mask image to a tempfile
-        prewarp_mask_path = element_tempdir / "prewarp_mask.nii.gz"
+        prewarp_mask_path = element_tempdir / "prewarp_mask.nii"
         nib.save(mask_img, prewarp_mask_path)
 
         # Create a tempfile for warped output
-        warped_mask_path = element_tempdir / "mask_warped.nii.gz"
+        warped_mask_path = element_tempdir / "mask_warped.nii"
         # Set applywarp command
         applywarp_cmd = [
+            "FSLOUTPUTTYPE=NIFTI",
             "applywarp",
             f"--interp={_get_interpolation_method(mask_img)}",
             f"-i {prewarp_mask_path.resolve()}",

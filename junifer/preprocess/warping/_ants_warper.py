@@ -16,6 +16,7 @@ from ...pipeline import ExtDep, WorkDirManager
 from ...typing import Dependencies, ExternalDependencies, SpaceLike
 from ...utils import raise_error, run_ext_cmd
 from ..base import logger
+from ._utils import warp_in_chunks
 
 
 __all__ = ["ANTsWarper"]
@@ -93,7 +94,7 @@ class ANTsWarper:
 
             # Create a tempfile for resampled reference output
             resample_image_out_path = (
-                element_tempdir / "resampled_reference.nii.gz"
+                element_tempdir / "resampled_reference.nii"
             )
             # Set ResampleImage command
             resample_image_cmd = [
@@ -109,21 +110,27 @@ class ANTsWarper:
             run_ext_cmd(name="ResampleImage", cmd=resample_image_cmd)
 
             # Create a tempfile for warped output
-            apply_transforms_out_path = element_tempdir / "warped_data.nii.gz"
-            # Set antsApplyTransforms command
-            apply_transforms_cmd = [
-                "antsApplyTransforms",
-                "-d 3",
-                "-e 3",
-                "-n LanczosWindowedSinc",
-                f"-i {input['path'].resolve()}",
-                # use resampled reference
-                f"-r {resample_image_out_path.resolve()}",
-                f"-t {warp_file_path.resolve()}",
-                f"-o {apply_transforms_out_path.resolve()}",
-            ]
-            # Call antsApplyTransforms
-            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
+            apply_transforms_out_path = element_tempdir / "warped_data.nii"
+            # Call antsApplyTransforms in single precision, in chunks of
+            # volumes
+            warp_in_chunks(
+                name="antsApplyTransforms",
+                input_path=input["path"].resolve(),
+                output_path=apply_transforms_out_path.resolve(),
+                cmd=lambda in_path, out_path: [
+                    "antsApplyTransforms",
+                    "-d 3",
+                    "-e 3",
+                    "-n LanczosWindowedSinc",
+                    "--float 1",
+                    f"-i {in_path}",
+                    # use resampled reference
+                    f"-r {resample_image_out_path.resolve()}",
+                    f"-t {warp_file_path.resolve()}",
+                    f"-o {out_path}",
+                ],
+                tempdir=element_tempdir,
+            )
 
             logger.debug("Updating warped data")
             input.update(
@@ -145,7 +152,7 @@ class ANTsWarper:
             if input.get("mask") is not None:
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = (
-                    element_tempdir / "warped_mask.nii.gz"
+                    element_tempdir / "warped_mask.nii"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [
@@ -153,6 +160,7 @@ class ANTsWarper:
                     "-d 3",
                     "-e 3",
                     "-n 'GenericLabel[NearestNeighbor]'",
+                    "--float 1",
                     f"-i {input['mask']['path'].resolve()}",
                     # use resampled reference
                     f"-r {input['reference']['path'].resolve()}",
@@ -212,7 +220,7 @@ class ANTsWarper:
                     # Create a tempfile for resampled reference output
                     ref_path = (
                         element_tempdir
-                        / f"resampled_reference-{reference}.nii.gz"
+                        / f"resampled_reference-{reference}.nii"
                     )
                     # Set ResampleImage command
                     resample_image_cmd = [
@@ -243,27 +251,33 @@ class ANTsWarper:
                     extra_input=None,
                 )
                 # Save template
-                ref_path = element_tempdir / f"{reference}_T1w.nii.gz"
+                ref_path = element_tempdir / f"{reference}_T1w.nii"
                 nib.save(template_space_img, ref_path)
 
             # Create a tempfile for warped output
             warped_output_path = element_tempdir / (
-                f"warped_data_from_{input_space}_to_{reference}.nii.gz"
+                f"warped_data_from_{input_space}_to_{reference}.nii"
             )
 
-            # Set antsApplyTransforms command
-            apply_transforms_cmd = [
-                "antsApplyTransforms",
-                "-d 3",
-                "-e 3",
-                "-n LanczosWindowedSinc",
-                f"-i {input['path'].resolve()}",
-                f"-r {ref_path.resolve()}",
-                f"-t {xfm_file_path.resolve()}",
-                f"-o {warped_output_path.resolve()}",
-            ]
-            # Call antsApplyTransforms
-            run_ext_cmd(name="antsApplyTransforms", cmd=apply_transforms_cmd)
+            # Call antsApplyTransforms in single precision, in chunks of
+            # volumes
+            warp_in_chunks(
+                name="antsApplyTransforms",
+                input_path=input["path"].resolve(),
+                output_path=warped_output_path.resolve(),
+                cmd=lambda in_path, out_path: [
+                    "antsApplyTransforms",
+                    "-d 3",
+                    "-e 3",
+                    "-n LanczosWindowedSinc",
+                    "--float 1",
+                    f"-i {in_path}",
+                    f"-r {ref_path.resolve()}",
+                    f"-t {xfm_file_path.resolve()}",
+                    f"-o {out_path}",
+                ],
+                tempdir=element_tempdir,
+            )
 
             logger.debug("Updating warped data")
             input.update(
@@ -287,7 +301,7 @@ class ANTsWarper:
                 logger.debug("Warping associated mask")
                 # Create a tempfile for warped mask output
                 apply_transforms_mask_out_path = element_tempdir / (
-                    f"warped_mask_from_{input_space}_to_{reference}.nii.gz"
+                    f"warped_mask_from_{input_space}_to_{reference}.nii"
                 )
                 # Set antsApplyTransforms command
                 apply_transforms_mask_cmd = [
@@ -295,6 +309,7 @@ class ANTsWarper:
                     "-d 3",
                     "-e 3",
                     "-n 'GenericLabel[NearestNeighbor]'",
+                    "--float 1",
                     f"-i {input['mask']['path'].resolve()}",
                     # use resampled reference or original
                     f"-r {ref_path.resolve()}",

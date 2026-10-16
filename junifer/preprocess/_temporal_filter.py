@@ -151,7 +151,7 @@ class TemporalFilter(BasePreprocessor):
                 extra_input=extra_input,
             )
             # Save generated mask for use later
-            generated_mask_img_path = element_tempdir / "generated_mask.nii.gz"
+            generated_mask_img_path = element_tempdir / "generated_mask.nii"
             nib.save(mask_img, generated_mask_img_path)
 
             # Save BOLD mask and link it to the BOLD data type dict;
@@ -193,7 +193,7 @@ class TemporalFilter(BasePreprocessor):
         # Fix t_r as nilearn messes it up
         cleaned_img.header["pixdim"][4] = t_r
         # Save filtered data
-        filtered_data_path = element_tempdir / "filtered_data.nii.gz"
+        filtered_data_path = element_tempdir / "filtered_data.nii"
         nib.save(cleaned_img, filtered_data_path)
 
         logger.debug("Updating `BOLD`")

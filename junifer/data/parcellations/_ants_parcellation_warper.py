@@ -101,19 +101,20 @@ class ANTsParcellationWarper:
 
             # Save existing parcellation image to a tempfile
             prewarp_parcellation_path = (
-                element_tempdir / "prewarp_parcellation.nii.gz"
+                element_tempdir / "prewarp_parcellation.nii"
             )
             nib.save(parcellation_img, prewarp_parcellation_path)
 
             # Create a tempfile for warped output
             warped_parcellation_path = (
-                element_tempdir / "parcellation_warped.nii.gz"
+                element_tempdir / "parcellation_warped.nii"
             )
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 # use resampled reference
@@ -139,24 +140,25 @@ class ANTsParcellationWarper:
                 extra_input=None,
             )
             # Save template to a tempfile
-            template_space_img_path = element_tempdir / f"{dst}_T1w.nii.gz"
+            template_space_img_path = element_tempdir / f"{dst}_T1w.nii"
             nib.save(template_space_img, template_space_img_path)
 
             # Save existing parcellation image to a tempfile
             prewarp_parcellation_path = (
-                element_tempdir / "prewarp_parcellation.nii.gz"
+                element_tempdir / "prewarp_parcellation.nii"
             )
             nib.save(parcellation_img, prewarp_parcellation_path)
 
             # Create a tempfile for warped output
             warped_parcellation_path = (
-                element_tempdir / "parcellation_warped.nii.gz"
+                element_tempdir / "parcellation_warped.nii"
             )
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_parcellation_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",

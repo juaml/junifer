@@ -67,16 +67,15 @@ class FSLParcellationWarper:
 
         # Save existing parcellation image to a tempfile
         prewarp_parcellation_path = (
-            element_tempdir / "prewarp_parcellation.nii.gz"
+            element_tempdir / "prewarp_parcellation.nii"
         )
         nib.save(parcellation_img, prewarp_parcellation_path)
 
         # Create a tempfile for warped output
-        warped_parcellation_path = (
-            element_tempdir / "parcellation_warped.nii.gz"
-        )
+        warped_parcellation_path = element_tempdir / "parcellation_warped.nii"
         # Set applywarp command
         applywarp_cmd = [
+            "FSLOUTPUTTYPE=NIFTI",
             "applywarp",
             "--interp=nn",
             f"-i {prewarp_parcellation_path.resolve()}",

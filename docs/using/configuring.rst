@@ -63,3 +63,9 @@ Available Configurations
      - ``preprocessing.dump.granularity``
      - "full" or "final"
      - Dump all pre-processing steps or just the final pre-processed data
+   * - ``JUNIFER_PREPROCESSING_WARPING_CHUNKSIZE``
+     - ``preprocessing.warping.chunksize``
+     - int
+     - | Number of volumes of 4D data to warp at once with
+       | :class:`.SpaceWarper` (default 100). The memory used by ANTs and FSL
+       | grows with the number of volumes, so smaller chunks use less memory

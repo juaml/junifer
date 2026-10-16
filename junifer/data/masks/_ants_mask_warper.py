@@ -121,16 +121,17 @@ class ANTsMaskWarper:
             logger.debug("Using ANTs for mask transformation")
 
             # Save existing mask image to a tempfile
-            prewarp_mask_path = element_tempdir / "prewarp_mask.nii.gz"
+            prewarp_mask_path = element_tempdir / "prewarp_mask.nii"
             nib.save(mask_img, prewarp_mask_path)
 
             # Create a tempfile for warped output
-            warped_mask_path = element_tempdir / "mask_warped.nii.gz"
+            warped_mask_path = element_tempdir / "mask_warped.nii"
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 "-n 'GenericLabel[NearestNeighbor]'",
                 f"-i {prewarp_mask_path.resolve()}",
                 # use resampled reference
@@ -154,20 +155,21 @@ class ANTsMaskWarper:
                 extra_input=None,
             )
             # Save template to a tempfile
-            template_space_img_path = element_tempdir / f"{dst}_T1w.nii.gz"
+            template_space_img_path = element_tempdir / f"{dst}_T1w.nii"
             nib.save(template_space_img, template_space_img_path)
 
             # Save existing mask image to a tempfile
-            prewarp_mask_path = element_tempdir / "prewarp_mask.nii.gz"
+            prewarp_mask_path = element_tempdir / "prewarp_mask.nii"
             nib.save(mask_img, prewarp_mask_path)
 
             # Create a tempfile for warped output
-            warped_mask_path = element_tempdir / "mask_warped.nii.gz"
+            warped_mask_path = element_tempdir / "mask_warped.nii"
             # Set antsApplyTransforms command
             apply_transforms_cmd = [
                 "antsApplyTransforms",
                 "-d 3",
                 "-e 3",
+                "--float 1",
                 f"-n {_get_interpolation_method(mask_img)}",
                 f"-i {prewarp_mask_path.resolve()}",
                 f"-r {template_space_img_path.resolve()}",

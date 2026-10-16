@@ -79,9 +79,10 @@ class FSLSmoothing:
         element_tempdir = WorkDirManager().get_element_tempdir(
             prefix="fsl_susan"
         )
-        susan_out_path = element_tempdir / "smoothed_data.nii.gz"
+        susan_out_path = element_tempdir / "smoothed_data.nii"
         # Set susan command
         susan_cmd = [
+            "FSLOUTPUTTYPE=NIFTI",
             "susan",
             f"{input['path'].resolve()}",
             f"{brightness_threshold}",
