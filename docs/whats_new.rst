@@ -10,6 +10,327 @@ What's new
 
 .. towncrier release notes start
 
+Junifer 0.0.8 (2026-10-19)
+--------------------------
+
+Bugfixes
+^^^^^^^^
+
+- Allow :class:`.SpaceWarper` to convert data from native to template space
+  when ``using="auto"`` by `Fede Raimondo`_ and `Synchon Mandal`_ (:gh:`482`)
+- Fix pattern indexing logic for :meth:`.PatternDataGrabber.get_elements` by
+  `Synchon Mandal`_ (:gh:`492`)
+- Fix the data collected by :class:`.HDF5FeatureStorage` being stored as
+  ``float32`` when ``force_float32=False`` and the ``h5py`` deprecation warning
+  when collecting by `Fede Raimondo`_ (:gh:`504`)
+- Fix :meth:`.PatternDataGrabber.get_elements` returning elements that miss
+  some of the data types when several types use all the replacements by `Fede
+  Raimondo`_ (:gh:`511`)
+- Fix ReHo computation with ``using="junifer"`` including neighbours outside
+  the mask, checking the wrong centre voxel for ``nneigh=125``, setting voxels
+  outside the mask to 1 instead of 0, skipping voxels at the edges of the
+  volume and setting fully tied neighbourhoods to 1 instead of 0, so that it
+  matches AFNI's ``3dReHo`` by `Fede Raimondo`_ (:gh:`514`)
+- Use the ``masks`` parameter of :class:`.ReHoMaps`, :class:`.ReHoParcels` and
+  :class:`.ReHoSpheres` to restrict the ReHo computation for both
+  ``using="junifer"`` and ``using="afni"``, instead of an MNI152 brain mask
+  resampled to the input data (wrong for native space) only for
+  ``using="junifer"``. Without ``masks``, both use the voxels with non-zero
+  time series, so that both implementations give the same results by `Fede
+  Raimondo`_ (:gh:`514`)
+- Fix :class:`.JuniferConnectivityMeasure` not checking its input as
+  ``nilearn``'s ``ConnectivityMeasure`` (e.g. tangent with a single subject)
+  and not listing all the valid kinds in the error message by `Fede Raimondo`_
+  (:gh:`516`)
+- Fix ``dtype`` being ignored in :class:`.JuniferNiftiSpheresMasker` by `Fede
+  Raimondo`_ (:gh:`516`)
+- Fix the labels of the ``Brainnetome`` parcellations, which repeated each name
+  for both hemispheres, by reading them from junifer-data (e.g. ``SFG_L_7_1``
+  and ``SFG_R_7_1`` instead of ``SFG_L(R)_7_1`` twice), which changes their
+  feature names by `Fede Raimondo`_ (:gh:`520`)
+- Fix the labels of the ``Julich-Brain`` parcellations, which were the label
+  values instead of the region names, which changes their feature names by
+  `Fede Raimondo`_ (:gh:`520`)
+- Fix the labels of the ``Yan`` parcellations, which were ``NaN`` or numbers
+  instead of the region names, which changes their feature names by `Fede
+  Raimondo`_ (:gh:`520`)
+- Fix the labels of the ``Shen_2013`` parcellations, which were assigned to the
+  wrong parcels, and add a ``-{i}`` suffix to the repeated ``No_BA_region``
+  labels, which changes their feature names by `Fede Raimondo`_ (:gh:`520`)
+- Fix the labels of parcellations with regions lost when resampling or warping
+  to the target image, which shifted the labels of the following regions; the
+  lost regions are kept (without data) and a warning lists them. The parcel
+  markers are computed on the regions with data and give ``NaN`` for the lost
+  ones (and :class:`.RSSETSMarker` only uses the edges with data) by `Fede
+  Raimondo`_ (:gh:`520`, :gh:`521`)
+- Fix :class:`.TemporalSNRParcels`, :class:`.TemporalSNRSpheres` and
+  :class:`.TemporalSNRMaps` replacing the BOLD data with the tSNR map, so the
+  markers computed after them in a pipeline used the tSNR map instead of the
+  BOLD data by `Fede Raimondo`_ (:gh:`522`)
+- Fix a relative ``datadir`` of the DataGrabber in the YAML being relative to
+  the current directory (e.g., the job directory when queueing) instead of the
+  YAML file by `Fede Raimondo`_ (:gh:`524`)
+- Fix partial element selectors (e.g., only the subject) always being reported
+  as invalid by :func:`.run`, after computing their elements by `Fede
+  Raimondo`_ (:gh:`524`)
+- Fix the same features being stored more than once: for each value of the
+  element keys that the data does not depend on (e.g., the VBM features of a
+  subject once per task), when running an element again, and when collecting
+  again (:class:`.SQLiteFeatureStorage` also collected its own output file) by
+  `Fede Raimondo`_ (:gh:`525`)
+- Fix the metadata of the preprocessors being replaced by the one of the last
+  preprocessor by `Fede Raimondo`_ (:gh:`525`)
+- Fix the complexity markers (e.g., :class:`.HurstExponent`) not being
+  available in the YAML file with ``with: junifer.markers.complexity`` by `Fede
+  Raimondo`_ (:gh:`529`)
+- Fix the Maps markers (e.g., :class:`.MapsAggregation`) not being available in
+  the YAML file without importing their modules by `Fede Raimondo`_ (:gh:`529`)
+- Fix ``junifer run`` and ``junifer list-elements`` ignoring the ``elements``
+  of the YAML file when ``--element`` is not given by `Fede Raimondo`_
+  (:gh:`529`)
+- Fix the AFNI smoothing of :class:`.Smoothing` leaving ``3dFWHMx.1D`` and
+  ``3dFWHMx.1D.png`` in the current directory by `Fede Raimondo`_ (:gh:`529`)
+
+
+API Changes
+^^^^^^^^^^^
+
+- Rename the methods of :class:`.QueueContextAdapter` to ``pre_run_cmds``,
+  ``run_cmds``, ``pre_collect_cmds`` and ``collect_cmds``; custom queue context
+  adapters must rename theirs by `Synchon Mandal`_ (:gh:`503`)
+- Sanitise the VOI names of built-in coordinates by replacing spaces with ``_``
+  and adding a ``-{i}`` suffix to duplicated names, which changes the feature
+  names of e.g. ``Dosenbach`` and ``Seitzman2018`` by `Fede Raimondo`_
+  (:gh:`511`)
+- Replace boolean values of ``standardize`` in :class:`.TemporalFilter`,
+  :class:`.fMRIPrepConfoundRemover` and :class:`.JuniferConnectivityMeasure`
+  with ``"zscore_sample"`` (default), ``"psc"`` or ``None``, following
+  ``nilearn``; booleans raise an error. ``"zscore_sample"`` uses the sample
+  standard deviation, while ``True`` used the population one, so standardized
+  values change slightly by `Fede Raimondo`_ (:gh:`516`)
+- Use the BIDS version of the SPM auditory dataset in
+  :class:`.SPMAuditoryTestingDataGrabber`, which has 84 timepoints instead of
+  96 by `Fede Raimondo`_ (:gh:`516`)
+- Use :class:`enum.StrEnum` for the enumerations, so ``str()`` and formatting
+  of their members give their value (e.g. ``"mean"``) instead of
+  ``"AggFunc.Mean"`` by `Fede Raimondo`_ (:gh:`520`)
+- Use only the replacements of the data types to grab as element keys in
+  :class:`.PatternDataGrabber` (e.g., only ``subject`` with VBM data), so the
+  data that does not depend on, e.g., the task is not processed once for each
+  task by `Fede Raimondo`_ (:gh:`524`)
+- Require the element selectors to have the same number of values, and each
+  data type to be grabbed by only one of the DataGrabbers of
+  :class:`.MultipleDataGrabber` by `Fede Raimondo`_ (:gh:`524`)
+- Find the elements of :class:`.DataladAOMICPIOP1`,
+  :class:`.DataladAOMICPIOP2`, :class:`.HCP1200` and :class:`.DMCC13Benchmark`
+  in the dataset, so only the elements with data are listed
+  (:class:`.DataladHCP1200` lists all the subjects, as they are datalad
+  sub-datasets), and return absolute paths in :class:`.PatternDataGrabber` by
+  `Fede Raimondo`_ (:gh:`524`, :gh:`528`)
+- Add the version of ``junifer`` to the MD5 of the features, as for the
+  dependencies of the markers and steps, for reproducibility: features computed
+  with different versions of ``junifer`` are different features, so the
+  differences between features (e.g., between datasets) can only come from the
+  data. Running again with a new version stores the features again, with the
+  same name, next to the ones computed with the previous version by `Fede
+  Raimondo`_ (:gh:`525`)
+- Raise an error in the ``collect`` method of :class:`.HDF5FeatureStorage` and
+  :class:`.SQLiteFeatureStorage` if a file to collect has more than one
+  element, as ``collect`` only compacts the files of single elements by `Fede
+  Raimondo`_ (:gh:`525`)
+- Use ``upsert="ignore"`` by default in :class:`.SQLiteFeatureStorage`, so the
+  elements already stored are not stored again by `Fede Raimondo`_ (:gh:`525`)
+- Add the ``processed_element`` argument to the ``store_*`` methods of
+  :class:`.BaseFeatureStorage`, the element being processed, so the concrete
+  storages can name the file of each element; custom storages must accept it by
+  `Fede Raimondo`_ (:gh:`525`)
+- Store the metadata of the preprocessors as a list, in order, in
+  ``meta["preprocess"]`` by `Fede Raimondo`_ (:gh:`525`)
+- Raise an error when installing the dataset of a
+  :class:`.PatternDataladDataGrabber` if a pattern searches the files of a
+  sub-dataset, which are only there once the sub-dataset is installed, instead
+  of not finding the elements by `Fede Raimondo`_ (:gh:`528`)
+- Use single precision in ``antsApplyTransforms`` (``--float 1``), halving its
+  memory and giving float32 instead of float64 data, with differences below
+  0.002% of the data range by `Fede Raimondo`_ (:gh:`530`)
+
+
+Improved Documentation
+^^^^^^^^^^^^^^^^^^^^^^
+
+- Add documentation on adding confounds format by `Synchon Mandal`_ (:gh:`364`)
+- Build the documentation of all the released versions with
+  ``sphinx-polyversion`` instead of ``sphinx-multiversion``, using a ``uv``
+  environment per version, and add a version selector and a banner showing
+  whether the latest, an old or the development version is being viewed by
+  `Fede Raimondo`_ (:gh:`513`)
+- Use the UCLA CNP VBM testing data and the Tian parcellations in the examples
+  and the codeless documentation, so no example needs warping by `Fede
+  Raimondo`_ (:gh:`515`)
+- Fix the docs build and the julearn example, whose scores were ``NaN`` with
+  ``scikit-learn`` 1.8 by `Fede Raimondo`_ (:gh:`520`)
+- Document the elements of the DataGrabbers, combining datasets with
+  :class:`.MultipleDataGrabber`, complete and partial elements, and restricting
+  the values of the replacements by `Fede Raimondo`_ (:gh:`524`)
+- Add the "Implementation details" page with the elements, the fields of the
+  metadata and the storage, and document the data types with different element
+  keys when extending DataGrabbers by `Fede Raimondo`_ (:gh:`525`)
+- Document that the DataGrabbers with files in datalad sub-datasets must list
+  their elements and build the paths without searching the files by `Fede
+  Raimondo`_ (:gh:`528`)
+- Fix the ``collect_task`` option of the HTCondor queue being documented as
+  ``collect``, document the ``elements`` key of the YAML file and the ``with``
+  needed by the markers, and use the full width of the page for the content by
+  `Fede Raimondo`_ (:gh:`529`)
+
+
+Enhancements
+^^^^^^^^^^^^
+
+- Improve logging consistency of components by `Synchon Mandal`_ (:gh:`239`)
+- Adopt Pydantic for user-facing core objects to perform automatic validation
+  using typing annotations by `Synchon Mandal`_ (:gh:`364`, :gh:`502`,
+  :gh:`510`)
+- Move ``parse_yaml`` from ``junifer.cli`` to ``junifer.api`` by `Synchon
+  Mandal`_ (:gh:`499`)
+- Set up the working directory first in all the commands of the CLI (from
+  ``workdir`` in the YAML) and in :func:`.run`, :func:`.collect`,
+  :func:`.queue`, :func:`.reset` and :func:`.list_elements`, adding the
+  ``workdir`` parameter to :func:`.collect` and :func:`.list_elements`, and
+  create the working directory if it does not exist by `Synchon Mandal`_ and
+  `Fede Raimondo`_ (:gh:`509`)
+- Drop the files fetched by :class:`.DataladDataGrabber` in a single call and
+  without checking their availability on the remote, making cleanup much faster
+  by `Fede Raimondo`_ (:gh:`511`)
+- Cache the available templateflow templates to speed up :func:`.get_template`
+  by `Fede Raimondo`_ (:gh:`511`)
+- Vectorize ReHo computation with ``using="junifer"``, making it about 5 times
+  faster by `Fede Raimondo`_ (:gh:`514`)
+- Add :class:`.UCLACNPVBMTestingDataGrabber` with grey matter probability maps
+  from OpenNeuro ds000030 in MNI152NLin2009cAsym, add ``n_subjects`` to
+  :class:`.PartlyCloudyTestingDataGrabber` and use the native 3mm resolution by
+  default in :class:`.ADHDTestingDataGrabber` by `Fede Raimondo`_ (:gh:`515`)
+- Speed up :class:`.ParcelAggregation` by not passing a target affine to the
+  masker, which made ``nilearn`` crop and copy the input image even when the
+  parcellation was already on its grid by `Fede Raimondo`_ (:gh:`515`)
+- Raise an error if a marker changes its input data (which is shared with the
+  other markers of a pipeline), checking the values and their contents (arrays,
+  data frames and images) by `Fede Raimondo`_ (:gh:`522`, :gh:`531`)
+- Run complete elements (with a value for each element key, e.g., in each
+  queued job) without searching the dataset for its elements by `Fede
+  Raimondo`_ (:gh:`524`)
+- Store the features for the element with only the keys that the data type
+  depends on (e.g., only ``subject`` for VBM data, when the elements also have
+  ``task``), and skip the elements already stored by `Fede Raimondo`_
+  (:gh:`525`)
+- Write the intermediate images (e.g., the warped, smoothed or filtered data)
+  uncompressed in the temporary directory of the element, as they are read
+  right away and deleted after the element is processed, so there is no need to
+  spend time compressing and decompressing them, and run the FSL commands with
+  ``FSLOUTPUTTYPE=NIFTI`` to write them uncompressed by `Fede Raimondo`_
+  (:gh:`530`)
+- Warp the volumes of 4D data in chunks of ``preprocessing.warping.chunksize``
+  volumes (default 100) in :class:`.SpaceWarper`, as the memory used by ANTs
+  and FSL grows with the number of volumes (e.g., about 53 GB to warp 1200
+  volumes to native space with ANTs) by `Fede Raimondo`_ (:gh:`530`)
+- Keep the data of :class:`.fMRIPrepConfoundRemover`, :class:`.TemporalFilter`,
+  :class:`.TemporalSlicer` and :class:`.Smoothing` (with nilearn) in the saved
+  file (memory-mapped) instead of in memory, as for the other preprocessors,
+  releasing its memory during the next steps of the pipeline (e.g., 5 GB for
+  1200 volumes while running AFNI) by `Fede Raimondo`_ (:gh:`533`)
+- Restrict the ALFF and fALFF computation of :class:`.ALFFParcels`,
+  :class:`.ALFFSpheres` and :class:`.ALFFMaps` to the voxels in their ``masks``
+  (with ``-mask`` for AFNI's ``3dRSFC``), as for ReHo, reducing the memory and
+  time (e.g., from 14.5 GB to 9.4 GB and from 7 to 1 minutes for 1200 volumes
+  with AFNI), and do not write the bandpassed time series with ``3dRSFC``
+  (``-no_rs_out``), as only the parameters are used by `Fede Raimondo`_
+  (:gh:`533`)
+- Read only the signals of the voxels of the spheres, in chunks of
+  ``markers.spheres.chunksize`` volumes (default 100), in
+  :class:`.JuniferNiftiSpheresMasker`, instead of loading the whole 4D data,
+  reducing the memory used by the sphere-based markers (e.g.,
+  :class:`.SphereAggregation` and :class:`.FunctionalConnectivitySpheres`) on
+  BOLD data, with the same results, and do not change the input data when it
+  has NaN values by `Fede Raimondo`_ (:gh:`534`)
+
+
+Features
+^^^^^^^^
+
+- Enable confounds format to be added by introducing
+  :func:`.register_confounds_format` by `Synchon Mandal`_ (:gh:`364`)
+- Add :class:`.ADHDTestingDataGrabber` and ``n_timepoints`` for
+  :class:`.SPMAuditoryTestingDataGrabber` and
+  :class:`.PartlyCloudyTestingDataGrabber` by `Fede Raimondo`_ (:gh:`511`)
+- Allow restricting the values of the replacements to grab in
+  :class:`.PatternDataGrabber`, with ``replacements`` as a dictionary or with
+  fields linked with ``_REPLACEMENT_FIELDS`` (e.g., ``tasks`` in the built-in
+  DataGrabbers), and using the ``*`` and ``?`` wildcards in the patterns to
+  find the elements by `Fede Raimondo`_ (:gh:`524`)
+- Allow :class:`.MultipleDataGrabber` to combine DataGrabbers with different
+  element keys, joining their elements on the common keys, and to replace
+  nested data types (e.g., the confounds of ``BOLD``) with a DataGrabber that
+  only grabs them by `Fede Raimondo`_ (:gh:`524`)
+- Add :meth:`.BaseDataGrabber.get_type_element_keys` to get the element keys
+  that the data of a data type depends on by `Fede Raimondo`_ (:gh:`525`)
+
+
+Miscellaneous
+^^^^^^^^^^^^^
+
+- Drop Python 3.9 and add Python 3.14 support, upgrade codebase to follow
+  modern syntax, bump dependencies and add ``uv`` support by `Synchon Mandal`_
+  (:gh:`474`)
+- Use original ``h5io`` instead of junifer's fork, keeping support for reading
+  the features collected with the fork by `Fede Raimondo`_ (:gh:`504`)
+- Speed up the test suite, split CI into tests requiring external resources
+  (self-hosted) and the rest (GitHub-hosted), build the docs on the self-hosted
+  runner, make the examples faster and use :class:`.HDF5FeatureStorage`, and
+  bump ``julearn`` to 0.3.5 by `Fede Raimondo`_ (:gh:`511`)
+- Publish the junifer Docker image (``ghcr.io/juaml/junifer``) on every release
+  with the matching junifer version, base it on Ubuntu 24.04 with native ANTs,
+  AFNI and FSL installations and the junifer-data version used by junifer, and
+  stop building the docs and CI images on GitHub Actions by `Fede Raimondo`_
+  (:gh:`511`)
+- Add the ``sphinx`` optional dependencies with the tools to build the
+  documentation, make ``docs`` include everything needed to build it, and skip
+  building the PR preview of the documentation when the PR is closed by `Fede
+  Raimondo`_ (:gh:`513`)
+- Speed up the test suite by freezing the objects alive after collection, so
+  the full garbage collections forced by ``nilearn`` are much faster by `Fede
+  Raimondo`_ (:gh:`515`)
+- Speed up the external tests by using fewer subjects, the UCLA CNP VBM testing
+  data and ``junifer-data`` 1.5.0, and bake the derived testing data and
+  templateflow templates into the CI image by `Fede Raimondo`_ (:gh:`515`)
+- Support ``nilearn`` 0.14 (required) by `Fede Raimondo`_ (:gh:`516`)
+- Update the dependencies to their latest versions supporting Python 3.11 (e.g.
+  ``numpy`` 2.4, ``pandas`` 3.0, ``scipy`` 1.17, ``click`` 8.5, ``datalad``
+  1.7, ``templateflow`` 25), fixing the open security alerts, require
+  ``junifer-data`` >= 1.6.1 and use junifer-data v8 by `Fede Raimondo`_
+  (:gh:`520`)
+- Pin ``neurokit2`` to 0.2.12, as 0.2.13 requires ``pandas`` < 3, and provide
+  ``np.trapz`` (removed in ``numpy`` 2.4) while :class:`.MultiscaleEntropyAUC`
+  calls ``neurokit2`` by `Fede Raimondo`_ (:gh:`520`)
+- Read dependency versions from the distribution metadata instead of the
+  deprecated ``__version__`` attributes, pass ``standardize=None`` to
+  ``nilearn`` maskers to avoid deprecation warnings and skip the tests of
+  vendored packages with a ``pytest_ignore_collect`` hook, as ``datalad``'s
+  pytest plugin prevents ``collect_ignore`` from being applied by `Fede
+  Raimondo`_ (:gh:`520`)
+- Cap ``sphinx`` below 9, as ``enum-tools`` does not support it yet by `Fede
+  Raimondo`_ (:gh:`520`)
+- Use :class:`.HDF5FeatureStorage` instead of :class:`.SQLiteFeatureStorage` in
+  the tests and documentation, as the latter is only kept for compatibility,
+  and fix the component registry test leaving components de-registered by `Fede
+  Raimondo`_ (:gh:`523`)
+
+
+Deprecations and Removals
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+- Drop support for Python 3.10 by `Fede Raimondo`_ (:gh:`520`)
+
+
 Junifer 0.0.7 (2026-03-04)
 --------------------------
 
