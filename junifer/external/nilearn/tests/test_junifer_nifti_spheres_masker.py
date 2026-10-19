@@ -520,6 +520,13 @@ def test_JuniferNiftiSpheresMasker_chunk_size_error(
             )
 
 
+def test_JuniferNiftiSpheresMasker_reports() -> None:
+    """Test the reports are disabled by default, as they load the data."""
+    assert JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)]).reports is False
+    masker = JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)], reports=True)
+    assert masker.reports is True
+
+
 def test_get_sphere_voxels_mask_only(tmp_path: Path) -> None:
     """Test the voxels of the spheres with only a mask, without an image.
 

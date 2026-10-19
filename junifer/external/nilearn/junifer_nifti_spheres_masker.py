@@ -463,6 +463,11 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     * it allows to pass any callable as the ``agg_func`` parameter.
     * empty spheres do not create an error. Instead, ``agg_func`` is applied to
       an empty array and the result is passed.
+    * only the signals of the voxels of the spheres are read, a few volumes at
+      a time (``markers.spheres.chunksize``), so the whole data is never in
+      memory.
+    * ``reports`` is False by default, as the data for the reports (e.g., the
+      middle volume of the resampled images) needs the whole data in memory.
 
     Parameters
     ----------
@@ -501,6 +506,9 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         self.agg_func = agg_func
         # nilearn's default (False) is deprecated, use the new equivalent
         kwargs.setdefault("standardize", None)
+        # The reports are not used, and computing their data at fit time
+        # loads (and resamples) the whole data
+        kwargs.setdefault("reports", False)
         super().__init__(
             seeds=seeds,
             radius=radius,

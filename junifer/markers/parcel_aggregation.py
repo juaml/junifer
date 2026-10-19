@@ -220,7 +220,9 @@ class ParcelAggregation(BaseMarker):
         # tailored to the input image, so no target affine is needed (it
         # would make nilearn crop and copy the input image)
         logger.debug("Masking")
-        masker = NiftiMasker(parcellation_bin, standardize=None)
+        # No reports, as they are not used and computing their data at fit
+        # time reads the data
+        masker = NiftiMasker(parcellation_bin, standardize=None, reports=False)
         # Mask the input data and the parcellation
         # nilearn maskers return 1D arrays for 3D images, keep 2D
         data = np.atleast_2d(masker.fit_transform(t_input_img))

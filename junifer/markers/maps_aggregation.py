@@ -194,6 +194,8 @@ class MapsAggregation(BaseMarker):
             mask_img=mask_img,
             resampling_target=None,
             standardize=None,
+            # Not used, and computing their data at fit time reads the data
+            reports=False,
         )
         # Mask the input data and extract data
         # nilearn maskers return 1D arrays for 3D images, keep 2D
