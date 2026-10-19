@@ -128,6 +128,26 @@ class WorkDirManager(metaclass=Singleton):
         """Get element directory."""
         return self._elementdir  # type: ignore
 
+    def get_elementdir(self) -> Path:
+        """Get the element directory, creating it if needed.
+
+        This directory should be available only for the lifetime of an
+        element.
+
+        Returns
+        -------
+        pathlib.Path
+            The path to the element directory.
+
+        """
+        if self._elementdir is None:
+            logger.debug(
+                "Setting up element directory under "
+                f"{self._workdir.resolve()!s}"  # type: ignore
+            )
+            self._elementdir = Path(tempfile.mkdtemp(dir=self._workdir))
+        return self._elementdir
+
     def get_element_tempdir(
         self, prefix: str | None = None, suffix: str | None = None
     ) -> Path:
@@ -151,22 +171,12 @@ class WorkDirManager(metaclass=Singleton):
             The path to the temporary directory.
 
         """
-        # Create element directory if not created already
-        if self._elementdir is None:
-            logger.debug(
-                "Setting up element directory under "
-                f"{self._workdir.resolve()!s}"  # type: ignore
-            )
-            self._elementdir = Path(tempfile.mkdtemp(dir=self._workdir))
-
+        elementdir = self.get_elementdir()
         logger.debug(
-            "Creating element temporary directory at "
-            f"{self._elementdir.resolve()!s}"
+            f"Creating element temporary directory at {elementdir.resolve()!s}"
         )
         return Path(
-            tempfile.mkdtemp(
-                dir=self._elementdir, prefix=prefix, suffix=suffix
-            )
+            tempfile.mkdtemp(dir=elementdir, prefix=prefix, suffix=suffix)
         )
 
     def delete_element_tempdir(self, tempdir: Path) -> None:

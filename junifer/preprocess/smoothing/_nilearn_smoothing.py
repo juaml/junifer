@@ -82,7 +82,10 @@ class NilearnSmoothing:
             {
                 # Update path to sync with "data"
                 "path": smoothed_img_path,
-                "data": smoothed_img,
+                # Update data, loaded from the file to not keep the
+                # in-memory image (memory-mapped, as the file is not
+                # compressed)
+                "data": nib.load(smoothed_img_path),
             }
         )
 

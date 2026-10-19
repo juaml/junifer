@@ -57,6 +57,7 @@ class AFNIALFF(metaclass=Singleton):
         highpass: float,
         lowpass: float,
         tr: float | None,
+        mask_path: Path | None = None,
     ) -> tuple["Nifti1Image", "Nifti1Image", Path, Path]:
         """Compute ALFF + fALFF map.
 
@@ -70,6 +71,10 @@ class AFNIALFF(metaclass=Singleton):
             Lowpass cutoff frequency.
         tr : positive float, optional
             The Repetition Time of the BOLD data.
+        mask_path : pathlib.Path, optional
+            Path to the mask to restrict the computation to. The voxels
+            outside the mask are set to 0. If None, all the voxels are used
+            (default None).
 
         Returns
         -------
@@ -90,18 +95,23 @@ class AFNIALFF(metaclass=Singleton):
             prefix="afni_lff"
         )
 
-        # Set 3dRSFC command
+        # Set 3dRSFC command; only the parameters are needed, not the
+        # bandpassed time series (-no_rs_out)
         lff_out_path_prefix = element_tempdir / "output"
         bp_cmd = [
             "3dRSFC",
             f"-prefix {lff_out_path_prefix.resolve()}",
             f"-input {input_path.resolve()}",
             f"-band {highpass} {lowpass}",
-            "-no_rsfa -nosat -nodetrend",
+            "-no_rsfa -nosat -nodetrend -no_rs_out",
         ]
         # Check tr
         if tr is not None:
             bp_cmd.append(f"-dt {tr}")
+        # Restrict the computation to the mask, which reduces the memory and
+        # time used by 3dRSFC
+        if mask_path is not None:
+            bp_cmd.append(f"-mask {mask_path.resolve()}")
         # Call 3dRSFC
         run_ext_cmd(name="3dRSFC", cmd=bp_cmd)
 

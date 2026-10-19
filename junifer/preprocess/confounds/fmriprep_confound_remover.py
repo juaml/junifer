@@ -694,8 +694,10 @@ class fMRIPrepConfoundRemover(BasePreprocessor):
             {
                 # Update path to sync with "data"
                 "path": deconfounded_img_path,
-                # Update data
-                "data": cleaned_img,
+                # Update data, loaded from the file to not keep the
+                # in-memory image (memory-mapped, as the file is not
+                # compressed)
+                "data": nib.load(deconfounded_img_path),
             }
         )
 

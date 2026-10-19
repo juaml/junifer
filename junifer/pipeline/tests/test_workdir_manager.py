@@ -95,6 +95,30 @@ def test_workdir_manager_cleanup_elementdir(
     assert workdir_mgr.elementdir is None
 
 
+def test_workdir_manager_get_elementdir(tmp_path: Path) -> None:
+    """Test WorkDirManager gets the element directory correctly.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    workdir_mgr = WorkDirManager()
+    workdir_mgr.workdir = tmp_path
+    assert workdir_mgr.elementdir is None
+    # Created on the first call, and the same afterwards
+    elementdir = workdir_mgr.get_elementdir()
+    assert elementdir.is_dir()
+    assert elementdir.parent == tmp_path
+    assert workdir_mgr.get_elementdir() == elementdir
+    # The element temporary directories are in it
+    assert workdir_mgr.get_element_tempdir().parent == elementdir
+    workdir_mgr.cleanup_elementdir()
+    assert not elementdir.exists()
+    assert workdir_mgr.elementdir is None
+
+
 def test_workdir_manager_get_and_delete_tempdir(tmp_path: Path) -> None:
     """Test WorkDirManager gets and deletes temporary directories correctly.
 

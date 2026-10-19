@@ -5,6 +5,7 @@
 
 from contextlib import AbstractContextManager, nullcontext
 
+import nibabel as nib
 import pytest
 
 from junifer.datareader import DefaultDataReader
@@ -128,5 +129,10 @@ def test_TemporalSlicer(
 
             # Check image data dim
             assert output["BOLD"]["data"].shape[3] == expected_dim
+            # The data is loaded from the saved file, not kept in memory
+            assert nib.is_proxy(output["BOLD"]["data"].dataobj)
+            assert output["BOLD"]["data"].get_filename() == str(
+                output["BOLD"]["path"]
+            )
             # Check confounds dim
             assert output["BOLD"]["confounds"]["data"].shape[0] == expected_dim

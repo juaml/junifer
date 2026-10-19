@@ -3,7 +3,6 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
-import hashlib
 from enum import StrEnum
 from pathlib import Path
 from typing import (
@@ -13,17 +12,15 @@ from typing import (
     ClassVar,
 )
 
-import nibabel as nib
-import numpy as np
 from pydantic import BeforeValidator
 
 from ...data import get_data
 from ...datagrabber import DataType
-from ...pipeline import WorkDirManager
 from ...storage import StorageType
 from ...typing import ConditionalDependencies, MarkerInOutMappings
 from ...utils import ensure_list_or_none
 from ..base import BaseMarker, logger
+from ..utils import _save_mask
 from ._afni_reho import AFNIReHo
 from ._junifer_reho import JuniferReHo
 
@@ -199,7 +196,8 @@ class ReHoBase(BaseMarker):
                     names=self.masks,
                     target_data=input_data,
                     extra_input=extra_input,
-                )
+                ),
+                prefix="reho_mask",
             )
         # Compute reho
         reho_map, reho_map_path = estimator.compute(  # type: ignore
@@ -217,38 +215,3 @@ class ReHoBase(BaseMarker):
             return reho_map, input_data["path"]
 
         return reho_map, reho_map_path
-
-
-def _save_mask(mask_img: "Nifti1Image") -> Path:
-    """Save mask to the working directory, named by its content.
-
-    The same mask always gets the same path, so that the cached ReHo
-    computation can be reused by markers using the same mask.
-
-    Parameters
-    ----------
-    mask_img : Niimg-like object
-        The mask to save.
-
-    Returns
-    -------
-    pathlib.Path
-        The path to the saved mask.
-
-    """
-    mask_data = np.squeeze(np.asarray(mask_img.dataobj)) != 0
-    digest = hashlib.sha256()
-    digest.update(str(mask_data.shape).encode())
-    digest.update(np.packbits(mask_data).tobytes())
-    digest.update(mask_img.affine.tobytes())
-    mask_path = (
-        WorkDirManager().workdir / f"reho_mask_{digest.hexdigest()[:16]}.nii"
-    )
-    if not mask_path.exists():
-        nib.save(
-            nib.Nifti1Image(
-                mask_data.astype(np.uint8), mask_img.affine, mask_img.header
-            ),
-            mask_path,
-        )
-    return mask_path
