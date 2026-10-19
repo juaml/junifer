@@ -6,10 +6,14 @@
 #          Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
+
+import nibabel as nib
 import numpy as np
 import pytest
 
-from junifer.markers.utils import _ets
+from junifer.markers.utils import _ets, _save_mask
+from junifer.pipeline import WorkDirManager
 
 
 def test_ets() -> None:
@@ -48,3 +52,38 @@ def test_ets_incorrect_label_list() -> None:
         ValueError, match="List of roi names does not correspond"
     ):
         _ets(bold_ts, roi_labels)
+
+
+def test_save_mask(tmp_path: Path) -> None:
+    """Test saving masks in the element directory, named by their content.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    workdir_mgr = WorkDirManager()
+    workdir_mgr.workdir = tmp_path
+    data = np.zeros((3, 4, 5), dtype=np.int8)
+    data[1, 1:3, 2:4] = 1
+    mask = nib.Nifti1Image(data, np.eye(4))
+    path = _save_mask(mask, prefix="test_mask")
+    # In the element directory, with the voxels in the mask
+    assert path.parent == workdir_mgr.elementdir
+    assert path.name.startswith("test_mask_")
+    assert np.array_equal(np.asarray(nib.load(path).dataobj), data)
+    # The same mask (another image) has the same path, a different one not
+    assert (
+        _save_mask(nib.Nifti1Image(data.copy(), np.eye(4)), prefix="test_mask")
+        == path
+    )
+    other = data.copy()
+    other[0, 0, 0] = 1
+    assert (
+        _save_mask(nib.Nifti1Image(other, np.eye(4)), prefix="test_mask")
+        != path
+    )
+    # Deleted with the element directory
+    workdir_mgr.cleanup_elementdir()
+    assert not path.exists()

@@ -25,10 +25,12 @@ from ..utils import raise_error
 
 
 def _save_mask(mask_img: SpatialImage, prefix: str) -> Path:
-    """Save mask to the working directory, named by its content.
+    """Save mask to the element directory, named by its content.
 
-    The same mask always gets the same path, so that the cached computations
-    (e.g., ReHo or ALFF) can be reused by markers using the same mask.
+    The same mask always gets the same path within an element, so that the
+    cached computations (e.g., ReHo or ALFF) can be reused by markers using
+    the same mask. The element directory is deleted after the element is
+    processed.
 
     Parameters
     ----------
@@ -49,7 +51,8 @@ def _save_mask(mask_img: SpatialImage, prefix: str) -> Path:
     digest.update(np.packbits(mask_data).tobytes())
     digest.update(mask_img.affine.tobytes())
     mask_path = (
-        WorkDirManager().workdir / f"{prefix}_{digest.hexdigest()[:16]}.nii"
+        WorkDirManager().get_elementdir()
+        / f"{prefix}_{digest.hexdigest()[:16]}.nii"
     )
     if not mask_path.exists():
         nib.save(
