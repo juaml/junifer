@@ -511,6 +511,11 @@ ways:</p>
 <li><p>it allows to pass any callable as the <code class="docutils literal notranslate"><span class="pre">agg_func</span></code> parameter.</p></li>
 <li><p>empty spheres do not create an error. Instead, <code class="docutils literal notranslate"><span class="pre">agg_func</span></code> is applied to
 an empty array and the result is passed.</p></li>
+<li><p>only the signals of the voxels of the spheres are read, a few volumes at
+a time (<code class="docutils literal notranslate"><span class="pre">markers.spheres.chunksize</span></code>), so the whole data is never in
+memory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reports</span></code> is False by default, as the data for the reports (e.g., the
+middle volume of the resampled images) needs the whole data in memory.</p></li>
 </ul>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -806,7 +811,7 @@ inputs.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=a89a635f"></script>
+</div><script src="../_static/documentation_options.js?v=e9fcd0db"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

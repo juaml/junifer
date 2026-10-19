@@ -10,7 +10,7 @@ What's new
 
 .. towncrier release notes start
 
-Junifer 0.0.8 (2026-10-16)
+Junifer 0.0.8 (2026-10-19)
 --------------------------
 
 Bugfixes
@@ -233,6 +233,25 @@ Enhancements
   volumes (default 100) in :class:`.SpaceWarper`, as the memory used by ANTs
   and FSL grows with the number of volumes (e.g., about 53 GB to warp 1200
   volumes to native space with ANTs) by `Fede Raimondo`_ (:gh:`530`)
+- Keep the data of :class:`.fMRIPrepConfoundRemover`, :class:`.TemporalFilter`,
+  :class:`.TemporalSlicer` and :class:`.Smoothing` (with nilearn) in the saved
+  file (memory-mapped) instead of in memory, as for the other preprocessors,
+  releasing its memory during the next steps of the pipeline (e.g., 5 GB for
+  1200 volumes while running AFNI) by `Fede Raimondo`_ (:gh:`533`)
+- Restrict the ALFF and fALFF computation of :class:`.ALFFParcels`,
+  :class:`.ALFFSpheres` and :class:`.ALFFMaps` to the voxels in their ``masks``
+  (with ``-mask`` for AFNI's ``3dRSFC``), as for ReHo, reducing the memory and
+  time (e.g., from 14.5 GB to 9.4 GB and from 7 to 1 minutes for 1200 volumes
+  with AFNI), and do not write the bandpassed time series with ``3dRSFC``
+  (``-no_rs_out``), as only the parameters are used by `Fede Raimondo`_
+  (:gh:`533`)
+- Read only the signals of the voxels of the spheres, in chunks of
+  ``markers.spheres.chunksize`` volumes (default 100), in
+  :class:`.JuniferNiftiSpheresMasker`, instead of loading the whole 4D data,
+  reducing the memory used by the sphere-based markers (e.g.,
+  :class:`.SphereAggregation` and :class:`.FunctionalConnectivitySpheres`) on
+  BOLD data, with the same results, and do not change the input data when it
+  has NaN values by `Fede Raimondo`_ (:gh:`534`)
 
 
 Features
