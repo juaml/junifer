@@ -69,3 +69,10 @@ Available Configurations
      - | Number of volumes of 4D data to warp at once with
        | :class:`.SpaceWarper` (default 100). The memory used by ANTs and FSL
        | grows with the number of volumes, so smaller chunks use less memory
+   * - ``JUNIFER_MARKERS_SPHERES_CHUNKSIZE``
+     - ``markers.spheres.chunksize``
+     - int
+     - | Number of volumes of 4D data to read at once to extract the signals
+       | of spheres (e.g., :class:`.SphereAggregation`) (default 100). Only
+       | the signals of the voxels of the spheres are kept, so the whole data
+       | is never in memory, and smaller chunks use less memory

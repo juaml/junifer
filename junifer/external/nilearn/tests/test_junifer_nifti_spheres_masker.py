@@ -3,6 +3,8 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+from pathlib import Path
+
 import nibabel
 import numpy as np
 import pytest
@@ -12,6 +14,12 @@ from nilearn.maskers import NiftiSpheresMasker
 from numpy.testing import assert_array_equal
 
 from junifer.external.nilearn import JuniferNiftiSpheresMasker
+from junifer.external.nilearn.junifer_nifti_spheres_masker import (
+    _apply_mask_and_get_affinity,
+    _get_sphere_voxels,
+    _iter_signals_from_spheres,
+)
+from junifer.testing import config_override
 
 
 # New BSD License
@@ -397,3 +405,213 @@ def test_junifer_and_nilearn_mean_agg_are_equal(
     # Checks
     assert junifer_output.shape == nilearn_output.shape
     np.testing.assert_almost_equal(junifer_output, nilearn_output)
+
+
+def _spheres_data(
+    tmp_path: Path, dtype: str = "float32", with_nan: bool = True
+) -> tuple[nibabel.Nifti1Image, nibabel.Nifti1Image, list]:
+    """Create a file-backed 4D image, a mask and seeds for the spheres."""
+    rng = np.random.default_rng(42)
+    affine = np.diag([3.0, 3.0, 3.0, 1.0])
+    affine[:3, 3] = -30
+    data = rng.normal(100, 10, size=(21, 21, 21, 23))
+    if with_nan:
+        data[10, 10, 10, 3] = np.nan
+    nibabel.save(
+        nibabel.Nifti1Image(data.astype(dtype), affine), tmp_path / "data.nii"
+    )
+    mask = np.zeros((21, 21, 21), dtype="int8")
+    mask[4:17, 3:18, 5:16] = 1
+    mask_img = nibabel.Nifti1Image(mask, affine)
+    # The last seed is outside the image, so its sphere is empty
+    seeds = [(0, 0, 0), (12, -9, 6), (-24, 24, 24), (100, 100, 100)]
+    return nibabel.load(tmp_path / "data.nii"), mask_img, seeds
+
+
+@pytest.mark.parametrize("chunk_size", [1, 5, 23, 100])
+@pytest.mark.parametrize("masked", [True, False])
+@pytest.mark.parametrize(
+    "dtype, with_nan",
+    [
+        ("float32", True),
+        ("float32", False),
+        ("float64", True),
+        ("int16", False),
+    ],
+)
+def test_iter_signals_from_spheres_chunks(
+    tmp_path: Path, chunk_size: int, masked: bool, dtype: str, with_nan: bool
+) -> None:
+    """Test the signals of the spheres read in chunks of volumes.
+
+    They are the same as the ones extracted from the whole data.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    chunk_size : int
+        The parametrized number of volumes to read at once.
+    masked : bool
+        The parametrized use of a mask.
+    dtype : str
+        The parametrized data type.
+    with_nan : bool
+        The parametrized presence of a NaN value in the data.
+
+    """
+    img, mask_img, seeds = _spheres_data(tmp_path, dtype, with_nan)
+    mask_img = mask_img if masked else None
+    X, A = _apply_mask_and_get_affinity(
+        seeds, img, radius=4.0, allow_overlap=True, mask_img=mask_img
+    )
+    with config_override("markers.spheres.chunksize", chunk_size):
+        signals = list(
+            _iter_signals_from_spheres(
+                seeds, img, radius=4.0, allow_overlap=True, mask_img=mask_img
+            )
+        )
+    assert len(signals) == len(seeds)
+    assert signals[-1].shape == (23, 0)
+    for row, t_signals in zip(A.rows, signals, strict=True):
+        assert t_signals.dtype == X.dtype
+        assert_array_equal(t_signals, X[:, row])
+
+
+def test_JuniferNiftiSpheresMasker_input_unchanged(tmp_path: Path) -> None:
+    """Test the masker does not change the input data.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    img, _, seeds = _spheres_data(tmp_path)
+    data = np.asarray(img.dataobj).copy()
+    in_memory = nibabel.Nifti1Image(data.copy(), img.affine)
+    with pytest.warns(RuntimeWarning, match="NaN values"):
+        JuniferNiftiSpheresMasker(
+            seeds=seeds, radius=4.0, allow_overlap=True
+        ).fit_transform(in_memory)
+    # The NaN is still there
+    assert_array_equal(np.asarray(in_memory.dataobj), data)
+
+
+@pytest.mark.parametrize("chunk_size", [0, -1, 1.5, True, "10"])
+def test_JuniferNiftiSpheresMasker_chunk_size_error(
+    tmp_path: Path, chunk_size: object
+) -> None:
+    """Test the masker with an invalid number of volumes to read at once.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    chunk_size : object
+        The parametrized invalid number of volumes.
+
+    """
+    img, _, seeds = _spheres_data(tmp_path)
+    with config_override("markers.spheres.chunksize", chunk_size):
+        with pytest.raises(ValueError, match="must be a positive integer"):
+            JuniferNiftiSpheresMasker(seeds=seeds, radius=4.0).fit_transform(
+                img
+            )
+
+
+def test_JuniferNiftiSpheresMasker_reports() -> None:
+    """Test the reports are disabled by default, as they load the data."""
+    assert JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)]).reports is False
+    masker = JuniferNiftiSpheresMasker(seeds=[(1, 1, 1)], reports=True)
+    assert masker.reports is True
+
+
+def test_get_sphere_voxels_mask_only(tmp_path: Path) -> None:
+    """Test the voxels of the spheres with only a mask, without an image.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    img, mask_img, seeds = _spheres_data(tmp_path)
+    voxels, A = _get_sphere_voxels(
+        seeds, img, radius=4.0, allow_overlap=True, mask_img=mask_img
+    )
+    mask_voxels, mask_A = _get_sphere_voxels(
+        seeds, None, radius=4.0, allow_overlap=True, mask_img=mask_img
+    )
+    assert_array_equal(mask_voxels, voxels)
+    assert mask_A.rows.tolist() == A.rows.tolist()
+    # No signals without an image
+    X, _ = _apply_mask_and_get_affinity(
+        seeds, None, radius=4.0, allow_overlap=True, mask_img=mask_img
+    )
+    assert X is None
+    with pytest.raises(ValueError, match="Either a niimg or a mask_img"):
+        _get_sphere_voxels(seeds, None, radius=4.0, allow_overlap=True)
+
+
+@pytest.mark.parametrize("dtype", ["auto", "float64"])
+def test_JuniferNiftiSpheresMasker_dtype(tmp_path: Path, dtype: str) -> None:
+    """Test the data type of the signals is the same as with nilearn.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    dtype : str
+        The parametrized data type of the extraction.
+
+    """
+    img, _, seeds = _spheres_data(tmp_path, "float32", with_nan=False)
+    junifer_signals = JuniferNiftiSpheresMasker(
+        seeds=seeds[:3], radius=4.0, allow_overlap=True, dtype=dtype
+    ).fit_transform(img)
+    nilearn_signals = NiftiSpheresMasker(
+        seeds=seeds[:3], radius=4.0, allow_overlap=True, dtype=dtype
+    ).fit_transform(img)
+    assert junifer_signals.dtype == nilearn_signals.dtype
+    np.testing.assert_allclose(junifer_signals, nilearn_signals, rtol=1e-6)
+
+
+@pytest.mark.parametrize("chunk_size", [5, 100])
+@pytest.mark.parametrize("masked", [True, False])
+@pytest.mark.parametrize("with_nan", [True, False])
+def test_junifer_and_nilearn_spheres_are_equal(
+    tmp_path: Path, chunk_size: int, masked: bool, with_nan: bool
+) -> None:
+    """Test the signals of the spheres are the same as with nilearn.
+
+    The signals are read in chunks of volumes from a file-backed image.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    chunk_size : int
+        The parametrized number of volumes to read at once.
+    masked : bool
+        The parametrized use of a mask.
+    with_nan : bool
+        The parametrized presence of a NaN value in the data.
+
+    """
+    img, mask_img, seeds = _spheres_data(tmp_path, with_nan=with_nan)
+    # Only the seeds with voxels in the mask, as nilearn fails for empty
+    # spheres
+    params = {
+        "seeds": seeds[:2],
+        "radius": 4.0,
+        "allow_overlap": True,
+        "mask_img": mask_img if masked else None,
+    }
+    with config_override("markers.spheres.chunksize", chunk_size):
+        junifer_signals = JuniferNiftiSpheresMasker(**params).fit_transform(
+            img
+        )
+    nilearn_signals = NiftiSpheresMasker(**params).fit_transform(img)
+    assert junifer_signals.dtype == nilearn_signals.dtype
+    np.testing.assert_allclose(junifer_signals, nilearn_signals, rtol=1e-6)

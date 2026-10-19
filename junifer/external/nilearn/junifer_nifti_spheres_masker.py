@@ -15,7 +15,7 @@ from nilearn.maskers.base_masker import filter_and_extract
 from sklearn import neighbors
 from sklearn.utils.validation import check_is_fitted
 
-from ...utils import raise_error, warn_with_log
+from ...utils import config, raise_error, warn_with_log
 
 
 if TYPE_CHECKING:
@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from nibabel import Nifti1Image, Nifti2Image
     from numpy.typing import ArrayLike, DTypeLike
     from pandas import DataFrame
+    from scipy.sparse import lil_matrix
 
 
 __all__ = ["JuniferNiftiSpheresMasker"]
@@ -60,6 +61,198 @@ __all__ = ["JuniferNiftiSpheresMasker"]
 # LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 # DAMAGE.
+
+
+def _get_chunk_size() -> int:
+    """Get the number of volumes to read at once.
+
+    Returns
+    -------
+    int
+        The value of ``markers.spheres.chunksize`` (default 100).
+
+    Raises
+    ------
+    ValueError
+        If ``markers.spheres.chunksize`` is not a positive integer.
+
+    """
+    chunk_size = config.get("markers.spheres.chunksize", 100)
+    if (
+        isinstance(chunk_size, bool)
+        or not isinstance(chunk_size, int)
+        or chunk_size < 1
+    ):
+        raise_error(
+            "`markers.spheres.chunksize` must be a positive integer, "
+            f"but is {chunk_size}"
+        )
+    return chunk_size
+
+
+def _get_sphere_voxels(
+    seeds, niimg, radius, allow_overlap, mask_img=None
+) -> tuple[np.ndarray, "lil_matrix"]:
+    """Get the voxels of the spheres at given seed locations.
+
+    The voxels only depend on the geometry (and the mask), so the data of
+    ``niimg`` is not read.
+
+    Parameters
+    ----------
+    seeds : List of triplets of coordinates in native space
+        Seed definitions. List of coordinates of the seeds in the same space
+        as target_affine.
+    niimg : 3D/4D Niimg-like object
+        See :ref:`extracting_data`.
+        Images to process.
+    radius : float
+        Indicates, in millimeters, the radius for the sphere around the seed.
+    allow_overlap : boolean
+        If False, a ValueError is raised if VOIs overlap
+    mask_img : Niimg-like object, optional
+        Mask to apply to regions before extracting signals. If niimg is None,
+        mask_img is used as a reference space in which the spheres 'indices are
+        placed.
+
+    Returns
+    -------
+    voxels : 1D numpy.ndarray
+        The flat (C order) index in ``niimg`` of each voxel (column of ``A``):
+        the voxels in the mask or all the voxels if there is no mask.
+    A : scipy.sparse.lil_matrix
+        Contains the boolean indices for each sphere.
+        shape: (number of seeds, number of voxels)
+
+    Raises
+    ------
+    ValueError
+        If ``niimg`` and ``mask_img`` are both not provided or
+        if overlap is detected between spheres.
+
+    """
+    seeds = list(seeds)
+    # Compute world coordinates of all in-mask voxels.
+    if niimg is None:
+        if mask_img is None:
+            raise_error("Either a niimg or a mask_img must be provided.")
+        mask, affine = masking.load_mask_img(mask_img)
+        shape = mask.shape
+        # Get coordinate for all voxels inside of mask
+        mask_coords = np.asarray(np.nonzero(mask)).T.tolist()
+    elif mask_img is not None:
+        affine = niimg.affine
+        shape = niimg.shape[:3]
+        mask_img = check_niimg_3d(mask_img)
+        mask_img = image.resample_img(
+            mask_img,
+            target_affine=affine,
+            target_shape=shape,
+            interpolation="nearest",
+        )
+        mask, _ = masking.load_mask_img(mask_img)
+        mask_coords = list(zip(*np.where(mask != 0), strict=False))
+    else:
+        affine = niimg.affine
+        shape = niimg.shape[:3]
+        mask_coords = list(np.ndindex(shape))
+    voxels = np.ravel_multi_index(
+        tuple(np.asarray(mask_coords, dtype=int).reshape(-1, 3).T), shape
+    )
+    # For each seed, get coordinates of nearest voxel
+    nearests = []
+    for sx, sy, sz in seeds:
+        nearest = np.round(
+            image.resampling.coord_transform(sx, sy, sz, np.linalg.inv(affine))
+        )
+        nearest = nearest.astype(int)
+        nearest = (nearest[0], nearest[1], nearest[2])
+        try:
+            nearests.append(mask_coords.index(nearest))
+        except ValueError:
+            nearests.append(None)
+
+    mask_coords = np.asarray(list(zip(*mask_coords, strict=False)))
+    mask_coords = image.resampling.coord_transform(
+        mask_coords[0], mask_coords[1], mask_coords[2], affine
+    )
+    mask_coords = np.asarray(mask_coords).T
+
+    clf = neighbors.NearestNeighbors(radius=radius)
+    A = clf.fit(mask_coords).radius_neighbors_graph(seeds)
+    A = A.tolil()
+    for i, nearest in enumerate(nearests):
+        if nearest is None:
+            continue
+
+        A[i, nearest] = True
+
+    # Include the voxel containing the seed itself if not masked
+    mask_coords = mask_coords.astype(int).tolist()
+    for i, seed in enumerate(seeds):
+        try:
+            A[i, mask_coords.index(list(map(int, seed)))] = True
+        except ValueError:
+            # seed is not in the mask
+            pass
+
+    if (not allow_overlap) and np.any(A.sum(axis=0) >= 2):
+        raise_error("Overlap detected between spheres")
+
+    return voxels, A
+
+
+def _read_signals(niimg, voxels, masked) -> np.ndarray:
+    """Read the signals of some voxels, a few volumes at a time.
+
+    The data is read in chunks of ``markers.spheres.chunksize`` volumes and
+    only the signals of ``voxels`` are kept, so the whole data is never in
+    memory. The values are the same as extracting the signals from the whole
+    data with :func:`nilearn.masking.apply_mask_fmri` (``masked``) or
+    :func:`nilearn._utils.niimg.safe_get_data` (not ``masked``).
+
+    Parameters
+    ----------
+    niimg : 4D Niimg-like object
+        The image to read.
+    voxels : 1D numpy.ndarray
+        The flat (C order) indices of the voxels to read.
+    masked : bool
+        Whether the voxels are the ones of a mask: as
+        :func:`nilearn.masking.apply_mask_fmri` does, the signals are then
+        float32 if the data is not floating point, and the non-finite values
+        are set to 0. Otherwise, the signals keep the data type of the image
+        and the non-finite values are set to 0 only if the image has NaN
+        values, with a warning.
+
+    Returns
+    -------
+    numpy.ndarray of shape (number of scans, number of voxels)
+        The signals of the voxels.
+
+    """
+    n_scans = niimg.shape[3]
+    chunk_size = _get_chunk_size()
+    signals = None
+    has_nan = False
+    for start in range(0, n_scans, chunk_size):
+        chunk = np.asanyarray(niimg.dataobj[..., start : start + chunk_size])
+        if not masked and not has_nan:
+            has_nan = bool(np.isnan(np.sum(chunk)))
+        chunk = chunk.reshape(-1, chunk.shape[-1])[voxels].T
+        if masked and chunk.dtype.kind != "f":
+            chunk = chunk.astype(np.float32)
+        if signals is None:
+            signals = np.empty((n_scans, len(voxels)), dtype=chunk.dtype)
+        signals[start : start + chunk.shape[0]] = chunk
+    if masked or has_nan:
+        if has_nan:
+            warn_with_log(
+                "The imgs you have fed into fit_transform() contains NaN "
+                "values which will be converted to zeroes."
+            )
+        signals[~np.isfinite(signals)] = 0
+    return signals
 
 
 def _apply_mask_and_get_affinity(
@@ -111,31 +304,19 @@ def _apply_mask_and_get_affinity(
         If the provided images contain NaN, they will be converted to zeroes.
 
     """
-    seeds = list(seeds)
-
-    # Compute world coordinates of all in-mask voxels.
-    if niimg is None:
-        mask, affine = masking.load_mask_img(mask_img)
-        # Get coordinate for all voxels inside of mask
-        mask_coords = np.asarray(np.nonzero(mask)).T.tolist()
-        X = None
-
-    elif mask_img is not None:
-        affine = niimg.affine
-        mask_img = check_niimg_3d(mask_img)
+    _, A = _get_sphere_voxels(
+        seeds, niimg, radius, allow_overlap, mask_img=mask_img
+    )
+    X = None
+    if niimg is not None and mask_img is not None:
         mask_img = image.resample_img(
-            mask_img,
-            target_affine=affine,
+            check_niimg_3d(mask_img),
+            target_affine=niimg.affine,
             target_shape=niimg.shape[:3],
             interpolation="nearest",
         )
-        mask, _ = masking.load_mask_img(mask_img)
-        mask_coords = list(zip(*np.where(mask != 0), strict=False))
-
         X = masking.apply_mask_fmri(niimg, mask_img)
-
     elif niimg is not None:
-        affine = niimg.affine
         if np.isnan(np.sum(safe_get_data(niimg))):
             warn_with_log(
                 "The imgs you have fed into fit_transform() contains NaN "
@@ -144,52 +325,6 @@ def _apply_mask_and_get_affinity(
             X = safe_get_data(niimg, True).reshape([-1, niimg.shape[3]]).T
         else:
             X = safe_get_data(niimg).reshape([-1, niimg.shape[3]]).T
-
-        mask_coords = list(np.ndindex(niimg.shape[:3]))
-
-    else:
-        raise_error("Either a niimg or a mask_img must be provided.")
-
-    # For each seed, get coordinates of nearest voxel
-    nearests = []
-    for sx, sy, sz in seeds:
-        nearest = np.round(
-            image.resampling.coord_transform(sx, sy, sz, np.linalg.inv(affine))
-        )
-        nearest = nearest.astype(int)
-        nearest = (nearest[0], nearest[1], nearest[2])
-        try:
-            nearests.append(mask_coords.index(nearest))
-        except ValueError:
-            nearests.append(None)
-
-    mask_coords = np.asarray(list(zip(*mask_coords, strict=False)))
-    mask_coords = image.resampling.coord_transform(
-        mask_coords[0], mask_coords[1], mask_coords[2], affine
-    )
-    mask_coords = np.asarray(mask_coords).T
-
-    clf = neighbors.NearestNeighbors(radius=radius)
-    A = clf.fit(mask_coords).radius_neighbors_graph(seeds)
-    A = A.tolil()
-    for i, nearest in enumerate(nearests):
-        if nearest is None:
-            continue
-
-        A[i, nearest] = True
-
-    # Include the voxel containing the seed itself if not masked
-    mask_coords = mask_coords.astype(int).tolist()
-    for i, seed in enumerate(seeds):
-        try:
-            A[i, mask_coords.index(list(map(int, seed)))] = True
-        except ValueError:
-            # seed is not in the mask
-            pass
-
-    if (not allow_overlap) and np.any(A.sum(axis=0) >= 2):
-        raise_error("Overlap detected between spheres")
-
     return X, A
 
 
@@ -198,16 +333,17 @@ def _iter_signals_from_spheres(
 ):
     """Iterate over spheres.
 
+    Only the signals of the voxels of the spheres are read, a few volumes at
+    a time (see :func:`_read_signals`), so the whole data is never in memory.
+
     Parameters
     ----------
     seeds : :obj:`list` of triplets of coordinates in native space
         Seed definitions. List of coordinates of the seeds in the same space
         as the images (typically MNI or TAL).
-    niimg : 3D/4D Niimg-like object
+    niimg : 4D Niimg-like object
         See :ref:`extracting_data`.
         Images to process.
-        If a 3D niimg is provided, a singleton dimension will be added to
-        the output to represent the single scan in the niimg.
     radius: float
         Indicates, in millimeters, the radius for the sphere around the seed.
     allow_overlap: boolean
@@ -218,11 +354,17 @@ def _iter_signals_from_spheres(
         Mask to apply to regions before extracting signals.
 
     """
-    X, A = _apply_mask_and_get_affinity(
+    voxels, A = _get_sphere_voxels(
         seeds, niimg, radius, allow_overlap, mask_img=mask_img
     )
-    for row in A.rows:
-        yield X[:, row]
+    rows = [np.asarray(row, dtype=int) for row in A.rows]
+    # The voxels of any sphere, and their position in the signals read
+    used = np.unique(np.concatenate([np.zeros(0, dtype=int), *rows]))
+    position = np.full(len(voxels), -1, dtype=int)
+    position[used] = np.arange(len(used))
+    signals = _read_signals(niimg, voxels[used], masked=mask_img is not None)
+    for row in rows:
+        yield signals[:, position[row]]
 
 
 class _JuniferExtractionFunctor:
@@ -321,6 +463,11 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
     * it allows to pass any callable as the ``agg_func`` parameter.
     * empty spheres do not create an error. Instead, ``agg_func`` is applied to
       an empty array and the result is passed.
+    * only the signals of the voxels of the spheres are read, a few volumes at
+      a time (``markers.spheres.chunksize``), so the whole data is never in
+      memory.
+    * ``reports`` is False by default, as the data for the reports (e.g., the
+      middle volume of the resampled images) needs the whole data in memory.
 
     Parameters
     ----------
@@ -359,6 +506,9 @@ class JuniferNiftiSpheresMasker(NiftiSpheresMasker):
         self.agg_func = agg_func
         # nilearn's default (False) is deprecated, use the new equivalent
         kwargs.setdefault("standardize", None)
+        # The reports are not used, and computing their data at fit time
+        # loads (and resamples) the whole data
+        kwargs.setdefault("reports", False)
         super().__init__(
             seeds=seeds,
             radius=radius,
