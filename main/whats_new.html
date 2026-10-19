@@ -340,8 +340,8 @@
 <article id="furo-main-content" role="main">
 <section id="what-s-new">
 <span id="whats-new"></span><h1><span class="section-number">15. </span>What’s new<a class="headerlink" href="#what-s-new" title="Link to this heading">¶</a></h1>
-<section id="junifer-release-2026-10-16">
-<h2><span class="section-number">15.1. </span>junifer 0.0.8.dev335 (2026-10-16)<a class="headerlink" href="#junifer-release-2026-10-16" title="Link to this heading">¶</a></h2>
+<section id="junifer-release-2026-10-19">
+<h2><span class="section-number">15.1. </span>junifer 0.0.8.dev339 (2026-10-19)<a class="headerlink" href="#junifer-release-2026-10-19" title="Link to this heading">¶</a></h2>
 <section id="bugfixes">
 <h3><span class="section-number">15.1.1. </span>Bugfixes<a class="headerlink" href="#bugfixes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
@@ -588,6 +588,18 @@ spend time compressing and decompressing them, and run the FSL commands with
 volumes (default 100) in <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.SpaceWarper" title="junifer.preprocess.SpaceWarper"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpaceWarper</span></code></a>, as the memory used by ANTs
 and FSL grows with the number of volumes (e.g., about 53 GB to warp 1200
 volumes to native space with ANTs) by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/530">#530</a>)</p></li>
+<li><p>Keep the data of <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.fMRIPrepConfoundRemover" title="junifer.preprocess.fMRIPrepConfoundRemover"><code class="xref py py-class docutils literal notranslate"><span class="pre">fMRIPrepConfoundRemover</span></code></a>, <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.TemporalFilter" title="junifer.preprocess.TemporalFilter"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalFilter</span></code></a>,
+<a class="reference internal" href="api/preprocessing.html#junifer.preprocess.TemporalSlicer" title="junifer.preprocess.TemporalSlicer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TemporalSlicer</span></code></a> and <a class="reference internal" href="api/preprocessing.html#junifer.preprocess.Smoothing" title="junifer.preprocess.Smoothing"><code class="xref py py-class docutils literal notranslate"><span class="pre">Smoothing</span></code></a> (with nilearn) in the saved
+file (memory-mapped) instead of in memory, as for the other preprocessors,
+releasing its memory during the next steps of the pipeline (e.g., 5 GB for
+1200 volumes while running AFNI) by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a> (<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/533">#533</a>)</p></li>
+<li><p>Restrict the ALFF and fALFF computation of <a class="reference internal" href="api/markers.html#junifer.markers.ALFFParcels" title="junifer.markers.ALFFParcels"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFParcels</span></code></a>,
+<a class="reference internal" href="api/markers.html#junifer.markers.ALFFSpheres" title="junifer.markers.ALFFSpheres"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFSpheres</span></code></a> and <a class="reference internal" href="api/markers.html#junifer.markers.ALFFMaps" title="junifer.markers.ALFFMaps"><code class="xref py py-class docutils literal notranslate"><span class="pre">ALFFMaps</span></code></a> to the voxels in their <code class="docutils literal notranslate"><span class="pre">masks</span></code>
+(with <code class="docutils literal notranslate"><span class="pre">-mask</span></code> for AFNI’s <code class="docutils literal notranslate"><span class="pre">3dRSFC</span></code>), as for ReHo, reducing the memory and
+time (e.g., from 14.5 GB to 9.4 GB and from 7 to 1 minutes for 1200 volumes
+with AFNI), and do not write the bandpassed time series with <code class="docutils literal notranslate"><span class="pre">3dRSFC</span></code>
+(<code class="docutils literal notranslate"><span class="pre">-no_rs_out</span></code>), as only the parameters are used by <a class="reference external" href="https://fraimondo.github.io">Fede Raimondo</a>
+(<a class="extlink-gh reference external" href="https://github.com/juaml/junifer/issues/533">#533</a>)</p></li>
 </ul>
 </section>
 <section id="features">
@@ -1714,7 +1726,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 <div class="toc-tree">
 <ul>
 <li><a class="reference internal" href="#">15. What’s new</a><ul>
-<li><a class="reference internal" href="#junifer-release-2026-10-16">15.1. junifer 0.0.8.dev335 (2026-10-16)</a><ul>
+<li><a class="reference internal" href="#junifer-release-2026-10-19">15.1. junifer 0.0.8.dev339 (2026-10-19)</a><ul>
 <li><a class="reference internal" href="#bugfixes">15.1.1. Bugfixes</a></li>
 <li><a class="reference internal" href="#api-changes">15.1.2. API Changes</a></li>
 <li><a class="reference internal" href="#improved-documentation">15.1.3. Improved Documentation</a></li>
@@ -1796,7 +1808,7 @@ juseless by <a class="reference external" href="https://github.com/LeSasse">Leon
 </div>
 </aside>
 </div>
-</div><script src="_static/documentation_options.js?v=d300ceee"></script>
+</div><script src="_static/documentation_options.js?v=0ce2e746"></script>
 <script src="_static/doctools.js?v=9bcbadda"></script>
 <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="_static/scripts/furo.js?v=46bd48cc"></script>
