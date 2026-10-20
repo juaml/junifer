@@ -8,6 +8,7 @@ import hashlib
 import json
 from collections.abc import Sequence
 from importlib.metadata import PackageNotFoundError, version
+from typing import Any
 
 import numpy as np
 from pydantic import validate_call
@@ -57,6 +58,39 @@ def get_dependency_version(dependency: str) -> str:
     return dep_version
 
 
+# The keys of the metadata of the pipeline steps that are not part of the
+# hash: the parameters set when creating the objects and the module to load
+# them, used to generate the YAML
+_NOT_HASHED = ("_fields_set", "_with")
+
+
+def _without_keys(value: Any, keys: tuple[str, ...]) -> Any:
+    """Copy dictionaries and lists, without some keys of the dictionaries.
+
+    Parameters
+    ----------
+    value : Any
+        The value to copy.
+    keys : tuple of str
+        The keys to remove from the dictionaries, at any level.
+
+    Returns
+    -------
+    Any
+        The value, with copies of the dictionaries and lists without the keys.
+
+    """
+    if isinstance(value, dict):
+        return {
+            k: _without_keys(v, keys)
+            for k, v in value.items()
+            if k not in keys
+        }
+    if isinstance(value, list):
+        return [_without_keys(v, keys) for v in value]
+    return value
+
+
 def _meta_hash(meta: dict) -> str:
     """Compute the MD5 hash of the metadata.
 
@@ -85,8 +119,11 @@ def _meta_hash(meta: dict) -> str:
     if meta.get("datagrabber") is not None:
         if meta["datagrabber"].get("uri") is not None:
             _ = meta["datagrabber"].pop("datadir")
+    # The metadata to generate the YAML is not part of the hash
     meta_md5 = hashlib.md5(
-        json.dumps(meta, sort_keys=True).encode("utf-8")
+        json.dumps(_without_keys(meta, _NOT_HASHED), sort_keys=True).encode(
+            "utf-8"
+        )
     ).hexdigest()
     logger.debug(f"Hash computed: {meta_md5}")
     return meta_md5

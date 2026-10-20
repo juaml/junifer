@@ -20,6 +20,7 @@ to interact with HPC and HTC systems.
    queueing
    configuring
    dumping
+   generate_yaml
 
 
 .. _using_components:

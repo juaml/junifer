@@ -9,6 +9,7 @@ import importlib
 import logging
 import pkgutil
 from abc import ABC
+from pathlib import Path
 
 import pytest
 
@@ -242,3 +243,74 @@ def test_pipeline_component_registry_build():
             baseclass=SuperClass,
             init_params={"wrong": 2},
         )
+
+
+def test_pipeline_component_registry_is_builtin() -> None:
+    """Test checking whether components are built-in."""
+    registry = PipelineComponentRegistry()
+    assert registry.is_builtin(step="marker", name="ParcelAggregation")
+    assert registry.is_builtin(step="datagrabber", name="HCP1200")
+    assert not registry.is_builtin(
+        step="datagrabber", name="PartlyCloudyTestingDataGrabber"
+    )
+    assert not registry.is_builtin(step="marker", name="HurstExponent")
+    with pytest.raises(ValueError, match="Invalid step"):
+        registry.is_builtin(step="foo", name="ParcelAggregation")
+
+
+def test_pipeline_component_registry_get_registering_module(
+    tmp_path: Path,
+) -> None:
+    """Test getting the module that registered a component.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    from junifer.api import parse_yaml
+    from junifer.api.decorators import register_marker
+    from junifer.markers import ParcelAggregation
+    from junifer.testing.datagrabbers import PartlyCloudyTestingDataGrabber
+
+    registry = PipelineComponentRegistry()
+    # Built-in
+    assert registry.get_registering_module(ParcelAggregation) is None
+    # Registered by another module, imported with `with`
+    importlib.import_module("junifer.testing.registry")
+    assert (
+        registry.get_registering_module(PartlyCloudyTestingDataGrabber)
+        == "junifer.testing.registry"
+    )
+
+    # Registered by this module, with the decorator
+    @register_marker
+    class MyParcelAggregation(ParcelAggregation):
+        """Parcel aggregation registered in the test."""
+
+    # Registered by a file loaded with `with`
+    (tmp_path / "my_marker.py").write_text(
+        "from junifer.api.decorators import register_marker\n"
+        "from junifer.markers import ParcelAggregation\n\n\n"
+        "@register_marker\n"
+        "class MyFileParcelAggregation(ParcelAggregation):\n"
+        '    """Parcel aggregation registered in a file."""\n'
+    )
+    (tmp_path / "config.yaml").write_text("with: my_marker.py\n")
+    parse_yaml(tmp_path / "config.yaml")
+    file_marker = registry.get_class(
+        step="marker", name="MyFileParcelAggregation"
+    )
+    try:
+        assert registry.get_registering_module(MyParcelAggregation) == (
+            __name__
+        )
+        assert registry.get_registering_module(file_marker) == str(
+            (tmp_path / "my_marker.py").resolve()
+        )
+        # Not registered
+        assert registry.get_registering_module(type("Foo", (), {})) is None
+    finally:
+        registry.deregister(step="marker", klass=MyParcelAggregation)
+        registry.deregister(step="marker", klass=file_marker)
