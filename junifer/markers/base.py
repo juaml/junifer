@@ -9,10 +9,10 @@ from copy import deepcopy
 from typing import Annotated, Any, ClassVar
 
 import structlog
-from pydantic import BaseModel, BeforeValidator, ConfigDict
+from pydantic import BeforeValidator
 
 from ..datagrabber import DataType
-from ..pipeline import PipelineStepMixin, UpdateMetaMixin
+from ..pipeline import PipelineComponentModel, PipelineStepMixin
 from ..storage import StorageType
 from ..typing import MarkerInOutMappings, StorageLike
 from ..utils import ensure_list_or_none, raise_error
@@ -26,7 +26,7 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="markers", step="marker")
 
 
-class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
+class BaseMarker(PipelineComponentModel, ABC, PipelineStepMixin):
     """Abstract base class for marker.
 
     For every marker, one needs to provide a concrete
@@ -56,8 +56,6 @@ class BaseMarker(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
     """
 
     _MARKER_INOUT_MAPPINGS: ClassVar[MarkerInOutMappings]
-
-    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     on: Annotated[
         DataType | list[DataType] | None,

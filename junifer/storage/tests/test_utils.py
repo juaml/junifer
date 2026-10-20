@@ -5,6 +5,7 @@
 # License: AGPL
 
 from collections.abc import Iterable
+from copy import deepcopy
 
 import numpy as np
 import pytest
@@ -507,3 +508,31 @@ def test_timeseries2d_to_vector() -> None:
     ]  # Generate timeseries
     assert_array_equal(flat_data, expected_flat_data)
     assert columns == [f"{r}~{c}" for r in row_names for c in col_names]
+
+
+def test_process_meta_not_hashed() -> None:
+    """Test the metadata to generate the YAML is not part of the hash."""
+    meta = {
+        "element": {"subject": "sub-01"},
+        "dependencies": ["numpy"],
+        "datagrabber": {
+            "class": "MultipleDataGrabber",
+            "datagrabbers": [
+                {"class": "PatternDataGrabber", "types": ["T1w"]}
+            ],
+        },
+        "marker": {"class": "ParcelAggregation", "name": "fc"},
+        "type": "BOLD",
+    }
+    md5, _, _ = process_meta(deepcopy(meta))
+    with_keys = deepcopy(meta)
+    with_keys["datagrabber"]["_fields_set"] = ["datagrabbers"]
+    with_keys["datagrabber"]["datagrabbers"][0]["_fields_set"] = ["types"]
+    with_keys["datagrabber"]["datagrabbers"][0]["_with"] = "my.module"
+    with_keys["marker"]["_fields_set"] = ["name"]
+    with_keys["marker"]["_with"] = "my_marker.py"
+    with_md5, processed, _ = process_meta(with_keys)
+    assert with_md5 == md5
+    # But they are stored
+    assert processed["marker"]["_with"] == "my_marker.py"
+    assert processed["datagrabber"]["datagrabbers"][0]["_with"] == "my.module"

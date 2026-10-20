@@ -6,7 +6,9 @@
 # License: AGPL
 
 import importlib
+import sys
 from collections.abc import Mapping
+from pathlib import Path
 
 import structlog
 
@@ -19,6 +21,49 @@ __all__ = ["PipelineComponentRegistry"]
 
 _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="pipeline")
+
+# The modules calling `PipelineComponentRegistry.register` on behalf of
+# another module (e.g., the `register_*` decorators)
+_REGISTERING_MODULES = {
+    __name__,
+    "junifer.api.decorators",
+}
+
+
+def _registering_module() -> str | None:
+    """Get the module registering a component.
+
+    It is the first module in the call stack that is not one of the modules
+    registering components on behalf of another module (e.g., the module
+    defining a component with ``@register_marker`` or registering it with
+    ``PipelineComponentRegistry().register``), as imported with ``with`` in
+    the YAML.
+
+    Returns
+    -------
+    str or None
+        The name of the module (or the path of the file, if loaded from a file
+        with ``with`` in the YAML), or None if it cannot be imported (e.g., a
+        script).
+
+    """
+    frame = sys._getframe(1)
+    while (
+        frame is not None
+        and frame.f_globals.get("__name__") in _REGISTERING_MODULES
+    ):
+        frame = frame.f_back
+    if frame is None:
+        return None
+    name = frame.f_globals.get("__name__")
+    if name is None or name == "__main__":
+        return None
+    # The files loaded with `with` in the YAML are named by their path in
+    # the YAML, so use their absolute path
+    file = frame.f_globals.get("__file__")
+    if name.endswith(".py") and file is not None:
+        return str(Path(file).resolve())
+    return name
 
 
 class PipelineComponentRegistry(metaclass=Singleton):
@@ -117,6 +162,13 @@ class PipelineComponentRegistry(metaclass=Singleton):
                 "SQLiteFeatureStorage": "SQLiteFeatureStorage",
             },
         }
+        # The built-in components, imported when first used
+        self._builtins = {
+            step: set(components)
+            for step, components in self._components.items()
+        }
+        # The modules that registered the other components
+        self._registering_modules: dict[type, str | None] = {}
 
     def _check_valid_step(self, step: str) -> None:
         """Check if ``step`` is valid."""
@@ -155,6 +207,7 @@ class PipelineComponentRegistry(metaclass=Singleton):
         name = klass.__name__
         logger.info(f"Registering {name} in {step}")
         self._components[step][name] = klass
+        self._registering_modules[klass] = _registering_module()
 
     def deregister(self, step: str, klass: type) -> None:
         """De-register ``klass`` under ``step``.
@@ -178,6 +231,58 @@ class PipelineComponentRegistry(metaclass=Singleton):
         name = klass.__name__
         logger.info(f"De-registering {name} in {step}")
         _ = self._components[step].pop(name)
+
+    def is_builtin(self, step: str, name: str) -> bool:
+        """Check whether a component is built-in.
+
+        The built-in components are available without loading them with
+        ``with`` in the YAML.
+
+        Parameters
+        ----------
+        step : str
+            Name of the pipeline step. For valid steps, check :meth:`.steps`.
+        name : str
+            Name of the component.
+
+        Returns
+        -------
+        bool
+            Whether the component is built-in.
+
+        Raises
+        ------
+        ValueError
+            If the ``step`` is invalid.
+
+        """
+        self._check_valid_step(step)
+        return name in self._builtins[step]
+
+    def get_registering_module(self, klass: type) -> str | None:
+        """Get the module that registered a component.
+
+        It is the module to load with ``with`` in the YAML to use the
+        component.
+
+        Parameters
+        ----------
+        klass : class
+            The class of the component.
+
+        Returns
+        -------
+        str or None
+            The name of the module (or the path of the file, if loaded from a
+            file with ``with`` in the YAML), or None if the component is
+            built-in (it does not need to be loaded) or the module is unknown.
+
+        """
+        if klass.__module__.startswith("junifer.") and any(
+            klass.__name__ in builtins for builtins in self._builtins.values()
+        ):
+            return None
+        return self._registering_modules.get(klass)
 
     def step_components(self, step: str) -> list[str]:
         """Get registered components for ``step``.
