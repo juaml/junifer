@@ -279,5 +279,7 @@ class DMCC13Benchmark(PatternDataladDataGrabber):
                     ],
                 }
             )
-            self.types.append(DataType.Warp)
+            # Not if already there (e.g., the types of the metadata)
+            if DataType.Warp not in self.types:
+                self.types.append(DataType.Warp)
         super().validate_datagrabber_params()
