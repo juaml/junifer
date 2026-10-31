@@ -21,9 +21,10 @@ from ruamel.yaml import YAML
 
 import junifer.testing.registry  # noqa: F401
 from junifer.api import collect, list_elements, parse_yaml, queue, reset, run
-from junifer.api.decorators import register_marker
+from junifer.api.decorators import register_datareader, register_marker
 from junifer.datagrabber import DataType, PatternDataGrabber
 from junifer.datagrabber.base import BaseDataGrabber
+from junifer.datareader import DefaultDataReader
 from junifer.markers import BaseMarker
 from junifer.pipeline import (
     MarkerCollection,
@@ -219,6 +220,52 @@ def test_run_single_element_with_preprocessing(
         ],
         elements=["sub-01"],
     )
+    # Check files
+    files = list(tmp_path.glob("*.hdf5"))
+    assert len(files) == 1
+
+
+def test_run_single_element_with_datareader(
+    tmp_path: Path,
+    markers: list[dict[str, str]],
+    storage: dict[str, str],
+) -> None:
+    """Test run function with single element and a DataReader.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+    markers : list of dict
+        Testing markers as list of dictionary.
+    storage : dict
+        Testing storage as dictionary.
+
+    """
+
+    @register_datareader
+    class CountingDataReader(DefaultDataReader):
+        """DataReader counting the elements it reads."""
+
+        n_read: ClassVar[int] = 0
+
+        def _fit_transform(self, input, params=None):
+            CountingDataReader.n_read += 1
+            return super()._fit_transform(input, params)
+
+    # Set storage
+    storage["uri"] = str((tmp_path / "out.hdf5").resolve())
+    # Run operations
+    run(
+        workdir=tmp_path,
+        datagrabber=_datagrabber.copy(),
+        markers=markers,
+        storage=storage,
+        elements=["sub-01"],
+        datareader={"kind": "CountingDataReader"},
+    )
+    # Check the DataReader was used
+    assert CountingDataReader.n_read == 1
     # Check files
     files = list(tmp_path.glob("*.hdf5"))
     assert len(files) == 1

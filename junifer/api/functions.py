@@ -21,6 +21,7 @@ from ..markers import BaseMarker
 from ..pipeline import (
     MarkerCollection,
     PipelineComponentRegistry,
+    PipelineStepMixin,
     WorkDirManager,
 )
 from ..preprocess import BasePreprocessor
@@ -67,6 +68,28 @@ def _get_datagrabber(datagrabber_config: dict) -> DataGrabberLike:
         name=datagrabber_config.pop("kind"),
         baseclass=BaseDataGrabber,
         init_params=datagrabber_config,
+    )
+
+
+def _get_datareader(datareader_config: dict) -> PipelineStepMixin:
+    """Get DataReader.
+
+    Parameters
+    ----------
+    datareader_config : dict
+        The config to get the DataReader using.
+
+    Returns
+    -------
+    object
+        The DataReader.
+
+    """
+    return PipelineComponentRegistry().build_component_instance(
+        step="datareader",
+        name=datareader_config.pop("kind"),
+        baseclass=PipelineStepMixin,
+        init_params=datareader_config,
     )
 
 
@@ -182,6 +205,7 @@ def run(
     storage: dict,
     preprocessors: list[dict] | None = None,
     elements: Elements | None = None,
+    datareader: dict | None = None,
 ) -> None:
     """Run the pipeline on the selected element.
 
@@ -209,6 +233,11 @@ def run(
         are passed to the preprocessor constructor (default None).
     elements : list or None, optional
         Element(s) to process. Will be used to index the DataGrabber
+        (default None).
+    datareader : dict or None, optional
+        DataReader to use. Must have a key ``kind`` with the kind of
+        DataReader to use. All other keys are passed to the DataReader
+        constructor. If None, will use :class:`.DefaultDataReader`
         (default None).
 
     Raises
@@ -249,9 +278,16 @@ def run(
     else:
         built_preprocessors = None
 
+    # Get datareader to use (if provided)
+    if datareader is not None:
+        datareader_object = _get_datareader(datareader.copy())
+    else:
+        datareader_object = None
+
     # Create new marker collection
     mc = MarkerCollection(
         markers=built_markers,
+        datareader=datareader_object,
         preprocessors=built_preprocessors,
         storage=storage_object,
     )

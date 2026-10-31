@@ -193,6 +193,8 @@ def run(
     markers = config["markers"]
     # Fetch storage
     storage = config["storage"]
+    # Fetch datareader
+    datareader = config.get("datareader")
     # Fetch preprocessors
     preprocessors = config.get("preprocess")
     # Convert to list if single preprocessor
@@ -208,6 +210,7 @@ def run(
         storage=storage,
         preprocessors=preprocessors,
         elements=elements,
+        datareader=datareader,
     )
 
 
