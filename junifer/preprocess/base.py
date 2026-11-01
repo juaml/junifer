@@ -9,10 +9,10 @@ from collections.abc import Sequence
 from typing import Annotated, Any, ClassVar
 
 import structlog
-from pydantic import BaseModel, BeforeValidator, ConfigDict
+from pydantic import BeforeValidator
 
 from ..datagrabber import DataType
-from ..pipeline import PipelineStepMixin, UpdateMetaMixin
+from ..pipeline import PipelineComponentModel, PipelineStepMixin
 from ..utils import ensure_list_or_none, raise_error
 
 
@@ -22,7 +22,7 @@ _log = structlog.get_logger("junifer")
 logger = _log.bind(pkg="preprocess", step="preprocessing")
 
 
-class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
+class BasePreprocessor(PipelineComponentModel, ABC, PipelineStepMixin):
     """Abstract base class for preprocessor.
 
     For every preprocessor, one needs to provide a concrete
@@ -54,8 +54,6 @@ class BasePreprocessor(BaseModel, ABC, PipelineStepMixin, UpdateMetaMixin):
     """
 
     _VALID_DATA_TYPES: ClassVar[Sequence[DataType]]
-
-    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     on: Annotated[
         DataType | list[DataType] | None,

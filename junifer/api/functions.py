@@ -6,17 +6,21 @@
 # License: AGPL
 
 import atexit
+import copy
+import datetime as dt
 import importlib
 import importlib.util
+import io
 import os
 import shutil
 import sys
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import structlog
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
-from ..datagrabber import BaseDataGrabber
+from ..datagrabber import BaseDataGrabber, DataType
 from ..markers import BaseMarker
 from ..pipeline import (
     MarkerCollection,
@@ -26,6 +30,7 @@ from ..pipeline import (
 )
 from ..preprocess import BasePreprocessor
 from ..storage import BaseFeatureStorage
+from ..storage.utils import get_dependency_version
 from ..typing import (
     DataGrabberLike,
     Elements,
@@ -36,8 +41,13 @@ from ..typing import (
 from ..utils import raise_error, warn_with_log, yaml
 
 
+if TYPE_CHECKING:
+    from ruamel.yaml.comments import CommentedMap
+
+
 __all__ = [
     "collect",
+    "generate_yaml",
     "list_elements",
     "parse_yaml",
     "queue",
@@ -681,3 +691,304 @@ def parse_yaml(filepath: str | Path) -> dict:  # noqa: C901
                     )
 
     return contents
+
+
+# The fields of the datagrabbers with the state of the datalad dataset, which
+# cannot be set
+_DATALAD_STATE_FIELDS = ("datalad_dirty", "datalad_commit_id", "datalad_id")
+
+
+# The names of the components of each step, for the comments
+_COMPONENT_NAMES = {
+    "datagrabber": "DataGrabber",
+    "preprocessing": "preprocessor",
+    "marker": "marker",
+}
+
+
+def _component_config(
+    meta: dict, step: str, issues: list[str]
+) -> tuple[dict, list[str]]:
+    """Get the configuration of a pipeline component from its metadata.
+
+    The parameters are the ones set when creating the component. If the
+    component is available, it is created with them to check that they are
+    still valid (e.g., not changed by changes in its API); if not, all its
+    parameters are used.
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the component.
+    step : str
+        The step of the component in the pipeline component registry.
+    issues : list of str
+        The issues found, to which the new ones are added.
+
+    Returns
+    -------
+    dict
+        The configuration of the component, with ``kind`` and its parameters.
+    list of str
+        The modules to load with ``with`` to use the component (and its
+        nested components, if any).
+
+    """
+    kind = meta["class"]
+    component = _COMPONENT_NAMES[step]
+    registry = PipelineComponentRegistry()
+    builtin = registry.is_builtin(step=step, name=kind)
+    # All the parameters, except the state of the datalad dataset
+    stored = {
+        k: v
+        for k, v in meta.items()
+        if k not in ("class", "_fields_set", "_with", *_DATALAD_STATE_FIELDS)
+    }
+    with_ = []
+    if meta.get("_with") is not None:
+        with_.append(meta["_with"])
+    elif not builtin:
+        issues.append(
+            f"`{kind}` is not a built-in component and the module to load it "
+            "is unknown: add it to `with`."
+        )
+    # Nested components (e.g., the datagrabbers of a MultipleDataGrabber)
+    for key, value in stored.items():
+        if (
+            isinstance(value, list)
+            and len(value) > 0
+            and all(isinstance(v, dict) and "class" in v for v in value)
+        ):
+            stored[key] = []
+            for t_meta in value:
+                t_config, t_with = _component_config(t_meta, step, issues)
+                stored[key].append(t_config)
+                with_.extend(t_with)
+    # Only the parameters set when creating the component
+    params = {k: stored[k] for k in meta["_fields_set"] if k in stored}
+    # Check the parameters with the component, if available
+    if kind in registry.step_components(step):
+        try:
+            registry.build_component_instance(
+                step=step,
+                name=kind,
+                baseclass=object,
+                init_params=copy.deepcopy(params),
+            )
+        except Exception as e:  # noqa: BLE001
+            params = stored
+            # The error, without the links to the documentation
+            error = " ".join(
+                line.strip()
+                for line in str(e).splitlines()
+                if line.strip()
+                and not line.strip().startswith("For further information")
+            )
+            issues.append(
+                f"`{kind}` failed to instantiate with junifer "
+                f"{get_dependency_version('junifer')} "
+                f"({error}) and thus could not be properly regenerated: all "
+                "its parameters are in the YAML. Some of these entries might "
+                "be redundant, not needed or changed (e.g., by changes in its "
+                "API): please check the documentation/implementation of this "
+                f"specific {component}."
+            )
+    return {"kind": kind, **params}, with_
+
+
+def _marker_name(meta: dict, issues: list[str]) -> str:
+    """Get the name of the marker of a feature.
+
+    The name of the marker in the metadata is followed by the name of the
+    feature (e.g., ``mean_aggregation`` for the ``aggregation`` feature of
+    the ``mean`` marker), which is added again when computing it.
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the feature.
+    issues : list of str
+        The issues found, to which the new ones are added.
+
+    Returns
+    -------
+    str
+        The name of the marker.
+
+    """
+    name = meta["marker"]["name"]
+    kind = meta["marker"]["class"]
+    try:
+        klass = PipelineComponentRegistry().get_class(step="marker", name=kind)
+        features = klass._MARKER_INOUT_MAPPINGS[DataType(meta["type"])]
+    except (ValueError, KeyError, AttributeError):
+        issues.append(
+            f"The name of the `{kind}` marker could not be checked: remove "
+            f"the name of the feature from `{name}`."
+        )
+        return name
+    # The longest feature name, in case one is the end of another
+    for feature in sorted(features, key=len, reverse=True):
+        if name.endswith(f"_{feature}"):
+            return name[: -len(feature) - 1]
+    return name
+
+
+def _check_generate_yaml_meta(meta: dict) -> None:
+    """Check the YAML can be generated from the metadata of a feature.
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the feature.
+
+    Raises
+    ------
+    ValueError
+        If the metadata of a component does not have the parameters set to
+        create it, as stored by ``junifer`` > 0.0.8.
+
+    """
+    components = [
+        meta.get("datagrabber"),
+        *meta.get("preprocess", []),
+        meta.get("marker"),
+    ]
+    if not all(isinstance(x, dict) and "_fields_set" in x for x in components):
+        version = meta.get("dependencies", {}).get("junifer", "unknown")
+        raise_error(
+            f"The YAML of the feature {meta.get('name', '')} cannot be "
+            f"generated: it was computed with junifer {version}, which does "
+            "not store the parameters set to create the components (only "
+            "junifer > 0.0.8 does)."
+        )
+
+
+def generate_yaml(
+    meta: dict, storage_kind: str = "HDF5FeatureStorage"
+) -> "CommentedMap":
+    """Generate the YAML to compute a feature from its metadata.
+
+    The YAML has the datagrabber, preprocessors and marker that computed the
+    feature, with the parameters set to create them and the modules to load
+    them with ``with``. Computing the feature with this YAML gives the same
+    feature (with the same MD5), as long as the data and the versions of the
+    dependencies are the same.
+
+    The working directory and the URI of the storage are not part of the
+    metadata, so they must be set in the YAML. The notes and issues found
+    are written as comments at the start of the YAML.
+
+    The parameters set to create the components and the modules to load them
+    are only in the metadata of the features computed with ``junifer`` >
+    0.0.8, so the YAML cannot be generated for the features computed with
+    previous versions.
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the feature, e.g., from
+        :meth:`.BaseFeatureStorage.list_features`.
+    storage_kind : str, optional
+        The kind of storage for the YAML (default "HDF5FeatureStorage").
+
+    Returns
+    -------
+    dict
+        The YAML (a ``ruamel.yaml`` ``CommentedMap``, with the comments),
+        which can be saved with ``junifer.utils.yaml.dump``.
+
+    Raises
+    ------
+    ValueError
+        If the feature was computed with a version of ``junifer`` that did not
+        store the parameters set to create the components (``junifer`` <=
+        0.0.8).
+
+    """
+    _check_generate_yaml_meta(meta)
+    issues: list[str] = []
+    datagrabber, with_ = _component_config(
+        meta["datagrabber"], "datagrabber", issues
+    )
+    preprocess = []
+    for t_meta in meta.get("preprocess", []):
+        t_config, t_with = _component_config(t_meta, "preprocessing", issues)
+        preprocess.append(t_config)
+        with_.extend(t_with)
+    marker, t_with = _component_config(meta["marker"], "marker", issues)
+    with_.extend(t_with)
+    name = _marker_name(meta, issues)
+    if "name" in marker:
+        marker["name"] = name
+    elif name != meta["marker"]["class"]:
+        # The name was not set, but it is not the default one
+        marker["name"] = name
+
+    config: dict[str, Any] = {"workdir": ""}
+    if with_:
+        config["with"] = list(dict.fromkeys(with_))
+    config["datagrabber"] = datagrabber
+    if preprocess:
+        config["preprocess"] = preprocess
+    config["markers"] = [marker]
+    config["storage"] = {"kind": storage_kind, "uri": ""}
+    # Format it as YAML
+    stream = io.StringIO()
+    yaml.dump(config, stream=stream)
+    stream.seek(0)
+    out = yaml.load(stream)
+
+    # Comments, with the version of junifer as in the metadata
+    junifer_version = get_dependency_version("junifer")
+    now = dt.datetime.now(tz=dt.UTC).strftime("%Y-%m-%d %H:%M:%S")
+    comment = (
+        f"Auto-generated by junifer {junifer_version} on {now} UTC from the "
+        f"metadata of the feature {meta.get('name', '')}\n"
+    )
+    dependencies = meta.get("dependencies", {})
+    if not isinstance(dependencies, dict):
+        dependencies = {}
+    if dependencies:
+        comment += "\nComputed with:\n" + "".join(
+            f"  {k}=={v}\n" for k, v in sorted(dependencies.items())
+        )
+    comment += (
+        "\nTo set:\n"
+        "  - workdir: the working directory\n"
+        "  - storage.uri: the file to store the features\n"
+    )
+    if "datadir" in datagrabber:
+        comment += (
+            "  - datagrabber.datadir: the directory of the data, if it is not "
+            "the same\n"
+        )
+    notes = []
+    computed_with = dependencies.get("junifer")
+    if computed_with is not None and computed_with != junifer_version:
+        notes.append(
+            f"The feature was computed with junifer {computed_with}: check "
+            "the components for possible changes in their API."
+        )
+    datalad_id = meta["datagrabber"].get("datalad_id")
+    if datalad_id is not None:
+        notes.append(
+            f"DataLad dataset {datalad_id} at commit "
+            f"{meta['datagrabber'].get('datalad_commit_id')}."
+        )
+        if meta["datagrabber"].get("datalad_dirty"):
+            issues.append(
+                "The DataLad dataset was dirty: while this YAML reproduces "
+                "the computation, there is no guarantee that the same "
+                "results will be obtained, as there is no strict data "
+                "provenance."
+            )
+    if notes:
+        comment += "\nNotes:\n" + "".join(f"  - {x}\n" for x in notes)
+    if issues:
+        comment += "\nIssues:\n" + "".join(f"  - {x}\n" for x in issues)
+    out.yaml_set_start_comment(comment)
+    # Add an empty line between the sections
+    for key in list(out.keys())[1:]:
+        out.yaml_set_comment_before_after_key(key, before="\n")
+    return out

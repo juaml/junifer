@@ -13,9 +13,9 @@ from typing import Annotated, Any
 
 import structlog
 from aenum import Enum as AEnum
-from pydantic import BaseModel, BeforeValidator, ConfigDict
+from pydantic import BeforeValidator
 
-from ..pipeline import UpdateMetaMixin
+from ..pipeline import PipelineComponentModel
 from ..typing import Element, Elements
 from ..utils import ensure_list, raise_error
 
@@ -98,7 +98,7 @@ def _selectors_as_tuples(selection: Elements) -> list[tuple]:
     return selectors
 
 
-class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
+class BaseDataGrabber(PipelineComponentModel, ABC):
     """Abstract base class for data fetcher.
 
     For every datagrabber, one needs to provide a concrete
@@ -112,8 +112,6 @@ class BaseDataGrabber(BaseModel, ABC, UpdateMetaMixin):
         The path where the data is or will be stored.
 
     """
-
-    model_config = ConfigDict(extra="forbid", use_enum_values=True)
 
     types: Annotated[
         DataType | list[DataType],

@@ -42,7 +42,13 @@ Metadata
 
 The ``meta`` of each data type in the :ref:`data object <data_object>` is
 built by the steps of the pipeline. Each step adds an entry with its class and
-parameters (``UpdateMetaMixin.update_meta``) and its dependencies:
+parameters (``UpdateMetaMixin.update_meta``) and its dependencies. To generate
+the YAML of a feature (:func:`.generate_yaml`), the entry of each step also has
+the parameters set when creating it (``_fields_set``, captured by
+:class:`.PipelineComponentModel` before validating them) and, for the components that are not built-in, the module that registered
+them, to load with ``with`` (``_with``, from
+``PipelineComponentRegistry.get_registering_module``). They are not part of the
+MD5, at any level (e.g., the DataGrabbers of a :class:`.MultipleDataGrabber`):
 
 .. list-table::
    :widths: auto
