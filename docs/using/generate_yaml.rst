@@ -71,20 +71,25 @@ example:
 What the YAML contains
 ----------------------
 
-* ``datagrabber``, ``preprocess`` and ``markers``: the components that
-  computed the feature, each with only the parameters that were set in the
-  original YAML (the defaults are left out). ``markers`` has a single marker,
-  the one of the feature.
+* ``datagrabber``, ``datareader``, ``preprocess`` and ``markers``: the
+  components that computed the feature, each with only the parameters that
+  were set in the original YAML (the defaults are left out). ``datareader``
+  is left out if it is the default one, ``DefaultDataReader`` without
+  parameters. ``markers`` has a single marker, the one of the feature, with
+  its name in the original YAML.
 * ``with``: the modules that loaded the components that are not built-in, as
   in the original YAML. The files loaded with ``with`` are written with their
   absolute path.
 
-The YAML can be generated from the metadata alone: the components that are
-not built-in do not need to be loaded. If a component is loaded (e.g., it is
-built-in), it is created with its parameters to check that they are still
-valid. If this fails (e.g., because the component changed in another version
-of ``junifer``), the YAML gets all the parameters stored in the metadata for
-that component, and an issue in the comments to check them.
+Each component is created with its parameters to check that they are still
+valid. The modules of the components that are not loaded are imported first,
+as with ``with`` when running the YAML: besides their components, they can
+register what the built-in components need (e.g., a data type for a
+DataGrabber). If a module cannot be imported, its components are not checked,
+and an issue in the comments says so. If a component fails to be created
+(e.g., because it changed in another version of ``junifer``), the YAML gets
+all the parameters stored in the metadata for that component, and an issue
+in the comments to check them.
 
 What you need to set
 --------------------
@@ -111,12 +116,14 @@ The comments at the start of the YAML list what to check before using it:
   version of ``junifer``, and the ID and commit of the DataLad dataset, if
   any.
 * Issues: the components that are not built-in and whose module is unknown
-  (to add to ``with``), the components that failed to be created with their
-  parameters, and a DataLad dataset that was dirty (had local changes), in
-  which case the same results are not guaranteed.
+  (to add to ``with``), the modules that could not be imported, the
+  components that failed to be created with their parameters, and a DataLad
+  dataset that was dirty (had local changes), in which case the same results
+  are not guaranteed.
 
 .. note::
 
-   The parameters set to create the components and the modules to load them
-   are only stored by ``junifer`` > 0.0.8, so :func:`.generate_yaml` raises an
-   error for the features computed with previous versions.
+   The parameters set to create the components, the modules to load them and
+   the name of the marker are only stored by ``junifer`` > 0.0.8, so
+   :func:`.generate_yaml` raises an error for the features computed with
+   previous versions.

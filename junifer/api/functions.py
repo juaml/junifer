@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Any
 import structlog
 
 from ..api.queue_context import GnuParallelLocalAdapter, HTCondorAdapter
-from ..datagrabber import BaseDataGrabber, DataType
+from ..datagrabber import BaseDataGrabber
 from ..markers import BaseMarker
 from ..pipeline import (
     MarkerCollection,
@@ -30,7 +30,7 @@ from ..pipeline import (
 )
 from ..preprocess import BasePreprocessor
 from ..storage import BaseFeatureStorage
-from ..storage.utils import get_dependency_version
+from ..storage.utils import _NOT_HASHED, get_dependency_version
 from ..typing import (
     DataGrabberLike,
     Elements,
@@ -701,9 +701,89 @@ _DATALAD_STATE_FIELDS = ("datalad_dirty", "datalad_commit_id", "datalad_id")
 # The names of the components of each step, for the comments
 _COMPONENT_NAMES = {
     "datagrabber": "DataGrabber",
+    "datareader": "DataReader",
     "preprocessing": "preprocessor",
     "marker": "marker",
 }
+
+
+def _components_meta(meta: dict) -> list[tuple[str, dict]]:
+    """Get the metadata of the pipeline components of a feature.
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the feature.
+
+    Returns
+    -------
+    list of tuple of str and dict
+        The step and the metadata of each component, including the nested
+        ones (e.g., the datagrabbers of a MultipleDataGrabber).
+
+    """
+    components = [("datagrabber", meta.get("datagrabber"))]
+    if meta.get("datareader") is not None:
+        components.append(("datareader", meta["datareader"]))
+    components += [("preprocessing", x) for x in meta.get("preprocess", [])]
+    components.append(("marker", meta.get("marker")))
+    out = []
+    while components:
+        step, t_meta = components.pop(0)
+        out.append((step, t_meta))
+        if not isinstance(t_meta, dict):
+            continue
+        for value in t_meta.values():
+            if (
+                isinstance(value, list)
+                and len(value) > 0
+                and all(isinstance(v, dict) and "class" in v for v in value)
+            ):
+                components += [(step, v) for v in value]
+    return out
+
+
+def _load_modules(meta: dict, issues: list[str]) -> None:
+    """Load the modules of the components of a feature that are not loaded.
+
+    The modules are the ones loaded with ``with`` in the YAML, so the
+    components can be checked with their parameters (e.g., a module that
+    registers a data type used by a built-in DataGrabber).
+
+    Parameters
+    ----------
+    meta : dict
+        The metadata of the feature.
+    issues : list of str
+        The issues found, to which the new ones are added.
+
+    """
+    registry = PipelineComponentRegistry()
+    to_load = [
+        t_meta["_with"]
+        for step, t_meta in _components_meta(meta)
+        if t_meta.get("_with") is not None
+        and t_meta["class"] not in registry.step_components(step)
+    ]
+    for module in dict.fromkeys(to_load):
+        try:
+            if module.endswith(".py"):
+                # A file loaded with `with`, by its absolute path
+                logger.debug(f"Importing file: {module}")
+                spec = importlib.util.spec_from_file_location(module, module)
+                t_module = importlib.util.module_from_spec(spec)  # type: ignore
+                sys.modules[module] = t_module
+                spec.loader.exec_module(t_module)  # type: ignore
+            else:
+                logger.debug(f"Importing module: {module}")
+                importlib.import_module(module)
+        except Exception as e:  # noqa: BLE001
+            sys.modules.pop(module, None)
+            issues.append(
+                f"`{module}` could not be loaded ({e}): its components could "
+                "not be checked, nor the built-in components that depend on "
+                "it (e.g., on the data types it registers)."
+            )
 
 
 def _component_config(
@@ -742,7 +822,7 @@ def _component_config(
     stored = {
         k: v
         for k, v in meta.items()
-        if k not in ("class", "_fields_set", "_with", *_DATALAD_STATE_FIELDS)
+        if k not in ("class", *_NOT_HASHED, *_DATALAD_STATE_FIELDS)
     }
     with_ = []
     if meta.get("_with") is not None:
@@ -796,44 +876,6 @@ def _component_config(
     return {"kind": kind, **params}, with_
 
 
-def _marker_name(meta: dict, issues: list[str]) -> str:
-    """Get the name of the marker of a feature.
-
-    The name of the marker in the metadata is followed by the name of the
-    feature (e.g., ``mean_aggregation`` for the ``aggregation`` feature of
-    the ``mean`` marker), which is added again when computing it.
-
-    Parameters
-    ----------
-    meta : dict
-        The metadata of the feature.
-    issues : list of str
-        The issues found, to which the new ones are added.
-
-    Returns
-    -------
-    str
-        The name of the marker.
-
-    """
-    name = meta["marker"]["name"]
-    kind = meta["marker"]["class"]
-    try:
-        klass = PipelineComponentRegistry().get_class(step="marker", name=kind)
-        features = klass._MARKER_INOUT_MAPPINGS[DataType(meta["type"])]
-    except (ValueError, KeyError, AttributeError):
-        issues.append(
-            f"The name of the `{kind}` marker could not be checked: remove "
-            f"the name of the feature from `{name}`."
-        )
-        return name
-    # The longest feature name, in case one is the end of another
-    for feature in sorted(features, key=len, reverse=True):
-        if name.endswith(f"_{feature}"):
-            return name[: -len(feature) - 1]
-    return name
-
-
 def _check_generate_yaml_meta(meta: dict) -> None:
     """Check the YAML can be generated from the metadata of a feature.
 
@@ -846,15 +888,17 @@ def _check_generate_yaml_meta(meta: dict) -> None:
     ------
     ValueError
         If the metadata of a component does not have the parameters set to
-        create it, as stored by ``junifer`` > 0.0.8.
+        create it, or the metadata of the marker does not have its name
+        (without the name of the feature), as stored by ``junifer`` > 0.0.8.
 
     """
-    components = [
-        meta.get("datagrabber"),
-        *meta.get("preprocess", []),
-        meta.get("marker"),
-    ]
-    if not all(isinstance(x, dict) and "_fields_set" in x for x in components):
+    if (
+        not all(
+            isinstance(x, dict) and "_fields_set" in x
+            for _, x in _components_meta(meta)
+        )
+        or "_name" not in meta["marker"]
+    ):
         version = meta.get("dependencies", {}).get("junifer", "unknown")
         raise_error(
             f"The YAML of the feature {meta.get('name', '')} cannot be "
@@ -869,9 +913,11 @@ def generate_yaml(
 ) -> "CommentedMap":
     """Generate the YAML to compute a feature from its metadata.
 
-    The YAML has the datagrabber, preprocessors and marker that computed the
-    feature, with the parameters set to create them and the modules to load
-    them with ``with``. Computing the feature with this YAML gives the same
+    The YAML has the datagrabber, datareader, preprocessors and marker that
+    computed the feature, with the parameters set to create them and the
+    modules to load them with ``with``. The modules of the components that
+    are not loaded are imported, to check the components with their
+    parameters. Computing the feature with this YAML gives the same
     feature (with the same MD5), as long as the data and the versions of the
     dependencies are the same.
 
@@ -879,10 +925,10 @@ def generate_yaml(
     metadata, so they must be set in the YAML. The notes and issues found
     are written as comments at the start of the YAML.
 
-    The parameters set to create the components and the modules to load them
-    are only in the metadata of the features computed with ``junifer`` >
-    0.0.8, so the YAML cannot be generated for the features computed with
-    previous versions.
+    The parameters set to create the components, the modules to load them and
+    the name of the marker (without the name of the feature) are only in the
+    metadata of the features computed with ``junifer`` > 0.0.8, so the YAML
+    cannot be generated for the features computed with previous versions.
 
     Parameters
     ----------
@@ -908,9 +954,17 @@ def generate_yaml(
     """
     _check_generate_yaml_meta(meta)
     issues: list[str] = []
+    # Load the components that are not loaded, to check them
+    _load_modules(meta, issues)
     datagrabber, with_ = _component_config(
         meta["datagrabber"], "datagrabber", issues
     )
+    datareader = None
+    if meta.get("datareader") is not None:
+        datareader, t_with = _component_config(
+            meta["datareader"], "datareader", issues
+        )
+        with_.extend(t_with)
     preprocess = []
     for t_meta in meta.get("preprocess", []):
         t_config, t_with = _component_config(t_meta, "preprocessing", issues)
@@ -918,17 +972,18 @@ def generate_yaml(
         with_.extend(t_with)
     marker, t_with = _component_config(meta["marker"], "marker", issues)
     with_.extend(t_with)
-    name = _marker_name(meta, issues)
+    # The name of the marker, without the name of the feature (the default
+    # one, the name of the class, if not set)
     if "name" in marker:
-        marker["name"] = name
-    elif name != meta["marker"]["class"]:
-        # The name was not set, but it is not the default one
-        marker["name"] = name
+        marker["name"] = meta["marker"]["_name"]
 
     config: dict[str, Any] = {"workdir": ""}
     if with_:
         config["with"] = list(dict.fromkeys(with_))
     config["datagrabber"] = datagrabber
+    # The default DataReader, as when the YAML does not set it
+    if datareader is not None and datareader != {"kind": "DefaultDataReader"}:
+        config["datareader"] = datareader
     if preprocess:
         config["preprocess"] = preprocess
     config["markers"] = [marker]

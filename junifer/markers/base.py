@@ -280,7 +280,9 @@ class BaseMarker(PipelineComponentModel, ABC, PipelineStepMixin):
                     # Update metadata for the feature,
                     # feature data is not manipulated, only meta
                     self.update_meta(f_data_copy, "marker")
-                    # Update marker feature's metadata name
+                    # Update marker feature's metadata name, keeping the name
+                    # of the marker to generate the YAML
+                    f_data_copy["meta"]["marker"]["_name"] = self.name
                     f_data_copy["meta"]["marker"]["name"] += f"_{f_name}"
 
                     if storage is not None:

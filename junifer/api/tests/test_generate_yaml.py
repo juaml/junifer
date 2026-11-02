@@ -5,6 +5,7 @@
 
 import copy
 import io
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -21,7 +22,7 @@ from junifer.storage.utils import _without_keys, get_dependency_version
 from junifer.utils import yaml
 
 
-_NOT_HASHED = ("_fields_set", "_with")
+_NOT_HASHED = ("_fields_set", "_with", "_name")
 _PARCELLATION = "Schaefer100x7"
 _MAPS = "Smith_rsn_10"
 _COORDS = "DMNBuckner"
@@ -193,6 +194,7 @@ def _feature_meta(**kwargs) -> dict:
         "marker": {
             "class": "ParcelAggregation",
             "_fields_set": ["parcellation", "method", "name"],
+            "_name": "mean",
             "name": "mean_aggregation",
             "parcellation": [_PARCELLATION],
             "method": "mean",
@@ -248,27 +250,30 @@ def test_generate_yaml() -> None:
 
 
 @pytest.mark.parametrize(
-    "kind, data_type, name, expected",
+    "kind, name, marker_name, expected",
     [
-        ("ParcelAggregation", "BOLD", "mean_aggregation", "mean"),
-        ("ParcelAggregation", "T1w", "mean_aggregation", "mean"),
+        ("ParcelAggregation", "mean_aggregation", "mean", "mean"),
         # The default name
-        ("ParcelAggregation", "BOLD", "ParcelAggregation_aggregation", None),
-        # Several outputs
-        ("ALFFParcels", "BOLD", "lff_alff", "lff"),
-        ("ALFFParcels", "BOLD", "lff_falff", "lff"),
-        # The name of the marker ends with the name of the output
-        ("ALFFParcels", "BOLD", "falff_falff", "falff"),
         (
-            "FunctionalConnectivityParcels",
-            "BOLD",
-            "fc_functional_connectivity",
-            "fc",
+            "ParcelAggregation",
+            "ParcelAggregation_aggregation",
+            "ParcelAggregation",
+            None,
         ),
+        # The name of the marker ends with the name of the feature
+        (
+            "ParcelAggregation",
+            "aggregation_aggregation",
+            "aggregation",
+            "aggregation",
+        ),
+        # The name of the feature is not one of the outputs of the class
+        # (e.g., set by the parameters of the marker)
+        ("ParcelAggregation", "psd_trim_mean80", "psd", "psd"),
     ],
 )
 def test_generate_yaml_marker_name(
-    kind: str, data_type: str, name: str, expected: str | None
+    kind: str, name: str, marker_name: str, expected: str | None
 ) -> None:
     """Test the name of the marker, without the name of the feature.
 
@@ -276,25 +281,32 @@ def test_generate_yaml_marker_name(
     ----------
     kind : str
         The parametrized kind of marker.
-    data_type : str
-        The parametrized data type of the feature.
     name : str
-        The parametrized name of the marker in the metadata.
+        The parametrized name of the marker in the metadata, with the name of
+        the feature.
+    marker_name : str
+        The parametrized name of the marker (``_name`` in the metadata).
     expected : str or None
         The parametrized name of the marker in the YAML (None if the
         default).
 
     """
-    marker = {"class": kind, "name": name, "parcellation": [_PARCELLATION]}
+    marker = {
+        "class": kind,
+        "name": name,
+        "_name": marker_name,
+        "parcellation": [_PARCELLATION],
+    }
     # The name is set unless it is the default one
     marker["_fields_set"] = ["parcellation"] + (
         ["name"] if expected is not None else []
     )
-    out = generate_yaml(_feature_meta(marker=marker, type=data_type))
+    out = generate_yaml(_feature_meta(marker=marker))
     if expected is None:
         assert "name" not in out["markers"][0]
     else:
         assert out["markers"][0]["name"] == expected
+    assert "Issues" not in _dump(out)
 
 
 def test_generate_yaml_unknown_marker() -> None:
@@ -302,14 +314,13 @@ def test_generate_yaml_unknown_marker() -> None:
     marker = {
         "class": "MyMarker",
         "_fields_set": ["name"],
+        "_name": "foo",
         "name": "foo_bar",
     }
     out = generate_yaml(_feature_meta(marker=marker))
-    assert out["markers"][0] == {"kind": "MyMarker", "name": "foo_bar"}
+    assert out["markers"][0] == {"kind": "MyMarker", "name": "foo"}
     assert "with" not in out
-    text = _dump(out)
-    assert "`MyMarker` is not a built-in component" in text
-    assert "remove the name of the feature from `foo_bar`" in text
+    assert "`MyMarker` is not a built-in component" in _dump(out)
 
 
 def test_generate_yaml_with() -> None:
@@ -449,7 +460,9 @@ def test_generate_yaml_without_preprocessors() -> None:
     assert "preprocess" not in generate_yaml(meta)
 
 
-@pytest.mark.parametrize("step", ["datagrabber", "preprocess", "marker"])
+@pytest.mark.parametrize(
+    "step", ["datagrabber", "datareader", "preprocess", "marker"]
+)
 def test_generate_yaml_incompatible(step: str) -> None:
     """Test the YAML of a feature computed with junifer <= 0.0.8.
 
@@ -469,6 +482,14 @@ def test_generate_yaml_incompatible(step: str) -> None:
     else:
         del meta[step]["_fields_set"]
     with pytest.raises(ValueError, match=r"computed with junifer 0\.0\.8"):
+        generate_yaml(meta)
+
+
+def test_generate_yaml_incompatible_marker_name() -> None:
+    """Test the YAML of a feature without the name of its marker."""
+    meta = _feature_meta()
+    del meta["marker"]["_name"]
+    with pytest.raises(ValueError, match="cannot be generated"):
         generate_yaml(meta)
 
 
@@ -509,6 +530,100 @@ def test_generate_yaml_failed_to_instantiate() -> None:
     assert "Extra inputs are not permitted" in text
 
 
+@pytest.mark.parametrize(
+    "datareader, expected",
+    [
+        # The default one, as without it in the YAML
+        ({"class": "DefaultDataReader", "_fields_set": []}, None),
+        (
+            {
+                "class": "MyDataReader",
+                "_fields_set": ["foo"],
+                "_with": "junifer.testing.registry",
+                "foo": 1,
+                "bar": 2,
+            },
+            {"kind": "MyDataReader", "foo": 1},
+        ),
+    ],
+)
+def test_generate_yaml_datareader(
+    datareader: dict, expected: dict | None
+) -> None:
+    """Test the DataReader of the feature.
+
+    Parameters
+    ----------
+    datareader : dict
+        The parametrized metadata of the DataReader.
+    expected : dict or None
+        The parametrized DataReader in the YAML (None if not in the YAML).
+
+    """
+    out = generate_yaml(_feature_meta(datareader=datareader))
+    if expected is None:
+        assert "datareader" not in out
+    else:
+        assert out["datareader"] == expected
+        assert out["with"] == ["junifer.testing.registry"]
+        # After the DataGrabber
+        keys = list(out)
+        assert keys.index("datareader") == keys.index("datagrabber") + 1
+
+
+def test_generate_yaml_load_modules(tmp_path: Path) -> None:
+    """Test loading the modules of the components that are not loaded.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    path = tmp_path / "my_slicer.py"
+    path.write_text(
+        "from junifer.api.decorators import register_preprocessor\n"
+        "from junifer.preprocess import TemporalSlicer\n\n\n"
+        "@register_preprocessor\n"
+        "class MyTemporalSlicer(TemporalSlicer):\n"
+        '    """Temporal slicer loaded from a file."""\n'
+    )
+    meta = _feature_meta()
+    meta["preprocess"][0]["class"] = "MyTemporalSlicer"
+    meta["preprocess"][0]["_with"] = str(path)
+    # An unknown parameter: found once the component is loaded
+    meta["preprocess"][0]["_fields_set"].append("foo")
+    meta["preprocess"][0]["foo"] = 1
+    registry = PipelineComponentRegistry()
+    assert "MyTemporalSlicer" not in registry.step_components("preprocessing")
+    try:
+        out = generate_yaml(meta)
+        assert "MyTemporalSlicer" in registry.step_components("preprocessing")
+    finally:
+        registry.deregister(
+            step="preprocessing",
+            klass=registry.get_class(
+                step="preprocessing", name="MyTemporalSlicer"
+            ),
+        )
+        sys.modules.pop(str(path), None)
+    assert out["with"] == [str(path)]
+    text = _dump(out)
+    assert "`MyTemporalSlicer` failed to instantiate" in text
+    assert "could not be loaded" not in text
+
+
+def test_generate_yaml_load_modules_failed() -> None:
+    """Test a module of a component that cannot be loaded."""
+    meta = _feature_meta()
+    meta["marker"]["class"] = "MyMarker"
+    meta["marker"]["_with"] = "my_missing_module"
+    out = generate_yaml(meta)
+    assert out["with"] == ["my_missing_module"]
+    assert "`my_missing_module` could not be loaded" in _dump(out)
+    assert "my_missing_module" not in sys.modules
+
+
 def test_generate_yaml_junifer_version() -> None:
     """Test the note about the version of junifer of the feature."""
     meta = _feature_meta()
@@ -519,7 +634,7 @@ def test_generate_yaml_junifer_version() -> None:
 
 @pytest.fixture
 def my_marker(tmp_path: Path) -> Iterator[Path]:
-    """Write a marker to load with ``with`` in the YAML.
+    """Write a marker and a DataReader to load with ``with`` in the YAML.
 
     Parameters
     ----------
@@ -529,21 +644,27 @@ def my_marker(tmp_path: Path) -> Iterator[Path]:
     """
     path = tmp_path / "my_marker.py"
     path.write_text(
-        "from junifer.api.decorators import register_marker\n"
+        "from junifer.api.decorators import register_datareader, "
+        "register_marker\n"
+        "from junifer.datareader import DefaultDataReader\n"
         "from junifer.markers import ParcelAggregation\n\n\n"
         "@register_marker\n"
         "class MyParcelAggregation(ParcelAggregation):\n"
-        '    """Parcel aggregation loaded from a file."""\n'
+        '    """Parcel aggregation loaded from a file."""\n\n\n'
+        "@register_datareader\n"
+        "class MyDataReader(DefaultDataReader):\n"
+        '    """DataReader loaded from a file."""\n'
     )
     yield path
     registry = PipelineComponentRegistry()
-    if "MyParcelAggregation" in registry.step_components("marker"):
-        registry.deregister(
-            step="marker",
-            klass=registry.get_class(
-                step="marker", name="MyParcelAggregation"
-            ),
-        )
+    for step, name in [
+        ("marker", "MyParcelAggregation"),
+        ("datareader", "MyDataReader"),
+    ]:
+        if name in registry.step_components(step):
+            registry.deregister(
+                step=step, klass=registry.get_class(step=step, name=name)
+            )
 
 
 def _run(config_path: Path) -> None:
@@ -555,6 +676,7 @@ def _run(config_path: Path) -> None:
         markers=config["markers"],
         storage=config["storage"],
         preprocessors=config.get("preprocess"),
+        datareader=config.get("datareader"),
         elements=["sub-01"],
     )
     collect(storage=config["storage"])
@@ -601,6 +723,8 @@ def test_generate_yaml_run(
             "n_subjects": 1,
             "n_timepoints": 30,
         },
+        # Loaded from a file
+        "datareader": {"kind": "MyDataReader"},
         "preprocess": [{"kind": "TemporalSlicer", "start": 0, "stop": 25}],
         "markers": [
             {

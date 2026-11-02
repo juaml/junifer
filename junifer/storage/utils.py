@@ -59,9 +59,10 @@ def get_dependency_version(dependency: str) -> str:
 
 
 # The keys of the metadata of the pipeline steps that are not part of the
-# hash: the parameters set when creating the objects and the module to load
-# them, used to generate the YAML
-_NOT_HASHED = ("_fields_set", "_with")
+# hash: the parameters set when creating the objects, the module to load
+# them and the name of the marker (without the name of the feature), used to
+# generate the YAML
+_NOT_HASHED = ("_fields_set", "_with", "_name")
 
 
 def _without_keys(value: Any, keys: tuple[str, ...]) -> Any:
