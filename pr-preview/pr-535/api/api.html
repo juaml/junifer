@@ -355,18 +355,20 @@ constructor.</p>
 <dt class="sig sig-object py" id="junifer.api.functions.generate_yaml">
 <span class="sig-prename descclassname"><span class="pre">junifer.api.functions.</span></span><span class="sig-name descname"><span class="pre">generate_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">meta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage_kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HDF5FeatureStorage'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.functions.generate_yaml" title="Link to this definition">¶</a></dt>
 <dd><p>Generate the YAML to compute a feature from its metadata.</p>
-<p>The YAML has the datagrabber, preprocessors and marker that computed the
-feature, with the parameters set to create them and the modules to load
-them with <code class="docutils literal notranslate"><span class="pre">with</span></code>. Computing the feature with this YAML gives the same
+<p>The YAML has the datagrabber, datareader, preprocessors and marker that
+computed the feature, with the parameters set to create them and the
+modules to load them with <code class="docutils literal notranslate"><span class="pre">with</span></code>. The modules of the components that
+are not loaded are imported, to check the components with their
+parameters. Computing the feature with this YAML gives the same
 feature (with the same MD5), as long as the data and the versions of the
 dependencies are the same.</p>
 <p>The working directory and the URI of the storage are not part of the
 metadata, so they must be set in the YAML. The notes and issues found
 are written as comments at the start of the YAML.</p>
-<p>The parameters set to create the components and the modules to load them
-are only in the metadata of the features computed with <code class="docutils literal notranslate"><span class="pre">junifer</span></code> &gt;
-0.0.8, so the YAML cannot be generated for the features computed with
-previous versions.</p>
+<p>The parameters set to create the components, the modules to load them and
+the name of the marker (without the name of the feature) are only in the
+metadata of the features computed with <code class="docutils literal notranslate"><span class="pre">junifer</span></code> &gt; 0.0.8, so the YAML
+cannot be generated for the features computed with previous versions.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><dl>
@@ -486,7 +488,7 @@ if the <code class="docutils literal notranslate"><span class="pre">jobdir</span
 
 <dl class="py function">
 <dt class="sig sig-object py" id="junifer.api.functions.run">
-<span class="sig-prename descclassname"><span class="pre">junifer.api.functions.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datagrabber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.functions.run" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">junifer.api.functions.</span></span><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datagrabber</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">markers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocessors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datareader</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#junifer.api.functions.run" title="Link to this definition">¶</a></dt>
 <dd><p>Run the pipeline on the selected element.</p>
 <dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -512,6 +514,11 @@ least a key <code class="docutils literal notranslate"><span class="pre">kind</s
 are passed to the preprocessor constructor (default None).</p>
 </dd>
 <dt><strong>elements</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">list</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>Element(s) to process. Will be used to index the DataGrabber
+(default None).</p>
+</dd>
+<dt><strong>datareader</strong><span class="classifier"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">dict</span></code></a> or <a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="docutils literal notranslate"><span class="pre">None</span></code></a>, optional</span></dt><dd><p>DataReader to use. Must have a key <code class="docutils literal notranslate"><span class="pre">kind</span></code> with the kind of
+DataReader to use. All other keys are passed to the DataReader
+constructor. If None, will use <a class="reference internal" href="datareaders.html#junifer.datareader.DefaultDataReader" title="junifer.datareader.DefaultDataReader"><code class="xref py py-class docutils literal notranslate"><span class="pre">DefaultDataReader</span></code></a>
 (default None).</p>
 </dd>
 </dl>
@@ -1747,7 +1754,7 @@ validated to form a valid model.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=631ba919"></script>
+</div><script src="../_static/documentation_options.js?v=d6a95bbc"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

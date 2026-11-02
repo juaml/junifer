@@ -390,20 +390,25 @@ example:</p>
 <section id="what-the-yaml-contains">
 <h2><span class="section-number">5.8.1. </span>What the YAML contains<a class="headerlink" href="#what-the-yaml-contains" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">datagrabber</span></code>, <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> and <code class="docutils literal notranslate"><span class="pre">markers</span></code>: the components that
-computed the feature, each with only the parameters that were set in the
-original YAML (the defaults are left out). <code class="docutils literal notranslate"><span class="pre">markers</span></code> has a single marker,
-the one of the feature.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datagrabber</span></code>, <code class="docutils literal notranslate"><span class="pre">datareader</span></code>, <code class="docutils literal notranslate"><span class="pre">preprocess</span></code> and <code class="docutils literal notranslate"><span class="pre">markers</span></code>: the
+components that computed the feature, each with only the parameters that
+were set in the original YAML (the defaults are left out). <code class="docutils literal notranslate"><span class="pre">datareader</span></code>
+is left out if it is the default one, <code class="docutils literal notranslate"><span class="pre">DefaultDataReader</span></code> without
+parameters. <code class="docutils literal notranslate"><span class="pre">markers</span></code> has a single marker, the one of the feature, with
+its name in the original YAML.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">with</span></code>: the modules that loaded the components that are not built-in, as
 in the original YAML. The files loaded with <code class="docutils literal notranslate"><span class="pre">with</span></code> are written with their
 absolute path.</p></li>
 </ul>
-<p>The YAML can be generated from the metadata alone: the components that are
-not built-in do not need to be loaded. If a component is loaded (e.g., it is
-built-in), it is created with its parameters to check that they are still
-valid. If this fails (e.g., because the component changed in another version
-of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>), the YAML gets all the parameters stored in the metadata for
-that component, and an issue in the comments to check them.</p>
+<p>Each component is created with its parameters to check that they are still
+valid. The modules of the components that are not loaded are imported first,
+as with <code class="docutils literal notranslate"><span class="pre">with</span></code> when running the YAML: besides their components, they can
+register what the built-in components need (e.g., a data type for a
+DataGrabber). If a module cannot be imported, its components are not checked,
+and an issue in the comments says so. If a component fails to be created
+(e.g., because it changed in another version of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>), the YAML gets
+all the parameters stored in the metadata for that component, and an issue
+in the comments to check them.</p>
 </section>
 <section id="what-you-need-to-set">
 <h2><span class="section-number">5.8.2. </span>What you need to set<a class="headerlink" href="#what-you-need-to-set" title="Link to this heading">¶</a></h2>
@@ -428,15 +433,17 @@ reminder to check the components if the feature was computed with another
 version of <code class="docutils literal notranslate"><span class="pre">junifer</span></code>, and the ID and commit of the DataLad dataset, if
 any.</p></li>
 <li><p>Issues: the components that are not built-in and whose module is unknown
-(to add to <code class="docutils literal notranslate"><span class="pre">with</span></code>), the components that failed to be created with their
-parameters, and a DataLad dataset that was dirty (had local changes), in
-which case the same results are not guaranteed.</p></li>
+(to add to <code class="docutils literal notranslate"><span class="pre">with</span></code>), the modules that could not be imported, the
+components that failed to be created with their parameters, and a DataLad
+dataset that was dirty (had local changes), in which case the same results
+are not guaranteed.</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The parameters set to create the components and the modules to load them
-are only stored by <code class="docutils literal notranslate"><span class="pre">junifer</span></code> &gt; 0.0.8, so <a class="reference internal" href="../api/api.html#junifer.api.functions.generate_yaml" title="junifer.api.functions.generate_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_yaml()</span></code></a> raises an
-error for the features computed with previous versions.</p>
+<p>The parameters set to create the components, the modules to load them and
+the name of the marker are only stored by <code class="docutils literal notranslate"><span class="pre">junifer</span></code> &gt; 0.0.8, so
+<a class="reference internal" href="../api/api.html#junifer.api.functions.generate_yaml" title="junifer.api.functions.generate_yaml"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_yaml()</span></code></a> raises an error for the features computed with
+previous versions.</p>
 </div>
 </section>
 </section>
@@ -511,7 +518,7 @@ error for the features computed with previous versions.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=631ba919"></script>
+</div><script src="../_static/documentation_options.js?v=d6a95bbc"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
