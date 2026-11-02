@@ -18,6 +18,7 @@ __all__ = [
     "DMCCTask",
     "DMCCPhaseEncoding",
     "DMCCRun",
+    "CompanionsFunction",
     "DataTypeManager",
     "DataTypeSchema",
     "OptionalTypeSchema",
@@ -62,6 +63,7 @@ from .dmcc13_benchmark import (
 )
 
 from .pattern_validation_mixin import (
+    CompanionsFunction,
     DataTypeManager,
     DataTypeSchema,
     OptionalTypeSchema,

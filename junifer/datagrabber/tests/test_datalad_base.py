@@ -3,13 +3,19 @@
 # Authors: Synchon Mandal <s.mandal@fz-juelich.de>
 # License: AGPL
 
+import os
 import warnings
 from pathlib import Path
 
 import datalad.api as dl
 import pytest
 
-from junifer.datagrabber import DataladDataGrabber, DataType
+from junifer.datagrabber import (
+    DataladDataGrabber,
+    DataType,
+    DataTypeManager,
+    register_data_type,
+)
 from junifer.utils import config
 
 
@@ -479,3 +485,85 @@ def test_DataladDataGrabber_previously_cloned_and_get_dirty(
     assert elem1_bold.is_file() is False
     assert elem1_t1w.is_symlink() is False
     assert elem1_t1w.is_file() is True
+
+
+def test_DataladDataGrabber_companions_subdatasets(tmp_path: Path) -> None:
+    """Test getting the companion files in sub-datasets.
+
+    The files of a sub-dataset are only there once it is installed, by the
+    get of the files, so the function giving the companion files must be
+    called after it.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # The state of the dataset when the function is called
+    calls = []
+
+    def _header_companions(path: Path) -> list[Path]:
+        name = path.read_text().strip().removeprefix("data=")
+        companion = path.parent / name
+        calls.append(
+            {
+                "installed": (path.parent / ".datalad").exists(),
+                "header": path.read_text(),
+                # The link of the companion, without its content
+                "companion_link": os.path.lexists(companion),
+                "companion_content": companion.exists(),
+            }
+        )
+        return [companion]
+
+    # A sub-dataset for each subject, with a header file naming its data
+    # file, as in some EEG formats
+    src = tmp_path / "src"
+    ds = dl.create(path=src, result_renderer="disabled")
+    for subject in ["sub-01", "sub-02"]:
+        dl.create(dataset=src, path=src / subject, result_renderer="disabled")
+        (src / subject / "rec.hdr").write_text(f"data={subject}_data.bin")
+        (src / subject / f"{subject}_data.bin").write_bytes(b"data")
+    ds.save(recursive=True, result_renderer="disabled")
+    register_data_type(
+        name="SubdatasetHeaderData",
+        schema={"mandatory": ["pattern"], "optional": {}},
+        companions=_header_companions,
+    )
+
+    class MyDataGrabber(DataladDataGrabber):
+        types: list[DataType] = [  # noqa: RUF012
+            DataType("SubdatasetHeaderData")
+        ]
+
+        def get_item(self, subject):
+            path = self.fulldir / subject / "rec.hdr"
+            return {"SubdatasetHeaderData": {"path": path}}
+
+        def get_elements(self):
+            return ["sub-01", "sub-02"]
+
+        def get_element_keys(self):
+            return ["subject"]
+
+    try:
+        with MyDataGrabber(uri=f"file://{src}") as dg:
+            # Not installed until the files are got
+            assert not (dg.datadir / "sub-01" / ".datalad").exists()
+            out = dg["sub-01"]
+            # Called once, with the sub-dataset installed and the file got,
+            # before getting the companion
+            assert calls == [
+                {
+                    "installed": True,
+                    "header": "data=sub-01_data.bin",
+                    "companion_link": True,
+                    "companion_content": False,
+                }
+            ]
+            path = out["SubdatasetHeaderData"]["path"]
+            assert (path.parent / "sub-01_data.bin").read_bytes() == b"data"
+            assert not (dg.datadir / "sub-02" / ".datalad").exists()
+    finally:
+        _ = DataTypeManager().pop("SubdatasetHeaderData")

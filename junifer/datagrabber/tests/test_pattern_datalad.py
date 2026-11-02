@@ -11,7 +11,12 @@ import datalad.api as dl
 import pytest
 from pydantic import AnyUrl
 
-from junifer.datagrabber import DataType, PatternDataladDataGrabber
+from junifer.datagrabber import (
+    DataType,
+    DataTypeManager,
+    PatternDataladDataGrabber,
+    register_data_type,
+)
 
 
 _testing_dataset = {
@@ -275,3 +280,50 @@ def test_PatternDataladDataGrabber_subdatasets_files(
     )
     with dg:
         assert dg.get_elements() == ["sub-01", "sub-02"]
+
+
+def _header_companions(path: Path) -> list[Path]:
+    """Get the data file named in a header file."""
+    name = path.read_text().strip().removeprefix("data=")
+    return [path.parent / name]
+
+
+def test_PatternDataladDataGrabber_companions(tmp_path: Path) -> None:
+    """Test getting the companion files of a data type.
+
+    Parameters
+    ----------
+    tmp_path : pathlib.Path
+        The path to the test directory.
+
+    """
+    # A header file naming its data file, as in some EEG formats
+    src = tmp_path / "src"
+    ds = dl.create(path=src, result_renderer="disabled")
+    for subject in ["sub-01", "sub-02"]:
+        (src / subject).mkdir()
+        (src / subject / "rec.hdr").write_text(f"data={subject}_data.bin")
+        (src / subject / f"{subject}_data.bin").write_bytes(b"data")
+        (src / subject / "other.bin").write_bytes(b"other")
+    ds.save(result_renderer="disabled")
+    register_data_type(
+        name="HeaderData",
+        schema={"mandatory": ["pattern"], "optional": {}},
+        companions=_header_companions,
+    )
+    try:
+        with PatternDataladDataGrabber(
+            uri=AnyUrl(f"file://{src}"),
+            types=["HeaderData"],
+            patterns={"HeaderData": {"pattern": "{subject}/rec.hdr"}},
+            replacements=["subject"],
+        ) as dg:
+            out = dg["sub-01"]
+            path = out["HeaderData"]["path"]
+            assert path.read_text() == "data=sub-01_data.bin"
+            # The companion file, not the other files
+            assert (path.parent / "sub-01_data.bin").read_bytes() == b"data"
+            assert not (path.parent / "other.bin").exists()
+            assert not (dg.datadir / "sub-02" / "sub-02_data.bin").exists()
+    finally:
+        _ = DataTypeManager().pop("HeaderData")

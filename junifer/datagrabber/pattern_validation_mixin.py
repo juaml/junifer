@@ -12,7 +12,8 @@ else:
     from typing import TypedDict
 
 
-from collections.abc import Iterator, MutableMapping
+from collections.abc import Callable, Iterator, MutableMapping
+from pathlib import Path
 
 from aenum import extend_enum
 
@@ -22,12 +23,20 @@ from .base import DataType, logger
 
 
 __all__ = [
+    "CompanionsFunction",
     "DataTypeManager",
     "DataTypeSchema",
     "OptionalTypeSchema",
     "PatternValidationMixin",
     "register_data_type",
 ]
+
+
+# The function giving the other files needed to read a file of a data type
+# (e.g., the data file of a header file), given the path of the file. The
+# DataLad DataGrabbers call it once the file is got and its sub-datasets are
+# installed, and get the companions it gives (see `register_data_type`)
+CompanionsFunction = Callable[[Path], list[Path]]
 
 
 class OptionalTypeSchema(TypedDict):
@@ -58,6 +67,9 @@ class DataTypeManager(MutableMapping):
             cls._global: dict[str, DataTypeSchema] = {}
             cls._builtin: dict[str, DataTypeSchema] = {}
             cls._external: dict[str, DataTypeSchema] = {}
+            # The functions giving the companion files of the data types
+            # that have them
+            cls._companions: dict[str, CompanionsFunction] = {}
             cls._builtin.update(
                 {
                     "T1w": {
@@ -168,6 +180,8 @@ class DataTypeManager(MutableMapping):
         _ = self._external.pop(key)
         # Update global
         _ = self._global.pop(key)
+        # Update companions
+        _ = self._companions.pop(key, None)
 
     def __setitem__(self, key: str, value: DataTypeSchema) -> None:
         """Update ``key`` with ``value``."""
@@ -194,8 +208,50 @@ class DataTypeManager(MutableMapping):
         """Not implemented."""
         pass
 
+    def set_companions(self, key: str, companions: CompanionsFunction) -> None:
+        """Set the function giving the companion files of a data type.
 
-def register_data_type(name: str, schema: DataTypeSchema) -> None:
+        Parameters
+        ----------
+        key : str
+            The data type name.
+        companions : callable
+            The function giving the other files needed to read a file of the
+            data type, given its path.
+
+        Raises
+        ------
+        KeyError
+            If the data type is not registered.
+
+        """
+        if key not in self._global:
+            raise_error(klass=KeyError, msg=key)
+        self._companions[key] = companions
+
+    def get_companions(self, key: str) -> CompanionsFunction | None:
+        """Get the function giving the companion files of a data type.
+
+        Parameters
+        ----------
+        key : str
+            The data type name.
+
+        Returns
+        -------
+        callable or None
+            The function, or None if the files of the data type do not need
+            other files.
+
+        """
+        return self._companions.get(key)
+
+
+def register_data_type(
+    name: str,
+    schema: DataTypeSchema,
+    companions: CompanionsFunction | None = None,
+) -> None:
     """Register custom data type.
 
     Parameters
@@ -204,10 +260,22 @@ def register_data_type(name: str, schema: DataTypeSchema) -> None:
         The data type name.
     schema : ``DataTypeSchema``
         The data type schema.
+    companions : callable or None, optional
+        The function giving the other files needed to read a file of the data
+        type, given its path: e.g., the data file of a header file, named in
+        the header. The DataLad DataGrabbers get them after the file, in a
+        second get. The function is only called once the file is got, so it
+        can read the file, and once the sub-datasets containing it are
+        installed (the get of the file installs them), so it can see the
+        other files of its sub-dataset (e.g., with ``os.path.lexists``),
+        even if their content is not got yet. The companions might not be
+        available when it is called (default None).
 
     """
     DataTypeManager()[name] = schema
     extend_enum(DataType, name, name)
+    if companions is not None:
+        DataTypeManager().set_companions(name, companions)
 
 
 class PatternValidationMixin:
