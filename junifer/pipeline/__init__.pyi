@@ -5,6 +5,7 @@ __all__ = [
     "DataObjectDumper",
     "ExtDep",
     "MarkerCollection",
+    "PipelineComponentModel",
     "PipelineComponentRegistry",
     "PipelineStepMixin",
     "UpdateMetaMixin",
@@ -18,6 +19,7 @@ from ._data_object_dumper import (
     DataObjectDumper,
 )
 from .marker_collection import MarkerCollection
+from .pipeline_component_model import PipelineComponentModel
 from .pipeline_component_registry import PipelineComponentRegistry
 from .pipeline_step_mixin import PipelineStepMixin
 from .update_meta_mixin import UpdateMetaMixin
