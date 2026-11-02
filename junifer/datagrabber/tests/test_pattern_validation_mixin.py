@@ -5,6 +5,7 @@
 # License: AGPL
 
 from contextlib import AbstractContextManager, nullcontext
+from pathlib import Path
 
 import pytest
 
@@ -112,9 +113,30 @@ def test_register_data_type() -> None:
 
     assert "dtype" in DataTypeManager()
     assert "dtype" in list(DataType)
+    assert DataTypeManager().get_companions("dtype") is None
     _ = DataTypeManager().pop("dtype")
     assert "dtype" not in DataTypeManager()
     assert "dtype" in list(DataType)
+
+
+def test_register_data_type_companions() -> None:
+    """Test data type registration with companion files."""
+
+    def _companions(path: Path) -> list[Path]:
+        return [path.with_suffix(".dat")]
+
+    register_data_type(
+        name="dtype_companions",
+        schema={"mandatory": ["pattern"], "optional": {}},
+        companions=_companions,
+    )
+    manager = DataTypeManager()
+    assert manager.get_companions("dtype_companions") is _companions
+    _ = manager.pop("dtype_companions")
+    assert manager.get_companions("dtype_companions") is None
+    # Only for the registered data types
+    with pytest.raises(KeyError, match="dtype_companions"):
+        manager.set_companions("dtype_companions", _companions)
 
 
 @pytest.mark.parametrize(

@@ -22,6 +22,7 @@ from ..pipeline import WorkDirManager
 from ..typing import Element
 from ..utils import config, raise_error, warn_with_log
 from .base import BaseDataGrabber, logger
+from .pattern_validation_mixin import DataTypeManager
 
 
 __all__ = ["DataladDataGrabber"]
@@ -235,8 +236,58 @@ class DataladDataGrabber(BaseDataGrabber):
             raise_error("Could not get dataset ID from remote")
         return remote_id, is_dirty
 
+    def _get_files(self, to_get: list[Path]) -> None:
+        """Get files of the dataset.
+
+        Parameters
+        ----------
+        to_get : list of pathlib.Path
+            The files (or directories) to get.
+
+        Raises
+        ------
+        datalad.support.exceptions.IncompleteResultsError
+            If there is a datalad-related problem while fetching data.
+
+        """
+        if len(to_get) == 0:
+            return
+        logger.debug(f"Getting {len(to_get)} files using datalad:")
+        for fname in to_get:
+            logger.debug(f"\t: {fname}")
+
+        try:
+            dl_out = self._dataset.get(to_get, result_renderer="disabled")
+        except IncompleteResultsError as e:
+            raise_error(f"Failed to get from dataset: {e.failed}")
+        if not self._was_cloned:
+            # If the dataset was already installed, check that the
+            # file was actually downloaded to avoid removing a
+            # file that was already there.
+            for t_out in dl_out:
+                t_path = Path(t_out["path"])
+                if t_out["status"] == "ok":
+                    logger.debug(f"File {t_path} downloaded")
+                    self._got_files.append(t_path)
+                elif t_out["status"] == "notneeded":
+                    logger.debug(f"File {t_path} was already present")
+                else:
+                    raise_error(f"File download failed: {t_out}")
+        logger.debug("Get done")
+
     def _dataset_get(self, out: dict) -> dict:
         """Get the dataset found from the path in ``out``.
+
+        The files are got in two steps. First, the paths in ``out``: getting
+        a path also installs the sub-datasets that contain it (e.g., one
+        sub-dataset per subject), so before this step the file, its
+        sub-dataset and the other files of the sub-dataset might not be
+        there at all. Second, the companion files of the data types that
+        have them (see :func:`.register_data_type`): the function giving
+        them is only called after the first step, so it can read the file
+        (e.g., the data file named in a header file) and see the other files
+        of its (now installed) sub-dataset, even if their content is not got
+        yet.
 
         Parameters
         ----------
@@ -255,46 +306,43 @@ class DataladDataGrabber(BaseDataGrabber):
 
         """
         to_get = []
-        for type_val in out.values():
+        # The paths of the data types with companion files, and the function
+        # giving them
+        with_companions = []
+        for type_key, type_val in out.items():
+            companions = DataTypeManager().get_companions(type_key)
             # Conditional for list dtype vals like Warp
             if isinstance(type_val, list):
                 for entry in type_val:
                     for k, v in entry.items():
                         if k == "path":
                             to_get.append(v)
+                            if companions is not None:
+                                with_companions.append((v, companions))
             else:
                 # Iterate to check for nested "types" like mask
                 for k, v in type_val.items():
                     # Add base data type path
                     if k == "path":
                         to_get.append(v)
+                        if companions is not None:
+                            with_companions.append((v, companions))
                     # Add nested data type path
                     if isinstance(v, dict) and "path" in v:
                         to_get.append(v["path"])
 
-        if len(to_get) > 0:
-            logger.debug(f"Getting {len(to_get)} files using datalad:")
-            for fname in to_get:
-                logger.debug(f"\t: {fname}")
-
-            try:
-                dl_out = self._dataset.get(to_get, result_renderer="disabled")
-            except IncompleteResultsError as e:
-                raise_error(f"Failed to get from dataset: {e.failed}")
-            if not self._was_cloned:
-                # If the dataset was already installed, check that the
-                # file was actually downloaded to avoid removing a
-                # file that was already there.
-                for t_out in dl_out:
-                    t_path = Path(t_out["path"])
-                    if t_out["status"] == "ok":
-                        logger.debug(f"File {t_path} downloaded")
-                        self._got_files.append(t_path)
-                    elif t_out["status"] == "notneeded":
-                        logger.debug(f"File {t_path} was already present")
-                    else:
-                        raise_error(f"File download failed: {t_out}")
-            logger.debug("Get done")
+        # First step: the files, installing their sub-datasets, if any
+        self._get_files(to_get)
+        # Second step: the companion files. Only now the files are there
+        # (with their content) and their sub-datasets are installed, so the
+        # functions can read them and find their companions, which are got
+        # with a second get
+        companion_files = []
+        for path, companions in with_companions:
+            for t_path in companions(Path(path)):
+                if t_path not in companion_files:
+                    companion_files.append(t_path)
+        self._get_files(companion_files)
 
         return out
 
